@@ -1,0 +1,12 @@
+dist
+node_modules
+coverage
+webpack.*.js
+*server.js
+*md5.js
+*http.js
+*dateTime.js
+App/Utils/codeHtML.js
+App/Utils/emoji.js
+App/Utils/htmlEncoding.js
+App/Utils/base.js
