@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react'
-import UserSystem from './login/index'
+import UserSystem from './views/login/index'
 import configureStore from './store/configureStore'
 
 const store = configureStore()
