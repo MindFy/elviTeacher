@@ -7,7 +7,7 @@ import {
   TextInput,
   StatusBar,
 } from 'react-native'
-import { Common, Styles } from './common'
+import { common, styles } from './common'
 
 export default class ForgotPwd extends Component {
   componentDidMount() { }
@@ -16,41 +16,41 @@ export default class ForgotPwd extends Component {
   }
   render() {
     return (
-      <ScrollView style={Styles.scrollViewStyle} >
+      <ScrollView style={styles.scrollViewStyle} >
         <StatusBar
           barStyle={'light-content'}
         />
-        <View style={[Styles.inputViewStyle, { marginTop: Common.screenH / 6 }]} >
-          <Text style={Styles.textStyle} >账号</Text>
+        <View style={[styles.inputViewStyle, { marginTop: common.screenH / 6 }]} >
+          <Text style={styles.textStyle} >账号</Text>
           <TextInput
-            style={Styles.inputStyle}
+            style={styles.inputStyle}
             placeholder="请输入11位手机号"
-            placeholderTextColor={Common.inputPlaceholderColor}
+            placeholderTextColor={common.inputPlaceholderColor}
           />
         </View>
 
-        <View style={[Styles.inputViewStyle, { marginTop: Common.inputViewMarginLeft, justifyContent: 'space-between' }]} >
+        <View style={[styles.inputViewStyle, { marginTop: common.inputViewMarginLeft, justifyContent: 'space-between' }]} >
           <View style={{ flexDirection: 'row' }}>
-            <Text style={Styles.textStyle} >验证码</Text>
+            <Text style={styles.textStyle} >验证码</Text>
             <TextInput
-              style={Styles.inputStyle}
+              style={styles.inputStyle}
               placeholder="请输入短信验证码"
-              placeholderTextColor={Common.inputPlaceholderColor}
+              placeholderTextColor={common.inputPlaceholderColor}
             />
           </View>
-          <View style={Styles.codeBtnViewStyle}>
+          <View style={styles.codeBtnViewStyle}>
             <TouchableOpacity >
-              <Text style={Styles.codeBtnTextStyle}>获取验证码</Text>
+              <Text style={styles.codeBtnTextStyle}>获取验证码</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={[Styles.bottomBtnViewStyle, { marginTop: Common.screenH / 3 }]}>
+        <View style={[styles.bottomBtnViewStyle, { marginTop: common.screenH / 3 }]}>
           <TouchableOpacity
-            activeOpacity={Common.activeOpacity}
+            activeOpacity={common.activeOpacity}
             onPress={() => this.nextPress()}
           >
-            <Text style={Styles.bottomBtnTextStyle}>下一步</Text>
+            <Text style={styles.bottomBtnTextStyle}>下一步</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
