@@ -5,7 +5,8 @@
  */
 
 import React, { Component } from 'react'
-import UserSystem from './views/login/index'
+import { Provider } from 'react-redux'
+import Navigator from './Navigator'
 import configureStore from './store/configureStore'
 
 const store = configureStore()
@@ -13,7 +14,9 @@ export default class App extends Component {
   componentDidMount() {}
   render() {
     return (
-      <UserSystem />
+      <Provider store={store}>
+        <Navigator />
+      </Provider>
     )
   }
 }
