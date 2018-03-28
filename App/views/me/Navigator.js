@@ -40,8 +40,8 @@ export default class Navigator extends Component {
     return (
       <View style={styles.navigatorStyle} >
         <TouchableOpacity style={{ alignSelf: 'center' }} onPress={this.props.leftImagePress} >
-          <Image style={styles.navigatorLeftImageStyle}
-            source={require('../assets/下拉copy.png')} />
+          {this.props.leftImage} || <Image style={styles.navigatorLeftImageStyle}
+            source={require('../../assets/下拉copy.png')} />
         </TouchableOpacity>
 
         <View style={styles.navigatorHeaderViewStyle}>

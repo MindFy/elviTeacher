@@ -19,7 +19,7 @@ export default class Login extends Component {
     this.props.navigation.navigate('ForgotPwd')
   }
   loginPress() {
-    this.props.navigation.navigate('Mine')
+    this.props.navigation.navigate('Tabbar')
   }
   render() {
     return (

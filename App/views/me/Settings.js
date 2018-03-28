@@ -31,7 +31,7 @@ export default class Settings extends Component {
             <View style={[styles.cellViewStyle, { marginTop: common.firstCellMarginTop, justifyContent: 'space-between' }]} >
               <Text style={styles.cellTextStyle} >修改密码</Text>
               <Image style={styles.cellRightImageStyle}
-                source={require('../assets/下拉copy.png')} />
+                source={require('../../assets/下拉copy.png')} />
             </View>
           </TouchableOpacity>
 
@@ -39,7 +39,7 @@ export default class Settings extends Component {
             <View style={[styles.cellViewStyle, { justifyContent: 'space-between' }]} >
               <Text style={styles.cellTextStyle} >语言选择</Text>
               <Image style={styles.cellRightImageStyle}
-                source={require('../assets/下拉copy.png')} />
+                source={require('../../assets/下拉copy.png')} />
             </View>
           </TouchableOpacity>
 
@@ -47,7 +47,7 @@ export default class Settings extends Component {
             <View style={[styles.cellViewStyle, { justifyContent: 'space-between' }]} >
               <Text style={styles.cellTextStyle} >版本显示</Text>
               <Image style={styles.cellRightImageStyle}
-                source={require('../assets/下拉copy.png')} />
+                source={require('../../assets/下拉copy.png')} />
             </View>
           </TouchableOpacity>
 
