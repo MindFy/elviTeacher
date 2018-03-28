@@ -6,8 +6,9 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
+  AppRegistry,
 } from 'react-native'
-import { Common, Styles } from './common'
+import { common, styles } from './common'
 
 export default class Login extends Component {
   componentDidMount() { }
@@ -17,52 +18,55 @@ export default class Login extends Component {
   pwdBtnPress() {
     this.props.navigation.navigate('ForgotPwd')
   }
+  loginPress() {
+    this.props.navigation.navigate('Tabbar')
+  }
   render() {
     return (
-      <ScrollView style={Styles.scrollViewStyle} >
+      <ScrollView style={styles.scrollViewStyle} >
         <StatusBar
           barStyle={'light-content'}
         />
 
-        <View style={[Styles.inputViewStyle, { marginTop: Common.screenH / 5 * 2 }]} >
-          <Text style={Styles.textStyle} >账号</Text>
+        <View style={[styles.inputViewStyle, { marginTop: common.screenH / 5 * 2 }]} >
+          <Text style={styles.textStyle} >账号</Text>
           <TextInput
-            style={Styles.inputStyle}
+            style={styles.inputStyle}
             placeholder="请输入11位手机号"
-            placeholderTextColor={Common.inputPlaceholderColor}
+            placeholderTextColor={common.inputPlaceholderColor}
           />
         </View>
 
-        <View style={[Styles.inputViewStyle, { marginTop: Common.inputViewMarginLeft }]} >
-          <Text style={Styles.textStyle} >密码</Text>
+        <View style={[styles.inputViewStyle, { marginTop: common.inputViewMarginLeft }]} >
+          <Text style={styles.textStyle} >密码</Text>
           <TextInput
-            style={Styles.inputStyle}
+            style={styles.inputStyle}
             placeholder="请输入密码"
-            placeholderTextColor={Common.inputPlaceholderColor}
+            placeholderTextColor={common.inputPlaceholderColor}
           />
         </View>
 
-        <View style={Styles.smallBtnViewStyle} >
+        <View style={styles.smallBtnViewStyle} >
           <TouchableOpacity
-            activeOpacity={Common.activeOpacity}
+            activeOpacity={common.activeOpacity}
             onPress={() => this.registrationPress()}
           >
-            <Text style={Styles.smallBtnTextStyle}>新用户注册</Text>
+            <Text style={styles.smallBtnTextStyle}>新用户注册</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            activeOpacity={Common.activeOpacity}
+            activeOpacity={common.activeOpacity}
             onPress={() => this.pwdBtnPress()}
           >
-            <Text style={Styles.smallBtnTextStyle}>忘记密码？</Text>
+            <Text style={styles.smallBtnTextStyle}>忘记密码？</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={Styles.bottomBtnViewStyle}>
+        <View style={styles.bottomBtnViewStyle}>
           <TouchableOpacity
-            activeOpacity={Common.activeOpacity}
-            onPress={() => { }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.loginPress()}
           >
-            <Text style={Styles.bottomBtnTextStyle}>登录</Text>
+            <Text style={styles.bottomBtnTextStyle}>登录</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

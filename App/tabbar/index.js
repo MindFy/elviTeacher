@@ -4,7 +4,7 @@ import Home from '../views/home'
 import Balance from '../views/balance'
 import Market from '../views/market'
 import Transactions from '../views/transactions'
-import Me from '../views/me'
+import Me from '../views/me/Me'
 
 export default class Tabbar extends Component {
   constructor() {
@@ -65,7 +65,7 @@ export default class Tabbar extends Component {
           // renderBadge={() => <CustomBadgeView />}
           onPress={() => this.setState({ selectedTab: 'me' })}
         >
-          <Me />
+          <Me navigation={this.props.navigation} />
         </TabNavigator.Item>
       </TabNavigator>
     )

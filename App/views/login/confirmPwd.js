@@ -7,7 +7,7 @@ import {
   TextInput,
   StatusBar,
 } from 'react-native'
-import { Common, Styles } from './common'
+import { common, styles } from './common'
 
 export default class ConfirmPwd extends Component {
   componentDidMount() { }
@@ -15,35 +15,35 @@ export default class ConfirmPwd extends Component {
   }
   render() {
     return (
-      <ScrollView style={Styles.scrollViewStyle} >
+      <ScrollView style={styles.scrollViewStyle} >
         <StatusBar
           barStyle={'light-content'}
         />
 
-        <View style={[Styles.inputViewStyle, { marginTop: Common.screenH / 6 }]} >
-          <Text style={[Styles.textStyle, { width: Common.textWidthPlus }]} >密码</Text>
+        <View style={[styles.inputViewStyle, { marginTop: common.screenH / 6 }]} >
+          <Text style={[styles.textStyle, { width: common.textWidthPlus }]} >密码</Text>
           <TextInput
-            style={Styles.inputStyle}
+            style={styles.inputStyle}
             placeholder="请输入密码"
-            placeholderTextColor={Common.inputPlaceholderColor}
+            placeholderTextColor={common.inputPlaceholderColor}
           />
         </View>
 
-        <View style={[Styles.inputViewStyle, { marginTop: Common.inputH }]} >
-          <Text style={[Styles.textStyle, { width: Common.textWidthPlus }]} >再次输入新密码</Text>
+        <View style={[styles.inputViewStyle, { marginTop: common.inputH }]} >
+          <Text style={[styles.textStyle, { width: common.textWidthPlus }]} >再次输入新密码</Text>
           <TextInput
-            style={Styles.inputStyle}
+            style={styles.inputStyle}
             placeholder="请再次输入新密码"
-            placeholderTextColor={Common.inputPlaceholderColor}
+            placeholderTextColor={common.inputPlaceholderColor}
           />
         </View>
 
-        <View style={[Styles.bottomBtnViewStyle, { marginTop: Common.screenH / 3 }]}>
+        <View style={[styles.bottomBtnViewStyle, { marginTop: common.screenH / 3 }]}>
           <TouchableOpacity
-            activeOpacity={Common.activeOpacity}
+            activeOpacity={common.activeOpacity}
             onPress={() => this.confirmPress()}
           >
-            <Text style={Styles.bottomBtnTextStyle}>确定</Text>
+            <Text style={styles.bottomBtnTextStyle}>确定</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

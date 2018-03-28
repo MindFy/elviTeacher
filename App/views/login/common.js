@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet } from 'react-native'
 const screenH = Dimensions.get('window').height
 const screenW = Dimensions.get('window').width
 
-const Common = {
+const common = {
 
   bgColor: '#171B29', // 视图背景色
   btnColor: '#E4BE07', // 普通按钮文字颜色
@@ -31,83 +31,83 @@ const Common = {
   screenH,
 }
 
-const Styles = StyleSheet.create({
+const styles = StyleSheet.create({
   // 滑动视图的样式
   scrollViewStyle: {
     flex: 1,
-    backgroundColor: Common.bgColor,
+    backgroundColor: common.bgColor,
   },
   // 输入框所在视图的样式
   inputViewStyle: {
-    marginRight: Common.inputViewMarginLeft,
-    marginLeft: Common.inputViewMarginLeft,
-    height: Common.inputH,
+    marginRight: common.inputViewMarginLeft,
+    marginLeft: common.inputViewMarginLeft,
+    height: common.inputH,
     flexDirection: 'row',
-    backgroundColor: Common.inputViewBgColor,
+    backgroundColor: common.inputViewBgColor,
     borderWidth: 1,
-    borderColor: Common.inputViewBorderColor,
+    borderColor: common.inputViewBorderColor,
   },
   // 输入框的样式
   inputStyle: {
-    fontSize: Common.textFontSize,
+    fontSize: common.textFontSize,
   },
   // 输入框左边的文字样子
   textStyle: {
-    width: Common.textWidthSmall,
-    marginLeft: Common.textMarginLeft,
+    width: common.textWidthSmall,
+    marginLeft: common.textMarginLeft,
     alignSelf: 'center',
-    fontSize: Common.textFontSize,
-    color: Common.textColor,
+    fontSize: common.textFontSize,
+    color: common.textColor,
   },
   // 获取验证码所在视图的样式
   codeBtnViewStyle: {
     justifyContent: 'center',
-    marginRight: Common.textMarginLeft,
+    marginRight: common.textMarginLeft,
   },
   // 获取验证码d 文本样式
   codeBtnTextStyle: {
-    color: Common.btnColor,
+    color: common.btnColor,
     textAlign: 'center',
-    fontSize: Common.btnFontSize,
+    fontSize: common.btnFontSize,
   },
   // 文本框底下两个按钮所在视图的样式
   smallBtnViewStyle: {
-    marginTop: Common.textMarginLeft,
-    marginLeft: Common.inputViewMarginLeft,
-    marginRight: Common.inputViewMarginLeft,
+    marginTop: common.textMarginLeft,
+    marginLeft: common.inputViewMarginLeft,
+    marginRight: common.inputViewMarginLeft,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   // 按钮左侧文字样式
   smallBtnLeftTextStyle: {
     alignSelf: 'center',
-    color: Common.textColor,
-    fontSize: Common.btnFontSize,
+    color: common.textColor,
+    fontSize: common.btnFontSize,
   },
   // 文本框底下两个按钮的文本样式
   smallBtnTextStyle: {
-    color: Common.btnColor,
-    fontSize: Common.btnFontSize,
+    color: common.btnColor,
+    fontSize: common.btnFontSize,
   },
   // 视图底部按钮的样式
   bottomBtnViewStyle: {
-    marginTop: Common.inputViewMarginLeft,
-    marginLeft: Common.inputViewMarginLeft,
-    marginRight: Common.inputViewMarginLeft,
-    height: Common.inputH,
-    backgroundColor: Common.plusBtnBgColor,
+    marginTop: common.inputViewMarginLeft,
+    marginLeft: common.inputViewMarginLeft,
+    marginRight: common.inputViewMarginLeft,
+    height: common.inputH,
+    backgroundColor: common.plusBtnBgColor,
     justifyContent: 'center',
     borderRadius: 5,
   },
   // 视图底部按钮的文本样式
   bottomBtnTextStyle: {
-    color: Common.plusBtnTextColor,
+    color: common.plusBtnTextColor,
     textAlign: 'center',
-    fontSize: Common.plusBtnFontSize,
+    fontSize: common.plusBtnFontSize,
   },
 })
 
 module.exports = {
-  Common,
-  Styles,
+  common,
+  styles,
 }
