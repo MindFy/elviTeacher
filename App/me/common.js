@@ -109,6 +109,27 @@ const styles = StyleSheet.create({
     color: common.placeholderTextColor,
     alignSelf: 'center',
   },
+  //认证成功图片样式
+  successfulImageStyle: {
+    marginTop: 120,
+    alignSelf: 'center',
+    width: 80,
+    height: 80,
+  },
+  //认证成功文字样式
+  successfulTextStyle: {
+    marginTop: 20,
+    color: 'rgb(223,228,225)',
+    alignSelf: 'center',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  //再次认证按钮标题样式
+  confirmAgainTextStyle: {
+    color: 'rgb(255,213,2)',
+    fontSize: 16,
+    alignSelf: 'center',
+  },
 })
 
 module.exports = {
