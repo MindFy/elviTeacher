@@ -15,20 +15,32 @@ const styles = StyleSheet.create({
     height: common.navigatorH,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    alignContent: 'center',
     backgroundColor: common.navigatorBgColor,
   },
   // 导航栏左侧视图样式
+  navigatorLeftImageViewStyle: {
+    width: common.screenW / 3,
+    alignSelf: 'center',
+  },
   navigatorLeftImageStyle: {
     marginLeft: common.navigatorLeftViewMarginLeft,
     width: common.navigatorLeftImageW,
     height: common.navigatorLeftImageH,
   },
-  // 导航栏头部视图样式
-  navigatorHeaderViewStyle: {
+  // 导航栏右侧文字样式
+  navigatorRightTextStyle: {
+    width: common.screenW / 3 - common.navigatorLeftViewMarginLeft,
     alignSelf: 'center',
+    color: 'white',
+    marginRight: common.navigatorLeftViewMarginLeft,
+    textAlign: 'right',
+    fontSize: common.navigatorTitleFont,
   },
   // 导航栏标题样式
   navigatorHeaderTitleStyle: {
+    alignSelf: 'center',
     color: 'white',
     fontSize: common.navigatorTitleFont,
   },
@@ -39,18 +51,20 @@ export default class Navigator extends Component {
   render() {
     return (
       <View style={styles.navigatorStyle} >
-        <TouchableOpacity style={{ alignSelf: 'center' }} onPress={this.props.leftImagePress} >
-          {this.props.leftImage} || <Image
-            style={styles.navigatorLeftImageStyle}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.navigatorHeaderViewStyle}>
-          <Text style={styles.navigatorHeaderTitleStyle} >{this.props.headerTitle}</Text>
+        <View style={styles.navigatorLeftImageViewStyle} >
+          <TouchableOpacity onPress={this.props.leftImagePress} >
+            <Image
+              style={styles.navigatorLeftImageStyle}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
         </View>
 
-        <View style={styles.navigatorLeftImageStyle} />
+        <Text style={styles.navigatorHeaderTitleStyle} >{this.props.headerTitle}</Text>
+
+        <TouchableOpacity onPress={this.props.rightTitlePress} >
+          <Text style={styles.navigatorRightTextStyle} >{this.props.rightTitle}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
