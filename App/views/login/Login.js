@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   TextInput,
   StatusBar,
-  AppRegistry,
 } from 'react-native'
 import { common, styles } from './common'
 

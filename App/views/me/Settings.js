@@ -22,32 +22,40 @@ export default class Settings extends Component {
           barStyle={'light-content'}
         />
         <Navigator
-          headerTitle='设置'
-          leftImagePress={() => this.props.navigation.goBack()} />
+          headerTitle="设置"
+          leftImagePress={() => this.props.navigation.goBack()}
+        />
         <ScrollView >
           <TouchableOpacity
-           activeOpacity={common.activeOpacity}
-          onPress={() => this.changePwd()} >
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.changePwd()}
+          >
             <View style={[styles.cellViewStyle, { marginTop: common.firstCellMarginTop, justifyContent: 'space-between' }]} >
               <Text style={styles.cellTextStyle} >修改密码</Text>
-              <Image style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')} />
+              <Image
+                style={styles.cellRightImageStyle}
+                source={require('../../assets/下拉copy.png')}
+              />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity activeOpacity={common.activeOpacity} >
             <View style={[styles.cellViewStyle, { justifyContent: 'space-between' }]} >
               <Text style={styles.cellTextStyle} >语言选择</Text>
-              <Image style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')} />
+              <Image
+                style={styles.cellRightImageStyle}
+                source={require('../../assets/下拉copy.png')}
+              />
             </View>
           </TouchableOpacity>
 
           <TouchableOpacity activeOpacity={common.activeOpacity} >
             <View style={[styles.cellViewStyle, { justifyContent: 'space-between' }]} >
               <Text style={styles.cellTextStyle} >版本显示</Text>
-              <Image style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')} />
+              <Image
+                style={styles.cellRightImageStyle}
+                source={require('../../assets/下拉copy.png')}
+              />
             </View>
           </TouchableOpacity>
 

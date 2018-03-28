@@ -19,30 +19,38 @@ export default class SetPwd extends Component {
           barStyle={'light-content'}
         />
         <Navigator
-          headerTitle='修改密码'
-          leftImagePress={() => this.props.navigation.goBack()} />
+          headerTitle="修改密码"
+          leftImagePress={() => this.props.navigation.goBack()}
+        />
         <ScrollView>
 
           <View style={styles.inputViewStyle} >
-            <TextInput style={styles.inputStyle}
+            <TextInput
+              style={styles.inputStyle}
               placeholder={'旧密码'}
-              placeholderTextColor={common.placeholderTextColor} />
+              placeholderTextColor={common.placeholderTextColor}
+            />
           </View>
 
           <View style={styles.inputViewStyle} >
-            <TextInput style={styles.inputStyle}
+            <TextInput
+              style={styles.inputStyle}
               placeholder={'输入密码'}
-              placeholderTextColor={common.placeholderTextColor} />
+              placeholderTextColor={common.placeholderTextColor}
+            />
           </View>
 
           <View style={styles.inputViewStyle} >
-            <TextInput style={styles.inputStyle}
+            <TextInput
+              style={styles.inputStyle}
               placeholder={'再次输入密码'}
-              placeholderTextColor={common.placeholderTextColor} />
+              placeholderTextColor={common.placeholderTextColor}
+            />
           </View>
 
           <TouchableOpacity
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+          >
             <View style={styles.bottomBtnViewStyle} >
               <Text style={styles.bottomBtnTextStyle} >确认</Text>
             </View>
