@@ -24,9 +24,6 @@ export default class Me extends Component {
         <StatusBar barStyle={'light-content'} />
         <Navigator
           headerTitle="我的"
-          leftImage={(
-            <Image />
-          )}
         />
         <ScrollView>
           <TouchableOpacity activeOpacity={common.activeOpacity} >
@@ -59,7 +56,7 @@ export default class Me extends Component {
               </View>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>
@@ -75,7 +72,7 @@ export default class Me extends Component {
               </View>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>
@@ -91,7 +88,7 @@ export default class Me extends Component {
               </View>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>
@@ -110,7 +107,7 @@ export default class Me extends Component {
               </View>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>

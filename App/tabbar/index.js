@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import TabNavigator from 'react-native-tab-navigator'
 import Home from '../views/home'
-import Balance from '../views/balance'
+import Balance from '../views/balance/Balance'
 import Market from '../views/market'
 import Transactions from '../views/transactions'
 import Me from '../views/me/Me'
@@ -55,7 +55,7 @@ export default class Tabbar extends Component {
           // renderBadge={() => <CustomBadgeView />}
           onPress={() => this.setState({ selectedTab: 'balance' })}
         >
-          <Balance />
+          <Balance navigation={this.props.navigation} />
         </TabNavigator.Item>
         <TabNavigator.Item
           selected={this.state.selectedTab === 'me'}

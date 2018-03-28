@@ -16,9 +16,9 @@ const common = {
 
   activeOpacity: 0.7, //  所有按钮点击的透明度
 
-  btnFontSize: screenW > 375 ? 14 : (screenW === 375 ? 12 : 10), // 普通按钮字体
-  textFontSize: screenW > 375 ? 16 : (screenW === 375 ? 14 : 12), // 输入框左边文字大小
-  plusBtnFontSize: screenW > 375 ? 20 : (screenW === 375 ? 18 : 16), // 较宽按钮字体
+  btnFontSize: screenW >= 375 ? 12 : 10, // 普通按钮字体
+  textFontSize: screenW >= 375 ? 14 : 12, // 输入框左边文字大小
+  plusBtnFontSize: screenW >= 375 ? 18 : 16, // 较宽按钮字体
 
   inputH: screenW >= 375 ? 44 : 35, // 输入框高度
   textWidthSmall: screenW / 100 * 15, // 输入框左边文字宽度

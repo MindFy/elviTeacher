@@ -34,7 +34,7 @@ export default class Settings extends Component {
               <Text style={styles.cellTextStyle} >修改密码</Text>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>
@@ -44,7 +44,7 @@ export default class Settings extends Component {
               <Text style={styles.cellTextStyle} >语言选择</Text>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>
@@ -54,7 +54,7 @@ export default class Settings extends Component {
               <Text style={styles.cellTextStyle} >版本显示</Text>
               <Image
                 style={styles.cellRightImageStyle}
-                source={require('../../assets/下拉copy.png')}
+                source={require('../../assets/下拉--向右.png')}
               />
             </View>
           </TouchableOpacity>
