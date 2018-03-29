@@ -4,7 +4,7 @@ import { View, Text } from 'react-native'
 export default function Market() {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Market</Text>
+      <Text>Home</Text>
     </View>
   )
 }
