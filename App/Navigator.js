@@ -1,5 +1,5 @@
 import { StackNavigator } from 'react-navigation'
-import Tabbar from './tabbar'
+import TabBar from './tabbar'
 
 import Login from './views/login/Login'
 import Registration from './views/login/Registration'
@@ -18,8 +18,8 @@ import History from './views/balance/History'
 
 export default StackNavigator(
   {
-    Tabbar: {
-      screen: Tabbar,
+    TabBar: {
+      screen: TabBar,
       navigationOptions: {
         header: null,
       },
@@ -97,6 +97,6 @@ export default StackNavigator(
       },
     },
   }, {
-    initialRouteName: 'Login',
+    initialRouteName: 'TabBar',
   },
 )
