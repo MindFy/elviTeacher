@@ -15,6 +15,7 @@ import Balance from './views/balance/Balance'
 import Recharge from './views/balance/Recharge'
 import Cash from './views/balance/Cash'
 import History from './views/balance/History'
+import AddAddress from './views/balance/AddAddress'
 
 export default StackNavigator(
   {
@@ -92,6 +93,12 @@ export default StackNavigator(
     },
     History: {
       screen: History,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    AddAddress: {
+      screen: AddAddress,
       navigationOptions: {
         header: null,
       },

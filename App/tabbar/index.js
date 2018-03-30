@@ -3,7 +3,7 @@ import TabNavigator from 'react-native-tab-navigator'
 import Home from '../views/home'
 import Balance from '../views/balance/Balance'
 import Market from '../views/market'
-import Transactions from '../views/transactions'
+import Transactions from '../views/transactions/Transactions'
 import Me from '../views/me/Me'
 
 export default class TabBar extends Component {
