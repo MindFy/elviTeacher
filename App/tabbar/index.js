@@ -6,7 +6,7 @@ import Market from '../views/market'
 import Transactions from '../views/transactions/Transactions'
 import Me from '../views/me/Me'
 
-export default class Tabbar extends Component {
+export default class TabBar extends Component {
   constructor() {
     super()
     this.state = {

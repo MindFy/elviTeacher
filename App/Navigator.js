@@ -1,5 +1,5 @@
 import { StackNavigator } from 'react-navigation'
-import Tabbar from './tabbar'
+import TabBar from './tabbar'
 
 import Login from './views/login/Login'
 import Registration from './views/login/Registration'
@@ -19,8 +19,8 @@ import AddAddress from './views/balance/AddAddress'
 
 export default StackNavigator(
   {
-    Tabbar: {
-      screen: Tabbar,
+    TabBar: {
+      screen: TabBar,
       navigationOptions: {
         header: null,
       },
@@ -104,6 +104,6 @@ export default StackNavigator(
       },
     },
   }, {
-    initialRouteName: 'Login',
+    initialRouteName: 'TabBar',
   },
 )
