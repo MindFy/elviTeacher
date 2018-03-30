@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   StatusBar,
-  Slider,
   TextInput,
   ScrollView,
   ListView,
@@ -13,11 +12,13 @@ import {
 import { common } from './common'
 import Navigator from '../me/Navigator'
 import Depth from './Depth'
+import TransactionsSlider from './TransactionsSlider'
 
 export default class Transactions extends Component {
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    this.dealDs = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.state = {
       dataSource: this.ds.cloneWithRows([
         ['0.987652', '11.976'],
@@ -30,6 +31,18 @@ export default class Transactions extends Component {
         ['0.987652', '11.976'],
         ['0.987652', '11.976'],
         ['0.987652', '11.976'],
+      ]),
+      dealListDataSource: this.dealDs.cloneWithRows([
+        ['12:12:12', '0.987652', '11.976'],
+        ['12:12:13', '0.987652', '11.976'],
+        ['12:12:14', '0.987652', '11.976'],
+        ['12:12:15', '0.987652', '11.976'],
+        ['12:12:16', '0.987652', '11.976'],
+        ['12:12:17', '0.987652', '11.976'],
+        ['12:12:18', '0.987652', '11.976'],
+        ['12:12:19', '0.987652', '11.976'],
+        ['12:12:20', '0.987652', '11.976'],
+        ['12:12:21', '0.987652', '11.976'],
       ]),
     }
   }
@@ -89,6 +102,89 @@ export default class Transactions extends Component {
           fontSize: common.equalPriceFont,
         }}
         >数量(ETH)</Text>
+      </View>
+    )
+  }
+  renderDealListRow(rd, sid, rid) {
+    let textColor = null
+    if (rid % 2 === 0) {
+      textColor = common.askColor
+    } else {
+      textColor = common.bidColor
+    }
+    return (
+      <View style={{
+        marginTop: common.listViewMarginLeft / 2,
+        marginLeft: common.listViewMarginLeft,
+        marginRight: common.listViewMarginLeft,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}
+      >
+        <Text style={{
+          color: 'white',
+          fontSize: common.placeholderTextFont,
+        }}
+        >{rd[0]}</Text>
+        <Text style={{
+          color: textColor,
+          fontSize: common.placeholderTextFont,
+        }}
+        >{rd[1]}</Text>
+        <Text style={{
+          color: 'white',
+          fontSize: common.placeholderTextFont,
+        }}
+        >{rd[2]}</Text>
+      </View>
+    )
+  }
+  renderDealListHeader() {
+    return (
+      <View>
+        <View style={{
+          height: common.topBarH,
+          backgroundColor: common.navBgColor,
+          flexDirection: 'row',
+        }}
+        >
+          <Text style={{
+            marginLeft: common.listViewMarginLeft,
+            color: common.btnTextColor,
+            fontSize: common.btnTextFont,
+            alignSelf: 'center',
+          }}
+          >最新成交</Text>
+        </View>
+
+        <View
+          style={{
+            marginTop: common.listViewMarginLeft,
+            marginLeft: common.listViewMarginLeft,
+            marginRight: common.listViewMarginLeft,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text style={{
+            color: common.placeholderColor,
+            fontSize: common.placeholderTextFont,
+            alignSelf: 'center',
+          }}
+          >时间</Text>
+          <Text style={{
+            color: common.placeholderColor,
+            fontSize: common.placeholderTextFont,
+            alignSelf: 'center',
+          }}
+          >价格</Text>
+          <Text style={{
+            color: common.placeholderColor,
+            fontSize: common.placeholderTextFont,
+            alignSelf: 'center',
+          }}
+          >数量</Text>
+        </View>
       </View>
     )
   }
@@ -221,25 +317,12 @@ export default class Transactions extends Component {
                 placeholderTextColor={common.placeholderColor}
               />
 
-              <Slider
-                style={{
-                  marginTop: common.listViewMarginLeft / 2,
-                  marginLeft: common.listViewMarginLeft,
-                  marginRight: common.listViewMarginLeft / 2,
-                  height: 15,
-                }}
-                maximumTrackTintColor={common.borderColor}
-                minimumTrackTintColor={'white'}
-                thumbImage={require('../../assets/椭圆形.png')}
-              />
-              <Text style={{
+              <TransactionsSlider styleee={{
+                marginTop: common.listViewMarginLeft / 2,
                 marginLeft: common.listViewMarginLeft,
                 marginRight: common.listViewMarginLeft / 2,
-                color: 'white',
-                fontSize: common.equalPriceFont,
-                textAlign: 'right',
               }}
-              >60%</Text>
+              />
 
               <TextInput
                 style={{
@@ -309,10 +392,19 @@ export default class Transactions extends Component {
             />
           </View>
 
-
           <Depth
             width={common.screenW}
             height={common.screenW * common.screenW / common.screenH}
+          />
+
+          <ListView
+            style={{
+              marginTop: common.listViewMarginLeft,
+            }}
+            dataSource={this.state.dealListDataSource}
+            renderRow={(rd, sid, rid) => this.renderDealListRow(rd, sid, rid)}
+            renderHeader={() => this.renderDealListHeader()}
+            enableEmptySections
           />
         </ScrollView>
       </View>

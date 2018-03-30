@@ -413,8 +413,8 @@ export default class Depth extends Component {
         },
         smooth: true,
         data: this.state.bids,
-        animation: true,
-        animationDuration: 500,
+        animation: false,
+        // animationDuration: 500,
       }, {
         name: '卖出',
         type: 'line',
@@ -445,8 +445,8 @@ export default class Depth extends Component {
           },
         },
         data: this.state.asks,
-        animation: true,
-        animationDuration: 300,
+        animation: false,
+        // animationDuration: 300,
       }],
     }
     return (
