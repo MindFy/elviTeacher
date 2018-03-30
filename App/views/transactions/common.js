@@ -11,12 +11,15 @@ const common = {
   btnViewBgColor: 'rgb(213,69,80)',
   btnTextColor: 'rgb(223,228,255)',
   btnTextSelectedColor: 'rgb(255,213,2)',
+  askColor: 'rgba(0,205,0,1)',
+  bidColor: 'rgba(205,0,0,1)',
 
   inputH: 35,
   topBarH: 32,
   topBarMarginRight: 22,
   listViewMarginLeft: 10,
   pulldownImageW: 10,
+  listViewCellMarginTop: 8,
   pulldownImageMarginLeft: 5,
   pulldownImageH: 5,
   w4: screenW / 4,
@@ -25,6 +28,7 @@ const common = {
   screenW,
 
   equalPriceFont: 10,
+  placeholderTextFont: 12,
   btnTextFont: 14,
   titleFont: 16,
 
