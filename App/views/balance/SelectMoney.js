@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native'
-import { common, styles } from './common'
+import { common, styles } from '../common'
 
 export default class SelectMoney extends Component {
   constructor() {
@@ -28,13 +28,13 @@ export default class SelectMoney extends Component {
   changeCellRightImageSize(selected) {
     if (selected) {
       return {
-        width: common.rechargeCellRightImageH,
-        height: common.rechargeCellRightImageW,
+        width: common.h20,
+        height: common.w10,
       }
     }
     return {
-      width: common.rechargeCellRightImageW,
-      height: common.rechargeCellRightImageH,
+      width: common.w10,
+      height: common.h20,
     }
   }
   rowPress(rd, selected) {
@@ -50,8 +50,21 @@ export default class SelectMoney extends Component {
         activeOpacity={common.activeOpacity}
         onPress={() => this.rowPress(rd, selected)}
       >
-        <View style={styles.rechargeCellStyle} >
-          <Text style={styles.cellTitleStyle} >{rd}</Text>
+        <View
+          style={{
+            marginTop: common.margin5,
+            height: common.h40,
+            backgroundColor: common.navBgColor,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }} >
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              fontSize: common.font14,
+              color: common.textColor,
+              alignSelf: 'center',
+            }} >{rd}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -76,14 +89,33 @@ export default class SelectMoney extends Component {
           activeOpacity={common.activeOpacity}
           onPress={() => this.cellRightImagePress(!this.state.selected)}
         >
-          <View style={[styles.rechargeCellStyle,
-            { marginTop: common.balanceImageTitleMarginTop }]}
+          <View
+            style={{
+              marginTop: common.margin10,
+              height: common.h40,
+              backgroundColor: common.navBgColor,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
           >
-            <Text style={styles.cellTitleStyle} >{this.state.title}</Text>
-            <View style={{ alignSelf: 'center' }} >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                fontSize: common.font14,
+                color: common.textColor,
+                alignSelf: 'center',
+              }} >{this.state.title}</Text>
+            <View
+              style={{
+                alignSelf: 'center',
+              }} >
               <Image
-                style={[styles.rechargeCellRightImageStyle,
-                  this.changeCellRightImageSize(this.state.selected)]}
+                style={[{
+                  marginRight: common.margin10,
+                  height: common.h20,
+                  width: common.w10,
+                },
+                this.changeCellRightImageSize(this.state.selected)]}
                 source={(this.state.selected ?
                   require('../../assets/下拉--向下.png') :
                   require('../../assets/下拉--向右.png'))}

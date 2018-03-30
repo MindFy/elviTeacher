@@ -104,6 +104,6 @@ export default StackNavigator(
       },
     },
   }, {
-    initialRouteName: 'TabBar',
+    initialRouteName: 'Login',
   },
 )

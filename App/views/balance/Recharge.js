@@ -6,8 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from './common'
-import Navigator from '../me/Navigator'
+import { common, styles } from '../common'
+import Navigator from '../Navigator'
 import SelectMoney from './SelectMoney'
 
 export default class Recharge extends Component {
@@ -32,24 +32,54 @@ export default class Recharge extends Component {
   renderBottomCell(selectedMoney) {
     if (selectedMoney) {
       return (
-        <View style={[styles.rechargeCellStyle,
-          {
+        <View
+          style={{
+            marginTop: common.margin10,
+            height: common.h97,
+            backgroundColor: common.navBgColor,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
             flexDirection: 'column',
-            marginTop: common.balanceImageTitleMarginTop,
-            height: common.rechargeBottomCellH,
-          }]}
+          }}
         >
-          <Text style={styles.rechargeBottomCellTitleStyle} >充值地址</Text>
-          <Text style={[styles.cellTitleStyle, {
-            alignSelf: 'auto',
-          }]}
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              marginTop: common.margin10,
+              fontSize: common.font12,
+              color: common.placeholderColor,
+            }}
+          >充值地址</Text>
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              fontSize: common.font14,
+              color: common.textColor,
+            }}
           >73YHF9SF99S9F9B99T9J9YJ99Y99N9D9E9</Text>
-          <View style={styles.rechargeBottomCellBtnViewStyle} >
-            <TouchableOpacity activeOpacity={common.activeOpacity} >
-              <Text style={styles.rechargeBottomCellBtnStyle} >复制地址</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              marginBottom: common.margin10,
+            }}
+          >
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity} >
+              <Text
+                style={{
+                  marginLeft: common.margin10,
+                  color: common.btnTextColor,
+                  fontSize: common.font14,
+                }} >复制地址</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={common.activeOpacity} >
-              <Text style={styles.rechargeBottomCellBtnStyle} >显示二维码</Text>
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity} >
+              <Text
+                style={{
+                  marginLeft: common.margin10,
+                  color: common.btnTextColor,
+                  fontSize: common.font14,
+                }} >显示二维码</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -59,8 +89,13 @@ export default class Recharge extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: common.bgColor }}>
-        <StatusBar barStyle={'light-content'} />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: common.bgColor
+        }}>
+        <StatusBar
+          barStyle={'light-content'} />
         <Navigator
           headerTitle="充值"
           leftImagePress={() => this.leftImagePress()}

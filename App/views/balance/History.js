@@ -6,8 +6,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from './common'
-import Navigator from '../me/Navigator'
+import { common } from '../common'
+import Navigator from '../Navigator'
 
 export default class History extends Component {
   componentDidMount() { }
@@ -27,6 +27,7 @@ export default class History extends Component {
         />
 
         <View style={{
+          marginTop: common.margin10,
           flexDirection: 'row',
         }}
         >

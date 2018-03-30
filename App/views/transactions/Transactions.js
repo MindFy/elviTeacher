@@ -9,8 +9,8 @@ import {
   ListView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from './common'
-import Navigator from '../me/Navigator'
+import { common } from '../common'
+import Navigator from '../Navigator'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 
@@ -56,27 +56,27 @@ export default class Transactions extends Component {
       textColor = common.bidColor
     }
     if (rid === 0) {
-      marginTop = common.listViewMarginLeft
+      marginTop = common.margin10
     } else {
-      marginTop = common.listViewCellMarginTop
+      marginTop = common.margin8
     }
     return (
       <View style={{
         marginTop,
-        marginLeft: common.listViewMarginLeft / 2,
-        marginRight: common.listViewMarginLeft,
+        marginLeft: common.margin10 / 2,
+        marginRight: common.margin10,
         flexDirection: 'row',
         justifyContent: 'space-between',
       }}
       >
         <Text style={{
           color: textColor,
-          fontSize: common.placeholderTextFont,
+          fontSize: common.font12,
         }}
         >{rd[0]}</Text>
         <Text style={{
           color: 'white',
-          fontSize: common.placeholderTextFont,
+          fontSize: common.font12,
         }}
         >{rd[1]}</Text>
       </View>
@@ -85,21 +85,21 @@ export default class Transactions extends Component {
   renderHeader() {
     return (
       <View style={{
-        marginTop: 2 * common.listViewMarginLeft,
-        marginLeft: common.listViewMarginLeft / 2,
-        marginRight: common.listViewMarginLeft,
+        marginTop: 2 * common.margin10,
+        marginLeft: common.margin10 / 2,
+        marginRight: common.margin10,
         flexDirection: 'row',
         justifyContent: 'space-between',
       }}
       >
         <Text style={{
           color: common.placeholderColor,
-          fontSize: common.equalPriceFont,
+          fontSize: common.font10,
         }}
         >价格(BTC)</Text>
         <Text style={{
           color: common.placeholderColor,
-          fontSize: common.equalPriceFont,
+          fontSize: common.font10,
         }}
         >数量(ETH)</Text>
       </View>
@@ -114,26 +114,26 @@ export default class Transactions extends Component {
     }
     return (
       <View style={{
-        marginTop: common.listViewMarginLeft / 2,
-        marginLeft: common.listViewMarginLeft,
-        marginRight: common.listViewMarginLeft,
+        marginTop: common.margin10 / 2,
+        marginLeft: common.margin10,
+        marginRight: common.margin10,
         flexDirection: 'row',
         justifyContent: 'space-between',
       }}
       >
         <Text style={{
           color: 'white',
-          fontSize: common.placeholderTextFont,
+          fontSize: common.font12,
         }}
         >{rd[0]}</Text>
         <Text style={{
           color: textColor,
-          fontSize: common.placeholderTextFont,
+          fontSize: common.font12,
         }}
         >{rd[1]}</Text>
         <Text style={{
           color: 'white',
-          fontSize: common.placeholderTextFont,
+          fontSize: common.font12,
         }}
         >{rd[2]}</Text>
       </View>
@@ -143,15 +143,15 @@ export default class Transactions extends Component {
     return (
       <View>
         <View style={{
-          height: common.topBarH,
+          height: common.h32,
           backgroundColor: common.navBgColor,
           flexDirection: 'row',
         }}
         >
           <Text style={{
-            marginLeft: common.listViewMarginLeft,
-            color: common.btnTextColor,
-            fontSize: common.btnTextFont,
+            marginLeft: common.margin10,
+            color: common.textColor,
+            fontSize: common.font14,
             alignSelf: 'center',
           }}
           >最新成交</Text>
@@ -159,28 +159,28 @@ export default class Transactions extends Component {
 
         <View
           style={{
-            marginTop: common.listViewMarginLeft,
-            marginLeft: common.listViewMarginLeft,
-            marginRight: common.listViewMarginLeft,
+            marginTop: common.margin10,
+            marginLeft: common.margin10,
+            marginRight: common.margin10,
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}
         >
           <Text style={{
             color: common.placeholderColor,
-            fontSize: common.placeholderTextFont,
+            fontSize: common.font12,
             alignSelf: 'center',
           }}
           >时间</Text>
           <Text style={{
             color: common.placeholderColor,
-            fontSize: common.placeholderTextFont,
+            fontSize: common.font12,
             alignSelf: 'center',
           }}
           >价格</Text>
           <Text style={{
             color: common.placeholderColor,
-            fontSize: common.placeholderTextFont,
+            fontSize: common.font12,
             alignSelf: 'center',
           }}
           >数量</Text>
@@ -195,52 +195,64 @@ export default class Transactions extends Component {
         backgroundColor: common.bgColor,
       }}
       >
-        <StatusBar barStyle={'light-content'} />
+        <StatusBar
+         barStyle={'light-content'}
+          />
         <Navigator
           headerTitle="交易"
         />
 
-        <View style={{
-          flexDirection: 'row',
-          backgroundColor: common.navBgColor,
-          height: common.topBarH,
-        }}
-        >
-          <View style={{
-            width: common.w4,
+        <View
+          style={{
+            height: common.h32,
+            backgroundColor: common.navBgColor,
+            flexDirection: 'row',
           }}
+        >
+          <View
+            style={{
+              width: common.sw / 4,
+            }}
           >
-            <TouchableOpacity activeOpacity={common.activeOpacity} >
-              <Text style={{
-                fontSize: common.btnTextFont,
-                color: common.btnTextSelectedColor,
+            <TouchableOpacity 
+            activeOpacity={common.activeOpacity} >
+              <Text 
+              style={{
+                fontSize: common.font14,
+                color: common.btnTextColor,
                 textAlign: 'center',
               }}
               >买入</Text>
             </TouchableOpacity>
           </View>
-          <View style={{
-            width: common.w4,
+          <View 
+          style={{
+            width: common.sw / 4,
           }}
           >
-            <TouchableOpacity activeOpacity={common.activeOpacity} >
-              <Text style={{
-                fontSize: common.btnTextFont,
-                color: common.btnTextColor,
+            <TouchableOpacity 
+            activeOpacity={common.activeOpacity} >
+              <Text 
+              style={{
+                fontSize: common.font14,
+                color: common.textColor,
                 textAlign: 'center',
               }}
               >卖出</Text>
             </TouchableOpacity>
           </View>
-          <View style={{
-            width: common.w4 * 2,
+          <View 
+          style={{
+            width: common.sw / 2,
           }}
           >
-            <TouchableOpacity activeOpacity={common.activeOpacity} >
-              <Text style={{
-                marginRight: common.topBarMarginRight,
-                fontSize: common.btnTextFont,
-                color: common.btnTextColor,
+            <TouchableOpacity 
+            activeOpacity={common.activeOpacity} >
+              <Text 
+              style={{
+                marginRight: common.margin22,
+                fontSize: common.font14,
+                color: common.textColor,
                 textAlign: 'right',
               }}
               >当前委托</Text>
@@ -249,30 +261,33 @@ export default class Transactions extends Component {
         </View>
 
         <ScrollView>
-          <View style={{
+          <View 
+          style={{
             flexDirection: 'row',
           }}
           >
-            <View style={{
-              width: common.w2,
+            <View 
+            style={{
+              width: common.sw / 2,
             }}
             >
-              <View style={{
-                marginLeft: common.listViewMarginLeft,
-                marginTop: common.listViewMarginLeft,
+              <View
+               style={{
+                marginLeft: common.margin10,
+                marginTop: common.margin10,
                 flexDirection: 'row',
               }}
               >
                 <Text style={{
-                  color: common.btnTextColor,
-                  fontSize: common.titleFont,
+                  color: common.textColor,
+                  fontSize: common.font16,
                 }}
                 >ETH/BTC</Text>
                 <Image
                   style={{
-                    marginLeft: common.pulldownImageMarginLeft,
-                    width: common.pulldownImageW,
-                    height: common.pulldownImageH,
+                    marginLeft: common.margin5,
+                    width: common.w10,
+                    height: common.h5,
                     alignSelf: 'center',
                   }}
                   source={require('../../assets/下拉.png')}
@@ -281,98 +296,104 @@ export default class Transactions extends Component {
 
               <TextInput
                 style={{
-                  marginTop: common.listViewMarginLeft,
-                  marginLeft: common.listViewMarginLeft,
-                  marginRight: common.listViewMarginLeft / 2,
+                  marginTop: common.margin10,
+                  marginLeft: common.margin10,
+                  marginRight: common.margin10 / 2,
                   borderColor: common.borderColor,
                   borderWidth: 1,
                   borderRadius: 1,
                   backgroundColor: common.navBgColor,
-                  height: common.inputH,
+                  height: common.h35,
+                  fontSize: common.font12,
                   textAlign: 'center',
+                  color: 'white',
                 }}
                 placeholder="0.987652"
                 placeholderTextColor={common.placeholderColor}
               />
 
               <Text style={{
-                marginLeft: common.listViewMarginLeft,
-                color: common.btnTextColor,
-                fontSize: common.equalPriceFont,
+                marginLeft: common.margin10,
+                color: common.textColor,
+                fontSize: common.font10,
               }}
               >= ¥4.43</Text>
 
               <TextInput
                 style={{
-                  marginLeft: common.listViewMarginLeft,
-                  marginRight: common.listViewMarginLeft / 2,
+                  marginLeft: common.margin10,
+                  marginRight: common.margin10 / 2,
                   borderColor: common.borderColor,
                   borderWidth: 1,
                   borderRadius: 1,
                   backgroundColor: common.navBgColor,
-                  height: common.inputH,
+                  height: common.h35,
+                  fontSize: common.font12,
                   textAlign: 'center',
+                  color: 'white',
                 }}
                 placeholder="数量（ETH）"
                 placeholderTextColor={common.placeholderColor}
               />
 
               <TransactionsSlider styleee={{
-                marginTop: common.listViewMarginLeft / 2,
-                marginLeft: common.listViewMarginLeft,
-                marginRight: common.listViewMarginLeft / 2,
+                marginTop: common.margin10 / 2,
+                marginLeft: common.margin10,
+                marginRight: common.margin10 / 2,
               }}
               />
 
               <TextInput
                 style={{
-                  marginTop: common.listViewMarginLeft,
-                  marginLeft: common.listViewMarginLeft,
-                  marginRight: common.listViewMarginLeft / 2,
+                  marginTop: common.margin10,
+                  marginLeft: common.margin10,
+                  marginRight: common.margin10 / 2,
                   borderColor: common.borderColor,
                   borderWidth: 1,
                   borderRadius: 1,
                   backgroundColor: common.navBgColor,
-                  height: common.inputH,
+                  height: common.h35,
+                  fontSize: common.font12,
                   textAlign: 'center',
+                  color: 'white',
                 }}
                 placeholder="成交金额（BTC）"
                 placeholderTextColor={common.placeholderColor}
               />
 
               <View style={{
-                marginLeft: common.listViewMarginLeft,
-                marginRight: common.listViewMarginLeft / 2,
+                marginLeft: common.margin10,
+                marginRight: common.margin10 / 2,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}
               >
                 <Text style={{
                   alignSelf: 'center',
-                  color: common.btnTextColor,
-                  fontSize: common.equalPriceFont,
+                  color: common.textColor,
+                  fontSize: common.font10,
                 }}
                 >可用</Text>
                 <Text style={{
                   alignSelf: 'center',
-                  color: common.btnTextColor,
-                  fontSize: common.equalPriceFont,
+                  color: common.textColor,
+                  fontSize: common.font10,
                 }}
                 >12 BTC</Text>
               </View>
 
               <TouchableOpacity activeOpacity={common.activeOpacity} >
                 <View style={{
-                  marginTop: common.listViewMarginLeft,
-                  marginLeft: common.listViewMarginLeft,
-                  marginRight: common.listViewMarginLeft / 2,
-                  height: common.inputH,
+                  marginTop: common.margin10,
+                  marginLeft: common.margin10,
+                  marginRight: common.margin10 / 2,
+                  height: common.h35,
                   backgroundColor: common.btnViewBgColor,
                   justifyContent: 'center',
                 }}
                 >
                   <Text style={{
-                    fontSize: common.btnTextFont,
+                    fontSize: common.font14,
                     color: 'white',
                     alignSelf: 'center',
                   }}
@@ -383,7 +404,7 @@ export default class Transactions extends Component {
 
             <ListView
               style={{
-                width: common.w2,
+                width: common.sw / 2,
               }}
               dataSource={this.state.dataSource}
               renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
@@ -393,13 +414,13 @@ export default class Transactions extends Component {
           </View>
 
           <Depth
-            width={common.screenW}
-            height={common.screenW * common.screenW / common.screenH}
+            width={common.sw}
+            height={common.sw * common.sw / common.sh}
           />
 
           <ListView
             style={{
-              marginTop: common.listViewMarginLeft,
+              marginTop: common.margin10,
             }}
             dataSource={this.state.dealListDataSource}
             renderRow={(rd, sid, rid) => this.renderDealListRow(rd, sid, rid)}

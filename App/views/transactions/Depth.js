@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Echarts from 'native-echarts'
-import { common } from './common'
+import { common } from '../common'
 
 export default class Depth extends Component {
   constructor(props) {
@@ -186,7 +186,7 @@ export default class Depth extends Component {
       title: {
         show: false,
       },
-      color: ['rgba(0,205,0,1)', 'rgba(205,0,0,1)'],
+      color: [common.bidColor, common.askColor],
       legend: {
         show: true,
         type: 'plain',
@@ -212,9 +212,9 @@ export default class Depth extends Component {
       },
       grid: {
         show: true,
-        left: common.listViewMarginLeft,
-        top: common.listViewMarginLeft,
-        right: common.listViewMarginLeft,
+        left: common.margin10,
+        top: common.margin10,
+        right: common.margin10,
         bottom: 1,
         backgroundColor: 'transparent',
         borderColor: 'transparent',
@@ -388,7 +388,7 @@ export default class Depth extends Component {
         clipOverflow: true,
         lineStyle: {
           normal: {
-            color: 'rgba(0,205,0,1)',
+            color: common.bidColor,
             width: 1,
           },
         },
@@ -414,7 +414,6 @@ export default class Depth extends Component {
         smooth: true,
         data: this.state.bids,
         animation: false,
-        // animationDuration: 500,
       }, {
         name: '卖出',
         type: 'line',
@@ -422,7 +421,7 @@ export default class Depth extends Component {
 
         lineStyle: {
           normal: {
-            color: 'rgba(205,0,0,1)',
+            color: common.askColor,
             width: 1,
           },
         },
@@ -446,7 +445,6 @@ export default class Depth extends Component {
         },
         data: this.state.asks,
         animation: false,
-        // animationDuration: 300,
       }],
     }
     return (

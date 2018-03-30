@@ -7,8 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from './common'
-import Navigator from '../me/Navigator'
+import { common, styles } from '../common'
+import Navigator from '../Navigator'
 import SelectMoney from './SelectMoney'
 
 export default class Cash extends Component {
@@ -34,46 +34,102 @@ export default class Cash extends Component {
     if (selectedMoney) {
       return (
         <View>
-          <Text style={styles.cashTopTextStyle} >可用</Text>
-          <Text style={styles.cashAmountStyle} >{`133${selectedMoney}`}</Text>
+          <Text style={{
+            marginTop: common.margin22,
+            fontSize: common.font16,
+            color: common.placeholderColor,
+            alignSelf: 'center',
+          }}
+          >可用</Text>
+          <Text style={{
+            marginTop: common.margin10,
+            fontSize: common.font30,
+            alignSelf: 'center',
+            color: 'white',
+          }}
+          >{`133${selectedMoney}`}</Text>
           <TextInput
-            style={[styles.cashInputStyle, {
+            style={{
+              marginTop: common.margin35,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              height: common.h35,
+              borderWidth: 1,
+              borderRadius: 1,
+              borderColor: common.borderColor,
+              backgroundColor: common.navBgColor,
+              justifyContent: 'center',
               textAlign: 'center',
-            }]}
+              fontSize: common.font12,
+              color: 'white',
+            }}
             placeholder="提现金额"
-            placeholderTextColor={common.balanceNumTitleColor}
+            placeholderTextColor={common.placeholderColor}
           />
 
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }} >
-            <Text style={[styles.cellTitleStyle, {
-              marginTop: common.cellMarginLeft,
-            }]}
+          <View
+            style={{
+              marginTop: common.margin5,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }} >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+                alignSelf: 'center',
+              }}
             >{`手续费：88${selectedMoney}`}</Text>
-            <Text style={[styles.cellTitleStyle, {
-              marginTop: common.cellMarginLeft,
-              marginRight: common.cellMarginLeft,
-            }]}
+            <Text
+              style={{
+                marginRight: common.margin10,
+                marginLeft: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+                alignSelf: 'center',
+              }}
             >{`实际到账：88${selectedMoney}`}</Text>
           </View>
 
           <TextInput
-            style={[styles.cashInputStyle, {
+            style={{
+              marginTop: common.margin35,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              height: common.h35,
+              borderWidth: 1,
+              borderRadius: 1,
+              borderColor: common.borderColor,
+              backgroundColor: common.navBgColor,
+              justifyContent: 'center',
               textAlign: 'center',
-            }]}
+            }}
             placeholder="地址"
-            placeholderTextColor={common.balanceNumTitleColor}
+            placeholderTextColor={common.placeholderColor}
           />
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => this.addAddressPress(selectedMoney)}
           >
-            <View style={[styles.cashInputStyle, {
-              marginTop: 0,
-            }]}
+            <View
+              style={{
+                marginLeft: common.margin10,
+                marginRight: common.margin10,
+                height: common.h35,
+                borderWidth: 1,
+                borderRadius: 1,
+                borderColor: common.borderColor,
+                backgroundColor: common.navBgColor,
+                justifyContent: 'center',
+              }}
             >
-              <Text style={[styles.rechargeBottomCellBtnStyle, {
-                alignSelf: 'center',
-              }]}
+              <Text
+                style={{
+                  color: common.btnTextColor,
+                  fontSize: common.font12,
+                  alignSelf: 'center',
+                }}
               >添加新地址</Text>
             </View>
           </TouchableOpacity>
@@ -84,7 +140,11 @@ export default class Cash extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: common.bgColor }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: common.bgColor
+        }}>
         <StatusBar barStyle={'light-content'} />
         <Navigator
           headerTitle="提现"

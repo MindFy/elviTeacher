@@ -4,7 +4,7 @@ import {
   Text,
   Slider,
 } from 'react-native'
-import { common } from './common'
+import { common } from '../common'
 
 export default class TransactionsSlider extends Component {
   constructor() {
@@ -33,7 +33,7 @@ export default class TransactionsSlider extends Component {
         />
         <Text style={{
           color: 'white',
-          fontSize: common.equalPriceFont,
+          fontSize: common.font10,
           textAlign: 'right',
         }}
         >{`${Number(this.state.sliderValue * 100).toFixed(0)}%`}</Text>
