@@ -58,7 +58,6 @@ const common = {
   h120: 120 / w * sw,
 
   font30: 30 / w * sw,
-  font18: 18 / w * sw,
   font16: 16 / w * sw,
   font14: 14 / w * sw,
   font12: 12 / w * sw,
