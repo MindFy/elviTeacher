@@ -113,8 +113,8 @@ export default class Login extends Component {
         <View
           style={{
             marginTop: common.margin10,
-            marginLeft: common.margin35,
-            marginRight: common.margin35,
+            marginLeft: common.margin38,
+            marginRight: common.margin38,
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}
@@ -146,8 +146,8 @@ export default class Login extends Component {
         <View
           style={{
             marginTop: common.margin36,
-            marginLeft: common.margin35,
-            marginRight: common.margin35,
+            marginLeft: common.margin38,
+            marginRight: common.margin38,
             height: common.h35,
             backgroundColor: common.loginBtnBgColor,
             borderRadius: 1,
