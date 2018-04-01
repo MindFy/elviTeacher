@@ -7,7 +7,7 @@ import {
   TextInput,
   StatusBar,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 
 export default class Registration extends Component {
   componentDidMount() { }

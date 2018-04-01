@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 
 export default class Me extends Component {
@@ -24,7 +24,8 @@ export default class Me extends Component {
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
-        }} >
+        }}
+      >
         <StatusBar barStyle={'light-content'} />
         <Navigator
           headerTitle="我的"
@@ -54,9 +55,10 @@ export default class Me extends Component {
                 fontSize: common.font16,
                 color: common.textColor,
                 alignSelf: 'center',
-              }}>
+              }}
+            >
               13899993333
-              </Text>
+            </Text>
           </View>
 
           <TouchableOpacity
@@ -71,11 +73,13 @@ export default class Me extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }} >
+              }}
+            >
               <View
                 style={{
-                  flexDirection: 'row'
-                }} >
+                  flexDirection: 'row',
+                }}
+              >
                 <Image
                   style={{
                     marginLeft: common.margin10,
@@ -91,7 +95,8 @@ export default class Me extends Component {
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'center',
-                  }} >身份认证</Text>
+                  }}
+                >身份认证</Text>
               </View>
               <Image
                 style={{
@@ -105,7 +110,8 @@ export default class Me extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+          >
             <View
               style={{
                 marginTop: common.margin5,
@@ -114,9 +120,11 @@ export default class Me extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }} >
+              }}
+            >
               <View
-                style={{ flexDirection: 'row' }} >
+                style={{ flexDirection: 'row' }}
+              >
                 <Image
                   style={{
                     marginLeft: common.margin10,
@@ -132,7 +140,8 @@ export default class Me extends Component {
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'center',
-                  }} >手机认证</Text>
+                  }}
+                >手机认证</Text>
               </View>
               <Image
                 style={{
@@ -146,7 +155,8 @@ export default class Me extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+          >
             <View
               style={{
                 marginTop: common.margin5,
@@ -155,11 +165,13 @@ export default class Me extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }} >
+              }}
+            >
               <View
                 style={{
-                  flexDirection: 'row'
-                }} >
+                  flexDirection: 'row',
+                }}
+              >
                 <Image
                   style={{
                     marginLeft: common.margin10,
@@ -175,7 +187,8 @@ export default class Me extends Component {
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'center',
-                  }} >超级返利</Text>
+                  }}
+                >超级返利</Text>
               </View>
               <Image
                 style={{
@@ -200,9 +213,11 @@ export default class Me extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }} >
+              }}
+            >
               <View
-                style={{ flexDirection: 'row' }} >
+                style={{ flexDirection: 'row' }}
+              >
                 <Image
                   style={{
                     marginLeft: common.margin10,
@@ -218,7 +233,8 @@ export default class Me extends Component {
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'center',
-                  }} >设置</Text>
+                  }}
+                >设置</Text>
               </View>
               <Image
                 style={{
@@ -241,13 +257,15 @@ export default class Me extends Component {
                 height: common.h40,
                 backgroundColor: common.navBgColor,
                 justifyContent: 'center',
-              }} >
+              }}
+            >
               <Text
                 style={{
                   fontSize: common.font14,
                   color: common.btnTextColor,
                   textAlign: 'center',
-                }} >退出登录</Text>
+                }}
+              >退出登录</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>

@@ -32,17 +32,17 @@ export default class History extends Component {
     }
   }
   componentDidMount() { }
-  leftImagePress() {
-    this.props.navigation.goBack()
-  }
   onPress(isPress) {
     this.setState({
       isPress,
     })
   }
+  leftImagePress() {
+    this.props.navigation.goBack()
+  }
   renderRow(rd) {
     return (
-      <HistoryCell  rd={rd}/>
+      <HistoryCell rd={rd} />
     )
   }
   render() {
@@ -54,7 +54,8 @@ export default class History extends Component {
         }}
       >
         <StatusBar
-          barStyle={'light-content'} />
+          barStyle={'light-content'}
+        />
         <Navigator
           headerTitle="历史记录"
           leftImagePress={() => this.leftImagePress()}
@@ -72,7 +73,8 @@ export default class History extends Component {
         >
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => this.onPress(true)} >
+            onPress={() => this.onPress(true)}
+          >
             <View
               style={{
                 height: common.h50,
@@ -80,18 +82,21 @@ export default class History extends Component {
                 backgroundColor: common.navBgColor,
                 alignSelf: 'center',
                 justifyContent: 'center',
-              }} >
+              }}
+            >
               <Text
                 style={{
                   fontSize: common.font14,
                   alignSelf: 'center',
                   color: (this.state.isPress ? common.btnTextColor : common.textColor),
-                }} >充值记录</Text>
+                }}
+              >充值记录</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => this.onPress(false)} >
+            onPress={() => this.onPress(false)}
+          >
             <View
               style={{
                 height: common.h50,
@@ -99,13 +104,15 @@ export default class History extends Component {
                 backgroundColor: common.navBgColor,
                 alignSelf: 'center',
                 justifyContent: 'center',
-              }} >
+              }}
+            >
               <Text
                 style={{
                   fontSize: common.font14,
                   alignSelf: 'center',
                   color: (!this.state.isPress ? common.btnTextColor : common.textColor),
-                }} >提现记录</Text>
+                }}
+              >提现记录</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -122,22 +129,26 @@ export default class History extends Component {
             style={{
               color: common.textColor,
               fontSize: common.font12,
-            }} >时间</Text>
+            }}
+          >时间</Text>
           <Text
             style={{
               color: common.textColor,
               fontSize: common.font12,
-            }} >币种</Text>
+            }}
+          >币种</Text>
           <Text
             style={{
               color: common.textColor,
               fontSize: common.font12,
-            }} >数量</Text>
+            }}
+          >数量</Text>
           <Text
             style={{
               color: common.textColor,
               fontSize: common.font12,
-            }} >状态</Text>
+            }}
+          >状态</Text>
         </View>
 
         <ListView

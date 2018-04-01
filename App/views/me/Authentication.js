@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 import SelectImage from './SelectImage'
 
@@ -42,7 +42,8 @@ export default class Authentication extends Component {
                 borderWidth: 1,
                 borderColor: common.borderColor,
                 justifyContent: 'center',
-              }}>
+              }}
+            >
               <TextInput
                 style={{
                   marginLeft: common.margin10,
@@ -63,7 +64,8 @@ export default class Authentication extends Component {
                 borderColor: common.borderColor,
                 borderWidth: 1,
                 justifyContent: 'center',
-              }} >
+              }}
+            >
               <TextInput
                 style={{
                   marginLeft: common.margin10,
@@ -74,12 +76,15 @@ export default class Authentication extends Component {
               />
             </View>
 
-            <SelectImage 
-            title={'请上传身份证正面照片'} />
-            <SelectImage 
-            title={'请上传身份证反面照片'} />
-            <SelectImage 
-            title={'请上传手持身份证照片'} />
+            <SelectImage
+              title={'请上传身份证正面照片'}
+            />
+            <SelectImage
+              title={'请上传身份证反面照片'}
+            />
+            <SelectImage
+              title={'请上传手持身份证照片'}
+            />
 
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
@@ -92,13 +97,15 @@ export default class Authentication extends Component {
                   backgroundColor: common.navBgColor,
                   justifyContent: 'center',
                   borderRadius: 5,
-                }} >
+                }}
+              >
                 <Text
                   style={{
                     fontSize: common.font14,
                     color: common.btnTextColor,
                     textAlign: 'center',
-                  }} >确认</Text>
+                  }}
+                >确认</Text>
               </View>
             </TouchableOpacity>
 
@@ -123,7 +130,8 @@ export default class Authentication extends Component {
                 fontSize: common.font16,
                 alignSelf: 'center',
                 textAlign: 'center',
-              }} >恭喜！身份认证成功！</Text>
+              }}
+            >恭喜！身份认证成功！</Text>
           </ScrollView>
         )
       case 0:
@@ -145,7 +153,8 @@ export default class Authentication extends Component {
                 fontSize: common.font16,
                 alignSelf: 'center',
                 textAlign: 'center',
-              }} >抱歉！您的身份认证未通过审核！</Text>
+              }}
+            >抱歉！您的身份认证未通过审核！</Text>
             <Text
               style={{
                 marginTop: common.margin10,
@@ -153,7 +162,8 @@ export default class Authentication extends Component {
                 fontSize: common.font16,
                 alignSelf: 'center',
                 textAlign: 'center',
-              }} >失败原因：照片不清晰</Text>
+              }}
+            >失败原因：照片不清晰</Text>
             <TouchableOpacity
               style={{
 
@@ -167,7 +177,8 @@ export default class Authentication extends Component {
                   color: common.btnTextColor,
                   fontSize: common.font16,
                   alignSelf: 'center',
-                }} >再次认证</Text>
+                }}
+              >再次认证</Text>
             </TouchableOpacity>
           </ScrollView>
         )
@@ -182,7 +193,8 @@ export default class Authentication extends Component {
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
-        }} >
+        }}
+      >
         <StatusBar barStyle={'light-content'} />
         <Navigator
           headerTitle="身份认证"

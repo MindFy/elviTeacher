@@ -7,7 +7,7 @@ import {
   TextInput,
   StatusBar,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 
 export default class ForgotPwd extends Component {
   componentDidMount() { }
@@ -98,15 +98,18 @@ export default class ForgotPwd extends Component {
             style={{
               justifyContent: 'center',
               marginRight: common.margin10,
-            }}>
+            }}
+          >
             <TouchableOpacity
-              activeOpacity={common.activeOpacity} >
+              activeOpacity={common.activeOpacity}
+            >
               <Text
                 style={{
                   color: common.btnTextColor,
                   textAlign: 'center',
                   fontSize: common.font12,
-                }} >获取验证码</Text>
+                }}
+              >获取验证码</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -3,7 +3,7 @@ import {
   View,
   Text,
 } from 'react-native'
-import {common} from '../common'
+import { common } from '../common'
 
 export default class History extends Component {
   componentDidMount() { }
@@ -21,22 +21,26 @@ export default class History extends Component {
           style={{
             color: common.textColor,
             fontSize: common.font12,
-          }} >{this.props.rd[0]}</Text>
+          }}
+        >{this.props.rd[0]}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
-          }} >{this.props.rd[1]}</Text>
+          }}
+        >{this.props.rd[1]}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
-          }} >{this.props.rd[2]}</Text>
+          }}
+        >{this.props.rd[2]}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
-          }} >已充值</Text>
+          }}
+        >已充值</Text>
       </View>
     )
   }

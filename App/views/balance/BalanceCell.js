@@ -4,7 +4,7 @@ import {
   Text,
   Image,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 
 export default class BalanceCell extends Component {
   componentDidMount() { }
@@ -25,7 +25,8 @@ export default class BalanceCell extends Component {
         <View
           style={{
             flexDirection: 'row',
-          }} >
+          }}
+        >
           <Image
             style={{
               marginLeft: common.margin15,
@@ -41,7 +42,8 @@ export default class BalanceCell extends Component {
               fontSize: common.font14,
               color: common.textColor,
               alignSelf: 'center',
-            }} >{this.props.title}</Text>
+            }}
+          >{this.props.title}</Text>
         </View>
 
         <Text

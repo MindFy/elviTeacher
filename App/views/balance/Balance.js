@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 import BalanceCell from './BalanceCell'
 
@@ -27,10 +27,12 @@ export default class Balance extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: common.bgColor
-        }}>
+          backgroundColor: common.bgColor,
+        }}
+      >
         <StatusBar
-          barStyle={'light-content'} />
+          barStyle={'light-content'}
+        />
         <Navigator
           headerTitle="资源"
           rightTitle="历史记录"
@@ -64,7 +66,8 @@ export default class Balance extends Component {
               fontSize: common.font14,
               color: common.placeholderColor,
               alignSelf: 'center',
-            }} >总资产(BTC)</Text>
+            }}
+          >总资产(BTC)</Text>
 
           <View
             style={{
@@ -93,7 +96,8 @@ export default class Balance extends Component {
                     fontSize: common.font14,
                     color: common.placeholderColor,
                     alignSelf: 'center',
-                  }} >充值</Text>
+                  }}
+                >充值</Text>
               </TouchableOpacity>
             </View>
             <View>
@@ -115,7 +119,8 @@ export default class Balance extends Component {
                     fontSize: common.font14,
                     color: common.placeholderColor,
                     alignSelf: 'center',
-                  }} >提现</Text>
+                  }}
+                >提现</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -123,7 +128,8 @@ export default class Balance extends Component {
           <View
             style={{
               marginTop: common.margin10,
-            }} >
+            }}
+          >
             <BalanceCell
               leftImageSource={require('../../assets/111.png')}
               title={'BTC'}

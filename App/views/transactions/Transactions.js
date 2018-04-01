@@ -48,7 +48,7 @@ export default class Transactions extends Component {
   }
   componentDidMount() { }
   topBarPress() {
-    
+
   }
   renderRow(rd, sid, rid) {
     let textColor = null
@@ -199,8 +199,8 @@ export default class Transactions extends Component {
       }}
       >
         <StatusBar
-         barStyle={'light-content'}
-          />
+          barStyle={'light-content'}
+        />
         <Navigator
           headerTitle="交易"
         />
@@ -217,70 +217,73 @@ export default class Transactions extends Component {
               width: common.sw / 4,
             }}
           >
-            <TouchableOpacity 
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.topBarPress()} >
-              <Text 
-              style={{
-                fontSize: common.font14,
-                color: common.btnTextColor,
-                textAlign: 'center',
-              }}
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              onPress={() => this.topBarPress()}
+            >
+              <Text
+                style={{
+                  fontSize: common.font14,
+                  color: common.btnTextColor,
+                  textAlign: 'center',
+                }}
               >买入</Text>
             </TouchableOpacity>
           </View>
-          <View 
-          style={{
-            width: common.sw / 4,
-          }}
+          <View
+            style={{
+              width: common.sw / 4,
+            }}
           >
-            <TouchableOpacity 
-            activeOpacity={common.activeOpacity} >
-              <Text 
-              style={{
-                fontSize: common.font14,
-                color: common.textColor,
-                textAlign: 'center',
-              }}
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+            >
+              <Text
+                style={{
+                  fontSize: common.font14,
+                  color: common.textColor,
+                  textAlign: 'center',
+                }}
               >卖出</Text>
             </TouchableOpacity>
           </View>
-          <View 
-          style={{
-            width: common.sw / 2,
-          }}
+          <View
+            style={{
+              width: common.sw / 2,
+            }}
           >
-            <TouchableOpacity 
-            activeOpacity={common.activeOpacity} >
-              <Text 
-              style={{
-                marginRight: common.margin22,
-                fontSize: common.font14,
-                color: common.textColor,
-                textAlign: 'right',
-              }}
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+            >
+              <Text
+                style={{
+                  marginRight: common.margin22,
+                  fontSize: common.font14,
+                  color: common.textColor,
+                  textAlign: 'right',
+                }}
               >当前委托</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <ScrollView>
-          <View 
-          style={{
-            flexDirection: 'row',
-          }}
-          >
-            <View 
+          <View
             style={{
-              width: common.sw / 2,
+              flexDirection: 'row',
             }}
+          >
+            <View
+              style={{
+                width: common.sw / 2,
+              }}
             >
               <View
-               style={{
-                marginLeft: common.margin10,
-                marginTop: common.margin10,
-                flexDirection: 'row',
-              }}
+                style={{
+                  marginLeft: common.margin10,
+                  marginTop: common.margin10,
+                  flexDirection: 'row',
+                }}
               >
                 <Text style={{
                   color: common.textColor,

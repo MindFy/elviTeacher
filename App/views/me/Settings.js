@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 
 export default class Settings extends Component {
@@ -21,7 +21,8 @@ export default class Settings extends Component {
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
-        }} >
+        }}
+      >
         <StatusBar
           barStyle={'light-content'}
         />
@@ -42,14 +43,16 @@ export default class Settings extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }} >
+              }}
+            >
               <Text
                 style={{
                   marginLeft: common.margin10,
                   fontSize: common.font14,
                   color: common.textColor,
                   alignSelf: 'center',
-                }} >修改密码</Text>
+                }}
+              >修改密码</Text>
               <Image
                 style={{
                   marginRight: common.margin10,
@@ -62,7 +65,8 @@ export default class Settings extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+          >
             <View
               style={{
                 marginTop: common.margin5,
@@ -71,14 +75,16 @@ export default class Settings extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }}  >
+              }}
+            >
               <Text
-               style={{
-                marginLeft: common.margin10,
-                fontSize: common.font14,
-                color: common.textColor,
-                alignSelf: 'center',
-              }} >语言选择</Text>
+                style={{
+                  marginLeft: common.margin10,
+                  fontSize: common.font14,
+                  color: common.textColor,
+                  alignSelf: 'center',
+                }}
+              >语言选择</Text>
               <Image
                 style={{
                   marginRight: common.margin10,
@@ -91,7 +97,8 @@ export default class Settings extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+          >
             <View
               style={{
                 marginTop: common.margin5,
@@ -100,14 +107,16 @@ export default class Settings extends Component {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-              }}  >
+              }}
+            >
               <Text
                 style={{
                   marginLeft: common.margin10,
                   fontSize: common.font14,
                   color: common.textColor,
                   alignSelf: 'center',
-                }} >版本显示</Text>
+                }}
+              >版本显示</Text>
               <Image
                 style={{
                   marginRight: common.margin10,

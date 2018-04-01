@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 
 export default class SetPwd extends Component {
@@ -18,7 +18,8 @@ export default class SetPwd extends Component {
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
-        }} >
+        }}
+      >
         <StatusBar
           barStyle={'light-content'}
         />
@@ -39,7 +40,8 @@ export default class SetPwd extends Component {
               borderWidth: 1,
               borderRadius: 1,
               justifyContent: 'center',
-            }} >
+            }}
+          >
             <TextInput
               style={{
                 marginLeft: common.margin10,
@@ -61,7 +63,8 @@ export default class SetPwd extends Component {
               borderWidth: 1,
               borderRadius: 1,
               justifyContent: 'center',
-            }} >
+            }}
+          >
             <TextInput
               style={{
                 marginLeft: common.margin10,
@@ -83,7 +86,8 @@ export default class SetPwd extends Component {
               borderWidth: 1,
               borderRadius: 1,
               justifyContent: 'center',
-            }} >
+            }}
+          >
             <TextInput
               style={{
                 marginLeft: common.margin10,
@@ -106,13 +110,15 @@ export default class SetPwd extends Component {
                 backgroundColor: common.navBgColor,
                 justifyContent: 'center',
                 borderRadius: 1,
-              }} >
+              }}
+            >
               <Text
                 style={{
                   color: common.btnTextColor,
                   fontSize: common.font16,
                   textAlign: 'center',
-                }} >确认</Text>
+                }}
+              >确认</Text>
             </View>
           </TouchableOpacity>
 

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 
 export default class SelectMoney extends Component {
   constructor() {
@@ -57,14 +57,16 @@ export default class SelectMoney extends Component {
             backgroundColor: common.navBgColor,
             flexDirection: 'row',
             justifyContent: 'space-between',
-          }} >
+          }}
+        >
           <Text
             style={{
               marginLeft: common.margin10,
               fontSize: common.font14,
               color: common.textColor,
               alignSelf: 'center',
-            }} >{rd}</Text>
+            }}
+          >{rd}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -104,11 +106,13 @@ export default class SelectMoney extends Component {
                 fontSize: common.font14,
                 color: common.textColor,
                 alignSelf: 'center',
-              }} >{this.state.title}</Text>
+              }}
+            >{this.state.title}</Text>
             <View
               style={{
                 alignSelf: 'center',
-              }} >
+              }}
+            >
               <Image
                 style={[{
                   marginRight: common.margin10,

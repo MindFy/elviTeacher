@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 
 export default class AddAddress extends Component {
@@ -20,10 +20,12 @@ export default class AddAddress extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: common.bgColor
-        }}>
+          backgroundColor: common.bgColor,
+        }}
+      >
         <StatusBar
-          barStyle={'light-content'} />
+          barStyle={'light-content'}
+        />
         <Navigator
           headerTitle="添加地址"
           leftImagePress={() => this.leftImagePress()}
@@ -100,7 +102,8 @@ export default class AddAddress extends Component {
           </View>
 
           <TouchableOpacity
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+          >
             <View
               style={{
                 marginTop: common.margin40,

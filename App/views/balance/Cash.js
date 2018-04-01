@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 import SelectMoney from './SelectMoney'
 
@@ -72,7 +72,8 @@ export default class Cash extends Component {
               marginTop: common.margin5,
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }} >
+            }}
+          >
             <Text
               style={{
                 marginLeft: common.margin10,
@@ -143,8 +144,9 @@ export default class Cash extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: common.bgColor
-        }}>
+          backgroundColor: common.bgColor,
+        }}
+      >
         <StatusBar barStyle={'light-content'} />
         <Navigator
           headerTitle="提现"

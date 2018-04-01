@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common, styles } from '../common'
+import { common } from '../common'
 import Navigator from '../Navigator'
 import SelectMoney from './SelectMoney'
 
@@ -37,9 +37,7 @@ export default class Recharge extends Component {
             marginTop: common.margin10,
             height: common.h97,
             backgroundColor: common.navBgColor,
-            flexDirection: 'row',
             justifyContent: 'space-between',
-            flexDirection: 'column',
           }}
         >
           <Text
@@ -64,22 +62,26 @@ export default class Recharge extends Component {
             }}
           >
             <TouchableOpacity
-              activeOpacity={common.activeOpacity} >
+              activeOpacity={common.activeOpacity}
+            >
               <Text
                 style={{
                   marginLeft: common.margin10,
                   color: common.btnTextColor,
                   fontSize: common.font14,
-                }} >复制地址</Text>
+                }}
+              >复制地址</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              activeOpacity={common.activeOpacity} >
+              activeOpacity={common.activeOpacity}
+            >
               <Text
                 style={{
                   marginLeft: common.margin10,
                   color: common.btnTextColor,
                   fontSize: common.font14,
-                }} >显示二维码</Text>
+                }}
+              >显示二维码</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -92,10 +94,12 @@ export default class Recharge extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: common.bgColor
-        }}>
+          backgroundColor: common.bgColor,
+        }}
+      >
         <StatusBar
-          barStyle={'light-content'} />
+          barStyle={'light-content'}
+        />
         <Navigator
           headerTitle="充值"
           leftImagePress={() => this.leftImagePress()}
