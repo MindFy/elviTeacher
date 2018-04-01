@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { common } from '../common'
 import Navigator from '../Navigator'
+import HistoryCell from './HistoryCell'
 
 export default class History extends Component {
   constructor() {
@@ -41,35 +42,7 @@ export default class History extends Component {
   }
   renderRow(rd) {
     return (
-      <View style={{
-        marginTop: common.margin10,
-        marginLeft: common.margin10,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-      >
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >{rd[0]}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >{rd[1]}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >{rd[2]}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >已充值</Text>
-      </View>
+      <HistoryCell  rd={rd}/>
     )
   }
   render() {
@@ -136,36 +109,36 @@ export default class History extends Component {
             </View>
           </TouchableOpacity>
         </View>
-              
+
         <View style={{
-        marginTop: common.margin10,
-        marginLeft: common.margin10,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-      >
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >时间</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >币种</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >数量</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }} >状态</Text>
-      </View>
+          marginTop: common.margin10,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+        >
+          <Text
+            style={{
+              color: common.textColor,
+              fontSize: common.font12,
+            }} >时间</Text>
+          <Text
+            style={{
+              color: common.textColor,
+              fontSize: common.font12,
+            }} >币种</Text>
+          <Text
+            style={{
+              color: common.textColor,
+              fontSize: common.font12,
+            }} >数量</Text>
+          <Text
+            style={{
+              color: common.textColor,
+              fontSize: common.font12,
+            }} >状态</Text>
+        </View>
 
         <ListView
           dataSource={this.state.dataSource}

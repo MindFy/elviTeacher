@@ -47,6 +47,9 @@ export default class Transactions extends Component {
     }
   }
   componentDidMount() { }
+  topBarPress() {
+    
+  }
   renderRow(rd, sid, rid) {
     let textColor = null
     let marginTop = null
@@ -215,7 +218,8 @@ export default class Transactions extends Component {
             }}
           >
             <TouchableOpacity 
-            activeOpacity={common.activeOpacity} >
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.topBarPress()} >
               <Text 
               style={{
                 fontSize: common.font14,

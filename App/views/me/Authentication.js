@@ -10,6 +10,7 @@ import {
 } from 'react-native'
 import { common, styles } from '../common'
 import Navigator from '../Navigator'
+import SelectImage from './SelectImage'
 
 export default class Authentication extends Component {
   constructor() {
@@ -73,104 +74,12 @@ export default class Authentication extends Component {
               />
             </View>
 
-            <View
-              style={{
-                marginTop: common.margin10,
-                marginLeft: common.margin10,
-                marginRight: common.margin10,
-                height: common.h120,
-                backgroundColor: common.navBgColor,
-                borderColor: common.borderColor,
-                borderWidth: 1,
-                justifyContent: 'center',
-                justifyContent: 'flex-start',
-              }} >
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity} >
-                <Image
-                  style={{
-                    marginTop: common.margin28,
-                    width: common.w40,
-                    height: common.w40,
-                    alignSelf: 'center',
-                  }}
-                  source={require('../../assets/添加copy2.png')}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  marginTop: common.margin20,
-                  color: common.placeholderColor,
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                }} >请上传身份证正面照片</Text>
-            </View>
-
-            <View
-              style={{
-                marginTop: common.margin10,
-                marginLeft: common.margin10,
-                marginRight: common.margin10,
-                height: common.h120,
-                backgroundColor: common.navBgColor,
-                borderColor: common.borderColor,
-                borderWidth: 1,
-                justifyContent: 'center',
-                justifyContent: 'flex-start',
-              }}  >
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity} >
-                <Image
-                  style={{
-                    marginTop: common.margin28,
-                    width: common.w40,
-                    height: common.w40,
-                    alignSelf: 'center',
-                  }}
-                  source={require('../../assets/添加copy2.png')}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  marginTop: common.margin20,
-                  color: common.placeholderColor,
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                }}  >请上传身份证反面照片</Text>
-            </View>
-
-            <View
-              style={{
-                marginTop: common.margin10,
-                marginLeft: common.margin10,
-                marginRight: common.margin10,
-                height: common.h120,
-                backgroundColor: common.navBgColor,
-                borderColor: common.borderColor,
-                borderWidth: 1,
-                justifyContent: 'center',
-                justifyContent: 'flex-start',
-              }} >
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity} >
-                <Image
-                  style={{
-                    marginTop: common.margin28,
-                    width: common.w40,
-                    height: common.w40,
-                    alignSelf: 'center',
-                  }}
-                  source={require('../../assets/添加copy2.png')}
-                />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  marginTop: common.margin20,
-                  color: common.placeholderColor,
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                }} >请上传手持身份证照片</Text>
-            </View>
+            <SelectImage 
+            title={'请上传身份证正面照片'} />
+            <SelectImage 
+            title={'请上传身份证反面照片'} />
+            <SelectImage 
+            title={'请上传手持身份证照片'} />
 
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
@@ -269,11 +178,11 @@ export default class Authentication extends Component {
 
   render() {
     return (
-      <View 
-      style={{
-        flex: 1,
-        backgroundColor: common.bgColor,
-      }} >
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: common.bgColor,
+        }} >
         <StatusBar barStyle={'light-content'} />
         <Navigator
           headerTitle="身份认证"
