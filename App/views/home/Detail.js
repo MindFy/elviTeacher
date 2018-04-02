@@ -26,7 +26,7 @@ export default class Detail extends Component {
         ['18:12:12', '0.00004972', '0.234', 0],
         ['18:12:12', '0.00004972', '0.234', 1],
         ['18:12:12', '0.00004972', '0.234', 0],
-      ])
+      ]),
     }
   }
   componentDidMount() { }
@@ -45,8 +45,14 @@ export default class Detail extends Component {
         ['18:12:12', '0.00004972', '0.234', 0],
         ['18:12:12', '0.00004972', '0.234', 1],
         ['18:12:12', '0.00004972', '0.234', 0],
-      ])
+      ]),
     })
+  }
+  redBtnPress() {
+
+  }
+  greenBtnPress() {
+
   }
   renderHeader(isOrderPress) {
     if (isOrderPress) {
@@ -59,56 +65,60 @@ export default class Detail extends Component {
             borderBottomColor: common.placeholderColor,
             borderBottomWidth: 1,
             flexDirection: 'row',
-          }} >
+          }}
+        >
           <Text
             style={{
               flex: 1,
               color: common.placeholderColor,
               fontSize: common.font12,
               paddingBottom: common.margin5,
-            }} >买</Text>
+            }}
+          >买</Text>
           <Text
             style={{
               flex: 1,
               color: common.placeholderColor,
               fontSize: common.font12,
               paddingBottom: common.margin5,
-            }} >卖</Text>
-        </View>
-      )
-    } else {
-      return (
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            marginBottom: common.margin5,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }} >
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.placeholderColor,
-            }} >时间</Text>
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.placeholderColor,
-            }} >价格</Text>
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.placeholderColor,
-            }} >数量</Text>
+            }}
+          >卖</Text>
         </View>
       )
     }
+    return (
+      <View
+        style={{
+          marginTop: common.margin10,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          marginBottom: common.margin5,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: common.placeholderColor,
+          }}
+        >时间</Text>
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: common.placeholderColor,
+          }}
+        >价格</Text>
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: common.placeholderColor,
+          }}
+        >数量</Text>
+      </View>
+    )
   }
   renderRow(rd, isOrderPress) {
-    console.log(isOrderPress)
-
     if (isOrderPress) {
       return (
         <View
@@ -117,77 +127,81 @@ export default class Detail extends Component {
             marginLeft: common.margin10,
             marginRight: common.margin10,
             flexDirection: 'row',
-          }} >
+          }}
+        >
           <View
             style={{
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }} >
+            }}
+          >
             <Text
               style={{
                 fontSize: common.font12,
                 color: common.textColor,
-              }} >{rd[2]}</Text>
+              }}
+            >{rd[2]}</Text>
             <Text
               style={{
                 fontSize: common.font12,
                 color: common.redColor,
-              }} >{rd[1]}</Text>
+              }}
+            >{rd[1]}</Text>
           </View>
           <View
             style={{
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }} >
+            }}
+          >
             <Text
               style={{
                 fontSize: common.font12,
                 color: common.greenColor,
-              }} >{rd[1]}</Text>
+              }}
+            >{rd[1]}</Text>
             <Text
               style={{
                 fontSize: common.font12,
                 color: common.textColor,
-              }} >{rd[2]}</Text>
+              }}
+            >{rd[2]}</Text>
           </View>
         </View>
       )
-    } else {
-      return (
-        <View
-          style={{
-            marginTop: common.margin5,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }} >
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.textColor,
-            }} >{rd[0]}</Text>
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: rd[3] === 1 ? common.greenColor : common.redColor,
-            }} >{rd[1]}</Text>
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.textColor,
-            }} >{rd[2]}</Text>
-        </View>
-      )
     }
-  }
-  redBtnPress() {
-
-  }
-  greenBtnPress() {
-
+    return (
+      <View
+        style={{
+          marginTop: common.margin5,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: common.textColor,
+          }}
+        >{rd[0]}</Text>
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: rd[3] === 1 ? common.greenColor : common.redColor,
+          }}
+        >{rd[1]}</Text>
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: common.textColor,
+          }}
+        >{rd[2]}</Text>
+      </View>
+    )
   }
   render() {
     return (
@@ -195,7 +209,8 @@ export default class Detail extends Component {
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
-        }} >
+        }}
+      >
         <StatusBar
           barStyle={'light-content'}
         />
@@ -213,14 +228,16 @@ export default class Detail extends Component {
               borderBottomColor: common.placeholderColor,
               borderBottomWidth: 1,
               width: common.sw / 4,
-            }} >
+            }}
+          >
             <Text
               style={{
                 color: 'white',
                 fontSize: common.font20,
                 alignSelf: 'flex-end',
                 paddingBottom: common.margin5,
-              }} >ETH/BTC</Text>
+              }}
+            >ETH/BTC</Text>
             <Image
               style={{
                 marginLeft: common.margin5,
@@ -228,7 +245,8 @@ export default class Detail extends Component {
                 width: common.w10,
                 alignSelf: 'center',
               }}
-              source={require('../../assets/下拉.png')} />
+              source={require('../../assets/下拉.png')}
+            />
           </View>
 
           <View
@@ -236,21 +254,25 @@ export default class Detail extends Component {
               marginLeft: common.margin10,
               marginRight: common.margin10,
               flexDirection: 'row',
-            }} >
+            }}
+          >
             <View
               style={{
                 marginTop: common.margin10,
                 flex: 1,
-              }} >
+              }}
+            >
               <View
                 style={{
                   flexDirection: 'row',
-                }} >
+                }}
+              >
                 <Text
                   style={{
                     fontSize: common.font20,
                     color: common.redColor,
-                  }} >0.988889</Text>
+                  }}
+                >0.988889</Text>
                 <Image
                   style={{
                     marginLeft: common.margin5,
@@ -259,55 +281,64 @@ export default class Detail extends Component {
                     alignSelf: 'center',
                     paddingBottom: 0,
                   }}
-                  source={require('../../assets/箭头.png')} />
+                  source={require('../../assets/箭头.png')}
+                />
                 <Text
                   style={{
                     marginLeft: common.margin5,
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'flex-end',
-                  }} >¥ 0.18</Text>
+                  }}
+                >¥ 0.18</Text>
               </View>
 
               <View
                 style={{
                   marginTop: common.margin5,
                   flexDirection: 'row',
-                }} >
+                }}
+              >
                 <Text
                   style={{
                     fontSize: common.font14,
                     color: common.redColor,
-                  }} >+0.988889</Text>
+                  }}
+                >+0.988889</Text>
                 <Text
                   style={{
                     marginLeft: common.margin10,
                     fontSize: common.font14,
                     color: common.redColor,
-                  }} >+3.94%</Text>
+                  }}
+                >+3.94%</Text>
               </View>
             </View>
 
             <View
               style={{
                 flex: 1,
-              }} >
+              }}
+            >
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
-                }} >
+                }}
+              >
                 <Text
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
-                  }} >24小时成交量</Text>
+                  }}
+                >24小时成交量</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
-                  }} >46.003.42 BTC</Text>
+                  }}
+                >46.003.42 BTC</Text>
               </View>
 
               <View
@@ -315,18 +346,21 @@ export default class Detail extends Component {
                   marginTop: common.margin8,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
-                }} >
+                }}
+              >
                 <Text
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
-                  }} >24小时最低量</Text>
+                  }}
+                >24小时最低量</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
-                  }} >0.090909</Text>
+                  }}
+                >0.090909</Text>
               </View>
 
               <View
@@ -334,18 +368,21 @@ export default class Detail extends Component {
                   marginTop: common.margin8,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
-                }} >
+                }}
+              >
                 <Text
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
-                  }} >24小时最高量</Text>
+                  }}
+                >24小时最高量</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
-                  }} >0.090909</Text>
+                  }}
+                >0.090909</Text>
               </View>
             </View>
           </View>
@@ -356,7 +393,8 @@ export default class Detail extends Component {
               height: common.h32,
               backgroundColor: common.navBgColor,
               flexDirection: 'row',
-            }} >
+            }}
+          >
             <TouchableOpacity
               style={{
                 flex: 1,
@@ -364,13 +402,15 @@ export default class Detail extends Component {
                 justifyContent: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.depthPress(false)} >
+              onPress={() => this.depthPress(false)}
+            >
               <Text
                 style={{
                   color: !this.state.isDepthPress ? common.btnTextColor : common.textColor,
                   fontSize: common.font14,
                   alignSelf: 'center',
-                }} >分时</Text>
+                }}
+              >分时</Text>
               <Image
                 style={{
                   marginLeft: common.margin5,
@@ -378,7 +418,10 @@ export default class Detail extends Component {
                   width: common.w10,
                   alignSelf: 'center',
                 }}
-                source={this.state.isDepthPress ? require('../../assets/下拉--向下.png') : require('../../assets/下拉.png')} />
+                source={this.state.isDepthPress ?
+                  require('../../assets/下拉--向下.png') :
+                  require('../../assets/下拉.png')}
+              />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -387,19 +430,22 @@ export default class Detail extends Component {
                 justifyContent: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.depthPress(true)} >
+              onPress={() => this.depthPress(true)}
+            >
               <Text
                 style={{
                   color: this.state.isDepthPress ? common.btnTextColor : common.textColor,
                   fontSize: common.font14,
                   alignSelf: 'center',
-                }} >深度</Text>
+                }}
+              >深度</Text>
             </TouchableOpacity>
 
             <Text
               style={{
                 flex: 2,
-              }} />
+              }}
+            />
           </View>
 
           <KLine
@@ -425,7 +471,9 @@ export default class Detail extends Component {
                 style={{
                   flex: 1,
                   width: (common.sw - common.margin10 * 2) / 2,
-                  backgroundColor: !this.state.isOrderPress ? common.navBgColor : common.borderColor,
+                  backgroundColor: !this.state.isOrderPress ?
+                    common.navBgColor :
+                    common.borderColor,
                   alignSelf: 'center',
                   justifyContent: 'center',
                 }}

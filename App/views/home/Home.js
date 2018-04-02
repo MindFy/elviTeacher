@@ -28,7 +28,8 @@ export default class Home extends Component {
     return (
       <TouchableOpacity
         activeOpacity={common.activeOpacity}
-        onPress={() => this.props.navigation.navigate('Detail')} >
+        onPress={() => this.props.navigation.navigate('Detail')}
+      >
         <HomeCell rd={rd} />
       </TouchableOpacity>
     )

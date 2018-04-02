@@ -31,19 +31,20 @@ export default class Consignation extends Component {
       ]
     } else {
       data = [
-        ['TK / BTC', '0.012345678', '2345.35']
+        ['TK / BTC', '0.012345678', '2345.35'],
       ]
     }
     this.setState({
       isCurrentPress,
-      dataSource: this.ds.cloneWithRows(data)
+      dataSource: this.ds.cloneWithRows(data),
     })
   }
   renderHeader(isCurrentPress) {
     if (isCurrentPress) {
       return (
         <TouchableOpacity
-          activeOpacity={common.activeOpacity} >
+          activeOpacity={common.activeOpacity}
+        >
           <Text
             style={{
               marginTop: common.margin10,
@@ -51,57 +52,65 @@ export default class Consignation extends Component {
               fontSize: common.font12,
               color: common.btnTextColor,
               textAlign: 'right',
-            }} >全部撤单</Text>
+            }}
+          >全部撤单</Text>
         </TouchableOpacity>
       )
-    } else {
-      return (
+    }
+    return (
+      <View
+        style={{
+          marginTop: common.margin10,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text
+          style={{
+            color: common.placeholderColor,
+            fontSize: common.font12,
+          }}
+        >市场</Text>
         <View
           style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
             flexDirection: 'row',
-            justifyContent: 'space-between',
-          }} >
+          }}
+        >
+          <Text
+            style={{
+              color: common.btnTextColor,
+              fontSize: common.font12,
+            }}
+          >均价</Text>
           <Text
             style={{
               color: common.placeholderColor,
               fontSize: common.font12,
-            }} >市场</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-            }} >
-            <Text
-              style={{
-                color: common.btnTextColor,
-                fontSize: common.font12,
-              }} >均价</Text>
-            <Text
-              style={{
-                color: common.placeholderColor,
-                fontSize: common.font12,
-              }} > / 价格</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-            }} >
-            <Text
-              style={{
-                color: common.btnTextColor,
-                fontSize: common.font12,
-              }} >成交数量</Text>
-            <Text
-              style={{
-                color: common.placeholderColor,
-                fontSize: common.font12,
-              }} > / 数量</Text>
-          </View>
+            }}
+          > / 价格</Text>
         </View>
-      )
-    }
+        <View
+          style={{
+            flexDirection: 'row',
+          }}
+        >
+          <Text
+            style={{
+              color: common.btnTextColor,
+              fontSize: common.font12,
+            }}
+          >成交数量</Text>
+          <Text
+            style={{
+              color: common.placeholderColor,
+              fontSize: common.font12,
+            }}
+          > / 数量</Text>
+        </View>
+      </View>
+    )
   }
   renderRow(rd, isCurrentPress) {
     if (isCurrentPress) {
@@ -115,7 +124,8 @@ export default class Consignation extends Component {
             backgroundColor: common.navBgColor,
             borderColor: common.borderColor,
             borderWidth: 1,
-          }} >
+          }}
+        >
           <View
             style={{
               flex: 1,
@@ -123,45 +133,52 @@ export default class Consignation extends Component {
               borderBottomWidth: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }} >
+            }}
+          >
             <View
               style={{
                 flexDirection: 'row',
-              }} >
+              }}
+            >
               <Text
                 style={{
                   marginLeft: common.margin5,
                   color: common.textColor,
                   fontSize: common.font12,
                   alignSelf: 'center',
-                }} >{rd[0]}</Text>
+                }}
+              >{rd[0]}</Text>
               <Text
                 style={{
                   marginLeft: common.margin10,
                   color: rd[5] === 1 ? common.redColor : common.greenColor,
                   fontSize: common.font12,
                   alignSelf: 'center',
-                }} >{rd[5] ? '买入' : '卖出'}</Text>
+                }}
+              >{rd[5] ? '买入' : '卖出'}</Text>
               <Text
                 style={{
                   marginLeft: common.margin10,
                   color: common.textColor,
                   fontSize: common.font12,
                   alignSelf: 'center',
-                }} >{rd[1]}</Text>
+                }}
+              >{rd[1]}</Text>
             </View>
             <TouchableOpacity
               style={{
                 alignSelf: 'center',
               }}
-              activeOpacity={common.activeOpacity} >
+              activeOpacity={common.activeOpacity}
+            >
               <Text
                 style={{
                   marginRight: common.margin5,
                   color: common.btnTextColor,
                   fontSize: common.font12,
                   paddingRight: 5,
-                }} >撤单</Text>
+                }}
+              >撤单</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -169,71 +186,81 @@ export default class Consignation extends Component {
               flex: 1,
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }} >
+            }}
+          >
             <Text
               style={{
                 marginLeft: common.margin5,
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
-              }} >{`价格:${rd[2]}`}</Text>
+              }}
+            >{`价格:${rd[2]}`}</Text>
             <Text
               style={{
                 marginLeft: common.margin5,
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
-              }} >{`数量:${rd[3]}`}</Text>
+              }}
+            >{`数量:${rd[3]}`}</Text>
             <Text
               style={{
                 marginLeft: common.margin5,
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
-              }} >{`已成交:${rd[4]}`}</Text>
+              }}
+            >{`已成交:${rd[4]}`}</Text>
           </View>
         </View >
       )
-    } else {
-      return (
-        <View
+    }
+    return (
+      <View
         style={{
           marginTop: common.margin10,
           marginLeft: common.margin10,
           marginRight: common.margin10,
           flexDirection: 'row',
           justifyContent: 'space-between',
-        }} >
-          <Text
+        }}
+      >
+        <Text
           style={{
             fontSize: common.font10,
             color: common.textColor,
-          }} >{rd[0]}</Text>
-          <Text
+          }}
+        >{rd[0]}</Text>
+        <Text
           style={{
             fontSize: common.font10,
             color: common.textColor,
-          }} >{rd[1]}</Text>
-          <Text
+          }}
+        >{rd[1]}</Text>
+        <Text
           style={{
             fontSize: common.font10,
             color: common.textColor,
-          }} >{rd[2]}</Text>
-        </View>
-      )
-    }
+          }}
+        >{rd[2]}</Text>
+      </View>
+    )
   }
   render() {
     return (
       <View style={{
         flex: 1,
         backgroundColor: common.bgColor,
-      }} >
+      }}
+      >
         <StatusBar
-          barStyle={'light-content'} />
+          barStyle={'light-content'}
+        />
         <Navigator
           headerTitle="我的委托"
-          leftImagePress={() => this.props.navigation.goBack()} />
+          leftImagePress={() => this.props.navigation.goBack()}
+        />
 
         <View
           style={{
@@ -275,7 +302,9 @@ export default class Consignation extends Component {
               style={{
                 flex: 1,
                 width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: !this.state.isCurrentPress ? common.borderColor : common.navBgColor,
+                backgroundColor: !this.state.isCurrentPress ?
+                  common.borderColor :
+                  common.navBgColor,
                 alignSelf: 'center',
                 justifyContent: 'center',
               }}
