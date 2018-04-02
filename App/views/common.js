@@ -6,8 +6,10 @@ const w = 375
 const h = 667
 
 const common = {
+  redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
+  greenColor: 'rgb(36,199,139)',
   navBgColor: 'rgb(38,42,65)', // 导航栏背景色
   borderColor: 'rgb(52,60,92)',
   borderColor05: 'rgba(52,60,92,0.5)',
@@ -49,12 +51,14 @@ const common = {
   w150: 150,
 
   h5: 5 / w * sw,
+  h13: 13 / w * sw,
   h20: 20 / w * sw,
   h32: 32 / w * sw,
   h35: 35 / w * sw,
   h40: 40 / w * sw,
-  h50: 50 / w * sw,
   h44: 44 / w * sw,
+  h50: 50 / w * sw,
+  h56: 56 / w * sw,
   h70: 70 / w * sw, // 首页Cell高度
   h80: 80 / w * sw,
   h97: 97 / w * sw,

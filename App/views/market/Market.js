@@ -36,51 +36,51 @@ export default class Market extends Component {
   renderHeader() {
     return (
       <View
+        style={{
+          flexDirection: 'row',
+        }}
+      >
+        <Text
           style={{
-            flexDirection: 'row',
+            flex: 1,
+            paddingTop: common.margin20,
+            paddingBottom: common.margin5,
+            fontSize: common.font14,
+            color: common.placeholderColor,
+            textAlign: 'center',
           }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'center',
-            }}
-          >名称</Text>
-          <Text
-            style={{
-              flex: 1,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'center',
-            }}
-          >成交量</Text>
-          <Text
-            style={{
-              flex: 1,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'center',
-            }}
-          >最新价</Text>
-          <Text
-            style={{
-              flex: 1,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'center',
-            }}
-          >24h涨跌</Text>
-        </View>
+        >名称</Text>
+        <Text
+          style={{
+            flex: 1,
+            paddingTop: common.margin20,
+            paddingBottom: common.margin5,
+            fontSize: common.font14,
+            color: common.placeholderColor,
+            textAlign: 'center',
+          }}
+        >成交量</Text>
+        <Text
+          style={{
+            flex: 1,
+            paddingTop: common.margin20,
+            paddingBottom: common.margin5,
+            fontSize: common.font14,
+            color: common.placeholderColor,
+            textAlign: 'center',
+          }}
+        >最新价</Text>
+        <Text
+          style={{
+            flex: 1,
+            paddingTop: common.margin20,
+            paddingBottom: common.margin5,
+            fontSize: common.font14,
+            color: common.placeholderColor,
+            textAlign: 'center',
+          }}
+        >24h涨跌</Text>
+      </View>
     )
   }
   render() {

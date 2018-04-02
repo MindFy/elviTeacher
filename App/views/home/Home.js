@@ -6,6 +6,7 @@ import {
   StatusBar,
   ListView,
   ScrollView,
+  TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
 import HomeCell from './HomeCell'
@@ -25,7 +26,11 @@ export default class Home extends Component {
   componentDidMount() { }
   renderRow(rd) {
     return (
-      <HomeCell rd={rd} />
+      <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => this.props.navigation.navigate('Detail')} >
+        <HomeCell rd={rd} />
+      </TouchableOpacity>
     )
   }
   render() {

@@ -41,25 +41,26 @@ export default class TabBar extends Component {
   render() {
     return (
       <TabNavigator
-        tabBarStyle={styles.tabBarStyle} >
+        tabBarStyle={styles.tabBarStyle}
+      >
         <TabNavigator.Item
           tabStyle={styles.tabStyle}
           titleStyle={styles.titleStyle}
           selectedTitleStyle={styles.selectedTitleStyle}
           selected={this.state.selectedTab === 'home'}
           title="首页"
-          renderIcon={() => <Image
+          renderIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/首页copy2.png')}
-          />}
-          renderSelectedIcon={() => <Image
+          />)}
+          renderSelectedIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/首页.png')}
-          />}
+          />)}
           // badgeText="1"
           onPress={() => this.setState({ selectedTab: 'home' })}
         >
-          <Home />
+          <Home navigation={this.props.navigation} />
         </TabNavigator.Item>
         <TabNavigator.Item
           tabStyle={styles.tabStyle}
@@ -67,14 +68,14 @@ export default class TabBar extends Component {
           selectedTitleStyle={styles.selectedTitleStyle}
           selected={this.state.selectedTab === 'market'}
           title="市场"
-          renderIcon={() => <Image
+          renderIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/市场分析.png')}
-          />}
-          renderSelectedIcon={() => <Image
+          />)}
+          renderSelectedIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/市场分析.png')}
-          />}
+          />)}
           // renderBadge={() => <CustomBadgeView />}
           onPress={() => this.setState({ selectedTab: 'market' })}
         >
@@ -86,14 +87,14 @@ export default class TabBar extends Component {
           selectedTitleStyle={styles.selectedTitleStyle}
           selected={this.state.selectedTab === 'transactions'}
           title="交易"
-          renderIcon={() => <Image
+          renderIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/交易.png')}
-          />}
-          renderSelectedIcon={() => <Image
+          />)}
+          renderSelectedIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/交易copy2.png')}
-          />}
+          />)}
           // badgeText="1"
           onPress={() => this.setState({ selectedTab: 'transactions' })}
         >
@@ -105,14 +106,14 @@ export default class TabBar extends Component {
           selectedTitleStyle={styles.selectedTitleStyle}
           selected={this.state.selectedTab === 'balance'}
           title="资金"
-          renderIcon={() => <Image
+          renderIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/个人资金.png')}
-          />}
-          renderSelectedIcon={() => <Image
+          />)}
+          renderSelectedIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/个人资金copy.png')}
-          />}
+          />)}
           // renderBadge={() => <CustomBadgeView />}
           onPress={() => this.setState({ selectedTab: 'balance' })}
         >
@@ -124,14 +125,14 @@ export default class TabBar extends Component {
           selectedTitleStyle={styles.selectedTitleStyle}
           selected={this.state.selectedTab === 'me'}
           title="我的"
-          renderIcon={() => <Image
+          renderIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/我的.png')}
-          />}
-          renderSelectedIcon={() => <Image
+          />)}
+          renderSelectedIcon={() => (<Image
             style={styles.icon}
             source={require('../assets/我的copy4.png')}
-          />}
+          />)}
           // renderBadge={() => <CustomBadgeView />}
           onPress={() => this.setState({ selectedTab: 'me' })}
         >
