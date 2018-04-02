@@ -19,7 +19,6 @@ const common = {
   placeholderColor: 'rgb(97,105,137)',
 
   bgColor: '#171B29', // 视图背景色
-  btnViewBgColor: 'rgb(213,69,80)',
 
   sw,
   sh,
@@ -51,7 +50,7 @@ const common = {
   w150: 150,
 
   h5: 5 / w * sw,
-  h13: 13 / w * sw,
+  h13: 13 / w * sw, // 首页详情页面中向上箭头高度
   h20: 20 / w * sw,
   h32: 32 / w * sw,
   h35: 35 / w * sw,
@@ -59,6 +58,7 @@ const common = {
   h44: 44 / w * sw,
   h50: 50 / w * sw,
   h56: 56 / w * sw,
+  h60: 60 / w * sw, // 当前委托cell高度
   h70: 70 / w * sw, // 首页Cell高度
   h80: 80 / w * sw,
   h97: 97 / w * sw,

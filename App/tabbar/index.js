@@ -98,7 +98,7 @@ export default class TabBar extends Component {
           // badgeText="1"
           onPress={() => this.setState({ selectedTab: 'transactions' })}
         >
-          <Transactions />
+          <Transactions navigation={this.props.navigation} />
         </TabNavigator.Item>
         <TabNavigator.Item
           tabStyle={styles.tabStyle}

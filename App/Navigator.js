@@ -8,6 +8,8 @@ import ConfirmPwd from './views/login/ConfirmPwd'
 
 import Detail from './views/home/Detail'
 
+import Consignation from './views/transactions/Consignation'
+
 import Me from './views/me/Me'
 import Settings from './views/me/Settings'
 import SetPwd from './views/me/SetPwd'
@@ -107,6 +109,12 @@ export default StackNavigator(
     },
     Detail: {
       screen: Detail,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Consignation: {
+      screen: Consignation,
       navigationOptions: {
         header: null,
       },

@@ -37,9 +37,6 @@ export default class History extends Component {
       isPress,
     })
   }
-  leftImagePress() {
-    this.props.navigation.goBack()
-  }
   renderRow(rd) {
     return (
       <HistoryCell rd={rd} />
@@ -58,7 +55,7 @@ export default class History extends Component {
         />
         <Navigator
           headerTitle="历史记录"
-          leftImagePress={() => this.leftImagePress()}
+          leftImagePress={() => this.props.navigation.goBack()}
         />
 
         <View

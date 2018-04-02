@@ -20,6 +20,7 @@ export default class Transactions extends Component {
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.dealDs = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     this.state = {
+      isAskPress: true,
       dataSource: this.ds.cloneWithRows([
         ['0.987652', '11.976'],
         ['0.987652', '11.976'],
@@ -47,8 +48,10 @@ export default class Transactions extends Component {
     }
   }
   componentDidMount() { }
-  topBarPress() {
-
+  topBarPress(isAskPress) {
+    this.setState({
+      isAskPress,
+    })
   }
   renderRow(rd, sid, rid) {
     let textColor = null
@@ -221,12 +224,12 @@ export default class Transactions extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.topBarPress()}
+              onPress={() => this.topBarPress(true)}
             >
               <Text
                 style={{
                   fontSize: common.font14,
-                  color: common.btnTextColor,
+                  color: this.state.isAskPress ? common.btnTextColor : common.textColor,
                   textAlign: 'center',
                 }}
               >买入</Text>
@@ -241,11 +244,12 @@ export default class Transactions extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
+              onPress={() => this.topBarPress(false)}
             >
               <Text
                 style={{
                   fontSize: common.font14,
-                  color: common.textColor,
+                  color: !this.state.isAskPress ? common.btnTextColor : common.textColor,
                   textAlign: 'center',
                 }}
               >卖出</Text>
@@ -260,6 +264,7 @@ export default class Transactions extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
+              onPress={() => this.props.navigation.navigate('Consignation')}
             >
               <Text
                 style={{
@@ -401,7 +406,7 @@ export default class Transactions extends Component {
                   marginLeft: common.margin10,
                   marginRight: common.margin10 / 2,
                   height: common.h35,
-                  backgroundColor: common.btnViewBgColor,
+                  backgroundColor: this.state.isAskPress ? common.redColor : common.greenColor,
                   justifyContent: 'center',
                 }}
                 >
@@ -410,7 +415,7 @@ export default class Transactions extends Component {
                     color: 'white',
                     alignSelf: 'center',
                   }}
-                  >买入</Text>
+                  >{this.state.isAskPress ? '买入' : '卖出'}</Text>
                 </View>
               </TouchableOpacity>
             </View>
