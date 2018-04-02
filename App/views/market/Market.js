@@ -24,7 +24,7 @@ export default class Market extends Component {
   componentDidMount() { }
   renderRow(rd) {
     return (
-      <MarketCell rd={this.props.rd} />
+      <MarketCell rd={rd} />
     )
   }
   render() {
@@ -52,7 +52,7 @@ export default class Market extends Component {
             style={{
               paddingBottom: common.margin10,
               alignSelf: 'flex-end',
-              flex: 1,
+              width: common.sw / 4,
             }}
           >
             <TouchableOpacity
@@ -72,7 +72,7 @@ export default class Market extends Component {
             style={{
               paddingBottom: common.margin10,
               alignSelf: 'flex-end',
-              flex: 1,
+              width: common.sw / 4,
             }}
           >
             <TouchableOpacity
@@ -85,26 +85,6 @@ export default class Market extends Component {
                   textAlign: 'center',
                 }}
               >BTC</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingBottom: common.margin10,
-              alignSelf: 'flex-end',
-              flex: 2,
-            }}
-          >
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-            >
-              <Text
-                style={{
-                  marginRight: common.margin22,
-                  fontSize: common.font14,
-                  color: common.textColor,
-                  textAlign: 'right',
-                }}
-              >当前委托</Text>
             </TouchableOpacity>
           </View>
         </View>

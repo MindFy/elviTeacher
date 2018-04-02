@@ -10,9 +10,9 @@ import { common } from './common'
 
 const styles = StyleSheet.create({
   // 导航栏样式
-  navigatorStyle: {
+  navigatorStyle: {                                                                     
     marginTop: 20,
-    height: common.h44,
+    height: common.h44,               
     backgroundColor: common.navBgColor,
     flexDirection: 'row',
     justifyContent: 'space-between',
