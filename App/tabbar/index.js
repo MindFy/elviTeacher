@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import TabNavigator from 'react-native-tab-navigator'
-import Home from '../views/home'
+import Home from '../views/home/Home'
 import Balance from '../views/balance/Balance'
 import Market from '../views/market/Market'
 import Transactions from '../views/transactions/Transactions'

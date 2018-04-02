@@ -216,7 +216,7 @@ export default class Transactions extends Component {
             style={{
               flex: 1,
               paddingBottom: common.margin10,
-              alignSelf:'flex-end',
+              alignSelf: 'flex-end',
             }}
           >
             <TouchableOpacity
@@ -236,7 +236,7 @@ export default class Transactions extends Component {
             style={{
               flex: 1,
               paddingBottom: common.margin10,
-              alignSelf:'flex-end',
+              alignSelf: 'flex-end',
             }}
           >
             <TouchableOpacity
@@ -255,7 +255,7 @@ export default class Transactions extends Component {
             style={{
               flex: 2,
               paddingBottom: common.margin10,
-              alignSelf:'flex-end',
+              alignSelf: 'flex-end',
             }}
           >
             <TouchableOpacity

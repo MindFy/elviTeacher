@@ -18,7 +18,7 @@ export default class Market extends Component {
       dataSource: this.ds.cloneWithRows([
         ['BTC', '8888', '0.00001234', '0.99%', 1],
         ['TK', '8888', '0.00001234', '0.99%', 0],
-      ])
+      ]),
     }
   }
   componentDidMount() { }
@@ -92,7 +92,8 @@ export default class Market extends Component {
         <View
           style={{
             flexDirection: 'row',
-          }} >
+          }}
+        >
           <Text
             style={{
               flex: 1,
@@ -101,7 +102,8 @@ export default class Market extends Component {
               fontSize: common.font14,
               color: common.placeholderColor,
               textAlign: 'center',
-            }} >名称</Text>
+            }}
+          >名称</Text>
           <Text
             style={{
               flex: 1,
@@ -110,7 +112,8 @@ export default class Market extends Component {
               fontSize: common.font14,
               color: common.placeholderColor,
               textAlign: 'center',
-            }} >成交量</Text>
+            }}
+          >成交量</Text>
           <Text
             style={{
               flex: 1,
@@ -119,7 +122,8 @@ export default class Market extends Component {
               fontSize: common.font14,
               color: common.placeholderColor,
               textAlign: 'center',
-            }} >最新价</Text>
+            }}
+          >最新价</Text>
           <Text
             style={{
               flex: 1,
@@ -128,14 +132,15 @@ export default class Market extends Component {
               fontSize: common.font14,
               color: common.placeholderColor,
               textAlign: 'center',
-            }} >24h涨跌</Text>
+            }}
+          >24h涨跌</Text>
         </View>
 
         <ListView
-              dataSource={this.state.dataSource}
-              renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
-              enableEmptySections
-            />
+          dataSource={this.state.dataSource}
+          renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
+          enableEmptySections
+        />
       </View>
     )
   }

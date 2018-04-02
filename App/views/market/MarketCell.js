@@ -8,7 +8,8 @@ import { common } from '../common'
 export default class MarketCell extends Component {
   componentDidMount() { }
   render() {
-    let type = null, typeColor = null
+    let type = null
+    let typeColor = null
     if (this.props.rd[4] === 1) {
       type = '+'
       typeColor = common.askColor
@@ -21,7 +22,8 @@ export default class MarketCell extends Component {
         <View
           style={{
             flexDirection: 'row',
-          }} >
+          }}
+        >
           <Text
             style={{
               flex: 1,
@@ -30,7 +32,8 @@ export default class MarketCell extends Component {
               fontSize: common.font14,
               color: common.textColor,
               textAlign: 'center',
-            }} >{this.props.rd[0]}</Text>
+            }}
+          >{this.props.rd[0]}</Text>
           <Text
             style={{
               flex: 1,
@@ -39,7 +42,8 @@ export default class MarketCell extends Component {
               fontSize: common.font14,
               color: common.textColor,
               textAlign: 'center',
-            }} >{this.props.rd[1]}</Text>
+            }}
+          >{this.props.rd[1]}</Text>
           <Text
             style={{
               flex: 1,
@@ -48,7 +52,8 @@ export default class MarketCell extends Component {
               fontSize: common.font14,
               color: common.textColor,
               textAlign: 'center',
-            }} >{this.props.rd[2]}</Text>
+            }}
+          >{this.props.rd[2]}</Text>
           <Text
             style={{
               flex: 1,
@@ -57,7 +62,8 @@ export default class MarketCell extends Component {
               fontSize: common.font14,
               color: typeColor,
               textAlign: 'center',
-            }} >{`${type}${this.props.rd[3]}`}</Text>
+            }}
+          >{`${type}${this.props.rd[3]}`}</Text>
         </View>
 
         <View
@@ -66,8 +72,8 @@ export default class MarketCell extends Component {
             marginRight: common.margin10,
             height: 1,
             backgroundColor: common.textColor,
-          }} >
-        </View>
+          }}
+        />
       </View>
     )
   }

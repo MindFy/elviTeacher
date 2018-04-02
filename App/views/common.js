@@ -10,6 +10,7 @@ const common = {
   askColor: 'rgba(205,0,0,1)',
   navBgColor: 'rgb(38,42,65)', // 导航栏背景色
   borderColor: 'rgb(52,60,92)',
+  borderColor05: 'rgba(52,60,92,0.5)',
   textColor: 'rgb(223,228,255)', // 单元格内文字颜色
   btnTextColor: 'rgb(255,213,2)',
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
@@ -54,11 +55,14 @@ const common = {
   h40: 40 / w * sw,
   h50: 50 / w * sw,
   h44: 44 / w * sw,
+  h70: 70 / w * sw, // 首页Cell高度
   h80: 80 / w * sw,
   h97: 97 / w * sw,
   h120: 120 / w * sw,
+  h233: 233 / w * sw, // 首页公告图片高度
 
   font30: 30 / w * sw,
+  font20: 20 / w * sw,
   font16: 16 / w * sw,
   font14: 14 / w * sw,
   font12: 12 / w * sw,
