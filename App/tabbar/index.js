@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import TabNavigator from 'react-native-tab-navigator'
 import Home from '../views/home'
 import Balance from '../views/balance/Balance'
-import Market from '../views/market'
+import Market from '../views/market/Market'
 import Transactions from '../views/transactions/Transactions'
 import Me from '../views/me/Me'
 

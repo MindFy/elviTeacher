@@ -214,7 +214,9 @@ export default class Transactions extends Component {
         >
           <View
             style={{
-              width: common.sw / 4,
+              flex: 1,
+              paddingBottom: common.margin10,
+              alignSelf:'flex-end',
             }}
           >
             <TouchableOpacity
@@ -232,7 +234,9 @@ export default class Transactions extends Component {
           </View>
           <View
             style={{
-              width: common.sw / 4,
+              flex: 1,
+              paddingBottom: common.margin10,
+              alignSelf:'flex-end',
             }}
           >
             <TouchableOpacity
@@ -249,7 +253,9 @@ export default class Transactions extends Component {
           </View>
           <View
             style={{
-              width: common.sw / 2,
+              flex: 2,
+              paddingBottom: common.margin10,
+              alignSelf:'flex-end',
             }}
           >
             <TouchableOpacity
