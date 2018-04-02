@@ -1,9 +1,8 @@
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions } from 'react-native'
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
 const w = 375
-const h = 667
 
 const common = {
   redColor: 'rgb(213,69,80)',
@@ -23,31 +22,31 @@ const common = {
   sw,
   sh,
 
-  margin5: 5,
-  margin8: 8,
-  margin10: 10,
-  margin15: 15,
-  margin20: 20,
-  margin22: 22,
-  margin28: 28,
+  margin5: 5 / w * sw,
+  margin8: 8 / w * sw,
+  margin10: 10 / w * sw,
+  margin15: 15 / w * sw,
+  margin20: 20 / w * sw,
+  margin22: 22 / w * sw,
+  margin28: 28 / w * sw,
   margin30: 30 / w * sw,
   margin35: 35 / w * sw,
   margin36: 36 / w * sw,
   margin38: 38 / w * sw,
   margin40: 40 / w * sw,
-  margin60: 60 / h * sh,
-  margin110: 110 / h * sh,
-  margin127: 127 / h * sh,
-  margin210: 210 / h * sh,
+  margin60: 60 / w * sw,
+  margin110: 110 / w * sw,
+  margin127: 127 / w * sw,
+  margin210: 210 / w * sw,
 
-  w10: 10,
-  w20: 20,
-  w25: 25,
-  w40: 40,
-  w60: 60,
+  w10: 10 / w * sw,
+  w20: 20 / w * sw,
+  w25: 25 / w * sw,
+  w40: 40 / w * sw,
+  w60: 60 / w * sw,
   w100: 100 / w * sw,
-  w120: 120,
-  w150: 150,
+  w120: 120 / w * sw,
+  w150: 150 / w * sw,
 
   h5: 5 / w * sw,
   h13: 13 / w * sw, // 首页详情页面中向上箭头高度
@@ -77,10 +76,6 @@ const common = {
   activeOpacity: 0.7,
 }
 
-const styles = StyleSheet.create({
-})
-
 module.exports = {
   common,
-  styles,
 }
