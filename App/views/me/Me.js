@@ -1,16 +1,29 @@
 import React, { Component } from 'react'
 import {
   View,
+  Text,
+  Image,
   StatusBar,
   ScrollView,
-  Image,
-  Text,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 
 export default class Me extends Component {
+  static navigationOptions() {
+    return {
+      headerTitle: '我的',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft: null,
+    }
+  }
   componentDidMount() { }
   settingsPress() {
     this.props.navigation.navigate('Settings')
@@ -27,9 +40,6 @@ export default class Me extends Component {
         }}
       >
         <StatusBar barStyle={'light-content'} />
-        <Navigator
-          headerTitle="我的"
-        />
         <ScrollView>
           <View
             style={{

@@ -34,8 +34,7 @@ export default class KLine extends Component {
     return {
       backgroundColor: '#fff',
       title: {
-        text: 'btc test',
-        left: 100,
+        show: false,
       },
       animation: true,
       legend: {
