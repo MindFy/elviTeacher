@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import {
   ScrollView,
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
   StatusBar,
 } from 'react-native'
 import { common } from '../common'
+import TextInputLogin from './TextInputLogin'
+import BtnLogin from './BtnLogin'
 
 export default class ConfirmPwd extends Component {
   componentDidMount() { }
@@ -25,94 +23,31 @@ export default class ConfirmPwd extends Component {
           barStyle={'light-content'}
         />
 
-        <View
-          style={{
+        <TextInputLogin
+          viewStyle={{
             marginTop: common.margin110,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            height: common.h35,
-            backgroundColor: common.navBgColor,
-            borderColor: common.borderColor,
-            borderWidth: 1,
-            borderRadius: 1,
-            flexDirection: 'row',
           }}
-        >
-          <Text
-            style={{
-              width: common.w100,
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-            }}
-          >密码</Text>
-          <TextInput
-            style={{
-              fontSize: common.font12,
-              color: 'white',
-            }}
-            placeholder="请输入密码"
-            placeholderTextColor={common.placeholderColor}
-          />
-        </View>
-
-        <View
-          style={{
-            marginTop: common.margin40,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            height: common.h35,
-            backgroundColor: common.navBgColor,
-            borderColor: common.borderColor,
-            borderWidth: 1,
-            borderRadius: 1,
-            flexDirection: 'row',
+          textStyle={{
+            width: common.w100,
           }}
-        >
-          <Text
-            style={{
-              width: common.w100,
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-            }}
-          >再次输入新密码</Text>
-          <TextInput
-            style={{
-              fontSize: common.font12,
-              color: 'white',
-            }}
-            placeholder="请再次输入新密码"
-            placeholderTextColor={common.placeholderColor}
-          />
-        </View>
+          title='密码'
+          placeholder="请输入密码"
+        />
 
-        <View
-          style={{
+        <TextInputLogin
+          textStyle={{
+            width: common.w100,
+          }}
+          title='再次输入新密码'
+          placeholder="请再次输入新密码"
+        />
+
+        <BtnLogin
+          viewStyle={{
             marginTop: common.margin210,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            height: common.h35,
-            backgroundColor: common.loginBtnBgColor,
-            justifyContent: 'center',
-            borderRadius: 1,
           }}
-        >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.confirmPress()}
-          >
-            <Text
-              style={{
-                fontSize: common.font16,
-                color: 'white',
-                textAlign: 'center',
-              }}
-            >确定</Text>
-          </TouchableOpacity>
-        </View>
+          title='确定'
+          onPress={() => this.confirmPress()} />
       </ScrollView>
     )
   }

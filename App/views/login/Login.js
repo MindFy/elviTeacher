@@ -5,10 +5,12 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  TextInput,
+  KeyboardAvoidingView,
   StatusBar,
 } from 'react-native'
 import { common } from '../common'
+import TextInputLogin from './TextInputLogin'
+import BtnLogin from './BtnLogin'
 
 export default class Login extends Component {
   componentDidMount() { }
@@ -23,150 +25,77 @@ export default class Login extends Component {
   }
   render() {
     return (
-      <ScrollView
+      <KeyboardAvoidingView
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
         }}
-      >
-        <StatusBar
-          barStyle={'light-content'}
-        />
-
-        <Image
-          style={{
-            marginTop: common.margin127,
-            width: common.w150,
-            height: common.h80,
-            alignSelf: 'center',
-          }}
-          source={require('../../assets/Logo11.png')}
-          resizeMode={'contain'}
-        />
-
-        <View
-          style={{
-            marginTop: common.margin60,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            height: common.h35,
-            flexDirection: 'row',
-            backgroundColor: common.navBgColor,
-            borderColor: common.borderColor,
-            borderRadius: 1,
-            borderWidth: 1,
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              alignSelf: 'center',
-              fontSize: common.font12,
-              color: common.textColor,
-            }}
-          >账号</Text>
-          <TextInput
-            style={{
-              marginLeft: common.margin30,
-              marginRight: 0,
-              fontSize: common.font12,
-              color: 'white',
-            }}
-            placeholder="请输入11位手机号"
-            placeholderTextColor={common.placeholderColor}
+        behavior='padding' >
+        <ScrollView>
+          <StatusBar
+            barStyle={'light-content'}
           />
-        </View>
 
-        <View
-          style={{
-            marginTop: common.margin40,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            height: common.h35,
-            backgroundColor: common.navBgColor,
-            borderColor: common.borderColor,
-            borderRadius: 1,
-            borderWidth: 1,
-            flexDirection: 'row',
-          }}
-        >
-          <Text
+          <Image
             style={{
-              marginLeft: common.margin10,
-              fontSize: common.font12,
-              color: common.textColor,
+              marginTop: common.margin127,
+              width: common.w150,
+              height: common.h80,
               alignSelf: 'center',
             }}
-          >密码</Text>
-          <TextInput
-            style={{
-              marginLeft: common.margin30,
-              marginRight: 0,
-              fontSize: common.font12,
-              color: 'white',
-            }}
-            placeholder="请输入密码"
-            placeholderTextColor={common.placeholderColor}
+            source={require('../../assets/Logo11.png')}
+            resizeMode={'contain'}
           />
-        </View>
 
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.registrationPress()}
-          >
-            <Text
-              style={{
-                color: common.btnTextColor,
-                fontSize: common.font10,
-              }}
-            >新用户注册</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.pwdBtnPress()}
-          >
-            <Text
-              style={{
-                color: common.btnTextColor,
-                fontSize: common.font10,
-              }}
-            >忘记密码？</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View
-          style={{
-            marginTop: common.margin36,
-            marginLeft: common.margin38,
-            marginRight: common.margin38,
-            height: common.h35,
-            backgroundColor: common.loginBtnBgColor,
-            borderRadius: 1,
-            justifyContent: 'center',
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.loginPress()}
-          >
-            <Text style={{
-              fontSize: common.font16,
-              color: 'white',
-              textAlign: 'center',
+          <TextInputLogin
+            viewStyle={{
+              marginTop: common.margin60,
             }}
-            >登录</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            title='账号'
+            placeholder="请输入11位手机号" />
+
+          <TextInputLogin
+            title='密码'
+            placeholder="请输入密码dd" />
+
+          <View
+            style={{
+              marginTop: common.margin10,
+              marginLeft: common.margin38,
+              marginRight: common.margin38,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              onPress={() => this.registrationPress()}
+            >
+              <Text
+                style={{
+                  color: common.btnTextColor,
+                  fontSize: common.font10,
+                }}
+              >新用户注册</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              onPress={() => this.pwdBtnPress()}
+            >
+              <Text
+                style={{
+                  color: common.btnTextColor,
+                  fontSize: common.font10,
+                }}
+              >忘记密码？</Text>
+            </TouchableOpacity>
+          </View>
+
+          <BtnLogin
+          title='登录'
+          onPress={() => this.loginPress()} />
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
