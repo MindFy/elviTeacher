@@ -15,24 +15,33 @@ import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 
 export default class Transactions extends Component {
-  static navigationOptions() {
+  static navigationOptions(props) {
     return {
-      title: '交易',
+      headerTitle: '交易',
       headerStyle: {
-        backgroundColor: '#171B29',
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
       },
-      headerTintColor: '#ffffff',
+      headerTintColor: 'white',
       headerTitleStyle: {
-        fontWeight: 'bold',
+        fontSize: common.font16,
       },
-      headerLeft: (<Button
-        onPress={() => alert(1)}
-        title="Info"
-        color="#fff"
-      />),
+      headerLeft: 
+      (
+        <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => props.navigation.navigate('Consignation')} >
+        <Image
+        style={{
+          marginLeft: common.margin10,
+          width: common.w20,
+          height: common.h20,
+        }}
+        source={require('../../assets/市场分析.png')} />
+        </TouchableOpacity>
+      ),
     }
   }
-
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })

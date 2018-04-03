@@ -1,18 +1,44 @@
 import React, { Component } from 'react'
 import {
   View,
-  StatusBar,
-  ScrollView,
-  TextInput,
   Text,
   Image,
+  StatusBar,
+  TextInput,
+  ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 import SelectImage from './SelectImage'
 
 export default class Authentication extends Component {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '身份认证',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft: 
+      (
+        <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => props.navigation.goBack()} >
+        <Image
+        style={{
+          marginLeft: common.margin10,
+          width: common.w10,
+          height: common.h20,
+        }}
+        source={require('../../assets/下拉copy.png')} />
+        </TouchableOpacity>
+      ),
+    }
+  }
   constructor() {
     super()
     this.state = {
@@ -196,10 +222,6 @@ export default class Authentication extends Component {
         }}
       >
         <StatusBar barStyle={'light-content'} />
-        <Navigator
-          headerTitle="身份认证"
-          leftImagePress={() => this.props.navigation.goBack()}
-        />
         {this.renderScrollView(this.state.authenticationState)}
       </View>
     )

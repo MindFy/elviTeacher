@@ -2,14 +2,41 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
+  Image,
   StatusBar,
   ListView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 
 export default class Consignation extends Component {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '我的委托',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft: 
+      (
+        <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => props.navigation.goBack()} >
+        <Image
+        style={{
+          marginLeft: common.margin10,
+          width: common.w10,
+          height: common.h20,
+        }}
+        source={require('../../assets/下拉copy.png')} />
+        </TouchableOpacity>
+      ),
+    }
+  }
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -256,10 +283,6 @@ export default class Consignation extends Component {
       >
         <StatusBar
           barStyle={'light-content'}
-        />
-        <Navigator
-          headerTitle="我的委托"
-          leftImagePress={() => this.props.navigation.goBack()}
         />
 
         <View

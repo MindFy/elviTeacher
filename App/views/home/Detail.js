@@ -9,10 +9,36 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 import KLine from './KLine'
 
 export default class Detail extends Component {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '详情',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft: 
+      (
+        <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => props.navigation.goBack()} >
+        <Image
+        style={{
+          marginLeft: common.margin10,
+          width: common.w10,
+          height: common.h20,
+        }}
+        source={require('../../assets/下拉copy.png')} />
+        </TouchableOpacity>
+      ),
+    }
+  }
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -213,10 +239,6 @@ export default class Detail extends Component {
       >
         <StatusBar
           barStyle={'light-content'}
-        />
-        <Navigator
-          headerTitle="详情"
-          leftImagePress={() => this.props.navigation.goBack()}
         />
 
         <ScrollView>

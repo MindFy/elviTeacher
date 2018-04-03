@@ -2,20 +2,42 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  StatusBar,
   Image,
+  StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 import BalanceCell from './BalanceCell'
 
 export default class Balance extends Component {
-  componentDidMount() { }
-  rightTitlePress() {
-    this.props.navigation.navigate('History')
+  static navigationOptions(props) {
+    return {
+      headerTitle: '资源',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerRight: 
+      (
+        <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => props.navigation.navigate('History')} >
+        <Text
+        style={{
+          marginRight: common.margin10,
+          fontSize: common.font16,
+          color: 'white'
+        }} >历史记录</Text>
+        </TouchableOpacity>
+      ),
+    }
   }
+  componentDidMount() { }
   rechargePress() {
     this.props.navigation.navigate('Recharge')
   }
@@ -32,11 +54,6 @@ export default class Balance extends Component {
       >
         <StatusBar
           barStyle={'light-content'}
-        />
-        <Navigator
-          headerTitle="资源"
-          rightTitle="历史记录"
-          rightTitlePress={() => this.rightTitlePress()}
         />
         <ScrollView>
           <View

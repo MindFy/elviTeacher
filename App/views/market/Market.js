@@ -2,15 +2,29 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
+  Image,
   StatusBar,
   ListView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 import MarketCell from './MarketCell'
 
 export default class Market extends Component {
+  static navigationOptions() {
+    return {
+      headerTitle: '市场',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft: null,
+    }
+  }
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -92,9 +106,6 @@ export default class Market extends Component {
       >
         <StatusBar
           barStyle={'light-content'}
-        />
-        <Navigator
-          headerTitle="市场"
         />
 
         <View

@@ -2,16 +2,43 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
+  Image,
   StatusBar,
   ScrollView,
   ListView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 import HistoryCell from './HistoryCell'
 
 export default class History extends Component {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '历史记录',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft: 
+      (
+        <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => props.navigation.goBack()} >
+        <Image
+        style={{
+          marginLeft: common.margin10,
+          width: common.w10,
+          height: common.h20,
+        }}
+        source={require('../../assets/下拉copy.png')} />
+        </TouchableOpacity>
+      ),
+    }
+  }
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
@@ -53,17 +80,13 @@ export default class History extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <Navigator
-          headerTitle="历史记录"
-          leftImagePress={() => this.props.navigation.goBack()}
-        />
 
         <View
           style={{
             marginTop: common.margin10,
             marginLeft: common.margin10,
             marginRight: common.margin10,
-            height: common.h50,
+            height: common.h40,
             flexDirection: 'row',
             justifyContent: 'center',
           }}
@@ -74,7 +97,7 @@ export default class History extends Component {
           >
             <View
               style={{
-                height: common.h50,
+                flex: 1,
                 width: (common.sw - common.margin10 * 2) / 2,
                 backgroundColor: common.navBgColor,
                 alignSelf: 'center',
@@ -96,7 +119,7 @@ export default class History extends Component {
           >
             <View
               style={{
-                height: common.h50,
+                flex: 1,
                 width: (common.sw - common.margin10 * 2) / 2,
                 backgroundColor: common.navBgColor,
                 alignSelf: 'center',
