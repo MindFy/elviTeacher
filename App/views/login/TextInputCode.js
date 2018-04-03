@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
 })
 
 export default class TextInputCode extends Component {
+  componentDidMount() {}
   render() {
     return (
       <View
@@ -55,7 +56,7 @@ export default class TextInputCode extends Component {
           >{this.props.title || '验证码'}</Text>
           <TextInput
             style={[styles.textInputStyle, this.props.textInputStyle]}
-            placeholder={this.props.placeholder || "请输入短信验证码"}
+            placeholder={this.props.placeholder || '请输入短信验证码'}
             placeholderTextColor={common.placeholderColor}
           />
         </View>

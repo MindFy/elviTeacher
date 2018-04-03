@@ -1,5 +1,4 @@
 import React from 'react'
-import { Button, Text, View, StatusBar } from 'react-native'
 import { StackNavigator, TabNavigator } from 'react-navigation'
 import { connect } from 'react-redux'
 import Home from './views/home/Home'

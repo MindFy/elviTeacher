@@ -30,7 +30,7 @@ export default class ConfirmPwd extends Component {
           textStyle={{
             width: common.w100,
           }}
-          title='密码'
+          title="密码"
           placeholder="请输入密码"
         />
 
@@ -38,7 +38,7 @@ export default class ConfirmPwd extends Component {
           textStyle={{
             width: common.w100,
           }}
-          title='再次输入新密码'
+          title="再次输入新密码"
           placeholder="请再次输入新密码"
         />
 
@@ -46,8 +46,9 @@ export default class ConfirmPwd extends Component {
           viewStyle={{
             marginTop: common.margin210,
           }}
-          title='确定'
-          onPress={() => this.confirmPress()} />
+          title="确定"
+          onPress={() => this.confirmPress()}
+        />
       </ScrollView>
     )
   }

@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   StatusBar,
-  Button,
   TextInput,
   ScrollView,
   ListView,
@@ -26,18 +25,20 @@ export default class Transactions extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft: 
+      headerLeft:
       (
         <TouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={() => props.navigation.navigate('Consignation')} >
-        <Image
-        style={{
-          marginLeft: common.margin10,
-          width: common.w20,
-          height: common.h20,
-        }}
-        source={require('../../assets/市场分析.png')} />
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.navigate('Consignation')}
+        >
+          <Image
+            style={{
+              marginLeft: common.margin10,
+              width: common.w20,
+              height: common.h20,
+            }}
+            source={require('../../assets/市场分析.png')}
+          />
         </TouchableOpacity>
       ),
     }

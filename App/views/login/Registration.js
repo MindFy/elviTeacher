@@ -24,7 +24,8 @@ export default class Registration extends Component {
           flex: 1,
           backgroundColor: common.bgColor,
         }}
-        behavior='padding' >
+        behavior="padding"
+      >
         <ScrollView >
           <StatusBar
             barStyle={'light-content'}
@@ -36,8 +37,9 @@ export default class Registration extends Component {
             textStyle={{
               width: common.w100,
             }}
-            title='账号'
-            placeholder="请输入11位手机号" />
+            title="账号"
+            placeholder="请输入11位手机号"
+          />
 
           <TextInputCode />
 
@@ -45,15 +47,17 @@ export default class Registration extends Component {
             textStyle={{
               width: common.w100,
             }}
-            title='密码'
-            placeholder="请输入密码" />
+            title="密码"
+            placeholder="请输入密码"
+          />
 
           <TextInputLogin
             textStyle={{
               width: common.w100,
             }}
-            title='再次确认密码'
-            placeholder="请再次输入密码" />
+            title="再次确认密码"
+            placeholder="请再次输入密码"
+          />
 
           <View
             style={{
@@ -105,8 +109,9 @@ export default class Registration extends Component {
             viewStyle={{
               marginTop: common.margin40,
             }}
-            title='注册'
-            onPress={() => this.registrationBtnPress()} />
+            title="注册"
+            onPress={() => this.registrationBtnPress()}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     )

@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
 })
 
 export default class BtnLogin extends Component {
+  componentDidMount() {}
   render() {
     return (
       <View
@@ -34,8 +35,7 @@ export default class BtnLogin extends Component {
           activeOpacity={common.activeOpacity}
           onPress={this.props.onPress}
         >
-          <Text style={[styles.textStyle, this.props.textStyle]}
-          >{this.props.title}</Text>
+          <Text style={[styles.textStyle, this.props.textStyle]}>{this.props.title}</Text>
         </TouchableOpacity>
       </View>
     )

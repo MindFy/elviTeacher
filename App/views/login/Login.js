@@ -30,7 +30,8 @@ export default class Login extends Component {
           flex: 1,
           backgroundColor: common.bgColor,
         }}
-        behavior='padding' >
+        behavior="padding"
+      >
         <ScrollView>
           <StatusBar
             barStyle={'light-content'}
@@ -51,12 +52,14 @@ export default class Login extends Component {
             viewStyle={{
               marginTop: common.margin60,
             }}
-            title='账号'
-            placeholder="请输入11位手机号" />
+            title="账号"
+            placeholder="请输入11位手机号"
+          />
 
           <TextInputLogin
-            title='密码'
-            placeholder="请输入密码dd" />
+            title="密码"
+            placeholder="请输入密码dd"
+          />
 
           <View
             style={{
@@ -92,8 +95,9 @@ export default class Login extends Component {
           </View>
 
           <BtnLogin
-          title='登录'
-          onPress={() => this.loginPress()} />
+            title="登录"
+            onPress={() => this.loginPress()}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     )

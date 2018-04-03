@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
 })
 
 export default class TextInputLogin extends Component {
+  componentDidMount() {}
   render() {
     return (
       <View
@@ -43,13 +44,13 @@ export default class TextInputLogin extends Component {
         >{this.props.title}</Text>
         <TextInput
           style={styles.textInputStyle}
-          autoCapitalize='none'
+          autoCapitalize="none"
           placeholder={this.props.placeholder}
           placeholderTextColor={common.placeholderColor}
           password={this.props.password}
           multiline={false}
-          editable={true}
-          autoFocus={true}
+          editable
+          autoFocus
         />
       </View>
     )

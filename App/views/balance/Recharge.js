@@ -22,31 +22,35 @@ export default class Recharge extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft: 
+      headerLeft:
       (
         <TouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={() => props.navigation.goBack()} >
-        <Image
-        style={{
-          marginLeft: common.margin10,
-          width: common.w10,
-          height: common.h20,
-        }}
-        source={require('../../assets/下拉copy.png')} />
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={{
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
+            }}
+            source={require('../../assets/下拉copy.png')}
+          />
         </TouchableOpacity>
       ),
-      headerRight: 
+      headerRight:
       (
         <TouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={() => props.navigation.navigate('History')} >
-        <Text
-        style={{
-          marginRight: common.margin10,
-          fontSize: common.font16,
-          color: 'white'
-        }} >历史记录</Text>
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.navigate('History')}
+        >
+          <Text
+            style={{
+              marginRight: common.margin10,
+              fontSize: common.font16,
+              color: 'white',
+            }}
+          >历史记录</Text>
         </TouchableOpacity>
       ),
     }

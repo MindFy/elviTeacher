@@ -31,7 +31,7 @@ export default class ForgotPwd extends Component {
           textStyle={{
             width: common.w100,
           }}
-          title='账号'
+          title="账号"
           placeholder="请输入11位手机号"
         />
 
@@ -41,8 +41,9 @@ export default class ForgotPwd extends Component {
           viewStyle={{
             marginTop: common.margin210,
           }}
-          title='下一步'
-          onPress={() => this.nextPress()} />
+          title="下一步"
+          onPress={() => this.nextPress()}
+        />
       </ScrollView>
     )
   }

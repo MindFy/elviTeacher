@@ -22,17 +22,19 @@ export default class Balance extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerRight: 
+      headerRight:
       (
         <TouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={() => props.navigation.navigate('History')} >
-        <Text
-        style={{
-          marginRight: common.margin10,
-          fontSize: common.font16,
-          color: 'white'
-        }} >历史记录</Text>
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.navigate('History')}
+        >
+          <Text
+            style={{
+              marginRight: common.margin10,
+              fontSize: common.font16,
+              color: 'white',
+            }}
+          >历史记录</Text>
         </TouchableOpacity>
       ),
     }

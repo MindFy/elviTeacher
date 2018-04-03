@@ -10,7 +10,7 @@ import {
 import { common } from '../common'
 
 export default class Me extends Component {
-  static navigationOptions(props) {
+  static navigationOptions() {
     return {
       headerTitle: '我的',
       headerStyle: {

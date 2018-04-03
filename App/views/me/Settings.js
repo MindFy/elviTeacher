@@ -21,18 +21,20 @@ export default class Settings extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft: 
+      headerLeft:
       (
         <TouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={() => props.navigation.goBack()} >
-        <Image
-        style={{
-          marginLeft: common.margin10,
-          width: common.w10,
-          height: common.h20,
-        }}
-        source={require('../../assets/下拉copy.png')} />
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={{
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
+            }}
+            source={require('../../assets/下拉copy.png')}
+          />
         </TouchableOpacity>
       ),
     }
