@@ -1,125 +1,93 @@
-import { StackNavigator } from 'react-navigation'
-import TabBar from './tabbar'
+import React from 'react'
+import { Button, Text, View, StatusBar } from 'react-native'
+import { StackNavigator, TabNavigator } from 'react-navigation'
+import { connect } from 'react-redux'
+import NavigatorScreen from './containers/NavigatorScreen'
+import HomeScreen from './views/home/Home'
+import TransactionsScreen from './views/transactions/Transactions'
 
-import Login from './views/login/Login'
-import Registration from './views/login/Registration'
-import ForgotPwd from './views/login/ForgotPwd'
-import ConfirmPwd from './views/login/ConfirmPwd'
+function Me(props) {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings!</Text>
+      <Button
+        title="Go to Home"
+        onPress={() => props.navigation.navigate('Home')}
+      />
+      <Button
+        title="Go to Details"
+        onPress={() => props.navigation.navigate('Details')}
+      />
+    </View>
+  )
+}
 
-import Detail from './views/home/Detail'
+function DetailsScreen() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Details!</Text>
+    </View>
+  )
+}
 
-import Consignation from './views/transactions/Consignation'
+function Market() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Market</Text>
+    </View>
+  )
+}
 
-import Me from './views/me/Me'
-import Settings from './views/me/Settings'
-import SetPwd from './views/me/SetPwd'
-import Authentication from './views/me/Authentication'
+function Balance() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Balance</Text>
+    </View>
+  )
+}
 
-import Balance from './views/balance/Balance'
-import Recharge from './views/balance/Recharge'
-import Cash from './views/balance/Cash'
-import History from './views/balance/History'
-import AddAddress from './views/balance/AddAddress'
+function Transaction() {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Transaction</Text>
+    </View>
+  )
+}
 
-export default StackNavigator(
+const TabBar = TabNavigator(
   {
-    TabBar: {
-      screen: TabBar,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Registration: {
-      screen: Registration,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ForgotPwd: {
-      screen: ForgotPwd,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    ConfirmPwd: {
-      screen: ConfirmPwd,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Me: {
-      screen: Me,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Settings: {
-      screen: Settings,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    SetPwd: {
-      screen: SetPwd,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Authentication: {
-      screen: Authentication,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Balance: {
-      screen: Balance,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Recharge: {
-      screen: Recharge,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Cash: {
-      screen: Cash,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    History: {
-      screen: History,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    AddAddress: {
-      screen: AddAddress,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Detail: {
-      screen: Detail,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Consignation: {
-      screen: Consignation,
-      navigationOptions: {
-        header: null,
-      },
-    },
-  }, {
-    initialRouteName: 'TabBar',
+    Home: { screen: HomeScreen, navigationOptions: { header: null } },
+    Market: { screen: Market },
+    Transaction: { screen: TransactionsScreen },
+    Balance: { screen: Balance },
+    Me: { screen: Me },
   },
 )
+
+const Details = NavigatorScreen(DetailsScreen, {
+  title: 'Home',
+  headerStyle: {
+    backgroundColor: '#171B29',
+  },
+  headerTintColor: '#ffffff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+  headerLeft: (<Button
+    onPress={() => alert(1)}
+    title="Info"
+    color="#fff"
+  />),
+})
+
+const Settings = NavigatorScreen(Me)
+
+const RootStack = StackNavigator({
+  TabBar,
+  Details,
+  Settings,
+})
+
+const RootNavigator = RootStack
+
+export default RootNavigator

@@ -204,10 +204,6 @@ export default class Transactions extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <Navigator
-          headerTitle="交易"
-        />
-
         <View
           style={{
             height: common.h32,
