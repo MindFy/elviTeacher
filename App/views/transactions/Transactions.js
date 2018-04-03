@@ -4,17 +4,35 @@ import {
   Text,
   Image,
   StatusBar,
+  Button,
   TextInput,
   ScrollView,
   ListView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import Navigator from '../Navigator'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 
 export default class Transactions extends Component {
+  static navigationOptions() {
+    return {
+      title: '交易',
+      headerStyle: {
+        backgroundColor: '#171B29',
+      },
+      headerTintColor: '#ffffff',
+      headerTitleStyle: {
+        fontWeight: 'bold',
+      },
+      headerLeft: (<Button
+        onPress={() => alert(1)}
+        title="Info"
+        color="#fff"
+      />),
+    }
+  }
+
   constructor() {
     super()
     this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
