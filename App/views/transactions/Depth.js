@@ -298,15 +298,15 @@ export default class Depth extends Component {
           splitLine: {
             show: false,
           },
-          axisPointer: {
-            show: true,
-            type: 'line',
-            snap: true,
-            label: {
-              show: true,
-            },
-            triggerTooltip: true,
-          },
+          // axisPointer: {
+          //   show: true,
+          //   type: 'line',
+          //   snap: true,
+          //   label: {
+          //     show: true,
+          //   },
+          //   triggerTooltip: true,
+          // },
         }, {
           show: true,
           position: 'right',
