@@ -4,12 +4,14 @@ import {
   Text,
   Image,
   StatusBar,
-  TextInput,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { common } from '../common'
 import SelectImage from './SelectImage'
+import TextInputPwd from './TextInputPwd'
+import BtnLogout from './BtnLogout'
 
 export default class Authentication extends Component {
   static navigationOptions(props) {
@@ -24,21 +26,21 @@ export default class Authentication extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
     }
   }
   constructor() {
@@ -54,90 +56,41 @@ export default class Authentication extends Component {
     })
   }
 
-  /*  */
   renderScrollView(state) {
     switch (state) {
       case -1:
         return (
-          <ScrollView>
-            <View
-              style={{
-                marginTop: common.margin10,
-                marginLeft: common.margin10,
-                marginRight: common.margin10,
-                height: common.h40,
-                backgroundColor: common.navBgColor,
-                borderWidth: 1,
-                borderColor: common.borderColor,
-                justifyContent: 'center',
-              }}
-            >
-              <TextInput
-                style={{
-                  marginLeft: common.margin10,
-                  fontSize: common.font14,
-                }}
-                placeholder={'姓名'}
-                placeholderTextColor={common.placeholderColor}
+          <KeyboardAvoidingView
+            behavior="padding"
+          >
+            <ScrollView>
+              <TextInputPwd
+                placeholder="姓名"
               />
-            </View>
-
-            <View
-              style={{
-                marginTop: common.margin10,
-                marginLeft: common.margin10,
-                marginRight: common.margin10,
-                height: common.h40,
-                backgroundColor: common.navBgColor,
-                borderColor: common.borderColor,
-                borderWidth: 1,
-                justifyContent: 'center',
-              }}
-            >
-              <TextInput
-                style={{
-                  marginLeft: common.margin10,
-                  fontSize: common.font14,
-                }}
-                placeholder={'身份证号'}
-                placeholderTextColor={common.placeholderColor}
+              <TextInputPwd
+                placeholder="身份证号"
               />
-            </View>
 
-            <SelectImage
-              title={'请上传身份证正面照片'}
-            />
-            <SelectImage
-              title={'请上传身份证反面照片'}
-            />
-            <SelectImage
-              title={'请上传手持身份证照片'}
-            />
+              <SelectImage
+                title={'请上传身份证正面照片'}
+              />
+              <SelectImage
+                title={'请上传身份证反面照片'}
+              />
+              <SelectImage
+                title={'请上传手持身份证照片'}
+              />
 
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => this.confirmPress(0)}
-            >
-              <View
-                style={{
+              <BtnLogout
+                viewStyle={{
                   marginTop: common.margin40,
                   height: common.h44,
-                  backgroundColor: common.navBgColor,
-                  justifyContent: 'center',
-                  borderRadius: 5,
                 }}
-              >
-                <Text
-                  style={{
-                    fontSize: common.font14,
-                    color: common.btnTextColor,
-                    textAlign: 'center',
-                  }}
-                >确认</Text>
-              </View>
-            </TouchableOpacity>
-
-          </ScrollView>
+                onPress={() => this.confirmPress(0)}
+                title="确认"
+              />
+            </ScrollView>
+          </KeyboardAvoidingView>
         )
       case 1:
         return (

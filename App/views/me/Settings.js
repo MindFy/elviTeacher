@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import {
-  View,
-  Text,
   Image,
   StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
+import MeCell from './MeCell'
 
 export default class Settings extends Component {
   static navigationOptions(props) {
@@ -22,30 +21,27 @@ export default class Settings extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
     }
   }
   componentDidMount() { }
-  changePwd() {
-    this.props.navigation.navigate('SetPwd')
-  }
   render() {
     return (
-      <View
+      <ScrollView
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
@@ -54,106 +50,27 @@ export default class Settings extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <ScrollView >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.changePwd()}
-          >
-            <View
-              style={{
-                marginTop: common.margin10,
-                height: common.h40,
-                backgroundColor: common.navBgColor,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text
-                style={{
-                  marginLeft: common.margin10,
-                  fontSize: common.font14,
-                  color: common.textColor,
-                  alignSelf: 'center',
-                }}
-              >修改密码</Text>
-              <Image
-                style={{
-                  marginRight: common.margin10,
-                  width: common.w10,
-                  height: common.h20,
-                }}
-                source={require('../../assets/下拉--向右.png')}
-              />
-            </View>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-          >
-            <View
-              style={{
-                marginTop: common.margin5,
-                height: common.h40,
-                backgroundColor: common.navBgColor,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text
-                style={{
-                  marginLeft: common.margin10,
-                  fontSize: common.font14,
-                  color: common.textColor,
-                  alignSelf: 'center',
-                }}
-              >语言选择</Text>
-              <Image
-                style={{
-                  marginRight: common.margin10,
-                  width: common.w10,
-                  height: common.h20,
-                }}
-                source={require('../../assets/下拉--向右.png')}
-              />
-            </View>
-          </TouchableOpacity>
+        <MeCell
+          viewStyle={{
+            marginTop: common.margin10,
+          }}
+          leftImageHide
+          onPress={() => this.props.navigation.navigate('SetPwd')}
+          title="修改密码"
+        />
+        <MeCell
+          leftImageHide
+          onPress={() => {}}
+          title="语言选择"
+        />
+        <MeCell
+          leftImageHide
+          onPress={() => {}}
+          title="版本显示"
+        />
 
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-          >
-            <View
-              style={{
-                marginTop: common.margin5,
-                height: common.h40,
-                backgroundColor: common.navBgColor,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Text
-                style={{
-                  marginLeft: common.margin10,
-                  fontSize: common.font14,
-                  color: common.textColor,
-                  alignSelf: 'center',
-                }}
-              >版本显示</Text>
-              <Image
-                style={{
-                  marginRight: common.margin10,
-                  width: common.w10,
-                  height: common.h20,
-                }}
-                source={require('../../assets/下拉--向右.png')}
-              />
-            </View>
-          </TouchableOpacity>
-
-        </ScrollView>
-      </View>
+      </ScrollView>
     )
   }
 }
