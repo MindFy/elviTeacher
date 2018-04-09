@@ -330,13 +330,14 @@ export default class KLine extends Component {
       for (let i = 0; i < optionData.values.length; i++) {
         if (i < dayCount) {
           result.push('-')
+        } else {
+          let sum = 0
+          for (let j = 0; j < dayCount; j++) {
+            sum += optionData.values[i - j][1]
+          }
+          // toFixed:四舍五入保留3位小数
+          result.push(+(sum / dayCount).toFixed(3))
         }
-        let sum = 0
-        for (let j = 0; j < dayCount; j++) {
-          sum += optionData.values[i - j][1]
-        }
-        // toFixed:四舍五入保留3位小数
-        result.push(+(sum / dayCount).toFixed(3))
       }
     }
     return result
