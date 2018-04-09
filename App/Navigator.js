@@ -16,6 +16,12 @@ import Authentication from './views/me/Authentication'
 import Settings from './views/me/Settings'
 import SetPwd from './views/me/SetPwd'
 
+import DismissableStackNavigator from './DismissableStackNavigator'
+import Login from './views/login/Login'
+import Registration from './views/login/Registration'
+import ForgotPwd from './views/login/ForgotPwd'
+import ConfirmPwd from './views/login/ConfirmPwd'
+
 const TabBar = TabNavigator(
   {
     Home: { screen: Home, navigationOptions: { header: null } },
@@ -26,7 +32,7 @@ const TabBar = TabNavigator(
   },
 )
 
-const RootStack = StackNavigator({
+const TabBarStack = StackNavigator({
   TabBar,
   Detail,
   Consignation,
@@ -39,6 +45,48 @@ const RootStack = StackNavigator({
   SetPwd,
 })
 
-const RootNavigator = RootStack
+const LoginStack = DismissableStackNavigator({
+  Login: {
+    screen: Login,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  Registration: {
+    screen: Registration,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ForgotPwd: {
+    screen: ForgotPwd,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ConfirmPwd: {
+    screen: ConfirmPwd,
+    navigationOptions: {
+      header: null,
+    },
+  },
+})
 
-export default RootNavigator
+const RootStack = StackNavigator({
+  TabBarStack: {
+    screen: TabBarStack,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  LoginStack: {
+    screen: LoginStack,
+    navigationOptions: {
+      header: null,
+    },
+  },
+}, {
+  mode: 'modal',
+})
+
+export default RootStack

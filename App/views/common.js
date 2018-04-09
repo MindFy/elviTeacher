@@ -74,6 +74,8 @@ const common = {
   radius6: 6,
 
   activeOpacity: 0.7,
+
+  reg: /^[0-9]+.?[0-9]*$/, // 是否为数字
 }
 
 module.exports = {
