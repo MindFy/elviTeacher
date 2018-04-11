@@ -64,6 +64,8 @@ class Login extends Component {
         messageStyle: {
           marginTop: common.margin10,
           alignSelf: 'center',
+          color: 'white',
+          fontSize: common.font14,
         },
       })
       return
@@ -94,6 +96,8 @@ class Login extends Component {
           messageStyle: {
             marginTop: common.margin10,
             alignSelf: 'center',
+            color: 'white',
+            fontSize: common.font14,
           },
         })
         this.props.screenProps.dismiss()
@@ -106,6 +110,8 @@ class Login extends Component {
           messageStyle: {
             marginTop: common.margin10,
             alignSelf: 'center',
+            color: 'white',
+            fontSize: common.font14,
           },
         })
         break
