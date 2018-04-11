@@ -1,15 +1,12 @@
 import { combineReducers } from 'redux'
-
-function reducer1(state = '', action) {
-  return state
-}
+import user from '../views/login/reducer'
 
 function reducer2(state = '', action) {
   return state
 }
 
 const rootReducer = combineReducers({
-  reducer1,
+  user,
   reducer2,
 })
 

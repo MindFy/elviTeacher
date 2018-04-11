@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   ScrollView,
   View,
@@ -8,22 +9,114 @@ import {
   KeyboardAvoidingView,
   StatusBar,
 } from 'react-native'
+import {
+  MessageBar,
+  MessageBarManager,
+} from 'react-native-message-bar'
+import Spinner from 'react-native-spinkit'
+import {
+  updateUser,
+  loginRequest,
+} from './actions'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
 
-export default class Login extends Component {
-  componentDidMount() { }
-  registrationPress() {
-    this.props.navigation.navigate('Registration')
+class Login extends Component {
+  constructor() {
+    super()
+    // 组件渲染时，是否需要显示成功/失败提示
+    this.needShowAlert = false
+
+    // binds
+    this.loginPress = this.loginPress.bind(this)
+
+    // refs
+    this.msgBar = undefined
   }
-  pwdBtnPress() {
-    this.props.navigation.navigate('ForgotPwd')
+
+  componentDidMount() {
+    MessageBarManager.registerMessageBar(this.msgBar)
   }
+
+  componentWillUnmount() {
+    MessageBarManager.unregisterMessageBar()
+  }
+
+  onChange(event, tag) {
+    const { text } = event.nativeEvent
+    const { dispatch, user } = this.props
+
+    if (tag === 1) {
+      dispatch(updateUser(text, user.password))
+    } else if (tag === 0) {
+      dispatch(updateUser(user.username, text))
+    }
+  }
+
   loginPress() {
-    this.props.screenProps.dismiss()
+    const { dispatch, user } = this.props
+    if (!user.username.length || !user.password.length) {
+      MessageBarManager.showAlert({
+        message: '请检查用户名和密码',
+        alertType: 'warning',
+        duration: 1500,
+        messageStyle: {
+          marginTop: common.margin10,
+          alignSelf: 'center',
+        },
+      })
+      return
+    }
+    dispatch(loginRequest({
+      username: user.username,
+      password: user.password,
+    }))
   }
+
+  /* 登录请求结果处理 */
+  loginRequestResult() {
+    const { user } = this.props
+    if (!user.isVisible && !this.needShowAlert) return
+    if (user.isVisible) {
+      this.needShowAlert = true
+    } else {
+      this.needShowAlert = false
+    }
+    switch (user.loginStatus) {
+      case 0:
+        break
+      case 1:
+        MessageBarManager.showAlert({
+          message: '登录成功',
+          alertType: 'success',
+          duration: 1500,
+          messageStyle: {
+            marginTop: common.margin10,
+            alignSelf: 'center',
+          },
+        })
+        this.props.screenProps.dismiss()
+        break
+      case -1:
+        MessageBarManager.showAlert({
+          message: '登录失败',
+          alertType: 'error',
+          duration: 1500,
+          messageStyle: {
+            marginTop: common.margin10,
+            alignSelf: 'center',
+          },
+        })
+        break
+      default:
+        break
+    }
+  }
+
   render() {
+    this.loginRequestResult()
+
     return (
       <KeyboardAvoidingView
         style={{
@@ -32,6 +125,23 @@ export default class Login extends Component {
         }}
         behavior="padding"
       >
+        <MessageBar
+          ref={(e) => {
+            this.msgBar = e
+          }}
+        />
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+            zIndex: 20,
+          }}
+          isVisible={this.props.user.isVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
         <ScrollView>
           <StatusBar
             barStyle={'light-content'}
@@ -54,11 +164,13 @@ export default class Login extends Component {
             }}
             title="账号"
             placeholder="请输入11位手机号"
+            onChange={e => this.onChange(e, 1)}
           />
 
           <TextInputLogin
             title="密码"
-            placeholder="请输入密码dd"
+            placeholder="请输入密码"
+            onChange={e => this.onChange(e, 0)}
           />
 
           <View
@@ -72,7 +184,7 @@ export default class Login extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.registrationPress()}
+              onPress={() => this.props.navigation.navigate('Registration')}
             >
               <Text
                 style={{
@@ -83,7 +195,7 @@ export default class Login extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.pwdBtnPress()}
+              onPress={() => this.props.navigation.navigate('ForgotPwd')}
             >
               <Text
                 style={{
@@ -96,10 +208,18 @@ export default class Login extends Component {
 
           <BtnLogin
             title="登录"
-            onPress={() => this.loginPress()}
+            onPress={this.loginPress}
           />
         </ScrollView>
       </KeyboardAvoidingView>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return state
+}
+
+export default connect(
+  mapStateToProps,
+)(Login)
