@@ -1,13 +1,10 @@
 import { combineReducers } from 'redux'
-import user from '../views/login/reducer'
-
-function reducer2(state = '', action) {
-  return state
-}
+import login from '../views/login/reducers/login'
+import register from '../views/login/reducers/register'
 
 const rootReducer = combineReducers({
-  user,
-  reducer2,
+  login,
+  register,
 })
 
 export default rootReducer

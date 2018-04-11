@@ -31,6 +31,7 @@ export default class BtnLogin extends Component {
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
+        disabled={this.props.disabled}
       >
         <Text
           style={[styles.textStyle, this.props.textStyle]}

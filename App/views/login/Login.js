@@ -45,84 +45,79 @@ class Login extends Component {
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, user } = this.props
+    const { dispatch, username, password } = this.props
 
-    if (tag === 1) {
-      dispatch(updateUser(text, user.password))
-    } else if (tag === 0) {
-      dispatch(updateUser(user.username, text))
+    if (tag === 'username') {
+      dispatch(updateUser(text, password))
+    } else if (tag === 'password') {
+      dispatch(updateUser(username, text))
     }
   }
 
+  showAlert(message, alertType) {
+    MessageBarManager.showAlert({
+      message,
+      alertType,
+      duration: common.messageBarDur,
+      messageStyle: {
+        marginTop: common.margin10,
+        alignSelf: 'center',
+        color: 'white',
+        fontSize: common.font14,
+      },
+    })
+  }
+
   loginPress() {
-    const { dispatch, user } = this.props
-    if (!user.username.length || !user.password.length) {
-      MessageBarManager.showAlert({
-        message: '请检查用户名和密码',
-        alertType: 'warning',
-        duration: 1500,
-        messageStyle: {
-          marginTop: common.margin10,
-          alignSelf: 'center',
-          color: 'white',
-          fontSize: common.font14,
-        },
-      })
+    const { dispatch, username, password } = this.props
+    if (!username.length) {
+      this.showAlert('请输入账号', 'warning')
       return
     }
+    if (!password.length) {
+      this.showAlert('请输入密码', 'warning')
+      return
+    }
+    if (!common.reg.test(username)) {
+      this.showAlert('请输入正确的手机号', 'warning')
+      return
+    }
+
     dispatch(loginRequest({
-      username: user.username,
-      password: user.password,
+      username,
+      password,
     }))
   }
 
   /* 登录请求结果处理 */
   loginRequestResult() {
-    const { user } = this.props
-    if (!user.isVisible && !this.needShowAlert) return
-    if (user.isVisible) {
+    const { isVisible, loginStatus, screenProps, loginResult } = this.props
+    if (!isVisible && !this.needShowAlert) return
+    if (isVisible) {
       this.needShowAlert = true
     } else {
       this.needShowAlert = false
-    }
-    switch (user.loginStatus) {
-      case 0:
-        break
-      case 1:
-        MessageBarManager.showAlert({
-          message: '登录成功',
-          alertType: 'success',
-          duration: 1500,
-          messageStyle: {
-            marginTop: common.margin10,
-            alignSelf: 'center',
-            color: 'white',
-            fontSize: common.font14,
-          },
-        })
-        this.props.screenProps.dismiss()
-        break
-      case -1:
-        MessageBarManager.showAlert({
-          message: '登录失败',
-          alertType: 'error',
-          duration: 1500,
-          messageStyle: {
-            marginTop: common.margin10,
-            alignSelf: 'center',
-            color: 'white',
-            fontSize: common.font14,
-          },
-        })
-        break
-      default:
-        break
+      switch (loginStatus) {
+        case 0:
+          break
+        case 1:
+          this.showAlert('登录成功', 'success')
+          // screenProps.dismiss()
+          break
+        case -1:
+          this.showAlert((loginResult.code === 4000114 ?
+            '密码不正确' :
+            loginResult.message), 'error')
+          break
+        default:
+          break
+      }
     }
   }
 
   render() {
     this.loginRequestResult()
-
+    const { isVisible, navigation } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -131,26 +126,26 @@ class Login extends Component {
         }}
         behavior="padding"
       >
-        <MessageBar
-          ref={(e) => {
-            this.msgBar = e
-          }}
-        />
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
-            zIndex: 20,
-          }}
-          isVisible={this.props.user.isVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
-        />
         <ScrollView>
           <StatusBar
             barStyle={'light-content'}
+          />
+          <MessageBar
+            ref={(e) => {
+              this.msgBar = e
+            }}
+          />
+          <Spinner
+            style={{
+              position: 'absolute',
+              alignSelf: 'center',
+              marginTop: common.sh / 2 - common.h50 / 2,
+              zIndex: 20,
+            }}
+            isVisible={isVisible}
+            size={common.h50}
+            type={'Wave'}
+            color={common.btnTextColor}
           />
 
           <Image
@@ -170,13 +165,15 @@ class Login extends Component {
             }}
             title="账号"
             placeholder="请输入11位手机号"
-            onChange={e => this.onChange(e, 1)}
+            maxLength={11}
+            onChange={e => this.onChange(e, 'username')}
           />
 
           <TextInputLogin
             title="密码"
             placeholder="请输入密码"
-            onChange={e => this.onChange(e, 0)}
+            maxLength={10}
+            onChange={e => this.onChange(e, 'password')}
           />
 
           <View
@@ -190,7 +187,7 @@ class Login extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.props.navigation.navigate('Registration')}
+              onPress={() => navigation.navigate('Register')}
             >
               <Text
                 style={{
@@ -201,7 +198,7 @@ class Login extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.props.navigation.navigate('ForgotPwd')}
+              onPress={() => navigation.navigate('ForgotPwd')}
             >
               <Text
                 style={{
@@ -215,15 +212,23 @@ class Login extends Component {
           <BtnLogin
             title="登录"
             onPress={this.loginPress}
+            disabled={isVisible}
           />
         </ScrollView>
       </KeyboardAvoidingView>
+
     )
   }
 }
 
 function mapStateToProps(state) {
-  return state
+  return {
+    username: state.login.username,
+    password: state.login.password,
+    loginStatus: state.login.loginStatus,
+    isVisible: state.login.isVisible,
+    loginResult: state.login.loginResult,
+  }
 }
 
 export default connect(

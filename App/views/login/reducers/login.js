@@ -3,16 +3,17 @@ import {
   LOGIN_FAILED,
   LOGIN_REQUEST,
   LOGIN_SUCCEED,
-} from '../../constants/index'
+} from '../../../constants/index'
 
 const initialState = {
   username: '',
   password: '',
   loginStatus: 0,
   isVisible: false,
+  loginResult: {},
 }
 
-export default function user(state = initialState, action) {
+export default function login(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
@@ -34,6 +35,7 @@ export default function user(state = initialState, action) {
         ...state,
         loginStatus: 1,
         isVisible: false,
+        loginResult: action.result,
       }
       break
     case LOGIN_FAILED:
@@ -41,6 +43,7 @@ export default function user(state = initialState, action) {
         ...state,
         loginStatus: -1,
         isVisible: false,
+        loginResult: action.error,
       }
       break
     default:
