@@ -8,22 +8,19 @@ import { common } from '../common'
 
 const styles = StyleSheet.create({
   viewStyle: {
-    marginTop: common.margin36,
-    marginLeft: common.margin38,
-    marginRight: common.margin38,
-    height: common.h35,
-    backgroundColor: common.loginBtnBgColor,
-    borderRadius: 1,
+    marginTop: common.margin40,
+    height: common.h40,
+    backgroundColor: common.navBgColor,
     justifyContent: 'center',
   },
-  textStyle: {
+  titleStyle: {
     fontSize: common.font16,
-    color: 'white',
+    color: common.btnTextColor,
     textAlign: 'center',
   },
 })
 
-export default class BtnLogin extends Component {
+export default class BtnLogout extends Component {
   componentDidMount() { }
   render() {
     return (
@@ -33,7 +30,7 @@ export default class BtnLogin extends Component {
         onPress={this.props.onPress}
       >
         <Text
-          style={[styles.textStyle, this.props.textStyle]}
+          style={styles.titleStyle}
         >{this.props.title}</Text>
       </TouchableOpacity>
     )

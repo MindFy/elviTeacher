@@ -24,21 +24,21 @@ export default class Detail extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
     }
   }
   constructor() {
@@ -414,6 +414,7 @@ export default class Detail extends Component {
           <View
             style={{
               marginTop: common.margin10,
+              marginBottom: common.margin5,
               height: common.h32,
               backgroundColor: common.navBgColor,
               flexDirection: 'row',
@@ -474,7 +475,7 @@ export default class Detail extends Component {
 
           <KLine
             width={common.sw}
-            height={common.sw * common.sw / common.sh}
+            height={common.sw * 0.8}
           />
 
           <View

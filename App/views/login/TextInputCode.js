@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 })
 
 export default class TextInputCode extends Component {
-  componentDidMount() {}
+  componentDidMount() { }
   render() {
     return (
       <View
@@ -60,20 +60,17 @@ export default class TextInputCode extends Component {
             placeholderTextColor={common.placeholderColor}
           />
         </View>
-        <View
+        <TouchableOpacity
           style={{
             justifyContent: 'center',
             marginRight: common.margin10,
           }}
+          activeOpacity={common.activeOpacity}
         >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-          >
-            <Text
-              style={[styles.btnTextStyle, this.props.btnTextStyle]}
-            >{this.props.btnTitle || '获取验证码'}</Text>
-          </TouchableOpacity>
-        </View>
+          <Text
+            style={[styles.btnTextStyle, this.props.btnTextStyle]}
+          >{this.props.btnTitle || '获取验证码'}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
