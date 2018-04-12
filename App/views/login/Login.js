@@ -79,8 +79,9 @@ class Login extends Component {
 
   /* 请求结果处理 */
   handleLoginRequest() {
-    const { isVisible, loginResponse, screenProps } = this.props
+    const { isVisible, loginResponse, screenProps, navigation } = this.props
     if (!isVisible && !this.showLoginResponse) return
+
     if (isVisible) {
       this.showLoginResponse = true
     } else {
@@ -91,6 +92,7 @@ class Login extends Component {
           if (error) {
             this.showAlert('用户保存失败', 'error')
           } else {
+            navigation.state.params.dismissBlock()
             screenProps.dismiss()
           }
         })
@@ -199,24 +201,24 @@ class Login extends Component {
             onPress={this.loginPress}
             disabled={isVisible}
           />
-        </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
-          }}
-          isVisible={isVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
-        />
-        <MessageBar
-          ref={(e) => {
-            this.msgBar = e
-          }}
-        />
+          <Spinner
+            style={{
+              position: 'absolute',
+              alignSelf: 'center',
+              marginTop: common.sh / 2 - common.h50 / 2,
+            }}
+            isVisible={isVisible}
+            size={common.h50}
+            type={'Wave'}
+            color={common.btnTextColor}
+          />
+          <MessageBar
+            ref={(e) => {
+              this.msgBar = e
+            }}
+          />
+        </ScrollView>
       </KeyboardAvoidingView>
     )
   }

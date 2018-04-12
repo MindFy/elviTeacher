@@ -24,6 +24,7 @@ const initialState = {
 
 export default function resetPassword(state = initialState, action) {
   let nextState = state
+  console.log('-resetPassword->', action)
 
   switch (action.type) {
     case RESET_PASSWORD_UPDATE:

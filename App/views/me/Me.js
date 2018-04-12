@@ -1,13 +1,23 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   StatusBar,
   ScrollView,
 } from 'react-native'
-import { common } from '../common'
+import Spinner from 'react-native-spinkit'
+import {
+  userInfoUpdate,
+  logoutRequest,
+} from '../../actions/me'
+import {
+  common,
+  storeRead,
+  storeDelete,
+} from '../common'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 
-export default class Me extends Component {
+class Me extends Component {
   static navigationOptions() {
     return {
       headerTitle: '我的',
@@ -22,19 +32,74 @@ export default class Me extends Component {
       headerLeft: null,
     }
   }
-  constructor() {
-    super()
-    this.state = {
-      phoneNum: '请登录',
-    }
+
+  constructor(props) {
+    super(props)
+    const { dispatch } = props
+
+    this.showLogoutResponse = false
+
+    this.logoutPress = this.logoutPress.bind(this)
+    this.loginPress = this.loginPress.bind(this)
+
+    this.readAndDisplay(dispatch)
   }
+
   componentDidMount() { }
-  loginPress(obj) {
-    if (!common.reg.test(obj)) {
-      this.props.navigation.navigate('LoginStack')
+
+  readAndDisplay(dispatch) {
+    storeRead(common.user, (result) => {
+      dispatch(userInfoUpdate(JSON.parse(result)))
+    })
+  }
+
+  loginPress() {
+    const { dispatch, user } = this.props
+    const dismissBlock = () => {
+      this.readAndDisplay(dispatch)
+    }
+    if (!user) {
+      this.props.navigation.navigate('LoginStack', {
+        dismissBlock,
+      })
     }
   }
+
+  logoutPress() {
+    const { dispatch, navigation } = this.props
+    dispatch(logoutRequest())
+  }
+
+  handleLogoutRequest() {
+    const { dispatch, logoutVisible, logoutResponse, navigation } = this.props
+    if (!logoutVisible && !this.showLogoutResponse) return
+
+    if (logoutVisible) {
+      this.showLogoutResponse = true
+    } else {
+      this.showLogoutResponse = false
+      if (logoutResponse.success) {
+        storeDelete(common.user, (error) => {
+          if (!error) {
+            // 清除页面数据
+            dispatch(userInfoUpdate(undefined))
+            // 返回登录页
+            navigation.navigate('LoginStack')
+          } else {
+            // 删除失败
+          }
+        })
+      } else {
+        // 登出失败
+      }
+    }
+  }
+
   render() {
+    this.handleLogoutRequest()
+
+    const { user, logoutVisible } = this.props
+    
     return (
       <ScrollView
         style={{
@@ -47,7 +112,7 @@ export default class Me extends Component {
         />
 
         <MeCell
-          onPress={() => this.loginPress(this.state.phoneNum)}
+          onPress={this.loginPress}
           viewStyle={{
             marginTop: common.margin10,
             height: common.h50,
@@ -60,7 +125,7 @@ export default class Me extends Component {
           titleStyle={{
             fontSize: common.font16,
           }}
-          title={this.state.phoneNum}
+          title={!user ? '请登录' : user.mobile}
           rightImageHide
         />
         <MeCell
@@ -85,13 +150,38 @@ export default class Me extends Component {
         />
 
         {
-          !common.reg.test(this.state.phoneNum) ? null :
+          !user ? null :
             (<BtnLogout
-              onPress={() => this.props.navigation.navigate('LoginStack')}
+              onPress={this.logoutPress}
               title="退出登录"
             />)
         }
+
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={logoutVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
       </ScrollView>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    user: state.me.user,
+
+    logoutVisible: state.me.logoutVisible,
+    logoutResponse: state.me.logoutResponse,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Me)

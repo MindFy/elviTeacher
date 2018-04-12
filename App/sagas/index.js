@@ -40,6 +40,15 @@ function* resetPassword() {
     else yield put({ type: constants.RESET_PASSWORD_FAILED, response })
   }
 }
+/* 注销用户 */
+function* logout() {
+  while (true) {
+    const request = yield take(constants.LOGOUT_REQUEST)
+    const response = yield call(api.logout, request.data)
+    if (response.success) yield put({ type: constants.LOGOUT_SUCCEED, response })
+    else yield put({ type: constants.LOGOUT_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -47,5 +56,6 @@ export default function* rootSaga() {
     fork(register),
     fork(getVerificateCode),
     fork(resetPassword),
+    fork(logout),
   ]
 }
