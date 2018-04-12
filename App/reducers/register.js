@@ -1,25 +1,25 @@
 import {
+  REGISTER_UPDATE,
   REGISTER_REQUEST,
   REGISTER_SUCCEED,
   REGISTER_FAILED,
-  REGISTER_UPDATE,
-  GETCODE,
-  GETCODE_SUCCEED,
-  GETCODE_FAILED,
-} from '../../../constants/index'
+
+  GET_VERIFICATE_CODE_REQUEST,
+  GET_VERIFICATE_CODE_SUCCEED,
+  GET_VERIFICATE_CODE_FAILED,
+} from '../constants/index'
 
 const initialState = {
   mobile: '',
   code: '',
   password: '',
   passwordAgain: '',
-  requestStatus: 0,
-  isVisible: false,
-  registerResult: {},
 
-  getCodeVisible: false,
-  getCodeStatus: 0,
-  getCodeResult: {},
+  isVisible: false,
+  registerResponse: undefined,
+
+  getVerificateCodeVisible: false,
+  getVerificateCodeResponse: undefined,
 }
 
 export default function register(state = initialState, action) {
@@ -45,38 +45,34 @@ export default function register(state = initialState, action) {
       nextState = {
         ...state,
         isVisible: false,
-        requestStatus: 1,
-        registerResult: action.result,
+        registerResponse: action.response,
       }
       break
     case REGISTER_FAILED:
       nextState = {
         ...state,
         isVisible: false,
-        requestStatus: -1,
-        registerResult: action.error,
+        registerResponse: action.response,
       }
       break
-    case GETCODE:
+    case GET_VERIFICATE_CODE_REQUEST:
       nextState = {
         ...state,
-        getCodeVisible: true,
+        getVerificateCodeVisible: true,
       }
       break
-    case GETCODE_SUCCEED:
+    case GET_VERIFICATE_CODE_SUCCEED:
       nextState = {
         ...state,
-        getCodeVisible: false,
-        getCodeStatus: 1,
-        getCodeResult: action.result,
+        getVerificateCodeVisible: false,
+        getVerificateCodeResponse: action.response,
       }
       break
-    case GETCODE_FAILED:
+    case GET_VERIFICATE_CODE_FAILED:
       nextState = {
         ...state,
-        getCodeVisible: false,
-        getCodeStatus: -1,
-        getCodeResult: action.error,
+        getVerificateCodeVisible: false,
+        getVerificateCodeResponse: action.response,
       }
       break
     default:

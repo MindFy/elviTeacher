@@ -12,8 +12,8 @@ import {
 import Spinner from 'react-native-spinkit'
 import {
   resetPasswordUpdate,
-  resetPassword,
-} from './actions'
+  resetPasswordRequest,
+} from '../../actions/login'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
@@ -21,7 +21,7 @@ import BtnLogin from './BtnLogin'
 class ConfirmPwd extends Component {
   constructor() {
     super()
-    this.needShowAlert = false
+    this.showResetPasswordResponse = false
 
     this.msgBar = undefined
   }
@@ -69,11 +69,28 @@ class ConfirmPwd extends Component {
       this.showAlert('密码至少为6位', 'warning')
       return
     }
-    dispatch(resetPassword({
+    dispatch(resetPasswordRequest({
       mobile,
       code,
       newpassword: password,
     }))
+  }
+
+  /* 请求结果处理 */
+  HandleResetPasswordRequest() {
+    const { isVisible, resetPasswordResponse } = this.props
+    if (!isVisible && !this.showResetPasswordResponse) return
+
+    if (isVisible) {
+      this.showResetPasswordResponse = true
+    } else {
+      this.showResetPasswordResponse = false
+      if (resetPasswordResponse.success) {
+        this.showAlert(resetPasswordResponse.result.message, 'success')
+      } else {
+        this.showAlert(resetPasswordResponse.error.message, 'error')
+      }
+    }
   }
 
   showAlert(message, alertType) {
@@ -90,33 +107,9 @@ class ConfirmPwd extends Component {
     })
   }
 
-  /* 重设密码结果处理 */
-  resetPasswordResult() {
-    const { isVisible, resetPasswordStatus, resetPasswordResult } = this.props
-
-    if (!isVisible && !this.needShowAlert) return
-    if (isVisible) {
-      this.needShowAlert = true
-    } else {
-      this.needShowAlert = false
-      console.log('-->', isVisible, resetPasswordStatus, resetPasswordResult)
-      switch (resetPasswordStatus) {
-        case 0:
-          break
-        case 1:
-          this.showAlert(resetPasswordResult.message, 'success')
-          break
-        case -1:
-          this.showAlert(resetPasswordResult.message, 'error')
-          break
-        default:
-          break
-      }
-    }
-  }
-
   render() {
-    this.resetPasswordResult()
+    this.HandleResetPasswordRequest()
+
     const { isVisible } = this.props
     return (
       <KeyboardAvoidingView
@@ -129,23 +122,6 @@ class ConfirmPwd extends Component {
         <ScrollView>
           <StatusBar
             barStyle={'light-content'}
-          />
-          <MessageBar
-            ref={(e) => {
-              this.msgBar = e
-            }}
-          />
-          <Spinner
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              marginTop: common.sh / 2 - common.h50 / 2,
-              zIndex: 20,
-            }}
-            isVisible={isVisible}
-            size={common.h50}
-            type={'Wave'}
-            color={common.btnTextColor}
           />
 
           <TextInputLogin
@@ -179,6 +155,23 @@ class ConfirmPwd extends Component {
             onPress={() => this.confirmPress()}
           />
         </ScrollView>
+
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={isVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
+        <MessageBar
+          ref={(e) => {
+            this.msgBar = e
+          }}
+        />
       </KeyboardAvoidingView>
     )
   }
@@ -190,9 +183,9 @@ function mapStateToProps(state) {
     code: state.resetPassword.code,
     password: state.resetPassword.password,
     passwordAgain: state.resetPassword.passwordAgain,
+
     isVisible: state.resetPassword.isVisible,
-    resetPasswordStatus: state.resetPassword.resetPasswordStatus,
-    resetPasswordResult: state.resetPassword.resetPasswordResult,
+    resetPasswordResponse: state.resetPassword.resetPasswordResponse,
   }
 }
 

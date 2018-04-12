@@ -16,8 +16,8 @@ import Spinner from 'react-native-spinkit'
 import {
   registerUpdate,
   registerRequest,
-  getVerificateCode,
-} from './actions'
+  getVerificateCodeRequest,
+} from '../../actions/login'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import TextInputCode from './TextInputCode'
@@ -26,8 +26,8 @@ import BtnLogin from './BtnLogin'
 class Register extends Component {
   constructor() {
     super()
-    this.needShowAlert = false
-    this.getCodeShowAlert = false
+    this.showRegisterResponse = false
+    this.showGetVerificateCodeResponse = false
 
     this.msgBar = undefined
 
@@ -64,44 +64,6 @@ class Register extends Component {
     }
   }
 
-  /* 发送验证码结果处理 */
-  getCodeResult() {
-    const { getCodeVisible, getCodeStatus, getCodeResult } = this.props
-
-    if (!getCodeVisible && !this.getCodeShowAlert) return
-    if (getCodeVisible) {
-      this.getCodeShowAlert = true
-    } else {
-      this.getCodeShowAlert = false
-      switch (getCodeStatus) {
-        case 0:
-          break
-        case 1:
-          this.showAlert(getCodeResult.message, 'success')
-          break
-        case -1:
-          this.showAlert(getCodeResult.message, 'error')
-          break
-        default:
-          break
-      }
-    }
-  }
-
-  showAlert(message, alertType) {
-    MessageBarManager.showAlert({
-      message,
-      alertType,
-      duration: common.messageBarDur,
-      messageStyle: {
-        marginTop: common.margin10,
-        alignSelf: 'center',
-        color: 'white',
-        fontSize: common.font14,
-      },
-    })
-  }
-
   codePress(count) {
     const { dispatch, mobile } = this.props
     if (!common.reg.test(mobile)) {
@@ -109,7 +71,7 @@ class Register extends Component {
       return
     }
     count()
-    dispatch(getVerificateCode({
+    dispatch(getVerificateCodeRequest({
       mobile,
       service: 'register',
     }))
@@ -148,36 +110,60 @@ class Register extends Component {
     }))
   }
 
-  /* 注册请求结果处理 */
-  registerRequestResult() {
-    const { isVisible, requestStatus, registerResult, navigation } = this.props
+  /* 请求结果处理 */
+  handleGetVerificateCodeRequest() {
+    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
+    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
 
-    if (!isVisible && !this.needShowAlert) return
-    if (isVisible) {
-      this.needShowAlert = true
+    if (getVerificateCodeVisible) {
+      this.showGetVerificateCodeResponse = true
     } else {
-      this.needShowAlert = false
-      switch (requestStatus) {
-        case 0:
-          break
-        case 1:
-          this.showAlert('注册成功', 'success')
-          setTimeout(() => {
-            navigation.goBack()
-          }, common.messageBarDur)
-          break
-        case -1:
-          this.showAlert(registerResult.message, 'error')
-          break
-        default:
-          break
+      this.showGetVerificateCodeResponse = false
+      if (getVerificateCodeResponse.success) {
+        this.showAlert(getVerificateCodeResponse.result.message, 'success')
+      } else {
+        this.showAlert(getVerificateCodeResponse.error.message, 'error')
       }
     }
   }
 
+  /* 请求结果处理 */
+  handleRegisterRequest() {
+    const { isVisible, registerResponse, navigation } = this.props
+    if (!isVisible && !this.showRegisterResponse) return
+
+    if (isVisible) {
+      this.showRegisterResponse = true
+    } else {
+      this.showRegisterResponse = false
+      if (registerResponse.success) {
+        this.showAlert('注册成功', 'success')
+        setTimeout(() => {
+          navigation.goBack()
+        }, common.messageBarDur)
+      } else {
+        this.showAlert(registerResponse.error.message, 'error')
+      }
+    }
+  }
+
+  showAlert(message, alertType) {
+    MessageBarManager.showAlert({
+      message,
+      alertType,
+      duration: common.messageBarDur,
+      messageStyle: {
+        marginTop: common.margin10,
+        alignSelf: 'center',
+        color: 'white',
+        fontSize: common.font14,
+      },
+    })
+  }
+
   render() {
-    this.registerRequestResult()
-    this.getCodeResult()
+    this.handleGetVerificateCodeRequest()
+    this.handleRegisterRequest()
 
     const { navigation, isVisible } = this.props
     return (
@@ -191,23 +177,6 @@ class Register extends Component {
         <ScrollView >
           <StatusBar
             barStyle={'light-content'}
-          />
-          <MessageBar
-            ref={(e) => {
-              this.msgBar = e
-            }}
-          />
-          <Spinner
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              marginTop: common.sh / 2 - common.h50 / 2,
-              zIndex: 20,
-            }}
-            isVisible={isVisible}
-            size={common.h50}
-            type={'Wave'}
-            color={common.btnTextColor}
           />
 
           <TextInputLogin
@@ -305,6 +274,23 @@ class Register extends Component {
             onPress={() => this.registerPress()}
           />
         </ScrollView>
+
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={isVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
+        <MessageBar
+          ref={(e) => {
+            this.msgBar = e
+          }}
+        />
       </KeyboardAvoidingView>
     )
   }
@@ -316,12 +302,12 @@ function mapStateToProps(state) {
     code: state.register.code,
     password: state.register.password,
     passwordAgain: state.register.passwordAgain,
-    requestStatus: state.register.requestStatus,
+
     isVisible: state.register.isVisible,
-    registerResult: state.register.registerResult,
-    getCodeVisible: state.register.getCodeVisible,
-    getCodeStatus: state.register.getCodeStatus,
-    getCodeResult: state.register.getCodeResult,
+    registerResponse: state.register.registerResponse,
+
+    getVerificateCodeVisible: state.register.getVerificateCodeVisible,
+    getVerificateCodeResponse: state.register.getVerificateCodeResponse,
   }
 }
 

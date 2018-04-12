@@ -1,26 +1,26 @@
 import {
-  UPDATE_USER,
+  LOGIN_UPDATE,
   LOGIN_FAILED,
   LOGIN_REQUEST,
   LOGIN_SUCCEED,
-} from '../../../constants/index'
+} from '../constants/index'
 
 const initialState = {
-  username: '',
+  mobile: '',
   password: '',
-  loginStatus: 0,
+
   isVisible: false,
-  loginResult: {},
+  loginResponse: undefined,
 }
 
 export default function login(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case UPDATE_USER:
+    case LOGIN_UPDATE:
       nextState = {
         ...state,
-        username: action.username,
+        mobile: action.mobile,
         password: action.password,
       }
       break
@@ -33,17 +33,15 @@ export default function login(state = initialState, action) {
     case LOGIN_SUCCEED:
       nextState = {
         ...state,
-        loginStatus: 1,
         isVisible: false,
-        loginResult: action.result,
+        loginResponse: action.response,
       }
       break
     case LOGIN_FAILED:
       nextState = {
         ...state,
-        loginStatus: -1,
         isVisible: false,
-        loginResult: action.error,
+        loginResponse: action.response,
       }
       break
     default:
