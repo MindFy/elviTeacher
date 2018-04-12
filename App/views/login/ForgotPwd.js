@@ -120,6 +120,7 @@ class ForgotPwd extends Component {
   render() {
     this.handleGetVerificateCodeRequest()
 
+    const { mobile, code } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -143,12 +144,14 @@ class ForgotPwd extends Component {
             title="账号"
             placeholder="请输入11位手机号"
             keyboardType="phone-pad"
+            value={mobile}
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
           />
 
           <TextInputCode
             keyboardType="number-pad"
+            value={code}
             maxLength={6}
             codePress={this.codePress}
             onChange={e => this.onChange(e, 'code')}

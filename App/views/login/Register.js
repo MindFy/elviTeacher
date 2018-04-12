@@ -165,7 +165,7 @@ class Register extends Component {
     this.handleGetVerificateCodeRequest()
     this.handleRegisterRequest()
 
-    const { navigation, isVisible } = this.props
+    const { navigation, isVisible, mobile, code, password, passwordAgain } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -189,12 +189,14 @@ class Register extends Component {
             title="账号"
             placeholder="请输入11位手机号"
             keyboardType="phone-pad"
+            value={mobile}
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
           />
 
           <TextInputCode
             keyboardType="number-pad"
+            value={code}
             maxLength={6}
             codePress={this.codePress}
             onChange={e => this.onChange(e, 'code')}
@@ -206,6 +208,7 @@ class Register extends Component {
             }}
             title="密码"
             placeholder="请输入密码"
+            value={password}
             maxLength={10}
             onChange={e => this.onChange(e, 'password')}
           />
@@ -216,6 +219,7 @@ class Register extends Component {
             }}
             title="再次确认密码"
             placeholder="请再次输入密码"
+            value={passwordAgain}
             maxLength={10}
             onChange={e => this.onChange(e, 'passwordAgain')}
           />

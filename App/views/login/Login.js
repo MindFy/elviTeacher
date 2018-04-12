@@ -121,7 +121,7 @@ class Login extends Component {
   render() {
     this.handleLoginRequest()
 
-    const { isVisible, navigation } = this.props
+    const { isVisible, navigation, mobile, password } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -152,6 +152,7 @@ class Login extends Component {
             }}
             title="账号"
             placeholder="请输入11位手机号"
+            value={mobile}
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
           />
@@ -159,6 +160,7 @@ class Login extends Component {
           <TextInputLogin
             title="密码"
             placeholder="请输入密码"
+            value={password}
             maxLength={10}
             onChange={e => this.onChange(e, 'password')}
           />

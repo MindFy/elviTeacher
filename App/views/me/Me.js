@@ -66,7 +66,7 @@ class Me extends Component {
   }
 
   logoutPress() {
-    const { dispatch, navigation } = this.props
+    const { dispatch } = this.props
     dispatch(logoutRequest())
   }
 

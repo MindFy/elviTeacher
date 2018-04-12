@@ -98,6 +98,7 @@ export default class TextInputCode extends Component {
             placeholderTextColor={common.placeholderColor}
             keyboardType={this.props.keyboardType}
             maxLength={this.props.maxLength}
+            value={this.props.value}
             onChange={this.props.onChange}
           />
         </View>

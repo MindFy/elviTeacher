@@ -15,7 +15,6 @@ const initialState = {
 
 export default function login(state = initialState, action) {
   let nextState = state
-  console.log('-login->', action)
 
   switch (action.type) {
     case LOGIN_UPDATE:
