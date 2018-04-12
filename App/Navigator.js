@@ -1,6 +1,4 @@
-import React from 'react'
 import { StackNavigator, TabNavigator } from 'react-navigation'
-import { connect } from 'react-redux'
 import Home from './views/home/Home'
 import Detail from './views/home/Detail'
 import Market from './views/market/Market'
@@ -18,7 +16,7 @@ import SetPwd from './views/me/SetPwd'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
-import Registration from './views/login/Registration'
+import Register from './views/login/Register'
 import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
 
@@ -52,8 +50,8 @@ const LoginStack = DismissableStackNavigator({
       header: null,
     },
   },
-  Registration: {
-    screen: Registration,
+  Register: {
+    screen: Register,
     navigationOptions: {
       header: null,
     },

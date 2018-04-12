@@ -75,7 +75,9 @@ const common = {
 
   activeOpacity: 0.7,
 
-  reg: /^[0-9]+.?[0-9]*$/, // 是否为数字
+  reg: /^1[0-9]{10}/, // 手机号正则
+
+  messageBarDur: 2000,
 }
 
 module.exports = {

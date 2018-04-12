@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     fontSize: common.font12,
+    width: '50%',
     color: 'white',
   },
 })
@@ -49,8 +50,10 @@ export default class TextInputLogin extends Component {
           placeholderTextColor={common.placeholderColor}
           password={this.props.password}
           multiline={false}
+          onChange={this.props.onChange}
+          keyboardType={this.props.keyboardType}
+          maxLength={this.props.maxLength}
           editable
-          autoFocus
         />
       </View>
     )
