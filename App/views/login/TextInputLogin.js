@@ -54,7 +54,6 @@ export default class TextInputLogin extends Component {
           keyboardType={this.props.keyboardType}
           maxLength={this.props.maxLength}
           editable
-          autoFocus
         />
       </View>
     )

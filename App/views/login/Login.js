@@ -91,7 +91,7 @@ class Login extends Component {
 
   /* 登录请求结果处理 */
   loginRequestResult() {
-    const { isVisible, loginStatus, screenProps, loginResult } = this.props
+    const { isVisible, loginStatus, loginResult } = this.props
     if (!isVisible && !this.needShowAlert) return
     if (isVisible) {
       this.needShowAlert = true

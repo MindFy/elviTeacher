@@ -1,16 +1,14 @@
-export const root = 'http://54.65.94.63'
-export const login = '/1.0/app/user/login'
-export const register = '/1.0/app/user/register'
-export const getVerificateCode = '/1.0/app/user/getVerificateCode'
+const API_ROOT = 'http://54.65.94.63'
 
-export function http(api, method = 'GET', data = {}) {
-  return fetch(api, {
-    method,
+function makePostAPI(endpoint) {
+  return params => fetch(`${API_ROOT}${endpoint}`, {
+    method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(params || {}),
+    credentials: 'same-origin',
   }).then(response => response.json().then(json => ({ json, response })))
     .then(({ json, response }) => {
       if (!response.ok) {
@@ -25,3 +23,8 @@ export function http(api, method = 'GET', data = {}) {
       error,
     }))
 }
+
+export const login = makePostAPI('/1.0/app/user/login')
+export const register = makePostAPI('/1.0/app/user/register')
+export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
+export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')

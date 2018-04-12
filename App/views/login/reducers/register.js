@@ -24,7 +24,7 @@ const initialState = {
 
 export default function register(state = initialState, action) {
   let nextState = state
-  console.log('-->', action)
+
   switch (action.type) {
     case REGISTER_UPDATE:
       nextState = {
@@ -44,16 +44,16 @@ export default function register(state = initialState, action) {
     case REGISTER_SUCCEED:
       nextState = {
         ...state,
-        requestStatus: 1,
         isVisible: false,
+        requestStatus: 1,
         registerResult: action.result,
       }
       break
     case REGISTER_FAILED:
       nextState = {
         ...state,
-        requestStatus: -1,
         isVisible: false,
+        requestStatus: -1,
         registerResult: action.error,
       }
       break
