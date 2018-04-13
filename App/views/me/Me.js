@@ -51,7 +51,7 @@ class Me extends Component {
   /* 读取用户数据并展示 */
   readAndDisplay(loginGoBack) {
     if (loginGoBack) {
-      this.showAlert('登录成功', 'success')
+      // 登录成功
     }
     const { dispatch } = this.props
     storeRead(common.userInfo, (result) => {
