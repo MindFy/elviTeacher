@@ -4,7 +4,7 @@ import {
 import * as constants from '../constants/index'
 import * as api from '../services/api'
 
-/* 登陆 */
+/* 登录 */
 function* login() {
   while (true) {
     const request = yield take(constants.LOGIN_REQUEST)
@@ -49,6 +49,15 @@ function* logout() {
     else yield put({ type: constants.LOGOUT_FAILED, response })
   }
 }
+/* 获取单个用户信息 */
+function* userInfo() {
+  while (true) {
+    const request = yield take(constants.USERINFO_REQUEST)
+    const response = yield call(api.userInfo, request.schema)
+    if (response.success) yield put({ type: constants.USERINFO_SUCCEED, response })
+    else yield put({ type: constants.USERINFO_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -57,5 +66,6 @@ export default function* rootSaga() {
     fork(getVerificateCode),
     fork(resetPassword),
     fork(logout),
+    fork(userInfo),
   ]
 }

@@ -1,5 +1,8 @@
 import {
   USERINFO_UPDATE,
+  USERINFO_REQUEST,
+  USERINFO_SUCCEED,
+  USERINFO_FAILED,
 
   LOGOUT_REQUEST,
   LOGOUT_SUCCEED,
@@ -7,7 +10,10 @@ import {
 } from '../constants/index'
 
 const initialState = {
-  user: null,
+  userInfo: undefined,
+
+  userInfoVisible: false,
+  userInfoResponse: undefined,
 
   logoutVisible: false,
   logoutResponse: undefined,
@@ -15,12 +21,33 @@ const initialState = {
 
 export default function me(state = initialState, action) {
   let nextState = state
+  console.log('me action response ->', action.response)
 
   switch (action.type) {
     case USERINFO_UPDATE:
       nextState = {
         ...state,
-        user: action.userInfo,
+        userInfo: action.userInfo,
+      }
+      break
+    case USERINFO_REQUEST:
+      nextState = {
+        ...state,
+        userInfoVisible: true,
+      }
+      break
+    case USERINFO_SUCCEED:
+      nextState = {
+        ...state,
+        userInfoVisible: false,
+        userInfoResponse: action.response,
+      }
+      break
+    case USERINFO_FAILED:
+      nextState = {
+        ...state,
+        userInfoVisible: false,
+        userInfoResponse: action.response,
       }
       break
     case LOGOUT_REQUEST:

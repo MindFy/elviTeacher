@@ -8,7 +8,7 @@ const sw = Dimensions.get('window').width
 const w = 375
 
 const common = {
-  user: 'user',
+  userInfo: 'userInfo',
 
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',
@@ -91,7 +91,7 @@ function storeSave(name, object, block) {
 
 function storeRead(name, block) {
   AsyncStorage.getItem(name, (error, result) => {
-    if (!error) {
+    if (!error && result) {
       block(result)
     }
   })

@@ -7,13 +7,16 @@ import {
 import Spinner from 'react-native-spinkit'
 import {
   userInfoUpdate,
+  userInfoRequest,
   logoutRequest,
 } from '../../actions/me'
 import {
   common,
+  storeSave,
   storeRead,
   storeDelete,
 } from '../common'
+import userInfoSchema from '../../schemas/me'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 
@@ -38,6 +41,7 @@ class Me extends Component {
     const { dispatch } = props
 
     this.showLogoutResponse = false
+    this.showUserInfoResponse = false
 
     this.logoutPress = this.logoutPress.bind(this)
     this.loginPress = this.loginPress.bind(this)
@@ -48,17 +52,20 @@ class Me extends Component {
   componentDidMount() { }
 
   readAndDisplay(dispatch) {
-    storeRead(common.user, (result) => {
-      dispatch(userInfoUpdate(JSON.parse(result)))
+    storeRead(common.userInfo, (result) => {
+      const objectResult = JSON.parse(result)
+
+      dispatch(userInfoUpdate(objectResult))
+      dispatch(userInfoRequest(userInfoSchema(objectResult.id)))
     })
   }
 
   loginPress() {
-    const { dispatch, user } = this.props
+    const { dispatch, userInfo } = this.props
     const dismissBlock = () => {
       this.readAndDisplay(dispatch)
     }
-    if (!user) {
+    if (!userInfo) {
       this.props.navigation.navigate('LoginStack', {
         dismissBlock,
       })
@@ -70,6 +77,25 @@ class Me extends Component {
     dispatch(logoutRequest())
   }
 
+  handleUserInfoRequest() {
+    const { dispatch, userInfoVisible, userInfoResponse, userInfo } = this.props
+    if (!userInfoVisible && !this.showUserInfoResponse) return
+
+    if (userInfoVisible) {
+      this.showUserInfoResponse = true
+    } else {
+      this.showUserInfoResponse = false
+      if (userInfoResponse.success) {
+        const responseUserInfo = userInfoResponse.result.data.user
+        storeSave(common.userInfo, responseUserInfo, (error) => {
+          if (!error) {
+            dispatch(userInfoUpdate(responseUserInfo))
+          }
+        })
+      }
+    }
+  }
+
   handleLogoutRequest() {
     const { dispatch, logoutVisible, logoutResponse, navigation } = this.props
     if (!logoutVisible && !this.showLogoutResponse) return
@@ -79,7 +105,7 @@ class Me extends Component {
     } else {
       this.showLogoutResponse = false
       if (logoutResponse.success) {
-        storeDelete(common.user, (error) => {
+        storeDelete(common.userInfo, (error) => {
           if (!error) {
             // 清除页面数据
             dispatch(userInfoUpdate(undefined))
@@ -97,9 +123,10 @@ class Me extends Component {
 
   render() {
     this.handleLogoutRequest()
+    this.handleUserInfoRequest()
 
-    const { user, logoutVisible } = this.props
-    
+    const { userInfo, logoutVisible } = this.props
+
     return (
       <ScrollView
         style={{
@@ -125,7 +152,7 @@ class Me extends Component {
           titleStyle={{
             fontSize: common.font16,
           }}
-          title={!user ? '请登录' : user.mobile}
+          title={!userInfo ? '请登录' : userInfo.mobile}
           rightImageHide
         />
         <MeCell
@@ -150,7 +177,7 @@ class Me extends Component {
         />
 
         {
-          !user ? null :
+          !userInfo ? null :
             (<BtnLogout
               onPress={this.logoutPress}
               title="退出登录"
@@ -175,7 +202,9 @@ class Me extends Component {
 
 function mapStateToProps(state) {
   return {
-    user: state.me.user,
+    userInfo: state.me.userInfo,
+    userInfoVisible: state.me.userInfoVisible,
+    userInfoResponse: state.me.userInfoResponse,
 
     logoutVisible: state.me.logoutVisible,
     logoutResponse: state.me.logoutResponse,

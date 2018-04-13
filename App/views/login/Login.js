@@ -79,7 +79,7 @@ class Login extends Component {
 
   /* 请求结果处理 */
   handleLoginRequest() {
-    const { isVisible, loginResponse, screenProps, navigation } = this.props
+    const { isVisible, loginResponse, screenProps, navigation, password } = this.props
     if (!isVisible && !this.showLoginResponse) return
 
     if (isVisible) {
@@ -87,8 +87,7 @@ class Login extends Component {
     } else {
       this.showLoginResponse = false
       if (loginResponse.success) {
-        this.showAlert('登录成功', 'success')
-        storeSave(common.user, loginResponse.result, (error) => {
+        storeSave(common.userInfo, loginResponse.result, (error) => {
           if (error) {
             this.showAlert('用户保存失败', 'error')
           } else {
