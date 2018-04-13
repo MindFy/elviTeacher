@@ -165,7 +165,7 @@ class Register extends Component {
     this.handleGetVerificateCodeRequest()
     this.handleRegisterRequest()
 
-    const { navigation, isVisible, mobile, code, password, passwordAgain } = this.props
+    const { navigation, mobile, code, password, passwordAgain, isVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -209,7 +209,7 @@ class Register extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
-            maxLength={10}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />
 
@@ -220,7 +220,7 @@ class Register extends Component {
             title="再次确认密码"
             placeholder="请再次输入密码"
             value={passwordAgain}
-            maxLength={10}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
           />
 
@@ -275,6 +275,7 @@ class Register extends Component {
               marginTop: common.margin40,
             }}
             title="注册"
+            disabled={isVisible}
             onPress={() => this.registerPress()}
           />
         </ScrollView>

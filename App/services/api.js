@@ -29,27 +29,23 @@ function graphqlAPI(endpoint) {
     method: 'POST',
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/graphql'
+      'Content-Type': 'application/graphql',
     },
     body: schema,
-    credentials: "same-origin"
+    credentials: 'same-origin',
   }).then(response => response.json().then(json => ({ json, response })))
     .then(({ json, response }) => {
       if (!response.ok) {
         return Promise.reject(json)
       }
       return json
-    }).then((result) => {
-      return {
-        success: true,
-        result,
-      }
-    }, (error) => {
-      return {
-        success: false,
-        error,
-      }
-    })
+    }).then(result => ({
+      success: true,
+      result,
+    }), error => ({
+      success: false,
+      error,
+    }))
 }
 
 export const login = makePostAPI('/1.0/app/user/login')
@@ -58,3 +54,4 @@ export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
 export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
 export const logout = makePostAPI('/1.0/app/user/logout')
 export const userInfo = graphqlAPI('/1.0/app')
+export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')

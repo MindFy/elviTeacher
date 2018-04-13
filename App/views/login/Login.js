@@ -160,7 +160,7 @@ class Login extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
-            maxLength={10}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />
 

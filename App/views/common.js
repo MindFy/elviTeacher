@@ -82,6 +82,8 @@ const common = {
 
   reg: /^1[0-9]{10}/, // 手机号正则
 
+  textInputMaxLenPwd: 20,
+
   messageBarDur: 2000,
 }
 

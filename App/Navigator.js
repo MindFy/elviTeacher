@@ -12,7 +12,7 @@ import AddAddress from './views/balance/AddAddress'
 import Me from './views/me/Me'
 import Authentication from './views/me/Authentication'
 import Settings from './views/me/Settings'
-import SetPwd from './views/me/SetPwd'
+import UpdatePassword from './views/me/UpdatePassword'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -40,7 +40,7 @@ const TabBarStack = StackNavigator({
   AddAddress,
   Authentication,
   Settings,
-  SetPwd,
+  UpdatePassword,
 })
 
 const LoginStack = DismissableStackNavigator({

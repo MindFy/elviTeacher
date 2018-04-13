@@ -110,7 +110,7 @@ class ConfirmPwd extends Component {
   render() {
     this.HandleResetPasswordRequest()
 
-    const { isVisible, password, passwordAgain } = this.props
+    const { password, passwordAgain, isVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -134,7 +134,7 @@ class ConfirmPwd extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
-            maxLength={10}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />
 
@@ -145,7 +145,7 @@ class ConfirmPwd extends Component {
             title="再次输入新密码"
             placeholder="请再次输入新密码"
             value={passwordAgain}
-            maxLength={10}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
           />
 
@@ -155,6 +155,7 @@ class ConfirmPwd extends Component {
             }}
             title="确定"
             onPress={() => this.confirmPress()}
+            disabled={isVisible}
           />
         </ScrollView>
 

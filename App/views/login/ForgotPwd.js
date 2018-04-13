@@ -120,7 +120,7 @@ class ForgotPwd extends Component {
   render() {
     this.handleGetVerificateCodeRequest()
 
-    const { mobile, code } = this.props
+    const { mobile, code, getVerificateCodeVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -162,6 +162,7 @@ class ForgotPwd extends Component {
               marginTop: common.margin210,
             }}
             title="下一步"
+            disabled={getVerificateCodeVisible}
             onPress={() => this.nextPress()}
           />
         </ScrollView>

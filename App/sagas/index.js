@@ -58,6 +58,15 @@ function* userInfo() {
     else yield put({ type: constants.USERINFO_FAILED, response })
   }
 }
+/* 用户自己修改密码 */
+function* updatePassword() {
+  while (true) {
+    const request = yield take(constants.PASSWORD_REQUEST)
+    const response = yield call(api.updatePassword, request.data)
+    if (response.success) yield put({ type: constants.PASSWORD_SUCCEED, response })
+    else yield put({ type: constants.PASSWORD_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -67,5 +76,6 @@ export default function* rootSaga() {
     fork(resetPassword),
     fork(logout),
     fork(userInfo),
+    fork(updatePassword),
   ]
 }

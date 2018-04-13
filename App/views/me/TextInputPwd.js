@@ -20,21 +20,28 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     marginLeft: common.margin10,
+    width: '80%',
     fontSize: common.font14,
+    color: 'white',
   },
 })
 
 export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
+    const { placeholder, value, onChange, maxLength, keyboardType } = this.props
     return (
       <View
         style={styles.viewStyle}
       >
         <TextInput
           style={styles.inputStyle}
-          placeholder={this.props.placeholder}
+          placeholder={placeholder}
           placeholderTextColor={common.placeholderColor}
+          value={value}
+          onChange={onChange}
+          maxLength={maxLength}
+          keyboardType={keyboardType}
         />
       </View>
     )

@@ -180,6 +180,7 @@ class Me extends Component {
           !userInfo ? null :
             (<BtnLogout
               onPress={this.logoutPress}
+              disabled={logoutVisible}
               title="退出登录"
             />)
         }
