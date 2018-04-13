@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   StatusBar,
+  DeviceEventEmitter,
 } from 'react-native'
 import {
   MessageBar,
@@ -15,18 +16,20 @@ import {
 } from 'react-native-message-bar'
 import Spinner from 'react-native-spinkit'
 import {
-  updateUser,
+  loginUpdate,
   loginRequest,
-} from './actions'
-import { common } from '../common'
+} from '../../actions/login'
+import {
+  common,
+  storeSave,
+} from '../common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
 
 class Login extends Component {
   constructor() {
     super()
-    // 组件渲染时，是否需要显示成功/失败提示
-    this.needShowAlert = false
+    this.showLoginResponse = false
 
     // binds
     this.loginPress = this.loginPress.bind(this)
@@ -37,20 +40,74 @@ class Login extends Component {
 
   componentDidMount() {
     MessageBarManager.registerMessageBar(this.msgBar)
+
+    /* 重置密码成功通知 */
+    this.resetPasswordGoBack = DeviceEventEmitter.addListener(common.resetPasswordGoBack, () => {
+      MessageBarManager.registerMessageBar(this.msgBar)
+      this.showAlert('重置密码成功', 'success')
+    })
   }
 
   componentWillUnmount() {
     MessageBarManager.unregisterMessageBar()
+    this.resetPasswordGoBack.remove()
   }
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, username, password } = this.props
+    const { dispatch, mobile, password } = this.props
 
-    if (tag === 'username') {
-      dispatch(updateUser(text, password))
+    if (tag === 'mobile') {
+      dispatch(loginUpdate(text, password))
     } else if (tag === 'password') {
-      dispatch(updateUser(username, text))
+      dispatch(loginUpdate(mobile, text))
+    }
+  }
+
+  loginPress() {
+    const { dispatch, mobile, password } = this.props
+    if (!mobile.length) {
+      this.showAlert('请输入账号', 'warning')
+      return
+    }
+    if (!password.length) {
+      this.showAlert('请输入密码', 'warning')
+      return
+    }
+    if (!common.reg.test(mobile)) {
+      this.showAlert('请输入正确的手机号', 'warning')
+      return
+    }
+
+    dispatch(loginRequest({
+      mobile,
+      password,
+    }))
+  }
+
+  /* 请求结果处理 */
+  handleLoginRequest() {
+    const { isVisible, loginResponse, navigation, screenProps } = this.props
+    if (!isVisible && !this.showLoginResponse) return
+
+    if (isVisible) {
+      this.showLoginResponse = true
+    } else {
+      this.showLoginResponse = false
+      if (loginResponse.success) {
+        storeSave(common.userInfo, loginResponse.result, (error) => {
+          if (error) {
+            this.showAlert('用户保存失败', 'error')
+          } else {
+            navigation.state.params.goBackBlock()
+            screenProps.dismiss()
+          }
+        })
+      } else {
+        this.showAlert((loginResponse.error.code === 4000114 ?
+          '密码不正确' :
+          loginResponse.error.message), 'error')
+      }
     }
   }
 
@@ -68,56 +125,17 @@ class Login extends Component {
     })
   }
 
-  loginPress() {
-    const { dispatch, username, password } = this.props
-    if (!username.length) {
-      this.showAlert('请输入账号', 'warning')
-      return
-    }
-    if (!password.length) {
-      this.showAlert('请输入密码', 'warning')
-      return
-    }
-    if (!common.reg.test(username)) {
-      this.showAlert('请输入正确的手机号', 'warning')
-      return
-    }
-
-    dispatch(loginRequest({
-      username,
-      password,
-    }))
-  }
-
-  /* 登录请求结果处理 */
-  loginRequestResult() {
-    const { isVisible, loginStatus, loginResult } = this.props
-    if (!isVisible && !this.needShowAlert) return
-    if (isVisible) {
-      this.needShowAlert = true
-    } else {
-      this.needShowAlert = false
-      switch (loginStatus) {
-        case 0:
-          break
-        case 1:
-          this.showAlert('登录成功', 'success')
-          // screenProps.dismiss()
-          break
-        case -1:
-          this.showAlert((loginResult.code === 4000114 ?
-            '密码不正确' :
-            loginResult.message), 'error')
-          break
-        default:
-          break
-      }
+  goBackBlock(response) {
+    MessageBarManager.registerMessageBar(this.msgBar)
+    if (response && response.success) {
+      this.showAlert('注册成功', 'success')
     }
   }
 
   render() {
-    this.loginRequestResult()
-    const { isVisible, navigation } = this.props
+    this.handleLoginRequest()
+
+    const { isVisible, navigation, mobile, password } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -129,23 +147,6 @@ class Login extends Component {
         <ScrollView>
           <StatusBar
             barStyle={'light-content'}
-          />
-          <MessageBar
-            ref={(e) => {
-              this.msgBar = e
-            }}
-          />
-          <Spinner
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              marginTop: common.sh / 2 - common.h50 / 2,
-              zIndex: 20,
-            }}
-            isVisible={isVisible}
-            size={common.h50}
-            type={'Wave'}
-            color={common.btnTextColor}
           />
 
           <Image
@@ -165,14 +166,16 @@ class Login extends Component {
             }}
             title="账号"
             placeholder="请输入11位手机号"
+            value={mobile}
             maxLength={11}
-            onChange={e => this.onChange(e, 'username')}
+            onChange={e => this.onChange(e, 'mobile')}
           />
 
           <TextInputLogin
             title="密码"
             placeholder="请输入密码"
-            maxLength={10}
+            value={password}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />
 
@@ -187,7 +190,9 @@ class Login extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.navigate('Register', {
+                goBackBlock: response => this.goBackBlock(response),
+              })}
             >
               <Text
                 style={{
@@ -198,7 +203,9 @@ class Login extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('ForgotPwd')}
+              onPress={() => navigation.navigate('ForgotPwd', {
+                goBackBlock: () => this.goBackBlock(),
+              })}
             >
               <Text
                 style={{
@@ -215,19 +222,35 @@ class Login extends Component {
             disabled={isVisible}
           />
         </ScrollView>
-      </KeyboardAvoidingView>
 
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={isVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
+        <MessageBar
+          ref={(e) => {
+            this.msgBar = e
+          }}
+        />
+      </KeyboardAvoidingView>
     )
   }
 }
 
 function mapStateToProps(state) {
   return {
-    username: state.login.username,
+    mobile: state.login.mobile,
     password: state.login.password,
-    loginStatus: state.login.loginStatus,
+
     isVisible: state.login.isVisible,
-    loginResult: state.login.loginResult,
+    loginResponse: state.login.loginResponse,
   }
 }
 

@@ -1,10 +1,16 @@
-import { Dimensions } from 'react-native'
+import {
+  Dimensions,
+  AsyncStorage,
+} from 'react-native'
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
 const w = 375
 
 const common = {
+  userInfo: 'userInfo',
+  resetPasswordGoBack: 'resetPasswordGoBack',
+
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
@@ -77,9 +83,30 @@ const common = {
 
   reg: /^1[0-9]{10}/, // 手机号正则
 
+  textInputMaxLenPwd: 20,
+
   messageBarDur: 2000,
+}
+
+function storeSave(name, object, block) {
+  AsyncStorage.setItem(name, JSON.stringify(object), block)
+}
+
+function storeRead(name, block) {
+  AsyncStorage.getItem(name, (error, result) => {
+    if (!error && result) {
+      block(result)
+    }
+  })
+}
+
+function storeDelete(name, block) {
+  AsyncStorage.removeItem(name, block)
 }
 
 module.exports = {
   common,
+  storeSave,
+  storeRead,
+  storeDelete,
 }

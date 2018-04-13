@@ -12,7 +12,7 @@ import AddAddress from './views/balance/AddAddress'
 import Me from './views/me/Me'
 import Authentication from './views/me/Authentication'
 import Settings from './views/me/Settings'
-import SetPwd from './views/me/SetPwd'
+import UpdatePassword from './views/me/UpdatePassword'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -40,7 +40,7 @@ const TabBarStack = StackNavigator({
   AddAddress,
   Authentication,
   Settings,
-  SetPwd,
+  UpdatePassword,
 })
 
 const LoginStack = DismissableStackNavigator({
@@ -69,6 +69,22 @@ const LoginStack = DismissableStackNavigator({
     },
   },
 })
+const loginStackDefaultGetStateForAction = LoginStack.router.getStateForAction
+LoginStack.router.getStateForAction = (action, state) => {
+  if (state && action.type === 'Navigation/BACK' && action.key) {
+    const backRoute = state.routes.find(route => route.routeName === action.key)
+    if (backRoute) {
+      const backRouteIndex = state.routes.indexOf(backRoute)
+      const purposeState = {
+        ...state,
+        routes: state.routes.slice(0, backRouteIndex + 1),
+        index: backRouteIndex,
+      }
+      return purposeState
+    }
+  }
+  return loginStackDefaultGetStateForAction(action, state)
+}
 
 const RootStack = StackNavigator({
   TabBarStack: {

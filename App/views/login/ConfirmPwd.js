@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   StatusBar,
   ScrollView,
+  DeviceEventEmitter,
   KeyboardAvoidingView,
 } from 'react-native'
 import {
@@ -12,8 +13,8 @@ import {
 import Spinner from 'react-native-spinkit'
 import {
   resetPasswordUpdate,
-  resetPassword,
-} from './actions'
+  resetPasswordRequest,
+} from '../../actions/login'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
@@ -21,7 +22,7 @@ import BtnLogin from './BtnLogin'
 class ConfirmPwd extends Component {
   constructor() {
     super()
-    this.needShowAlert = false
+    this.showResetPasswordResponse = false
 
     this.msgBar = undefined
   }
@@ -31,7 +32,14 @@ class ConfirmPwd extends Component {
   }
 
   componentWillUnmount() {
+    const { dispatch, mobile, code, resetPasswordResponse } = this.props
     MessageBarManager.unregisterMessageBar()
+    if (resetPasswordResponse && resetPasswordResponse.success) {
+      DeviceEventEmitter.emit(common.resetPasswordGoBack)
+      dispatch(resetPasswordUpdate('', '', '', ''))
+    } else {
+      dispatch(resetPasswordUpdate(mobile, code, '', ''))
+    }
   }
 
   onChange(event, tag) {
@@ -52,7 +60,6 @@ class ConfirmPwd extends Component {
 
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
-
     if (!password.length) {
       this.showAlert('请设置密码', 'warning')
       return
@@ -69,11 +76,28 @@ class ConfirmPwd extends Component {
       this.showAlert('密码至少为6位', 'warning')
       return
     }
-    dispatch(resetPassword({
+    dispatch(resetPasswordRequest({
       mobile,
       code,
       newpassword: password,
     }))
+  }
+
+  /* 请求结果处理 */
+  HandleResetPasswordRequest() {
+    const { isVisible, resetPasswordResponse, navigation } = this.props
+    if (!isVisible && !this.showResetPasswordResponse) return
+
+    if (isVisible) {
+      this.showResetPasswordResponse = true
+    } else {
+      this.showResetPasswordResponse = false
+      if (resetPasswordResponse.success) {
+        navigation.goBack('Login')
+      } else {
+        this.showAlert(resetPasswordResponse.error.message, 'error')
+      }
+    }
   }
 
   showAlert(message, alertType) {
@@ -90,34 +114,10 @@ class ConfirmPwd extends Component {
     })
   }
 
-  /* 重设密码结果处理 */
-  resetPasswordResult() {
-    const { isVisible, resetPasswordStatus, resetPasswordResult } = this.props
-
-    if (!isVisible && !this.needShowAlert) return
-    if (isVisible) {
-      this.needShowAlert = true
-    } else {
-      this.needShowAlert = false
-      console.log('-->', isVisible, resetPasswordStatus, resetPasswordResult)
-      switch (resetPasswordStatus) {
-        case 0:
-          break
-        case 1:
-          this.showAlert(resetPasswordResult.message, 'success')
-          break
-        case -1:
-          this.showAlert(resetPasswordResult.message, 'error')
-          break
-        default:
-          break
-      }
-    }
-  }
-
   render() {
-    this.resetPasswordResult()
-    const { isVisible } = this.props
+    this.HandleResetPasswordRequest()
+
+    const { password, passwordAgain, isVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -130,23 +130,6 @@ class ConfirmPwd extends Component {
           <StatusBar
             barStyle={'light-content'}
           />
-          <MessageBar
-            ref={(e) => {
-              this.msgBar = e
-            }}
-          />
-          <Spinner
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              marginTop: common.sh / 2 - common.h50 / 2,
-              zIndex: 20,
-            }}
-            isVisible={isVisible}
-            size={common.h50}
-            type={'Wave'}
-            color={common.btnTextColor}
-          />
 
           <TextInputLogin
             viewStyle={{
@@ -157,7 +140,8 @@ class ConfirmPwd extends Component {
             }}
             title="密码"
             placeholder="请输入密码"
-            maxLength={10}
+            value={password}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />
 
@@ -167,7 +151,8 @@ class ConfirmPwd extends Component {
             }}
             title="再次输入新密码"
             placeholder="请再次输入新密码"
-            maxLength={10}
+            value={passwordAgain}
+            maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
           />
 
@@ -177,8 +162,26 @@ class ConfirmPwd extends Component {
             }}
             title="确定"
             onPress={() => this.confirmPress()}
+            disabled={isVisible}
           />
         </ScrollView>
+
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={isVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
+        <MessageBar
+          ref={(e) => {
+            this.msgBar = e
+          }}
+        />
       </KeyboardAvoidingView>
     )
   }
@@ -190,9 +193,9 @@ function mapStateToProps(state) {
     code: state.resetPassword.code,
     password: state.resetPassword.password,
     passwordAgain: state.resetPassword.passwordAgain,
+
     isVisible: state.resetPassword.isVisible,
-    resetPasswordStatus: state.resetPassword.resetPasswordStatus,
-    resetPasswordResult: state.resetPassword.resetPasswordResult,
+    resetPasswordResponse: state.resetPassword.resetPasswordResponse,
   }
 }
 

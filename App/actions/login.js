@@ -1,17 +1,21 @@
 import {
-  UPDATE_USER,
+  LOGIN_UPDATE,
   LOGIN_REQUEST,
+
   REGISTER_UPDATE,
   REGISTER_REQUEST,
-  GETCODE,
-  RESETPASSWORD_UPDATE,
-  RESETPASSWORD,
-} from '../../constants/index'
 
-export function updateUser(username, password) {
+  RESET_PASSWORD_UPDATE,
+  RESET_PASSWORD_REQUEST,
+
+  GET_VERIFICATE_CODE_REQUEST,
+  CHECK_VERIFICATE_CODE_REQUEST,
+} from '../constants/index'
+
+export function loginUpdate(mobile, password) {
   return {
-    type: UPDATE_USER,
-    username,
+    type: LOGIN_UPDATE,
+    mobile,
     password,
   }
 }
@@ -40,16 +44,9 @@ export function registerRequest(data) {
   }
 }
 
-export function getVerificateCode(data) {
-  return {
-    type: GETCODE,
-    data,
-  }
-}
-
 export function resetPasswordUpdate(mobile, code, password, passwordAgain) {
   return {
-    type: RESETPASSWORD_UPDATE,
+    type: RESET_PASSWORD_UPDATE,
     mobile,
     code,
     password,
@@ -57,9 +54,23 @@ export function resetPasswordUpdate(mobile, code, password, passwordAgain) {
   }
 }
 
-export function resetPassword(data) {
+export function resetPasswordRequest(data) {
   return {
-    type: RESETPASSWORD,
+    type: RESET_PASSWORD_REQUEST,
+    data,
+  }
+}
+
+export function getVerificateCodeRequest(data) {
+  return {
+    type: GET_VERIFICATE_CODE_REQUEST,
+    data,
+  }
+}
+
+export function checkVerificateCodeRequest(data) {
+  return {
+    type: CHECK_VERIFICATE_CODE_REQUEST,
     data,
   }
 }

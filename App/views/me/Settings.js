@@ -56,7 +56,7 @@ export default class Settings extends Component {
             marginTop: common.margin10,
           }}
           leftImageHide
-          onPress={() => this.props.navigation.navigate('SetPwd')}
+          onPress={() => this.props.navigation.navigate('UpdatePassword')}
           title="修改密码"
         />
         <MeCell

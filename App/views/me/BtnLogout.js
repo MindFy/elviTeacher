@@ -23,15 +23,17 @@ const styles = StyleSheet.create({
 export default class BtnLogout extends Component {
   componentDidMount() { }
   render() {
+    const { viewStyle, onPress, disabled, title } = this.props
     return (
       <TouchableOpacity
-        style={[styles.viewStyle, this.props.viewStyle]}
+        style={[styles.viewStyle, viewStyle]}
         activeOpacity={common.activeOpacity}
-        onPress={this.props.onPress}
+        onPress={onPress}
+        disabled={disabled}
       >
         <Text
           style={styles.titleStyle}
-        >{this.props.title}</Text>
+        >{title}</Text>
       </TouchableOpacity>
     )
   }

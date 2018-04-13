@@ -51,6 +51,7 @@ export default class TextInputLogin extends Component {
           password={this.props.password}
           multiline={false}
           onChange={this.props.onChange}
+          value={this.props.value}
           keyboardType={this.props.keyboardType}
           maxLength={this.props.maxLength}
           editable
