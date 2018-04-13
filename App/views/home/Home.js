@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -8,22 +9,47 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
+import {
+  findBannersRequest,
+} from '../../actions/home'
 import { common } from '../common'
 import HomeCell from './HomeCell'
+import graphqlFindBanners from '../../schemas/home'
 
-export default class Home extends Component {
-  constructor() {
-    super()
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.dealDs = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+class Home extends Component {
+  constructor(props) {
+    super(props)
+    const { dispatch } = props
+    this.dataSource = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
     this.state = {
-      dataSource: this.ds.cloneWithRows([
+      testdata: [
         ['ETH', '0.00082722', '0.98%', 1],
         ['TK', '0.00082722', '0.98%', 0],
-      ]),
+      ],
+    }
+
+    this.showFindBannersResponse = false
+
+    dispatch(findBannersRequest(graphqlFindBanners()))
+  }
+
+  handleFindBannersRequest() {
+    const { banners, findBannersVisible, findBannersResponse } = this.props
+    if (!findBannersVisible && !this.showFindBannersResponse) return
+    console.log('findBannersResponse->', findBannersResponse)
+
+    if (findBannersVisible) {
+      this.showFindBannersResponse = true
+    } else {
+      this.showFindBannersResponse = false
+      if (findBannersResponse.success) {
+        console.log('banners->', banners)
+      }
     }
   }
-  componentDidMount() { }
+
   renderRow(rd) {
     return (
       <TouchableOpacity
@@ -34,7 +60,10 @@ export default class Home extends Component {
       </TouchableOpacity>
     )
   }
+
   render() {
+    this.handleFindBannersRequest()
+
     return (
       <View
         style={{
@@ -101,7 +130,7 @@ export default class Home extends Component {
           </View>
 
           <ListView
-            dataSource={this.state.dataSource}
+            dataSource={this.dataSource(this.state.testdata)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
           />
@@ -110,3 +139,16 @@ export default class Home extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    banners: state.home.banners,
+
+    findBannersVisible: state.home.findBannersVisible,
+    findBannersResponse: state.home.findBannersResponse,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Home)

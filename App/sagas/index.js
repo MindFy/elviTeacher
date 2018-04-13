@@ -62,7 +62,7 @@ function* logout() {
 function* userInfo() {
   while (true) {
     const request = yield take(constants.USERINFO_REQUEST)
-    const response = yield call(api.userInfo, request.schema)
+    const response = yield call(api.graphql, request.schema)
     if (response.success) yield put({ type: constants.USERINFO_SUCCEED, response })
     else yield put({ type: constants.USERINFO_FAILED, response })
   }
@@ -76,6 +76,15 @@ function* updatePassword() {
     else yield put({ type: constants.PASSWORD_FAILED, response })
   }
 }
+/* 获取轮播图片 */
+function* findBanners() {
+  while (true) {
+    const request = yield take(constants.FIND_BANNERS_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) yield put({ type: constants.FIND_BANNERS_SUCCEED, response })
+    else yield put({ type: constants.FIND_BANNERS_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -87,5 +96,6 @@ export default function* rootSaga() {
     fork(logout),
     fork(userInfo),
     fork(updatePassword),
+    fork(findBanners),
   ]
 }
