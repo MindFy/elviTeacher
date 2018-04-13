@@ -9,8 +9,10 @@ import {
   MessageBar,
   MessageBarManager,
 } from 'react-native-message-bar'
+import Spinner from 'react-native-spinkit'
 import {
   getVerificateCodeRequest,
+  checkVerificateCodeRequest,
   resetPasswordUpdate,
 } from '../../actions/login'
 import { common } from '../common'
@@ -22,6 +24,7 @@ class ForgotPwd extends Component {
   constructor() {
     super()
     this.showGetVerificateCodeResponse = false
+    this.showCheckVerificateCodeResponse = false
 
     this.msgBar = undefined
 
@@ -33,7 +36,10 @@ class ForgotPwd extends Component {
   }
 
   componentWillUnmount() {
+    const { dispatch, navigation } = this.props
     MessageBarManager.unregisterMessageBar()
+    navigation.state.params.goBackBlock()
+    dispatch(resetPasswordUpdate('', '', '', ''))
   }
 
   onChange(event, tag) {
@@ -42,10 +48,10 @@ class ForgotPwd extends Component {
 
     switch (tag) {
       case 'mobile':
-        dispatch(resetPasswordUpdate(text, code))
+        dispatch(resetPasswordUpdate(text, code, '', ''))
         break
       case 'code':
-        dispatch(resetPasswordUpdate(mobile, text))
+        dispatch(resetPasswordUpdate(mobile, text, '', ''))
         break
       default:
         break
@@ -66,7 +72,7 @@ class ForgotPwd extends Component {
   }
 
   nextPress() {
-    const { navigation, mobile, code } = this.props
+    const { dispatch, mobile, code } = this.props
     if (!mobile.length) {
       this.showAlert('请输入手机号', 'warning')
       return
@@ -79,14 +85,14 @@ class ForgotPwd extends Component {
       this.showAlert('请输入正确的手机号', 'warning')
       return
     }
-    if (code !== '1234') {
-      this.showAlert('验证码不正确', 'error')
-      return
-    }
-    navigation.navigate('ConfirmPwd')
+    dispatch(checkVerificateCodeRequest({
+      mobile,
+      service: 'reset',
+      code,
+    }))
   }
 
-  /* 请求结果处理 */
+  /* 获取验证码请求结果处理 */
   handleGetVerificateCodeRequest() {
     const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
@@ -99,6 +105,25 @@ class ForgotPwd extends Component {
         this.showAlert(getVerificateCodeResponse.result.message, 'success')
       } else {
         this.showAlert(getVerificateCodeResponse.error.message, 'error')
+      }
+    }
+  }
+
+  /* 检测验证码请求结果处理 */
+  handleCheckVerificateCodeRequest() {
+    const { checkVerificateCodeVisible, checkVerificateCodeResponse, navigation } = this.props
+    if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
+
+    if (checkVerificateCodeVisible) {
+      this.showCheckVerificateCodeResponse = true
+    } else {
+      this.showCheckVerificateCodeResponse = false
+      if (checkVerificateCodeResponse.success) {
+        navigation.navigate('ConfirmPwd', {
+          goBackBlock: () => this.goBackBlock(),
+        })
+      } else {
+        this.showAlert(checkVerificateCodeResponse.error.message, 'error')
       }
     }
   }
@@ -117,10 +142,15 @@ class ForgotPwd extends Component {
     })
   }
 
+  goBackBlock() {
+    MessageBarManager.registerMessageBar(this.msgBar)
+  }
+
   render() {
     this.handleGetVerificateCodeRequest()
+    this.handleCheckVerificateCodeRequest()
 
-    const { mobile, code, getVerificateCodeVisible } = this.props
+    const { mobile, code, getVerificateCodeVisible, checkVerificateCodeVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -167,6 +197,17 @@ class ForgotPwd extends Component {
           />
         </ScrollView>
 
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={checkVerificateCodeVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
         <MessageBar
           ref={(e) => {
             this.msgBar = e
@@ -184,6 +225,9 @@ function mapStateToProps(state) {
 
     getVerificateCodeVisible: state.resetPassword.getVerificateCodeVisible,
     getVerificateCodeResponse: state.resetPassword.getVerificateCodeResponse,
+
+    checkVerificateCodeVisible: state.resetPassword.checkVerificateCodeVisible,
+    checkVerificateCodeResponse: state.resetPassword.checkVerificateCodeResponse,
   }
 }
 

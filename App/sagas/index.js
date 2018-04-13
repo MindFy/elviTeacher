@@ -31,6 +31,15 @@ function* getVerificateCode() {
     else yield put({ type: constants.GET_VERIFICATE_CODE_FAILED, response })
   }
 }
+/* 检测验证码 */
+function* checkVerificateCode() {
+  while (true) {
+    const request = yield take(constants.CHECK_VERIFICATE_CODE_REQUEST)
+    const response = yield call(api.checkVerificateCode, request.data)
+    if (response.success) yield put({ type: constants.CHECK_VERIFICATE_CODE_SUCCEED, response })
+    else yield put({ type: constants.CHECK_VERIFICATE_CODE_FAILED, response })
+  }
+}
 /* 重设密码 */
 function* resetPassword() {
   while (true) {
@@ -73,6 +82,7 @@ export default function* rootSaga() {
     fork(login),
     fork(register),
     fork(getVerificateCode),
+    fork(checkVerificateCode),
     fork(resetPassword),
     fork(logout),
     fork(userInfo),

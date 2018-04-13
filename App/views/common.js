@@ -9,6 +9,7 @@ const w = 375
 
 const common = {
   userInfo: 'userInfo',
+  resetPasswordGoBack: 'resetPasswordGoBack',
 
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',

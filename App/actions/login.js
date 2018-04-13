@@ -9,6 +9,7 @@ import {
   RESET_PASSWORD_REQUEST,
 
   GET_VERIFICATE_CODE_REQUEST,
+  CHECK_VERIFICATE_CODE_REQUEST,
 } from '../constants/index'
 
 export function loginUpdate(mobile, password) {
@@ -63,6 +64,13 @@ export function resetPasswordRequest(data) {
 export function getVerificateCodeRequest(data) {
   return {
     type: GET_VERIFICATE_CODE_REQUEST,
+    data,
+  }
+}
+
+export function checkVerificateCodeRequest(data) {
+  return {
+    type: CHECK_VERIFICATE_CODE_REQUEST,
     data,
   }
 }

@@ -7,6 +7,10 @@ import {
   GET_VERIFICATE_CODE_REQUEST,
   GET_VERIFICATE_CODE_SUCCEED,
   GET_VERIFICATE_CODE_FAILED,
+
+  CHECK_VERIFICATE_CODE_REQUEST,
+  CHECK_VERIFICATE_CODE_SUCCEED,
+  CHECK_VERIFICATE_CODE_FAILED,
 } from '../constants/index'
 
 const initialState = {
@@ -20,6 +24,9 @@ const initialState = {
 
   getVerificateCodeVisible: false,
   getVerificateCodeResponse: undefined,
+
+  checkVerificateCodeVisible: false,
+  checkVerificateCodeResponse: undefined,
 }
 
 export default function resetPassword(state = initialState, action) {
@@ -73,6 +80,26 @@ export default function resetPassword(state = initialState, action) {
         ...state,
         getVerificateCodeVisible: false,
         getVerificateCodeResponse: action.response,
+      }
+      break
+    case CHECK_VERIFICATE_CODE_REQUEST:
+      nextState = {
+        ...state,
+        checkVerificateCodeVisible: true,
+      }
+      break
+    case CHECK_VERIFICATE_CODE_SUCCEED:
+      nextState = {
+        ...state,
+        checkVerificateCodeVisible: false,
+        checkVerificateCodeResponse: action.response,
+      }
+      break
+    case CHECK_VERIFICATE_CODE_FAILED:
+      nextState = {
+        ...state,
+        checkVerificateCodeVisible: false,
+        checkVerificateCodeResponse: action.response,
       }
       break
     default:

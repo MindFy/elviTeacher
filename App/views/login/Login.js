@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   StatusBar,
+  DeviceEventEmitter,
 } from 'react-native'
 import {
   MessageBar,
@@ -39,10 +40,17 @@ class Login extends Component {
 
   componentDidMount() {
     MessageBarManager.registerMessageBar(this.msgBar)
+
+    /* 重置密码成功通知 */
+    this.resetPasswordGoBack = DeviceEventEmitter.addListener(common.resetPasswordGoBack, () => {
+      MessageBarManager.registerMessageBar(this.msgBar)
+      this.showAlert('重置密码成功', 'success')
+    })
   }
 
   componentWillUnmount() {
     MessageBarManager.unregisterMessageBar()
+    this.resetPasswordGoBack.remove()
   }
 
   onChange(event, tag) {
@@ -79,7 +87,7 @@ class Login extends Component {
 
   /* 请求结果处理 */
   handleLoginRequest() {
-    const { isVisible, loginResponse, screenProps, navigation, password } = this.props
+    const { isVisible, loginResponse, navigation, screenProps } = this.props
     if (!isVisible && !this.showLoginResponse) return
 
     if (isVisible) {
@@ -91,7 +99,7 @@ class Login extends Component {
           if (error) {
             this.showAlert('用户保存失败', 'error')
           } else {
-            navigation.state.params.dismissBlock()
+            navigation.state.params.goBackBlock()
             screenProps.dismiss()
           }
         })
@@ -115,6 +123,13 @@ class Login extends Component {
         fontSize: common.font14,
       },
     })
+  }
+
+  goBackBlock(response) {
+    MessageBarManager.registerMessageBar(this.msgBar)
+    if (response && response.success) {
+      this.showAlert('注册成功', 'success')
+    }
   }
 
   render() {
@@ -175,7 +190,9 @@ class Login extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('Register')}
+              onPress={() => navigation.navigate('Register', {
+                goBackBlock: response => this.goBackBlock(response),
+              })}
             >
               <Text
                 style={{
@@ -186,7 +203,9 @@ class Login extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('ForgotPwd')}
+              onPress={() => navigation.navigate('ForgotPwd', {
+                goBackBlock: () => this.goBackBlock(),
+              })}
             >
               <Text
                 style={{
@@ -202,24 +221,24 @@ class Login extends Component {
             onPress={this.loginPress}
             disabled={isVisible}
           />
-
-          <Spinner
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              marginTop: common.sh / 2 - common.h50 / 2,
-            }}
-            isVisible={isVisible}
-            size={common.h50}
-            type={'Wave'}
-            color={common.btnTextColor}
-          />
-          <MessageBar
-            ref={(e) => {
-              this.msgBar = e
-            }}
-          />
         </ScrollView>
+
+        <Spinner
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2,
+          }}
+          isVisible={isVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
+        <MessageBar
+          ref={(e) => {
+            this.msgBar = e
+          }}
+        />
       </KeyboardAvoidingView>
     )
   }

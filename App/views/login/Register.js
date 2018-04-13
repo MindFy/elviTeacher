@@ -39,7 +39,10 @@ class Register extends Component {
   }
 
   componentWillUnmount() {
+    const { dispatch, registerResponse, navigation } = this.props
     MessageBarManager.unregisterMessageBar()
+    navigation.state.params.goBackBlock(registerResponse)
+    dispatch(registerUpdate('', '', '', ''))
   }
 
   onChange(event, tag) {
@@ -137,10 +140,7 @@ class Register extends Component {
     } else {
       this.showRegisterResponse = false
       if (registerResponse.success) {
-        this.showAlert('注册成功', 'success')
-        setTimeout(() => {
-          navigation.goBack()
-        }, common.messageBarDur)
+        navigation.goBack()
       } else {
         this.showAlert(registerResponse.error.message, 'error')
       }

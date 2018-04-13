@@ -69,6 +69,22 @@ const LoginStack = DismissableStackNavigator({
     },
   },
 })
+const loginStackDefaultGetStateForAction = LoginStack.router.getStateForAction
+LoginStack.router.getStateForAction = (action, state) => {
+  if (state && action.type === 'Navigation/BACK' && action.key) {
+    const backRoute = state.routes.find(route => route.routeName === action.key)
+    if (backRoute) {
+      const backRouteIndex = state.routes.indexOf(backRoute)
+      const purposeState = {
+        ...state,
+        routes: state.routes.slice(0, backRouteIndex + 1),
+        index: backRouteIndex,
+      }
+      return purposeState
+    }
+  }
+  return loginStackDefaultGetStateForAction(action, state)
+}
 
 const RootStack = StackNavigator({
   TabBarStack: {

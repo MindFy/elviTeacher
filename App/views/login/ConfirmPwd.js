@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   StatusBar,
   ScrollView,
+  DeviceEventEmitter,
   KeyboardAvoidingView,
 } from 'react-native'
 import {
@@ -31,7 +32,14 @@ class ConfirmPwd extends Component {
   }
 
   componentWillUnmount() {
+    const { dispatch, mobile, code, resetPasswordResponse } = this.props
     MessageBarManager.unregisterMessageBar()
+    if (resetPasswordResponse && resetPasswordResponse.success) {
+      DeviceEventEmitter.emit(common.resetPasswordGoBack)
+      dispatch(resetPasswordUpdate('', '', '', ''))
+    } else {
+      dispatch(resetPasswordUpdate(mobile, code, '', ''))
+    }
   }
 
   onChange(event, tag) {
@@ -52,7 +60,6 @@ class ConfirmPwd extends Component {
 
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
-
     if (!password.length) {
       this.showAlert('请设置密码', 'warning')
       return
@@ -78,7 +85,7 @@ class ConfirmPwd extends Component {
 
   /* 请求结果处理 */
   HandleResetPasswordRequest() {
-    const { isVisible, resetPasswordResponse } = this.props
+    const { isVisible, resetPasswordResponse, navigation } = this.props
     if (!isVisible && !this.showResetPasswordResponse) return
 
     if (isVisible) {
@@ -86,7 +93,7 @@ class ConfirmPwd extends Component {
     } else {
       this.showResetPasswordResponse = false
       if (resetPasswordResponse.success) {
-        this.showAlert(resetPasswordResponse.result.message, 'success')
+        navigation.goBack('Login')
       } else {
         this.showAlert(resetPasswordResponse.error.message, 'error')
       }

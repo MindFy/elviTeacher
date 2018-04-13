@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
+  View,
   StatusBar,
   ScrollView,
 } from 'react-native'
@@ -38,38 +39,36 @@ class Me extends Component {
 
   constructor(props) {
     super(props)
-    const { dispatch } = props
 
     this.showLogoutResponse = false
     this.showUserInfoResponse = false
 
     this.logoutPress = this.logoutPress.bind(this)
-    this.loginPress = this.loginPress.bind(this)
 
-    this.readAndDisplay(dispatch)
+    this.readAndDisplay()
   }
 
-  componentDidMount() { }
-
-  readAndDisplay(dispatch) {
+  /* 读取用户数据并展示 */
+  readAndDisplay(loginGoBack) {
+    if (loginGoBack) {
+      this.showAlert('登录成功', 'success')
+    }
+    const { dispatch } = this.props
     storeRead(common.userInfo, (result) => {
       const objectResult = JSON.parse(result)
 
       dispatch(userInfoUpdate(objectResult))
+      /* 发送获取用户个人信息请求 */
       dispatch(userInfoRequest(userInfoSchema(objectResult.id)))
     })
   }
 
-  loginPress() {
-    const { dispatch, userInfo } = this.props
-    const dismissBlock = () => {
-      this.readAndDisplay(dispatch)
-    }
-    if (!userInfo) {
-      this.props.navigation.navigate('LoginStack', {
-        dismissBlock,
-      })
-    }
+  /* 跳转到登录页面 */
+  navigateLogin() {
+    const { navigation } = this.props
+    navigation.navigate('LoginStack', {
+      goBackBlock: () => this.readAndDisplay(true),
+    })
   }
 
   logoutPress() {
@@ -78,7 +77,7 @@ class Me extends Component {
   }
 
   handleUserInfoRequest() {
-    const { dispatch, userInfoVisible, userInfoResponse, userInfo } = this.props
+    const { dispatch, userInfoVisible, userInfoResponse } = this.props
     if (!userInfoVisible && !this.showUserInfoResponse) return
 
     if (userInfoVisible) {
@@ -97,7 +96,7 @@ class Me extends Component {
   }
 
   handleLogoutRequest() {
-    const { dispatch, logoutVisible, logoutResponse, navigation } = this.props
+    const { dispatch, logoutVisible, logoutResponse } = this.props
     if (!logoutVisible && !this.showLogoutResponse) return
 
     if (logoutVisible) {
@@ -110,7 +109,7 @@ class Me extends Component {
             // 清除页面数据
             dispatch(userInfoUpdate(undefined))
             // 返回登录页
-            navigation.navigate('LoginStack')
+            this.navigateLogin()
           } else {
             // 删除失败
           }
@@ -128,75 +127,81 @@ class Me extends Component {
     const { userInfo, logoutVisible } = this.props
 
     return (
-      <ScrollView
+      <View
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
+        <ScrollView>
+          <StatusBar
+            barStyle={'light-content'}
+          />
 
-        <MeCell
-          onPress={this.loginPress}
-          viewStyle={{
-            marginTop: common.margin10,
-            height: common.h50,
-          }}
-          leftImageStyle={{
-            width: common.w25,
-            height: common.w25,
-          }}
-          leftImageSource={require('../../assets/默认头像ICON.png')}
-          titleStyle={{
-            fontSize: common.font16,
-          }}
-          title={!userInfo ? '请登录' : userInfo.mobile}
-          rightImageHide
-        />
-        <MeCell
-          onPress={() => this.props.navigation.navigate('Authentication')}
-          leftImageSource={require('../../assets/手机认证copy.png')}
-          title="身份认证"
-        />
-        <MeCell
-          onPress={() => { }}
-          leftImageSource={require('../../assets/手机认证.png')}
-          title="手机认证"
-        />
-        <MeCell
-          onPress={() => { }}
-          leftImageSource={require('../../assets/手机认证copy3.png')}
-          title="超级返利"
-        />
-        <MeCell
-          onPress={() => this.props.navigation.navigate('Settings')}
-          leftImageSource={require('../../assets/手机认证copy4.png')}
-          title="设置"
-        />
+          <MeCell
+            onPress={() => {
+              if (!userInfo) {
+                this.navigateLogin()
+              }
+            }}
+            viewStyle={{
+              marginTop: common.margin10,
+              height: common.h50,
+            }}
+            leftImageStyle={{
+              width: common.w25,
+              height: common.w25,
+            }}
+            leftImageSource={require('../../assets/默认头像ICON.png')}
+            titleStyle={{
+              fontSize: common.font16,
+            }}
+            title={!userInfo ? '请登录' : userInfo.mobile}
+            rightImageHide
+          />
+          <MeCell
+            onPress={() => this.props.navigation.navigate('Authentication')}
+            leftImageSource={require('../../assets/手机认证copy.png')}
+            title="身份认证"
+          />
+          <MeCell
+            onPress={() => { }}
+            leftImageSource={require('../../assets/手机认证.png')}
+            title="手机认证"
+          />
+          <MeCell
+            onPress={() => { }}
+            leftImageSource={require('../../assets/手机认证copy3.png')}
+            title="超级返利"
+          />
+          <MeCell
+            onPress={() => this.props.navigation.navigate('Settings')}
+            leftImageSource={require('../../assets/手机认证copy4.png')}
+            title="设置"
+          />
 
-        {
-          !userInfo ? null :
-            (<BtnLogout
-              onPress={this.logoutPress}
-              disabled={logoutVisible}
-              title="退出登录"
-            />)
-        }
+          {
+            !userInfo ? null :
+              (<BtnLogout
+                onPress={this.logoutPress}
+                disabled={logoutVisible}
+                title="退出登录"
+              />)
+          }
+        </ScrollView>
 
         <Spinner
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
+            marginTop: common.sh / 2,
           }}
           isVisible={logoutVisible}
           size={common.h50}
           type={'Wave'}
           color={common.btnTextColor}
         />
-      </ScrollView>
+      </View>
     )
   }
 }

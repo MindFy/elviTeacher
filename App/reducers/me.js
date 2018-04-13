@@ -32,7 +32,6 @@ const initialState = {
 
 export default function me(state = initialState, action) {
   let nextState = state
-  console.log('me action response ->', action.response)
 
   switch (action.type) {
     case USERINFO_UPDATE:
