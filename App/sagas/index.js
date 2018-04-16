@@ -98,6 +98,33 @@ function* findBanners() {
     }
   }
 }
+/* 按交易币币对，查询委托的买卖的各10档 */
+function* getShelves() {
+  while (true) {
+    const request = yield take(constants.GET_SHELVES_REQUEST)
+    const response = yield call(api.getShelves, request.data)
+    if (response.success) yield put({ type: constants.GET_SHELVES_SUCCEED, response })
+    else yield put({ type: constants.GET_SHELVES_FAILED, response })
+  }
+}
+/* 获取某个币币对最新交易列表 */
+function* latestDeals() {
+  while (true) {
+    const request = yield take(constants.LATEST_DEALS_REQUEST)
+    const response = yield call(api.latestDeals, request.data)
+    if (response.success) yield put({ type: constants.LATEST_DEALS_SUCCEED, response })
+    else yield put({ type: constants.LATEST_DEALS_FAILED, response })
+  }
+}
+/* 创建委托单 */
+function* delegateCreate() {
+  while (true) {
+    const request = yield take(constants.DELEGATE_CREATE_REQUEST)
+    const response = yield call(api.delegateCreate, request.data)
+    if (response.success) yield put({ type: constants.DELEGATE_CREATE_SUCCEED, response })
+    else yield put({ type: constants.DELEGATE_CREATE_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -110,5 +137,8 @@ export default function* rootSaga() {
     fork(userInfo),
     fork(updatePassword),
     fork(findBanners),
+    fork(getShelves),
+    fork(latestDeals),
+    fork(delegateCreate),
   ]
 }

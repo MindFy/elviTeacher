@@ -1,19 +1,30 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
   Image,
   StatusBar,
-  TextInput,
   ScrollView,
   ListView,
   TouchableOpacity,
 } from 'react-native'
+import Menu from 'teaset/components/Menu/Menu'
+import Toast from 'teaset/components/Toast/Toast'
+import {
+  buyOrSellUpdate,
+  TextInputDelegateUpdate,
+  getShelvesRequest,
+  latestDealsRequest,
+  currentTokensUpdate,
+  delegateCreateRequest,
+} from '../../actions/transactions'
 import { common } from '../common'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
+import TextInputTransactions from './TextInputTransactions'
 
-export default class Transactions extends Component {
+class Transactions extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '交易',
@@ -26,62 +37,142 @@ export default class Transactions extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.navigate('Consignation')}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w20,
-              height: common.h20,
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => {
+              
             }}
-            source={require('../../assets/市场分析.png')}
-          />
-        </TouchableOpacity>
-      ),
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w20,
+                height: common.h20,
+              }}
+              source={require('../../assets/市场分析.png')}
+            />
+          </TouchableOpacity>
+        ),
     }
   }
-  constructor() {
-    super()
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.dealDs = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.state = {
-      isAskPress: true,
-      dataSource: this.ds.cloneWithRows([
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-        ['0.987652', '11.976'],
-      ]),
-      dealListDataSource: this.dealDs.cloneWithRows([
-        ['12:12:12', '0.987652', '11.976'],
-        ['12:12:13', '0.987652', '11.976'],
-        ['12:12:14', '0.987652', '11.976'],
-        ['12:12:15', '0.987652', '11.976'],
-        ['12:12:16', '0.987652', '11.976'],
-        ['12:12:17', '0.987652', '11.976'],
-        ['12:12:18', '0.987652', '11.976'],
-        ['12:12:19', '0.987652', '11.976'],
-        ['12:12:20', '0.987652', '11.976'],
-        ['12:12:21', '0.987652', '11.976'],
-      ]),
-    }
+  constructor(props) {
+    super(props)
+    const { dispatch, goods, currency } = props
+
+    this.showDelegateCreateResponse = false
+
+    this.shelvesDS = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
+    this.latestDealsDS = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
+
+    dispatch(getShelvesRequest({
+      goods_id: goods.id,
+      currency_id: currency.id,
+    }))
+    dispatch(latestDealsRequest({
+      goods_id: goods.id,
+      currency_id: currency.id,
+    }))
   }
+
   componentDidMount() { }
-  topBarPress(isAskPress) {
-    this.setState({
-      isAskPress,
-    })
+
+  onChange(event, tag) {
+    const { text } = event.nativeEvent
+    const { dispatch, price, quantity, amount } = this.props
+
+    const p = !price.length ? 0 : parseInt(price)
+    let n
+    let a
+
+    if (tag === 'price') {
+      dispatch(TextInputDelegateUpdate(text, quantity, amount))
+    } else if (tag === 'quantity') {
+      n = !text.length ? 0 : parseInt(text)
+      a = p * n === 0 ? amount : p * n
+      dispatch(TextInputDelegateUpdate(price, text, `${a}`))
+    } else if (tag === 'amount') {
+      a = !text.length ? 0 : parseInt(text)
+      n = a / p === 0 ? quantity : Number(a / p).toFixed(0)
+
+      dispatch(TextInputDelegateUpdate(price, `${n}`, text))
+    }
   }
-  renderRow(rd, sid, rid) {
+
+  menuPress() {
+    const { dispatch, tokenList } = this.props
+    const items = [
+      {
+        title: `${tokenList[0].name}/${tokenList[1].name}`,
+        onPress: () => {
+          dispatch(currentTokensUpdate(tokenList[0], tokenList[1]))
+        },
+      },
+      {
+        title: `${tokenList[0].name}/${tokenList[2].name}`,
+        onPress: () => {
+          dispatch(currentTokensUpdate(tokenList[0], tokenList[2]))
+        },
+      },
+      {
+        title: `${tokenList[0].name}/${tokenList[3].name}`,
+        onPress: () => {
+          dispatch(currentTokensUpdate(tokenList[0], tokenList[3]))
+        },
+      },
+      {
+        title: `${tokenList[1].name}/${tokenList[2].name}`,
+        onPress: () => {
+          dispatch(currentTokensUpdate(tokenList[1], tokenList[2]))
+        },
+      },
+    ]
+    Menu.show({
+      x: 50,
+      y: 126,
+    }, items)
+  }
+
+  topBarPress(b) {
+    const { dispatch, buyOrSell } = this.props
+    if (buyOrSell !== b) {
+      dispatch(buyOrSellUpdate(b))
+      dispatch(TextInputDelegateUpdate('', '', ''))
+    }
+  }
+
+  buyOrSellPress() {
+    const { dispatch, goods, currency, buyOrSell, price, quantity, amount } = this.props
+    dispatch(delegateCreateRequest({
+      currency_id: goods.id,
+      goods_id: currency.id,
+      direct: buyOrSell ? 'buy' : 'sell',
+      price: Number(price),
+      quantity: Number(quantity),
+    }))
+  }
+
+  handleDelegateCreateRequest() {
+    const { delegateCreateVisible, delegateCreateResponse } = this.props
+    if (!delegateCreateVisible && !this.showDelegateCreateResponse) return
+
+    if (delegateCreateVisible) {
+      this.showDelegateCreateResponse = true
+    } else {
+      this.showDelegateCreateResponse = false
+      if (delegateCreateResponse.success) {
+        Toast.success('挂单成功')
+      } else {
+        Toast.fail(delegateCreateResponse.error.message)
+      }
+    }
+  }
+
+  renderShelvesRow(rd, sid, rid) {
     let textColor = null
     let marginTop = null
     if (rid < 5) {
@@ -116,7 +207,8 @@ export default class Transactions extends Component {
       </View>
     )
   }
-  renderHeader() {
+
+  renderShelvesHeader() {
     return (
       <View style={{
         marginTop: 2 * common.margin10,
@@ -139,7 +231,8 @@ export default class Transactions extends Component {
       </View>
     )
   }
-  renderDealListRow(rd, sid, rid) {
+
+  renderLatestDealsRow(rd, sid, rid) {
     let textColor = null
     if (rid % 2 === 0) {
       textColor = common.askColor
@@ -173,7 +266,8 @@ export default class Transactions extends Component {
       </View>
     )
   }
-  renderDealListHeader() {
+
+  renderLatestDealsHeader() {
     return (
       <View>
         <View style={{
@@ -222,7 +316,13 @@ export default class Transactions extends Component {
       </View>
     )
   }
+
   render() {
+    const { buyOrSell, navigation, delegateCreateVisible,
+      goods, currency, price, quantity, amount, latestDeals,
+    } = this.props
+    this.handleDelegateCreateRequest()
+
     return (
       <View style={{
         flex: 1,
@@ -253,7 +353,7 @@ export default class Transactions extends Component {
               <Text
                 style={{
                   fontSize: common.font14,
-                  color: this.state.isAskPress ? common.btnTextColor : common.textColor,
+                  color: buyOrSell ? common.btnTextColor : common.textColor,
                   textAlign: 'center',
                 }}
               >买入</Text>
@@ -273,7 +373,7 @@ export default class Transactions extends Component {
               <Text
                 style={{
                   fontSize: common.font14,
-                  color: !this.state.isAskPress ? common.btnTextColor : common.textColor,
+                  color: !buyOrSell ? common.btnTextColor : common.textColor,
                   textAlign: 'center',
                 }}
               >卖出</Text>
@@ -288,7 +388,7 @@ export default class Transactions extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.props.navigation.navigate('Consignation')}
+              onPress={() => navigation.navigate('Delegate')}
             >
               <Text
                 style={{
@@ -313,18 +413,20 @@ export default class Transactions extends Component {
                 width: common.sw / 2,
               }}
             >
-              <View
+              <TouchableOpacity
                 style={{
                   marginLeft: common.margin10,
                   marginTop: common.margin10,
                   flexDirection: 'row',
                 }}
+                activeOpacity={common.activeOpacity}
+                onPress={() => this.menuPress()}
               >
                 <Text style={{
                   color: common.textColor,
                   fontSize: common.font16,
                 }}
-                >ETH/BTC</Text>
+                >{`${goods.name}/${currency.name}`}</Text>
                 <Image
                   style={{
                     marginLeft: common.margin5,
@@ -334,24 +436,13 @@ export default class Transactions extends Component {
                   }}
                   source={require('../../assets/下拉.png')}
                 />
-              </View>
+              </TouchableOpacity>
 
-              <TextInput
-                style={{
-                  marginTop: common.margin10,
-                  marginLeft: common.margin10,
-                  marginRight: common.margin10 / 2,
-                  borderColor: common.borderColor,
-                  borderWidth: 1,
-                  borderRadius: 1,
-                  backgroundColor: common.navBgColor,
-                  height: common.h35,
-                  fontSize: common.font12,
-                  textAlign: 'center',
-                  color: 'white',
-                }}
+              <TextInputTransactions
                 placeholder="0.987652"
-                placeholderTextColor={common.placeholderColor}
+                keyboardType="number-pad"
+                value={price}
+                onChange={e => this.onChange(e, 'price')}
               />
 
               <Text style={{
@@ -361,21 +452,11 @@ export default class Transactions extends Component {
               }}
               >= ¥4.43</Text>
 
-              <TextInput
-                style={{
-                  marginLeft: common.margin10,
-                  marginRight: common.margin10 / 2,
-                  borderColor: common.borderColor,
-                  borderWidth: 1,
-                  borderRadius: 1,
-                  backgroundColor: common.navBgColor,
-                  height: common.h35,
-                  fontSize: common.font12,
-                  textAlign: 'center',
-                  color: 'white',
-                }}
+              <TextInputTransactions
                 placeholder="数量（ETH）"
-                placeholderTextColor={common.placeholderColor}
+                keyboardType="number-pad"
+                value={quantity}
+                onChange={e => this.onChange(e, 'quantity')}
               />
 
               <TransactionsSlider styleee={{
@@ -385,22 +466,11 @@ export default class Transactions extends Component {
               }}
               />
 
-              <TextInput
-                style={{
-                  marginTop: common.margin10,
-                  marginLeft: common.margin10,
-                  marginRight: common.margin10 / 2,
-                  borderColor: common.borderColor,
-                  borderWidth: 1,
-                  borderRadius: 1,
-                  backgroundColor: common.navBgColor,
-                  height: common.h35,
-                  fontSize: common.font12,
-                  textAlign: 'center',
-                  color: 'white',
-                }}
+              <TextInputTransactions
                 placeholder="成交金额（BTC）"
-                placeholderTextColor={common.placeholderColor}
+                keyboardType="number-pad"
+                value={amount}
+                onChange={e => this.onChange(e, 'amount')}
               />
 
               <View style={{
@@ -424,13 +494,17 @@ export default class Transactions extends Component {
                 >12 BTC</Text>
               </View>
 
-              <TouchableOpacity activeOpacity={common.activeOpacity} >
+              <TouchableOpacity
+                activeOpacity={common.activeOpacity}
+                onPress={() => this.buyOrSellPress()}
+                disabled={delegateCreateVisible}
+              >
                 <View style={{
                   marginTop: common.margin10,
                   marginLeft: common.margin10,
                   marginRight: common.margin10 / 2,
                   height: common.h35,
-                  backgroundColor: this.state.isAskPress ? common.redColor : common.greenColor,
+                  backgroundColor: buyOrSell ? common.redColor : common.greenColor,
                   justifyContent: 'center',
                 }}
                 >
@@ -439,7 +513,7 @@ export default class Transactions extends Component {
                     color: 'white',
                     alignSelf: 'center',
                   }}
-                  >{this.state.isAskPress ? '买入' : '卖出'}</Text>
+                  >{buyOrSell ? '买入' : '卖出'}</Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -448,9 +522,9 @@ export default class Transactions extends Component {
               style={{
                 width: common.sw / 2,
               }}
-              dataSource={this.state.dataSource}
-              renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
-              renderHeader={() => this.renderHeader()}
+              dataSource={this.shelvesDS([])}
+              renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
+              renderHeader={() => this.renderShelvesHeader()}
               enableEmptySections
             />
           </View>
@@ -464,9 +538,9 @@ export default class Transactions extends Component {
             style={{
               marginTop: common.margin10,
             }}
-            dataSource={this.state.dealListDataSource}
-            renderRow={(rd, sid, rid) => this.renderDealListRow(rd, sid, rid)}
-            renderHeader={() => this.renderDealListHeader()}
+            dataSource={this.latestDealsDS(latestDeals)}
+            renderRow={(rd, sid, rid) => this.renderLatestDealsRow(rd, sid, rid)}
+            renderHeader={() => this.renderLatestDealsHeader()}
             enableEmptySections
           />
         </ScrollView>
@@ -474,3 +548,25 @@ export default class Transactions extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    tokenList: state.delegate.tokenList,
+    goods: state.delegate.goods,
+    currency: state.delegate.currency,
+    buyOrSell: state.delegate.buyOrSell,
+    shelves: state.delegate.shelves,
+    latestDeals: state.delegate.latestDeals,
+
+    price: state.delegate.price,
+    quantity: state.delegate.quantity,
+    amount: state.delegate.amount,
+
+    delegateCreateVisible: state.delegate.delegateCreateVisible,
+    delegateCreateResponse: state.delegate.delegateCreateResponse,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Transactions)

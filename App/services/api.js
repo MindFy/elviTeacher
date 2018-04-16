@@ -56,5 +56,8 @@ export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
 export const logout = makePostAPI('/1.0/app/user/logout')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
 export const imgHash = makePostAPI('/1.0/fileProc/imghash')
+export const getShelves = makePostAPI('/1.0/app/delegate/getShelves')
+export const latestDeals = makePostAPI('/1.0/app/deal/latestDeals')
+export const delegateCreate = makePostAPI('/1.0/app/delegate/create')
 
 export const graphql = graphqlAPI('/1.0/app')

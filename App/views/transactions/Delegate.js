@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { common } from '../common'
 
-export default class Consignation extends Component {
+export default class Delegate extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '我的委托',

@@ -3,7 +3,7 @@ import Home from './views/home/Home'
 import Detail from './views/home/Detail'
 import Market from './views/market/Market'
 import Transactions from './views/transactions/Transactions'
-import Consignation from './views/transactions/Consignation'
+import Delegate from './views/transactions/Delegate'
 import Balance from './views/balance/Balance'
 import History from './views/balance/History'
 import Cash from './views/balance/Cash'
@@ -33,7 +33,7 @@ const TabBar = TabNavigator(
 const TabBarStack = StackNavigator({
   TabBar,
   Detail,
-  Consignation,
+  Delegate,
   History,
   Cash,
   Recharge,

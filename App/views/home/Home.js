@@ -25,12 +25,10 @@ class Home extends Component {
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
-    this.state = {
-      testdata: [
-        ['ETH', '0.00082722', '0.98%', 1],
-        ['TK', '0.00082722', '0.98%', 0],
-      ],
-    }
+    this.testdata = [
+      ['ETH', '0.00082722', '0.98%', 1],
+      ['TK', '0.00082722', '0.98%', 0],
+    ]
 
     this.showFindBannersResponse = false
 
@@ -38,7 +36,7 @@ class Home extends Component {
   }
 
   handleFindBannersRequest() {
-    const { banners, findBannersVisible, findBannersResponse } = this.props
+    const { findBannersVisible, findBannersResponse } = this.props
     if (!findBannersVisible && !this.showFindBannersResponse) return
 
     if (findBannersVisible) {
@@ -69,7 +67,7 @@ class Home extends Component {
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
-    const navigateKeys = ['Recharge', 'Cash', 'Consignation', '法币交易']
+    const navigateKeys = ['Recharge', 'Cash', 'Delegate', '法币交易']
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {
@@ -171,7 +169,7 @@ class Home extends Component {
           </View>
 
           <ListView
-            dataSource={this.dataSource(this.state.testdata)}
+            dataSource={this.dataSource(this.testdata)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
           />
