@@ -11,9 +11,11 @@ import {
 } from 'react-native'
 import {
   findBannersRequest,
+  banndersAddUpdate,
 } from '../../actions/home'
 import { common } from '../common'
 import HomeCell from './HomeCell'
+import HomeSwiper from './HomeSwiper'
 import graphqlFindBanners from '../../schemas/home'
 
 class Home extends Component {
@@ -38,14 +40,13 @@ class Home extends Component {
   handleFindBannersRequest() {
     const { banners, findBannersVisible, findBannersResponse } = this.props
     if (!findBannersVisible && !this.showFindBannersResponse) return
-    console.log('findBannersResponse->', findBannersResponse)
 
     if (findBannersVisible) {
       this.showFindBannersResponse = true
     } else {
       this.showFindBannersResponse = false
-      if (findBannersResponse.success) {
-        console.log('banners->', banners)
+      if (!findBannersResponse.success) {
+        console.log('finderBannersResponse-error->', findBannersResponse.error.message)
       }
     }
   }
@@ -64,6 +65,60 @@ class Home extends Component {
   render() {
     this.handleFindBannersRequest()
 
+    const { banners } = this.props
+
+    const btnTitles = ['充值', '提现', '当前委托', '法币交易']
+    const btns = []
+    const navigateKeys = ['Recharge', 'Cash', 'Consignation', '法币交易']
+    for (let i = 0; i < btnTitles.length; i++) {
+      let source = require('../../assets/充值.png')
+      switch (i) {
+        case 1:
+          source = require('../../assets/充值copy.png')
+          break
+        case 2:
+          source = require('../../assets/当前委托.png')
+          break
+        case 3:
+          source = require('../../assets/法币交易.png')
+          break
+        default:
+          break
+      }
+      btns.push(
+        <TouchableOpacity
+          key={i}
+          style={{
+            flex: 1,
+            backgroundColor: common.navBgColor,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => {
+            this.props.navigation.navigate(navigateKeys[i])
+          }}
+        >
+          <Image
+            style={{
+              marginTop: common.margin10,
+              width: common.w40,
+              height: common.h40,
+              alignSelf: 'center',
+            }}
+            source={source}
+          />
+          <Text
+            style={{
+              marginTop: common.margin5,
+              alignSelf: 'center',
+              color: common.textColor,
+              fontSize: common.font14,
+            }}
+          >{btnTitles[i]}</Text>
+        </TouchableOpacity>,
+      )
+    }
+
     return (
       <View
         style={{
@@ -75,30 +130,16 @@ class Home extends Component {
           barStyle={'light-content'}
         />
         <ScrollView>
-          <Image
-            style={{
-              width: common.sw,
-              height: common.h233,
-            }}
-            resizeMode="stretch"
-            resizeMethod="scale"
-            source={require('../../assets/VCG21gic.png')}
+          <HomeSwiper
+            banners={banners}
           />
+
           <View
             style={{
-              height: common.h32,
-              backgroundColor: common.borderColor05,
-              justifyContent: 'center',
+              height: common.h80,
+              flexDirection: 'row',
             }}
-          >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                color: common.placeholderColor,
-                fontSize: common.font12,
-              }}
-            >公告: xxxxxxxxxxxxxxxx</Text>
-          </View>
+          >{btns}</View>
 
           <View
             style={{

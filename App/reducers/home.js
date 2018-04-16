@@ -2,6 +2,11 @@ import {
   FIND_BANNERS_REQUEST,
   FIND_BANNERS_SUCCEED,
   FIND_BANNERS_FAILED,
+
+  IMG_HASH_SUCCEED,
+  IMG_HASH_FAILED,
+
+  BANNERS_ADD_UPDATE,
 } from '../constants/index'
 
 const initialState = {
@@ -13,7 +18,6 @@ const initialState = {
 
 export default function home(state = initialState, action) {
   let nextState = state
-  console.log('home-action->', action)
 
   switch (action.type) {
     case FIND_BANNERS_REQUEST:
@@ -37,8 +41,26 @@ export default function home(state = initialState, action) {
         findBannersResponse: action.response,
       }
       break
+    case IMG_HASH_SUCCEED:
+      nextState = {
+        ...state,
+      }
+      break
+    case IMG_HASH_FAILED:
+      nextState = {
+        ...state,
+      }
+      break
+    case BANNERS_ADD_UPDATE:
+      state.banners.push(action.data)
+      nextState = {
+        ...state,
+        banners: JSON.parse(JSON.stringify(state.banners)),
+      }
+      break
     default:
       break
   }
+
   return nextState
 }

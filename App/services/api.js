@@ -55,5 +55,6 @@ export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCod
 export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
 export const logout = makePostAPI('/1.0/app/user/logout')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
+export const imgHash = makePostAPI('/1.0/fileProc/imghash')
 
 export const graphql = graphqlAPI('/1.0/app')

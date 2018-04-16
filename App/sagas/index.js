@@ -81,8 +81,21 @@ function* findBanners() {
   while (true) {
     const request = yield take(constants.FIND_BANNERS_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_BANNERS_SUCCEED, response })
-    else yield put({ type: constants.FIND_BANNERS_FAILED, response })
+    if (response.success) {
+      yield put({ type: constants.FIND_BANNERS_SUCCEED, response })
+      const imgHashs = response.result.data.find_banners
+      console.log('imgHashs-->', imgHashs)
+      for (let i = 0; i < imgHashs.length; i++) {
+        const imghash = imgHashs[i].imghash
+        console.log('imghash-', i, '->', imghash)
+        // const imgHashResponse = yield call(api.imgHash, { imghash: imgHashs[i].imghash })
+        // console.log('imgHashResponse-', i, '->', imgHashResponse)
+        // if (imgHashResponse.success) yield put({ type: constants.IMG_HASH_SUCCEED, response })
+        // else yield put({ type: constants.IMG_HASH_FAILED, response })
+      }
+    } else {
+      yield put({ type: constants.FIND_BANNERS_FAILED, response })
+    }
   }
 }
 
