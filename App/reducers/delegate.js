@@ -12,6 +12,10 @@ import {
   DELEGATE_CREATE_REQUEST,
   DELEGATE_CREATE_SUCCEED,
   DELEGATE_CREATE_FAILED,
+
+  GET_DEPTH_MAP_REQUEST,
+  GET_DEPTH_MAP_SUCCEED,
+  GET_DEPTH_MAP_FAILED,
 } from '../constants/index'
 
 const initialState = {
@@ -55,9 +59,13 @@ const initialState = {
 
   shelves: [],
   latestDeals: [],
+  depthMap: undefined,
 
   delegateCreateVisible: false,
   delegateCreateResponse: undefined,
+
+  getDepthMapVisible: false,
+  getDepthMapResponse: undefined,
 }
 
 export default function delegate(state = initialState, action) {
@@ -116,6 +124,26 @@ export default function delegate(state = initialState, action) {
         ...state,
         delegateCreateVisible: false,
         delegateCreateResponse: action.response,
+      }
+      break
+    case GET_DEPTH_MAP_REQUEST:
+      nextState = {
+        ...state,
+        getDepthMapVisible: true,
+      }
+      break
+    case GET_DEPTH_MAP_SUCCEED:
+      nextState = {
+        ...state,
+        getDepthMapVisible: false,
+        getDepthMapResponse: action.response,
+      }
+      break
+    case GET_DEPTH_MAP_FAILED:
+      nextState = {
+        ...state,
+        getDepthMapVisible: false,
+        getDepthMapResponse: action.response,
       }
       break
     default:

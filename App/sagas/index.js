@@ -125,6 +125,15 @@ function* delegateCreate() {
     else yield put({ type: constants.DELEGATE_CREATE_FAILED, response })
   }
 }
+/* 按交易币币对，查询深度图 */
+function* getDepthMap() {
+  while (true) {
+    const request = yield take(constants.GET_DEPTH_MAP_REQUEST)
+    const response = yield call(api.getDepthMap, request.data)
+    if (response.success) yield put({ type: constants.GET_DEPTH_MAP_SUCCEED, response })
+    else yield put({ type: constants.GET_DEPTH_MAP_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -140,5 +149,6 @@ export default function* rootSaga() {
     fork(getShelves),
     fork(latestDeals),
     fork(delegateCreate),
+    fork(getDepthMap),
   ]
 }

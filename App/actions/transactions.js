@@ -5,6 +5,7 @@ import {
   CURRENT_TOKENS_UPDATE,
   TEXTINPUT_DELEGATE_UPDATE,
   DELEGATE_CREATE_REQUEST,
+  GET_DEPTH_MAP_REQUEST,
 } from '../constants/index'
 
 export function buyOrSellUpdate(buyOrSell) {
@@ -48,6 +49,13 @@ export function TextInputDelegateUpdate(price, quantity, amount) {
 export function delegateCreateRequest(data) {
   return {
     type: DELEGATE_CREATE_REQUEST,
+    data,
+  }
+}
+
+export function getDepthMapRequest(data) {
+  return {
+    type: GET_DEPTH_MAP_REQUEST,
     data,
   }
 }

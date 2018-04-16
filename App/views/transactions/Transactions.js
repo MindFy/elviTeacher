@@ -41,7 +41,7 @@ class Transactions extends Component {
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => {
-              
+
             }}
           >
             <Image
@@ -557,6 +557,7 @@ function mapStateToProps(state) {
     buyOrSell: state.delegate.buyOrSell,
     shelves: state.delegate.shelves,
     latestDeals: state.delegate.latestDeals,
+    depthMap: state.delegate.depthMap,
 
     price: state.delegate.price,
     quantity: state.delegate.quantity,
@@ -564,6 +565,9 @@ function mapStateToProps(state) {
 
     delegateCreateVisible: state.delegate.delegateCreateVisible,
     delegateCreateResponse: state.delegate.delegateCreateResponse,
+
+    getDepthMapVisible: state.delegate.getDepthMapVisible,
+    getDepthMapResponse: state.delegate.getDepthMapResponse,
   }
 }
 
