@@ -13,7 +13,6 @@ const initialState = {
 
 export default function dealstat(state = initialState, action) {
   let nextState = state
-  console.log('dealstat-action->', action)
 
   switch (action.type) {
     case GET_ROSE_REQUEST:

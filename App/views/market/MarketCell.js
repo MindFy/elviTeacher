@@ -6,7 +6,6 @@ import {
 import { common } from '../common'
 
 export default class MarketCell extends Component {
-
   componentDidMount() { }
 
   render() {

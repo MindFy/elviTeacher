@@ -25,7 +25,7 @@ import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'
 
 class Transactions extends Component {
-  static navigationOptions(props) {
+  static navigationOptions() {
     return {
       headerTitle: '交易',
       headerStyle: {
@@ -85,18 +85,18 @@ class Transactions extends Component {
     const { text } = event.nativeEvent
     const { dispatch, price, quantity, amount } = this.props
 
-    const p = !price.length ? 0 : parseInt(price)
+    const p = !price.length ? 0 : parseInt(price, 0)
     let n
     let a
 
     if (tag === 'price') {
       dispatch(TextInputDelegateUpdate(text, quantity, amount))
     } else if (tag === 'quantity') {
-      n = !text.length ? 0 : parseInt(text)
+      n = !text.length ? 0 : parseInt(text, 0)
       a = p * n === 0 ? amount : p * n
       dispatch(TextInputDelegateUpdate(price, text, `${a}`))
     } else if (tag === 'amount') {
-      a = !text.length ? 0 : parseInt(text)
+      a = !text.length ? 0 : parseInt(text, 0)
       n = a / p === 0 ? quantity : Number(a / p).toFixed(0)
 
       dispatch(TextInputDelegateUpdate(price, `${n}`, text))
@@ -146,7 +146,7 @@ class Transactions extends Component {
   }
 
   buyOrSellPress() {
-    const { dispatch, goods, currency, buyOrSell, price, quantity, amount } = this.props
+    const { dispatch, goods, currency, buyOrSell, price, quantity } = this.props
     dispatch(delegateCreateRequest({
       currency_id: goods.id,
       goods_id: currency.id,

@@ -5,12 +5,10 @@ import {
   Text,
   StatusBar,
   ListView,
-  TouchableOpacity,
 } from 'react-native'
 import ScrollableTab from 'react-native-scrollable-tab-view'
 import {
   getRoseRequest,
-  getRoseUpdate,
 } from '../../actions/market'
 import { common } from '../common'
 import MarketCell from './MarketCell'
@@ -105,8 +103,6 @@ class Market extends Component {
     const { rose } = this.props
     const tabViews = []
     if (rose.length) {
-      console.log('rose->', rose)
-
       for (let i = 0; i < rose.length; i++) {
         const element = rose[i]
         tabViews.push(
@@ -158,9 +154,6 @@ class Market extends Component {
 function mapStateToProps(state) {
   return {
     rose: state.dealstat.rose,
-
-    getRoseVisible: state.dealstat.getRoseVisible,
-    getRoseResponse: state.dealstat.getRoseResponse,
   }
 }
 
