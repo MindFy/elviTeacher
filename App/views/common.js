@@ -15,7 +15,7 @@ const common = {
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
   greenColor: 'rgb(36,199,139)',
-  navBgColor: 'rgb(38,42,65)', // 导航栏背景色
+  navBgColor: 'rgb(38,43,65)', // 导航栏背景色
   borderColor: 'rgb(52,60,92)',
   borderColor05: 'rgba(52,60,92,0.5)',
   textColor: 'rgb(223,228,255)', // 单元格内文字颜色
@@ -68,7 +68,7 @@ const common = {
   h80: 80 / w * sw,
   h97: 97 / w * sw,
   h120: 120 / w * sw,
-  h233: 233 / w * sw, // 首页公告图片高度
+  h234: 234 / w * sw, // 首页公告图片高度
 
   font30: 30 / w * sw,
   font20: 20 / w * sw,

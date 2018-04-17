@@ -62,7 +62,7 @@ function* logout() {
 function* userInfo() {
   while (true) {
     const request = yield take(constants.USERINFO_REQUEST)
-    const response = yield call(api.userInfo, request.schema)
+    const response = yield call(api.graphql, request.schema)
     if (response.success) yield put({ type: constants.USERINFO_SUCCEED, response })
     else yield put({ type: constants.USERINFO_FAILED, response })
   }
@@ -76,6 +76,64 @@ function* updatePassword() {
     else yield put({ type: constants.PASSWORD_FAILED, response })
   }
 }
+/* 获取轮播图片 */
+function* findBanners() {
+  while (true) {
+    const request = yield take(constants.FIND_BANNERS_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) {
+      yield put({ type: constants.FIND_BANNERS_SUCCEED, response })
+      const imgHashs = response.result.data.find_banners
+      console.log('imgHashs-->', imgHashs)
+      for (let i = 0; i < imgHashs.length; i++) {
+        const imghash = imgHashs[i].imghash
+        console.log('imghash-', i, '->', imghash)
+        // const imgHashResponse = yield call(api.imgHash, { imghash: imgHashs[i].imghash })
+        // console.log('imgHashResponse-', i, '->', imgHashResponse)
+        // if (imgHashResponse.success) yield put({ type: constants.IMG_HASH_SUCCEED, response })
+        // else yield put({ type: constants.IMG_HASH_FAILED, response })
+      }
+    } else {
+      yield put({ type: constants.FIND_BANNERS_FAILED, response })
+    }
+  }
+}
+/* 按交易币币对，查询委托的买卖的各10档 */
+function* getShelves() {
+  while (true) {
+    const request = yield take(constants.GET_SHELVES_REQUEST)
+    const response = yield call(api.getShelves, request.data)
+    if (response.success) yield put({ type: constants.GET_SHELVES_SUCCEED, response })
+    else yield put({ type: constants.GET_SHELVES_FAILED, response })
+  }
+}
+/* 获取某个币币对最新交易列表 */
+function* latestDeals() {
+  while (true) {
+    const request = yield take(constants.LATEST_DEALS_REQUEST)
+    const response = yield call(api.latestDeals, request.data)
+    if (response.success) yield put({ type: constants.LATEST_DEALS_SUCCEED, response })
+    else yield put({ type: constants.LATEST_DEALS_FAILED, response })
+  }
+}
+/* 创建委托单 */
+function* delegateCreate() {
+  while (true) {
+    const request = yield take(constants.DELEGATE_CREATE_REQUEST)
+    const response = yield call(api.delegateCreate, request.data)
+    if (response.success) yield put({ type: constants.DELEGATE_CREATE_SUCCEED, response })
+    else yield put({ type: constants.DELEGATE_CREATE_FAILED, response })
+  }
+}
+/* 按交易币币对，查询深度图 */
+function* getDepthMap() {
+  while (true) {
+    const request = yield take(constants.GET_DEPTH_MAP_REQUEST)
+    const response = yield call(api.getDepthMap, request.data)
+    if (response.success) yield put({ type: constants.GET_DEPTH_MAP_SUCCEED, response })
+    else yield put({ type: constants.GET_DEPTH_MAP_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -87,5 +145,10 @@ export default function* rootSaga() {
     fork(logout),
     fork(userInfo),
     fork(updatePassword),
+    fork(findBanners),
+    fork(getShelves),
+    fork(latestDeals),
+    fork(delegateCreate),
+    fork(getDepthMap),
   ]
 }

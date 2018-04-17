@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -8,22 +9,46 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
+import {
+  findBannersRequest,
+  banndersAddUpdate,
+} from '../../actions/home'
 import { common } from '../common'
 import HomeCell from './HomeCell'
+import HomeSwiper from './HomeSwiper'
+import graphqlFindBanners from '../../schemas/home'
 
-export default class Home extends Component {
-  constructor() {
-    super()
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.dealDs = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.state = {
-      dataSource: this.ds.cloneWithRows([
-        ['ETH', '0.00082722', '0.98%', 1],
-        ['TK', '0.00082722', '0.98%', 0],
-      ]),
+class Home extends Component {
+  constructor(props) {
+    super(props)
+    const { dispatch } = props
+    this.dataSource = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
+    this.testdata = [
+      ['ETH', '0.00082722', '0.98%', 1],
+      ['TK', '0.00082722', '0.98%', 0],
+    ]
+
+    this.showFindBannersResponse = false
+
+    dispatch(findBannersRequest(graphqlFindBanners()))
+  }
+
+  handleFindBannersRequest() {
+    const { findBannersVisible, findBannersResponse } = this.props
+    if (!findBannersVisible && !this.showFindBannersResponse) return
+
+    if (findBannersVisible) {
+      this.showFindBannersResponse = true
+    } else {
+      this.showFindBannersResponse = false
+      if (!findBannersResponse.success) {
+        console.log('finderBannersResponse-error->', findBannersResponse.error.message)
+      }
     }
   }
-  componentDidMount() { }
+
   renderRow(rd) {
     return (
       <TouchableOpacity
@@ -34,7 +59,64 @@ export default class Home extends Component {
       </TouchableOpacity>
     )
   }
+
   render() {
+    this.handleFindBannersRequest()
+
+    const { banners } = this.props
+
+    const btnTitles = ['充值', '提现', '当前委托', '法币交易']
+    const btns = []
+    const navigateKeys = ['Recharge', 'Cash', 'Delegate', '法币交易']
+    for (let i = 0; i < btnTitles.length; i++) {
+      let source = require('../../assets/充值.png')
+      switch (i) {
+        case 1:
+          source = require('../../assets/充值copy.png')
+          break
+        case 2:
+          source = require('../../assets/当前委托.png')
+          break
+        case 3:
+          source = require('../../assets/法币交易.png')
+          break
+        default:
+          break
+      }
+      btns.push(
+        <TouchableOpacity
+          key={i}
+          style={{
+            flex: 1,
+            backgroundColor: common.navBgColor,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => {
+            this.props.navigation.navigate(navigateKeys[i])
+          }}
+        >
+          <Image
+            style={{
+              marginTop: common.margin10,
+              width: common.w40,
+              height: common.h40,
+              alignSelf: 'center',
+            }}
+            source={source}
+          />
+          <Text
+            style={{
+              marginTop: common.margin5,
+              alignSelf: 'center',
+              color: common.textColor,
+              fontSize: common.font14,
+            }}
+          >{btnTitles[i]}</Text>
+        </TouchableOpacity>,
+      )
+    }
+
     return (
       <View
         style={{
@@ -46,30 +128,16 @@ export default class Home extends Component {
           barStyle={'light-content'}
         />
         <ScrollView>
-          <Image
-            style={{
-              width: common.sw,
-              height: common.h233,
-            }}
-            resizeMode="stretch"
-            resizeMethod="scale"
-            source={require('../../assets/VCG21gic.png')}
+          <HomeSwiper
+            banners={banners}
           />
+
           <View
             style={{
-              height: common.h32,
-              backgroundColor: common.borderColor05,
-              justifyContent: 'center',
+              height: common.h80,
+              flexDirection: 'row',
             }}
-          >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                color: common.placeholderColor,
-                fontSize: common.font12,
-              }}
-            >公告: xxxxxxxxxxxxxxxx</Text>
-          </View>
+          >{btns}</View>
 
           <View
             style={{
@@ -101,7 +169,7 @@ export default class Home extends Component {
           </View>
 
           <ListView
-            dataSource={this.state.dataSource}
+            dataSource={this.dataSource(this.testdata)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
           />
@@ -110,3 +178,16 @@ export default class Home extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    banners: state.home.banners,
+
+    findBannersVisible: state.home.findBannersVisible,
+    findBannersResponse: state.home.findBannersResponse,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Home)
