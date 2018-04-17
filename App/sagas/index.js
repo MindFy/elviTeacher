@@ -152,6 +152,24 @@ function* getRose() {
     else yield put({ type: constants.GET_ROSE_FAILED, response })
   }
 }
+/* 增加一个提币地址 */
+function* addressAdd() {
+  while (true) {
+    const request = yield take(constants.ADDRESS_ADD_REQUEST)
+    const response = yield call(api.addressAdd, request.data)
+    if (response.success) yield put({ type: constants.ADDRESS_ADD_SUCCEED, response })
+    else yield put({ type: constants.ADDRESS_ADD_FAILED, response })
+  }
+}
+/* 获取用户提币地址 */
+function* findAddress() {
+  while (true) {
+    const request = yield take(constants.FIND_ADDRESS_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) yield put({ type: constants.FIND_ADDRESS_SUCCEED, response })
+    else yield put({ type: constants.FIND_ADDRESS_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -170,5 +188,7 @@ export default function* rootSaga() {
     fork(delegateCreate),
     fork(getDepthMap),
     fork(getRose),
+    fork(addressAdd),
+    fork(findAddress),
   ]
 }
