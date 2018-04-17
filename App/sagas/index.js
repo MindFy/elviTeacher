@@ -143,6 +143,15 @@ function* getDepthMap() {
     else yield put({ type: constants.GET_DEPTH_MAP_FAILED, response })
   }
 }
+/* 获取交易中心的涨幅，包含：左上角以及顶上数据 */
+function* getRose() {
+  while (true) {
+    yield take(constants.GET_ROSE_REQUEST)
+    const response = yield call(api.getRose)
+    if (response.success) yield put({ type: constants.GET_ROSE_SUCCEED, response })
+    else yield put({ type: constants.GET_ROSE_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -160,5 +169,6 @@ export default function* rootSaga() {
     fork(latestDeals),
     fork(delegateCreate),
     fork(getDepthMap),
+    fork(getRose),
   ]
 }

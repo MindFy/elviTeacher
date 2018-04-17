@@ -70,7 +70,7 @@ const initialState = {
 
 export default function delegate(state = initialState, action) {
   let nextState = state
-  console.log('delegate-action->', action)
+  // console.log('delegate-action->', action)
 
   switch (action.type) {
     case BUY_OR_SELL_UPDATE:
