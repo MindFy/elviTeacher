@@ -6,6 +6,8 @@ import me from './me'
 import home from './home'
 import delegate from './delegate'
 import dealstat from './dealstat'
+import announcement from './announcement'
+import address from './address'
 
 const rootReducer = combineReducers({
   login,
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
   home,
   delegate,
   dealstat,
+  announcement,
+  address,
 })
 
 export default rootReducer

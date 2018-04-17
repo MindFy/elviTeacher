@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -7,13 +8,17 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
+import {
+  findAssetListRequest,
+} from '../../actions/recharge'
 import { common } from '../common'
 import BalanceCell from './BalanceCell'
+import graphqlFindAssetList from '../../schemas/asset'
 
-export default class Balance extends Component {
+class Balance extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '资源',
+      headerTitle: '资产',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -39,6 +44,14 @@ export default class Balance extends Component {
       ),
     }
   }
+
+  constructor(props) {
+    super(props)
+    const { dispatch } = props
+    
+    // dispatch(findAssetListRequest(graphqlFindAssetList()))
+  }
+
   componentDidMount() { }
   rechargePress() {
     this.props.navigation.navigate('Recharge')
@@ -173,3 +186,13 @@ export default class Balance extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    rose: state.dealstat.rose,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Balance)

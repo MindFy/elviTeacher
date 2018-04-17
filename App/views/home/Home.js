@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import {
   findBannersRequest,
-  banndersAddUpdate,
+  findAnnouncementRequest,
   syncRequest,
 } from '../../actions/home'
 import {
@@ -21,6 +21,7 @@ import {
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import graphqlFindBanners from '../../schemas/home'
+import graphqlFindAnnouncement from '../../schemas/announcement'
 
 class Home extends Component {
   constructor(props) {
@@ -38,6 +39,7 @@ class Home extends Component {
     this.showFindBannersResponse = false
 
     dispatch(syncRequest())
+    dispatch(findAnnouncementRequest(graphqlFindAnnouncement()))
     dispatch(findBannersRequest(graphqlFindBanners()))
   }
 
@@ -55,20 +57,6 @@ class Home extends Component {
     }
   }
 
-  handleFindBannersRequest() {
-    const { findBannersVisible, findBannersResponse } = this.props
-    if (!findBannersVisible && !this.showFindBannersResponse) return
-
-    if (findBannersVisible) {
-      this.showFindBannersResponse = true
-    } else {
-      this.showFindBannersResponse = false
-      if (!findBannersResponse.success) {
-        console.log('finderBannersResponse-error->', findBannersResponse.error.message)
-      }
-    }
-  }
-
   renderRow(rd) {
     return (
       <TouchableOpacity
@@ -82,9 +70,8 @@ class Home extends Component {
 
   render() {
     this.handleSyncRequest()
-    this.handleFindBannersRequest()
 
-    const { banners } = this.props
+    const { announcement } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -150,7 +137,7 @@ class Home extends Component {
         />
         <ScrollView>
           <HomeSwiper
-            banners={banners}
+            announcement={announcement}
           />
 
           <View
@@ -203,6 +190,7 @@ class Home extends Component {
 function mapStateToProps(state) {
   return {
     banners: state.home.banners,
+    announcement: state.announcement.announcement,
 
     findBannersVisible: state.home.findBannersVisible,
     findBannersResponse: state.home.findBannersResponse,

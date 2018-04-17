@@ -7,9 +7,7 @@ import {
   ListView,
 } from 'react-native'
 import ScrollableTab from 'react-native-scrollable-tab-view'
-import {
-  getRoseRequest,
-} from '../../actions/market'
+import getRoseRequest from '../../actions/market'
 import { common } from '../common'
 import MarketCell from './MarketCell'
 

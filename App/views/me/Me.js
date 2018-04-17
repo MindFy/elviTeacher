@@ -17,7 +17,7 @@ import {
   storeRead,
   storeDelete,
 } from '../common'
-import userInfoSchema from '../../schemas/me'
+import graphqlGet from '../../schemas/user'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 
@@ -59,7 +59,7 @@ class Me extends Component {
 
       dispatch(userInfoUpdate(objectResult))
       /* 发送获取用户个人信息请求 */
-      dispatch(userInfoRequest(userInfoSchema(objectResult.id)))
+      dispatch(userInfoRequest(graphqlGet(objectResult.id)))
     })
   }
 

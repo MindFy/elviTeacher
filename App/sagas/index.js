@@ -170,6 +170,42 @@ function* findAddress() {
     else yield put({ type: constants.FIND_ADDRESS_FAILED, response })
   }
 }
+/* 获取announcement */
+function* findAnnouncement() {
+  while (true) {
+    const request = yield take(constants.FIND_ANNOUNCEMENT_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) yield put({ type: constants.FIND_ANNOUNCEMENT_SUCCEED, response })
+    else yield put({ type: constants.FIND_ANNOUNCEMENT_FAILED, response })
+  }
+}
+/* 创建充值地址,触发时创建，减少浪费 */
+function* createAddress() {
+  while (true) {
+    const request = yield take(constants.CREATE_ADDRESS_REQUEST)
+    const response = yield call(api.createAddress, request.data)
+    if (response.success) yield put({ type: constants.CREATE_ADDRESS_SUCCEED, response })
+    else yield put({ type: constants.CREATE_ADDRESS_FAILED, response })
+  }
+}
+/* 获取某几个币种的余额等信息 */
+function* getAssets() {
+  while (true) {
+    const request = yield take(constants.GET_ASSETS_REQUEST)
+    const response = yield call(api.getAssets, request.data)
+    if (response.success) yield put({ type: constants.GET_ASSETS_SUCCEED, response })
+    else yield put({ type: constants.GET_ASSETS_FAILED, response })
+  }
+}
+/* 获取资产列表的余额 */
+function* findAssetList() {
+  while (true) {
+    const request = yield take(constants.FIND_ASSET_LIST_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, response })
+    else yield put({ type: constants.FIND_ADDRESS_FAILED, response })
+  }
+}
 
 export default function* rootSaga() {
   yield [
@@ -190,5 +226,9 @@ export default function* rootSaga() {
     fork(getRose),
     fork(addressAdd),
     fork(findAddress),
+    fork(findAnnouncement),
+    fork(createAddress),
+    fork(getAssets),
+    fork(findAssetList),
   ]
 }

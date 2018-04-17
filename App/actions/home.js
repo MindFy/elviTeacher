@@ -5,6 +5,8 @@ import {
   BANNERS_ADD_UPDATE,
 
   SYNC_REQUEST,
+
+  FIND_ANNOUNCEMENT_REQUEST,
 } from '../constants/index'
 
 export function findBannersRequest(schema) {
@@ -32,5 +34,12 @@ export function banndersAddUpdate(data) {
 export function syncRequest() {
   return {
     type: SYNC_REQUEST,
+  }
+}
+
+export function findAnnouncementRequest(schema) {
+  return {
+    type: FIND_ANNOUNCEMENT_REQUEST,
+    schema,
   }
 }

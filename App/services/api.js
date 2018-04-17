@@ -62,5 +62,7 @@ export const latestDeals = makePostAPI('/1.0/app/deal/latestDeals')
 export const delegateCreate = makePostAPI('/1.0/app/delegate/create')
 export const getRose = makePostAPI('/1.0/app/dealstat/getRose')
 export const addressAdd = makePostAPI('/1.0/app/address/add')
+export const createAddress = makePostAPI('/1.0/app/asset/createAddress')
+export const getAssets = makePostAPI('/1.0/app/asset/getAssets')
 
 export const graphql = graphqlAPI('/1.0/app')
