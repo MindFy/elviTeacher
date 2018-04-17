@@ -3,6 +3,8 @@ import {
 
   BANNERS_ADD_REQUEST,
   BANNERS_ADD_UPDATE,
+
+  SYNC_REQUEST,
 } from '../constants/index'
 
 export function findBannersRequest(schema) {
@@ -24,5 +26,11 @@ export function banndersAddUpdate(data) {
   return {
     type: BANNERS_ADD_UPDATE,
     data,
+  }
+}
+
+export function syncRequest() {
+  return {
+    type: SYNC_REQUEST,
   }
 }

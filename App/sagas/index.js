@@ -4,6 +4,15 @@ import {
 import * as constants from '../constants/index'
 import * as api from '../services/api'
 
+/* app、web状态同步 */
+function* sync() {
+  while (true) {
+    const request = yield take(constants.SYNC_REQUEST)
+    const response = yield call(api.sync, request.data)
+    if (response.success) yield put({ type: constants.SYNC_SUCCEED, response })
+    else yield put({ type: constants.SYNC_FAILED, response })
+  }
+}
 /* 登录 */
 function* login() {
   while (true) {
@@ -137,6 +146,7 @@ function* getDepthMap() {
 
 export default function* rootSaga() {
   yield [
+    fork(sync),
     fork(login),
     fork(register),
     fork(getVerificateCode),

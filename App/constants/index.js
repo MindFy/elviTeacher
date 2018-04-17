@@ -1,3 +1,7 @@
+export const SYNC_REQUEST = 'SYNC_REQUEST'
+export const SYNC_SUCCEED = 'SYNC_SUCCEED'
+export const SYNC_FAILED = 'SYNC_FAILED'
+
 export const LOGIN_UPDATE = 'LOGIN_UPDATE'
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCEED = 'LOGIN_SUCCEED'

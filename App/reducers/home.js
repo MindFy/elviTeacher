@@ -7,6 +7,10 @@ import {
   IMG_HASH_FAILED,
 
   BANNERS_ADD_UPDATE,
+
+  SYNC_REQUEST,
+  SYNC_SUCCEED,
+  SYNC_FAILED,
 } from '../constants/index'
 
 const initialState = {
@@ -14,6 +18,9 @@ const initialState = {
 
   findBannersVisible: false,
   findBannersResponse: undefined,
+
+  syncVisible: false,
+  syncResponse: undefined,
 }
 
 export default function home(state = initialState, action) {
@@ -56,6 +63,26 @@ export default function home(state = initialState, action) {
       nextState = {
         ...state,
         banners: JSON.parse(JSON.stringify(state.banners)),
+      }
+      break
+    case SYNC_REQUEST:
+      nextState = {
+        ...state,
+        syncVisible: true,
+      }
+      break
+    case SYNC_SUCCEED:
+      nextState = {
+        ...state,
+        syncVisible: false,
+        syncResponse: action.response,
+      }
+      break
+    case SYNC_FAILED:
+      nextState = {
+        ...state,
+        syncVisible: false,
+        syncResponse: action.response,
       }
       break
     default:

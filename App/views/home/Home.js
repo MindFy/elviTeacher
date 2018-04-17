@@ -12,8 +12,12 @@ import {
 import {
   findBannersRequest,
   banndersAddUpdate,
+  syncRequest,
 } from '../../actions/home'
-import { common } from '../common'
+import {
+  common,
+  storeDelete,
+} from '../common'
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import graphqlFindBanners from '../../schemas/home'
@@ -30,9 +34,25 @@ class Home extends Component {
       ['TK', '0.00082722', '0.98%', 0],
     ]
 
+    this.showSyncResponse = false
     this.showFindBannersResponse = false
 
+    dispatch(syncRequest())
     dispatch(findBannersRequest(graphqlFindBanners()))
+  }
+
+  handleSyncRequest() {
+    const { syncVisible, syncResponse } = this.props
+    if (!syncVisible && !this.showSyncResponse) return
+
+    if (syncVisible) {
+      this.showSyncResponse = true
+    } else {
+      this.showSyncResponse = false
+      if (syncResponse.success && !syncResponse.result.mobile.length) {
+        storeDelete(common.userInfo)
+      }
+    }
   }
 
   handleFindBannersRequest() {
@@ -61,6 +81,7 @@ class Home extends Component {
   }
 
   render() {
+    this.handleSyncRequest()
     this.handleFindBannersRequest()
 
     const { banners } = this.props
@@ -185,6 +206,9 @@ function mapStateToProps(state) {
 
     findBannersVisible: state.home.findBannersVisible,
     findBannersResponse: state.home.findBannersResponse,
+
+    syncVisible: state.home.syncVisible,
+    syncResponse: state.home.syncResponse,
   }
 }
 

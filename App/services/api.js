@@ -48,6 +48,7 @@ function graphqlAPI(endpoint) {
     }))
 }
 
+export const sync = makePostAPI('/1.0/app/user/sync')
 export const login = makePostAPI('/1.0/app/user/login')
 export const register = makePostAPI('/1.0/app/user/register')
 export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
