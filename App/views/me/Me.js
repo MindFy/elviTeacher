@@ -44,8 +44,6 @@ class Me extends Component {
     this.showUserInfoResponse = false
 
     this.logoutPress = this.logoutPress.bind(this)
-
-    this.readAndDisplay()
   }
 
   /* 读取用户数据并展示 */

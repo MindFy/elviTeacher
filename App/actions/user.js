@@ -1,4 +1,15 @@
 import {
+  CHECK_VERIFICATE_CODE_REQUEST,
+
+  
+  GET_USER_UPDATE,
+  GET_USER_REQUEST,
+
+  LOGOUT_REQUEST,
+
+  PASSWORD_UPDATE,
+  PASSWORD_REQUEST,
+
   LOGIN_UPDATE,
   LOGIN_REQUEST,
 
@@ -9,7 +20,6 @@ import {
   RESET_PASSWORD_REQUEST,
 
   GET_VERIFICATE_CODE_REQUEST,
-  CHECK_VERIFICATE_CODE_REQUEST,
 } from '../constants/index'
 
 export function loginUpdate(mobile, password) {
@@ -71,6 +81,42 @@ export function getVerificateCodeRequest(data) {
 export function checkVerificateCodeRequest(data) {
   return {
     type: CHECK_VERIFICATE_CODE_REQUEST,
+    data,
+  }
+}
+
+export function getUserUpdate(user) {
+  return {
+    type: GET_USER_UPDATE,
+    user,
+  }
+}
+
+export function getUserRequest(schema) {
+  return {
+    type: GET_USER_REQUEST,
+    schema,
+  }
+}
+
+export function logoutRequest() {
+  return {
+    type: LOGOUT_REQUEST,
+  }
+}
+
+export function passwordUpdate(oldPassword, newPassword, newPasswordAgain) {
+  return {
+    type: PASSWORD_UPDATE,
+    oldPassword,
+    newPassword,
+    newPasswordAgain,
+  }
+}
+
+export function passwordRequest(data) {
+  return {
+    type: PASSWORD_REQUEST,
     data,
   }
 }

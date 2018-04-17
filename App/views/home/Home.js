@@ -15,7 +15,13 @@ import {
   syncRequest,
 } from '../../actions/home'
 import {
+  userInfoUpdate,
+  userInfoRequest,
+} from '../../actions/me'
+import {
   common,
+  storeSave,
+  storeRead,
   storeDelete,
 } from '../common'
 import HomeCell from './HomeCell'
@@ -38,9 +44,21 @@ class Home extends Component {
     this.showSyncResponse = false
     this.showFindBannersResponse = false
 
+    this.initialStoreUser()
     dispatch(syncRequest())
     dispatch(findAnnouncementRequest(graphqlFindAnnouncement()))
     dispatch(findBannersRequest(graphqlFindBanners()))
+  }
+
+  initialStoreUser() {
+    const { dispatch } = this.props
+    storeRead(common.userInfo, (result) => {
+      const objectResult = JSON.parse(result)
+
+      dispatch(userInfoUpdate(objectResult))
+      /* 发送获取用户个人信息请求 */
+      dispatch(userInfoRequest(graphqlGet(objectResult.id)))
+    })
   }
 
   handleSyncRequest() {
