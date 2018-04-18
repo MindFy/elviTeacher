@@ -13,6 +13,9 @@ import findBanners from './banners'
 import {
   findListSelf,
   latestDeals,
+  buyOrSellUpdate,
+  currentTokensUpdate,
+  textInputDelegateUpdate,
 } from './deal'
 import getRose from './dealstat'
 import {
@@ -65,6 +68,9 @@ const actions = {
 
   findListSelf,
   latestDeals,
+  buyOrSellUpdate,
+  currentTokensUpdate,
+  textInputDelegateUpdate,
 
   getRose,
 

@@ -10,8 +10,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import actions from '../../actions/index'
-import schemas from '../../schemas/index'
 
 class AddAddress extends Component {
   static navigationOptions(props) {

@@ -48,6 +48,7 @@ class Me extends Component {
       /* 发送获取用户个人信息请求 */
       dispatch(actions.findUser(schemas.findUser(objectResult.id)))
       dispatch(actions.findAssetList(schemas.findAssetList(objectResult.id)))
+      dispatch(actions.findListSelf(schemas.findListSelf(objectResult.id)))
     })
   }
 

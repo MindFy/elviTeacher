@@ -15,7 +15,7 @@ import { common } from '../common'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'
-import * as actions from '../../actions/index'
+import actions from '../../actions/index'
 
 class Transactions extends Component {
   static navigationOptions() {
@@ -55,10 +55,10 @@ class Transactions extends Component {
 
     this.showDelegateCreateResponse = false
 
-    this.shelvesDS = data => new ListView.DataSource({
+    this.latestDealsDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
-    this.latestDealsDS = data => new ListView.DataSource({
+    this.dealDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
@@ -66,10 +66,14 @@ class Transactions extends Component {
     //   goods_id: goods.id,
     //   currency_id: currency.id,
     // }))
-    // dispatch(latestDealsRequest({
-    //   goods_id: goods.id,
-    //   currency_id: currency.id,
-    // }))
+    dispatch(actions.latestDeals({
+      goods_id: goods.id,
+      currency_id: currency.id,
+    }))
+    dispatch(actions.getDepthMap({
+      goods_id: goods.id,
+      currency_id: currency.id,
+    }))
   }
 
   componentDidMount() { }
@@ -83,16 +87,15 @@ class Transactions extends Component {
     let a
 
     if (tag === 'price') {
-      // dispatch(TextInputDelegateUpdate(text, quantity, amount))
+      dispatch(actions.textInputDelegateUpdate(text, quantity, amount))
     } else if (tag === 'quantity') {
       n = !text.length ? 0 : parseInt(text, 0)
       a = p * n === 0 ? amount : p * n
-      // dispatch(TextInputDelegateUpdate(price, text, `${a}`))
+      dispatch(actions.textInputDelegateUpdate(price, text, `${a}`))
     } else if (tag === 'amount') {
       a = !text.length ? 0 : parseInt(text, 0)
       n = a / p === 0 ? quantity : Number(a / p).toFixed(0)
-
-      // dispatch(TextInputDelegateUpdate(price, `${n}`, text))
+      dispatch(actions.textInputDelegateUpdate(price, `${n}`, text))
     }
   }
 
@@ -102,25 +105,41 @@ class Transactions extends Component {
       {
         title: `${tokenList[0].name}/${tokenList[1].name}`,
         onPress: () => {
-          // dispatch(actions.(tokenList[0], tokenList[1]))
+          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0],
+            currency_id: tokenList[1],
+          }))
         },
       },
       {
         title: `${tokenList[0].name}/${tokenList[2].name}`,
         onPress: () => {
-          // dispatch(currentTokensUpdate(tokenList[0], tokenList[2]))
+          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[2]))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0],
+            currency_id: tokenList[2],
+          }))
         },
       },
       {
         title: `${tokenList[0].name}/${tokenList[3].name}`,
         onPress: () => {
-          // dispatch(currentTokensUpdate(tokenList[0], tokenList[3]))
+          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[3]))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0],
+            currency_id: tokenList[3],
+          }))
         },
       },
       {
         title: `${tokenList[1].name}/${tokenList[2].name}`,
         onPress: () => {
-          // dispatch(currentTokensUpdate(tokenList[1], tokenList[2]))
+          dispatch(actions.currentTokensUpdate(tokenList[1], tokenList[2]))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[1],
+            currency_id: tokenList[2],
+          }))
         },
       },
     ]
@@ -133,20 +152,20 @@ class Transactions extends Component {
   topBarPress(b) {
     const { dispatch, buyOrSell } = this.props
     if (buyOrSell !== b) {
-      // dispatch(buyOrSellUpdate(b))
-      // dispatch(TextInputDelegateUpdate('', '', ''))
+      dispatch(actions.buyOrSellUpdate(b))
+      dispatch(actions.textInputDelegateUpdate('', '', ''))
     }
   }
 
   buyOrSellPress() {
     const { dispatch, goods, currency, buyOrSell, price, quantity } = this.props
-    // dispatch(delegateCreateRequest({
-    //   currency_id: goods.id,
-    //   goods_id: currency.id,
-    //   direct: buyOrSell ? 'buy' : 'sell',
-    //   price: Number(price),
-    //   quantity: Number(quantity),
-    // }))
+    dispatch(actions.create({
+      currency_id: goods.id,
+      goods_id: currency.id,
+      direct: buyOrSell ? 'buy' : 'sell',
+      price: Number(price),
+      quantity: Number(quantity),
+    }))
   }
 
   handleDelegateCreateRequest() {
@@ -165,13 +184,13 @@ class Transactions extends Component {
     }
   }
 
-  renderShelvesRow(rd, sid, rid) {
+  renderLatestDealsRow(rd, sid, rid) {
     let textColor = null
     let marginTop = null
-    if (rid < 5) {
-      textColor = common.askColor
+    if (rd.endDirect === 'sell') {
+      textColor = common.redColor
     } else {
-      textColor = common.bidColor
+      textColor = common.greenColor
     }
     if (rid === 0) {
       marginTop = common.margin10
@@ -191,17 +210,17 @@ class Transactions extends Component {
           color: textColor,
           fontSize: common.font12,
         }}
-        >{rd[0]}</Text>
+        >{rd.dealPrice}</Text>
         <Text style={{
           color: 'white',
           fontSize: common.font12,
         }}
-        >{rd[1]}</Text>
+        >{rd.quantity}</Text>
       </View>
     )
   }
 
-  renderShelvesHeader() {
+  renderLatestDealsHeader() {
     return (
       <View style={{
         marginTop: 2 * common.margin10,
@@ -225,42 +244,54 @@ class Transactions extends Component {
     )
   }
 
-  renderLatestDealsRow(rd, sid, rid) {
+  renderDealRow(rd) {
+    const { user } = this.props
     let textColor = null
-    if (rid % 2 === 0) {
-      textColor = common.askColor
-    } else {
-      textColor = common.bidColor
+    if (rd.buyer.id === user.id) {
+      textColor = common.redColor
+    } else if (rd.seller.id === user.id) {
+      textColor = common.greenColor
     }
+    const date = new Date(rd.createdAt)
+    const zero1 = date.getMinutes() < 10 ? '0' : ''
+    const zero2 = date.getSeconds() < 10 ? '0' : ''
+
     return (
-      <View style={{
-        marginTop: common.margin10 / 2,
-        marginLeft: common.margin10,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
+      <View
+        style={{
+          marginTop: common.margin10 / 2,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
       >
         <Text style={{
+          flex: 1,
           color: 'white',
           fontSize: common.font12,
+          textAlign: 'left',
         }}
-        >{rd[0]}</Text>
+        >{`${date.getHours()}:${zero1}${date.getMinutes()}:${zero2}${date.getSeconds()}`}</Text>
         <Text style={{
+          flex: 1,
           color: textColor,
           fontSize: common.font12,
+          textAlign: 'center',
         }}
-        >{rd[1]}</Text>
+        >{rd.dealPrice}</Text>
         <Text style={{
+          flex: 1,
           color: 'white',
           fontSize: common.font12,
+          textAlign: 'right',
         }}
-        >{rd[2]}</Text>
+        >{rd.quantity}</Text>
       </View>
     )
   }
 
-  renderLatestDealsHeader() {
+  renderDealHeader() {
     return (
       <View>
         <View style={{
@@ -312,7 +343,7 @@ class Transactions extends Component {
 
   render() {
     const { buyOrSell, navigation, delegateCreateVisible,
-      goods, currency, price, quantity, amount, latestDeals,
+      goods, currency, price, quantity, amount, deal, latestDeals,
     } = this.props
     this.handleDelegateCreateRequest()
 
@@ -515,9 +546,9 @@ class Transactions extends Component {
               style={{
                 width: common.sw / 2,
               }}
-              dataSource={this.shelvesDS([])}
-              renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
-              renderHeader={() => this.renderShelvesHeader()}
+              dataSource={this.latestDealsDS(latestDeals)}
+              renderRow={(rd, sid, rid) => this.renderLatestDealsRow(rd, sid, rid)}
+              renderHeader={() => this.renderLatestDealsHeader()}
               enableEmptySections
             />
           </View>
@@ -531,9 +562,9 @@ class Transactions extends Component {
             style={{
               marginTop: common.margin10,
             }}
-            dataSource={this.latestDealsDS(latestDeals)}
-            renderRow={(rd, sid, rid) => this.renderLatestDealsRow(rd, sid, rid)}
-            renderHeader={() => this.renderLatestDealsHeader()}
+            dataSource={this.dealDS(deal)}
+            renderRow={(rd, sid, rid) => this.renderDealRow(rd, sid, rid)}
+            renderHeader={() => this.renderDealHeader()}
             enableEmptySections
           />
         </ScrollView>
@@ -542,25 +573,28 @@ class Transactions extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    tokenList: state.delegate.tokenList,
-    goods: state.delegate.goods,
-    currency: state.delegate.currency,
-    buyOrSell: state.delegate.buyOrSell,
-    shelves: state.delegate.shelves,
-    latestDeals: state.delegate.latestDeals,
-    depthMap: state.delegate.depthMap,
+    deal: store.deal.deal,
+    latestDeals: store.deal.latestDeals,
+    goods: store.deal.goods,
+    currency: store.deal.currency,
+    price: store.deal.price,
+    quantity: store.deal.quantity,
+    amount: store.deal.amount,
+    buyOrSell: store.deal.buyOrSell,
 
-    price: state.delegate.price,
-    quantity: state.delegate.quantity,
-    amount: state.delegate.amount,
+    user: store.user.user,
 
-    delegateCreateVisible: state.delegate.delegateCreateVisible,
-    delegateCreateResponse: state.delegate.delegateCreateResponse,
+    tokenList: store.delegate.tokenList,
+    shelves: store.delegate.shelves,
+    depthMap: store.delegate.depthMap,
 
-    getDepthMapVisible: state.delegate.getDepthMapVisible,
-    getDepthMapResponse: state.delegate.getDepthMapResponse,
+    delegateCreateVisible: store.delegate.delegateCreateVisible,
+    delegateCreateResponse: store.delegate.delegateCreateResponse,
+
+    getDepthMapVisible: store.delegate.getDepthMapVisible,
+    getDepthMapResponse: store.delegate.getDepthMapResponse,
   }
 }
 

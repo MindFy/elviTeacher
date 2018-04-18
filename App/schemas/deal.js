@@ -1,13 +1,13 @@
-export default function findListSelf() {
+export default function findListSelf(id) {
   return `{
     find_deal(
         skip: 0,
         limit: 10,
         where: {
           or:[{
-            buyer_id: 1
+            buyer_id: ${id}
           },{
-            seller_id: 1
+            seller_id: ${id}
           }]
         },
         order: "-createdAt"

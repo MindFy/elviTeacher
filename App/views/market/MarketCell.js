@@ -14,10 +14,10 @@ export default class MarketCell extends Component {
     let typeColor = null
     if (this.props.rd[4] === 1) {
       type = '+'
-      typeColor = common.askColor
+      typeColor = common.redColor
     } else {
       type = '-'
-      typeColor = common.bidColor
+      typeColor = common.greenColor
     }
     return (
       <View>

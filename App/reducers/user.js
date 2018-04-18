@@ -55,7 +55,6 @@ const initialState = {
 
 export default function user(state = initialState, action) {
   let nextState = state
-  console.log('user-action->', action)
 
   switch (action.type) {
     case constants.CHECK_VERIFICATE_CODE_REQUEST:

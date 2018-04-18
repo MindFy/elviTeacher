@@ -22,7 +22,7 @@ import schemas from '../../schemas/index'
 class Home extends Component {
   constructor(props) {
     super(props)
-    const { dispatch, user } = props
+    const { dispatch } = props
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
@@ -37,9 +37,6 @@ class Home extends Component {
     this.readAndDisplay()
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
-    if (user) {
-      dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-    }
   }
 
   readAndDisplay() {
@@ -68,6 +65,7 @@ class Home extends Component {
       } else {
         dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
         dispatch(actions.findUser(schemas.findUser(user.id)))
+        dispatch(actions.findListSelf(schemas.findListSelf(user.id)))
       }
     }
   }

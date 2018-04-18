@@ -67,27 +67,3 @@ export function findDelegateSelf(schema) {
     schema,
   }
 }
-
-export function buyOrSellUpdate(buyOrSell) {
-  return {
-    type: BUY_OR_SELL_UPDATE,
-    buyOrSell,
-  }
-}
-
-export function currentTokensUpdate(goods, currency) {
-  return {
-    type: CURRENT_TOKENS_UPDATE,
-    goods,
-    currency,
-  }
-}
-
-export function textInputDelegateUpdate(price, quantity, amount) {
-  return {
-    type: TEXTINPUT_DELEGATE_UPDATE,
-    price,
-    quantity,
-    amount,
-  }
-}

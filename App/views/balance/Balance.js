@@ -11,8 +11,6 @@ import {
 } from 'react-native'
 import { common } from '../common'
 import BalanceCell from './BalanceCell'
-import actions from '../../actions/index'
-import schemas from '../../schemas/index'
 
 class Balance extends Component {
   static navigationOptions(props) {
@@ -46,7 +44,6 @@ class Balance extends Component {
 
   constructor(props) {
     super(props)
-    const { dispatch, user } = props
 
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
