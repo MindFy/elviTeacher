@@ -37,14 +37,14 @@ export default class HomeSwiper extends Component {
     const images = []
     const { banners } = this.props
     for (let i = 0; i < banners.length; i++) {
-      const banner = banners[i]
+      const element = banners[i]
       images.push(
         <Image
+          key={element.id}
           style={{
             width: common.sw,
             height: common.h234,
           }}
-          key={banner.id}
           resizeMode="stretch"
           resizeMethod="scale"
           source={require('../../assets/VCG21gic.png')}
@@ -53,12 +53,11 @@ export default class HomeSwiper extends Component {
     }
 
     return (
-      <View>
+      <View
+        style={styles.swiper}
+      >
         {
-          !images.length ?
-            <View
-              style={styles.swiper}
-            /> :
+          images.length ?
             <Swiper
               style={styles.swiper}
               showsButtons={false}
@@ -69,15 +68,14 @@ export default class HomeSwiper extends Component {
               activeDotColor={common.placeholderColor}
             >
               {images}
-            </Swiper>
+            </Swiper> : null
         }
-
         <View
           style={styles.noticeView}
         >
           <Text
             style={styles.noticeTitle}
-          >公告: xxxxxxxxxxxxxxxx</Text>
+          >{'公告: '}</Text>
         </View>
       </View>
     )

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -10,7 +11,7 @@ import {
 } from 'react-native'
 import { common } from '../common'
 
-export default class AddAddress extends Component {
+class AddAddress extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '添加地址',
@@ -23,25 +24,26 @@ export default class AddAddress extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
     }
   }
   componentDidMount() { }
   render() {
+    const { selectedToken } = this.props
     return (
       <View
         style={{
@@ -72,7 +74,7 @@ export default class AddAddress extends Component {
                 fontSize: common.font14,
                 color: common.textColor,
               }}
-            >{this.props.navigation.state.params.selectedMoney}</Text>
+            >{selectedToken.token.name}</Text>
           </View>
 
           <View
@@ -112,19 +114,18 @@ export default class AddAddress extends Component {
               justifyContent: 'center',
             }}
           >
-            <TextInput
+            <Text
               style={{
                 marginLeft: common.margin10,
                 fontSize: common.font14,
                 color: 'white',
               }}
-              placeholder="地址"
-              placeholderTextColor={common.placeholderColor}
-            />
+            >{common.btcAddress}</Text>
           </View>
 
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
+            onPress={() => { }}
           >
             <View
               style={{
@@ -153,3 +154,13 @@ export default class AddAddress extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    selectedToken: store.address.selectedToken,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(AddAddress)

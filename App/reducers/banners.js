@@ -1,12 +1,7 @@
 import {
   FIND_BANNERS_REQUEST,
   FIND_BANNERS_SUCCEED,
-  FIND_BANNERS_FAILED,
-
-  IMG_HASH_SUCCEED,
-  IMG_HASH_FAILED,
-
-  BANNERS_ADD_UPDATE,
+  FIND_ADDRESS_FAILED,
 } from '../constants/index'
 
 const initialState = {
@@ -16,7 +11,7 @@ const initialState = {
   findBannersResponse: undefined,
 }
 
-export default function home(state = initialState, action) {
+export default function banners(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
@@ -34,33 +29,15 @@ export default function home(state = initialState, action) {
         banners: action.response.result.data.find_banners,
       }
       break
-    case FIND_BANNERS_FAILED:
+    case FIND_ADDRESS_FAILED:
       nextState = {
         ...state,
         findBannersVisible: false,
         findBannersResponse: action.response,
       }
       break
-    case IMG_HASH_SUCCEED:
-      nextState = {
-        ...state,
-      }
-      break
-    case IMG_HASH_FAILED:
-      nextState = {
-        ...state,
-      }
-      break
-    case BANNERS_ADD_UPDATE:
-      state.banners.push(action.data)
-      nextState = {
-        ...state,
-        banners: JSON.parse(JSON.stringify(state.banners)),
-      }
-      break
     default:
       break
   }
-
   return nextState
 }

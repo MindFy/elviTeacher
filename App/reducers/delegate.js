@@ -1,22 +1,4 @@
-import {
-  BUY_OR_SELL_UPDATE,
-
-  GET_SHELVES_SUCCEED,
-
-  LATEST_DEALS_SUCCEED,
-
-  CURRENT_TOKENS_UPDATE,
-
-  TEXTINPUT_DELEGATE_UPDATE,
-
-  DELEGATE_CREATE_REQUEST,
-  DELEGATE_CREATE_SUCCEED,
-  DELEGATE_CREATE_FAILED,
-
-  GET_DEPTH_MAP_REQUEST,
-  GET_DEPTH_MAP_SUCCEED,
-  GET_DEPTH_MAP_FAILED,
-} from '../constants/index'
+import * as constants from '../constants/index'
 
 const initialState = {
   tokenList: [
@@ -41,109 +23,174 @@ const initialState = {
       description: 'this is CNY',
     },
   ],
-  goods: {
-    id: 1,
-    name: 'TK',
-    description: 'this is TK',
-  },
-  currency: {
-    id: 2,
-    name: 'BTC',
-    description: 'this is BTC',
-  },
-  buyOrSell: true,
-
-  price: '',
-  quantity: '',
-  amount: '',
 
   shelves: [],
-  latestDeals: [],
   depthMap: undefined,
 
-  delegateCreateVisible: false,
-  delegateCreateResponse: undefined,
+  allCancelVisible: false,
+  allCancelResponse: undefined,
+
+  cancelVisible: false,
+  cancelResponse: undefined,
+
+  createVisible: false,
+  createResponse: undefined,
 
   getDepthMapVisible: false,
   getDepthMapResponse: undefined,
+
+  getShelvesVisible: false,
+  getShelvesResponse: undefined,
+
+  findDelegateListVisible: false,
+  findDelegateListResponse: undefined,
+
+  findDelegateSelfVisible: false,
+  findDelegateSelfResponse: undefined,
 }
 
 export default function delegate(state = initialState, action) {
   let nextState = state
-  console.log('delegate-action->', action)
 
   switch (action.type) {
-    case BUY_OR_SELL_UPDATE:
+    case constants.ALL_CANCEL_REQUEST:
       nextState = {
         ...state,
-        buyOrSell: action.buyOrSell,
+        allCancelVisible: true,
       }
       break
-    case GET_SHELVES_SUCCEED:
+    case constants.ALL_CANCEL_SUCCEED:
       nextState = {
         ...state,
-        shelves: action.response.result,
+        allCancelVisible: false,
+        allCancelResponse: action.response,
       }
       break
-    case LATEST_DEALS_SUCCEED:
+    case constants.ALL_CANCEL_FAILED:
       nextState = {
         ...state,
-        latestDeals: action.response.result,
+        allCancelVisible: false,
+        allCancelResponse: action.response,
       }
       break
-    case CURRENT_TOKENS_UPDATE:
+    case constants.CANCEL_REQUEST:
       nextState = {
         ...state,
-        goods: action.goods,
-        currency: action.currency,
+        cancelVisible: true,
       }
       break
-    case TEXTINPUT_DELEGATE_UPDATE:
+    case constants.CANCEL_SUCCEED:
       nextState = {
         ...state,
-        price: action.price,
-        quantity: action.quantity,
-        amount: action.amount,
+        cancelVisible: false,
+        cancelResponse: action.response,
       }
       break
-    case DELEGATE_CREATE_REQUEST:
+    case constants.CANCEL_FAILED:
       nextState = {
         ...state,
-        delegateCreateVisible: true,
+        cancelVisible: false,
+        cancelResponse: action.response,
       }
       break
-    case DELEGATE_CREATE_SUCCEED:
+    case constants.CREATE_REQUEST:
       nextState = {
         ...state,
-        delegateCreateVisible: false,
-        delegateCreateResponse: action.response,
+        createVisible: true,
       }
       break
-    case DELEGATE_CREATE_FAILED:
+    case constants.CREATE_SUCCEED:
       nextState = {
         ...state,
-        delegateCreateVisible: false,
-        delegateCreateResponse: action.response,
+        createVisible: false,
+        createResponse: action.response,
       }
       break
-    case GET_DEPTH_MAP_REQUEST:
+    case constants.CREATE_FAILED:
+      nextState = {
+        ...state,
+        createVisible: false,
+        createResponse: action.response,
+      }
+      break
+    case constants.GET_DEPTH_MAP_REQUEST:
       nextState = {
         ...state,
         getDepthMapVisible: true,
       }
       break
-    case GET_DEPTH_MAP_SUCCEED:
+    case constants.GET_DEPTH_MAP_SUCCEED:
       nextState = {
         ...state,
         getDepthMapVisible: false,
         getDepthMapResponse: action.response,
       }
       break
-    case GET_DEPTH_MAP_FAILED:
+    case constants.GET_DEPTH_MAP_FAILED:
       nextState = {
         ...state,
         getDepthMapVisible: false,
         getDepthMapResponse: action.response,
+      }
+      break
+    case constants.GET_SHELVES_REQUEST:
+      nextState = {
+        ...state,
+        getShelvesVisible: true,
+      }
+      break
+    case constants.GET_SHELVES_SUCCEED:
+      nextState = {
+        ...state,
+        getShelvesVisible: false,
+        getShelvesResponse: action.response,
+      }
+      break
+    case constants.GET_SHELVES_FAILED:
+      nextState = {
+        ...state,
+        getShelvesVisible: false,
+        getShelvesResponse: action.response,
+      }
+      break
+    case constants.FIND_DELEGATE_LIST_REQUEST:
+      nextState = {
+        ...state,
+        findDelegateListVisible: true,
+      }
+      break
+    case constants.FIND_DELEGATE_LIST_SUCCEED:
+      nextState = {
+        ...state,
+        findDelegateListVisible: false,
+        findDelegateListResponse: action.response,
+      }
+      break
+    case constants.FIND_DELEGATE_LIST_FAILED:
+      nextState = {
+        ...state,
+        findDelegateListVisible: false,
+        findDelegateListResponse: action.response,
+      }
+      break
+    case constants.FIND_DELEGATE_SELF_REQUEST:
+      nextState = {
+        ...state,
+        findDelegateSelfVisible: true,
+      }
+      break
+    case constants.FIND_DELEGATE_SELF_SUCCEED:
+      nextState = {
+        ...state,
+        findDelegateSelfVisible: false,
+        findDelegateSelfResponse: action.response,
+      }
+      break
+    case constants.FIND_DELEGATE_SELF_FAILED:
+      nextState = {
+        ...state,
+        findDelegateSelfVisible: false,
+        findDelegateSelfResponse: action.response,
       }
       break
     default:

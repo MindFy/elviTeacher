@@ -48,16 +48,36 @@ function graphqlAPI(endpoint) {
     }))
 }
 
-export const login = makePostAPI('/1.0/app/user/login')
-export const register = makePostAPI('/1.0/app/user/register')
-export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
+// User
 export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCode')
-export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
+export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
+export const idCardAuth = makePostAPI('/1.0/app/user/idCardAuth')
+export const isExist = makePostAPI('/1.0/app/user/isExist')
+export const login = makePostAPI('/1.0/app/user/login')
 export const logout = makePostAPI('/1.0/app/user/logout')
+export const register = makePostAPI('/1.0/app/user/register')
+export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
+export const sync = makePostAPI('/1.0/app/user/sync')
+export const updateBank = makePostAPI('/1.0/app/user/updateBank')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
-export const imgHash = makePostAPI('/1.0/fileProc/imghash')
+// Payment
+export const cancelWithdraw = makePostAPI('/1.0/payment/cancelWithdraw')
+export const recharge = makePostAPI('/1.0/payment/recharge')
+export const withdraw = makePostAPI('/1.0/payment/withdraw')
+// Delegate
+export const allCancel = makePostAPI('/1.0/app/delegate/allCancel')
+export const cancel = makePostAPI('/1.0/app/delegate/cancel')
+export const create = makePostAPI('/1.0/app/delegate/create')
+export const getDepthMap = makePostAPI('/1.0/app/delegate/getDepthMap')
 export const getShelves = makePostAPI('/1.0/app/delegate/getShelves')
+// Dealstat
+export const getRose = makePostAPI('/1.0/app/dealstat/getRose')
+// Deal
 export const latestDeals = makePostAPI('/1.0/app/deal/latestDeals')
-export const delegateCreate = makePostAPI('/1.0/app/delegate/create')
+// Asset
+export const createAddress = makePostAPI('/1.0/app/asset/createAddress')
+export const getAssets = makePostAPI('/1.0/app/asset/getAssets')
+// Address
+export const add = makePostAPI('/1.0/app/address/add')
 
 export const graphql = graphqlAPI('/1.0/app')

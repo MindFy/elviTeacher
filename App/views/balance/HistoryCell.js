@@ -2,12 +2,16 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
+  TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
 
 export default class History extends Component {
   componentDidMount() { }
   render() {
+    const { rd, rechargeOrWithdraw } = this.props
+    const btnTitleColor = rd.status === '待审核' ? common.btnTextColor : common.placeholderColor
+    const btnDisabled = rd.status !== '待审核'
     return (
       <View style={{
         marginTop: common.margin10,
@@ -22,25 +26,39 @@ export default class History extends Component {
             color: common.textColor,
             fontSize: common.font12,
           }}
-        >{this.props.rd[0]}</Text>
+        >{rd.createdAt}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
           }}
-        >{this.props.rd[1]}</Text>
+        >{rd.token.name}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
           }}
-        >{this.props.rd[2]}</Text>
+        >{rd.amount}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
           }}
-        >已充值</Text>
+        >{rd.status}</Text>
+        {
+          rechargeOrWithdraw === common.withdraw ?
+            <TouchableOpacity
+              onPress={() => { }}
+              disabled={btnDisabled}
+            >
+              <Text
+                style={{
+                  color: btnTitleColor,
+                  fontSize: common.font12,
+                }}
+              >撤单</Text>
+            </TouchableOpacity> : null
+        }
       </View>
     )
   }

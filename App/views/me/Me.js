@@ -7,19 +7,14 @@ import {
 } from 'react-native'
 import Spinner from 'react-native-spinkit'
 import {
-  userInfoUpdate,
-  userInfoRequest,
-  logoutRequest,
-} from '../../actions/me'
-import {
   common,
-  storeSave,
   storeRead,
   storeDelete,
 } from '../common'
-import userInfoSchema from '../../schemas/me'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Me extends Component {
   static navigationOptions() {
@@ -41,25 +36,19 @@ class Me extends Component {
     super(props)
 
     this.showLogoutResponse = false
-    this.showUserInfoResponse = false
-
-    this.logoutPress = this.logoutPress.bind(this)
-
-    this.readAndDisplay()
   }
 
   /* 读取用户数据并展示 */
-  readAndDisplay(loginGoBack) {
-    if (loginGoBack) {
-      // 登录成功
-    }
+  readAndDisplay() {
     const { dispatch } = this.props
-    storeRead(common.userInfo, (result) => {
+    storeRead(common.user, (result) => {
       const objectResult = JSON.parse(result)
 
-      dispatch(userInfoUpdate(objectResult))
+      dispatch(actions.findUserUpdate(objectResult))
       /* 发送获取用户个人信息请求 */
-      dispatch(userInfoRequest(userInfoSchema(objectResult.id)))
+      dispatch(actions.findUser(schemas.findUser(objectResult.id)))
+      dispatch(actions.findAssetList(schemas.findAssetList(objectResult.id)))
+      dispatch(actions.findListSelf(schemas.findListSelf(objectResult.id)))
     })
   }
 
@@ -67,32 +56,13 @@ class Me extends Component {
   navigateLogin() {
     const { navigation } = this.props
     navigation.navigate('LoginStack', {
-      goBackBlock: () => this.readAndDisplay(true),
+      goBackBlock: () => this.readAndDisplay(),
     })
   }
 
   logoutPress() {
     const { dispatch } = this.props
-    dispatch(logoutRequest())
-  }
-
-  handleUserInfoRequest() {
-    const { dispatch, userInfoVisible, userInfoResponse } = this.props
-    if (!userInfoVisible && !this.showUserInfoResponse) return
-
-    if (userInfoVisible) {
-      this.showUserInfoResponse = true
-    } else {
-      this.showUserInfoResponse = false
-      if (userInfoResponse.success) {
-        const responseUserInfo = userInfoResponse.result.data.user
-        storeSave(common.userInfo, responseUserInfo, (error) => {
-          if (!error) {
-            dispatch(userInfoUpdate(responseUserInfo))
-          }
-        })
-      }
-    }
+    dispatch(actions.logout())
   }
 
   handleLogoutRequest() {
@@ -104,14 +74,12 @@ class Me extends Component {
     } else {
       this.showLogoutResponse = false
       if (logoutResponse.success) {
-        storeDelete(common.userInfo, (error) => {
+        storeDelete(common.user, (error) => {
           if (!error) {
             // 清除页面数据
-            dispatch(userInfoUpdate(undefined))
+            dispatch(actions.findUserUpdate(undefined))
             // 返回登录页
             this.navigateLogin()
-          } else {
-            // 删除失败
           }
         })
       } else {
@@ -122,9 +90,8 @@ class Me extends Component {
 
   render() {
     this.handleLogoutRequest()
-    this.handleUserInfoRequest()
 
-    const { userInfo, logoutVisible } = this.props
+    const { user, logoutVisible } = this.props
 
     return (
       <View
@@ -140,7 +107,7 @@ class Me extends Component {
 
           <MeCell
             onPress={() => {
-              if (!userInfo) {
+              if (!user) {
                 this.navigateLogin()
               }
             }}
@@ -156,7 +123,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!userInfo ? '请登录' : userInfo.mobile}
+            title={!user ? '请登录' : user.mobile}
             rightImageHide
           />
           <MeCell
@@ -181,9 +148,9 @@ class Me extends Component {
           />
 
           {
-            !userInfo ? null :
+            !user ? null :
               (<BtnLogout
-                onPress={this.logoutPress}
+                onPress={() => this.logoutPress()}
                 disabled={logoutVisible}
                 title="退出登录"
               />)
@@ -206,14 +173,12 @@ class Me extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    userInfo: state.me.userInfo,
-    userInfoVisible: state.me.userInfoVisible,
-    userInfoResponse: state.me.userInfoResponse,
+    user: store.user.user,
 
-    logoutVisible: state.me.logoutVisible,
-    logoutResponse: state.me.logoutResponse,
+    logoutVisible: store.user.logoutVisible,
+    logoutResponse: store.user.logoutResponse,
   }
 }
 

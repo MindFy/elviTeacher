@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -8,9 +9,9 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import SelectMoney from './SelectMoney'
+import SelectToken from './SelectToken'
 
-export default class Recharge extends Component {
+class Recharge extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '充值',
@@ -23,52 +24,44 @@ export default class Recharge extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
       headerRight:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.navigate('History')}
-        >
-          <Text
-            style={{
-              marginRight: common.margin10,
-              fontSize: common.font16,
-              color: 'white',
-            }}
-          >历史记录</Text>
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.navigate('History')}
+          >
+            <Text
+              style={{
+                marginRight: common.margin10,
+                fontSize: common.font16,
+                color: 'white',
+              }}
+            >历史记录</Text>
+          </TouchableOpacity>
+        ),
     }
   }
-  constructor() {
-    super()
-    this.state = {
-      selectedMoney: null,
-    }
-  }
+
   componentDidMount() { }
-  selectedMoney(money) {
-    this.setState({
-      selectedMoney: money,
-    })
-  }
-  renderBottomCell(selectedMoney) {
-    if (selectedMoney) {
+
+  renderBottomCell() {
+    const { selectedToken } = this.props
+    if (selectedToken !== common.selectedTokenDefault) {
       return (
         <View
           style={{
@@ -92,7 +85,7 @@ export default class Recharge extends Component {
               fontSize: common.font14,
               color: common.textColor,
             }}
-          >73YHF9SF99S9F9B99T9J9YJ99Y99N9D9E9</Text>
+          >{selectedToken.rechargeaddr}</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -128,6 +121,7 @@ export default class Recharge extends Component {
     return null
   }
   render() {
+    const { dispatch, selectedToken, asset, tokenListSelected } = this.props
     return (
       <View
         style={{
@@ -139,11 +133,31 @@ export default class Recharge extends Component {
           barStyle={'light-content'}
         />
         <ScrollView>
-          <SelectMoney selectedMoney={money => this.selectedMoney(money)} />
+          <SelectToken
+            asset={asset}
+            selectedToken={selectedToken}
+            tokenListSelected={tokenListSelected}
+            dispatch={dispatch}
+            selectedTokenBlock={() => { }}
+          />
 
-          {this.renderBottomCell(this.state.selectedMoney)}
+          {this.renderBottomCell()}
         </ScrollView>
       </View>
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    asset: store.asset.asset,
+    createAddress: store.asset.createAddress,
+
+    selectedToken: store.address.selectedToken,
+    tokenListSelected: store.address.tokenListSelected,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Recharge)

@@ -1,8 +1,8 @@
-export default function graphqlFindBanners() {
+export default function findBanners() {
   return `{
     find_banners{
         id,
-        title,
+        hyperlink,
         imghash,
         createdAt
     }

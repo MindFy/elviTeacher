@@ -7,18 +7,12 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native'
-import {
-  MessageBar,
-  MessageBarManager,
-} from 'react-native-message-bar'
+import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import {
-  passwordUpdate,
-  passwordRequest,
-} from '../../actions/me'
 import { common } from '../common'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'
+import actions from '../../actions/index'
 
 class UpdatePassword extends Component {
   static navigationOptions(props) {
@@ -53,19 +47,16 @@ class UpdatePassword extends Component {
 
   constructor() {
     super()
-    this.showPasswordResponse = false
-
-    this.confirmPress = this.confirmPress.bind(this)
-
-    this.msgBar = undefined
-  }
-
-  componentDidMount() {
-    MessageBarManager.registerMessageBar(this.msgBar)
+    this.showUpdatePasswordResponse = false
   }
 
   componentWillUnmount() {
-    MessageBarManager.unregisterMessageBar()
+    const { dispatch } = this.props
+    dispatch(actions.updatePasswordUpdate({
+      oldPassword: '',
+      newPassword: '',
+      newPasswordAgain: '',
+    }))
   }
 
   onChange(event, tag) {
@@ -74,13 +65,13 @@ class UpdatePassword extends Component {
 
     switch (tag) {
       case 'oldPassword':
-        dispatch(passwordUpdate(text, newPassword, newPasswordAgain))
+        dispatch(actions.updatePasswordUpdate({ oldPassword: text, newPassword, newPasswordAgain }))
         break
       case 'newPassword':
-        dispatch(passwordUpdate(oldPassword, text, newPasswordAgain))
+        dispatch(actions.updatePasswordUpdate({ oldPassword, newPassword: text, newPasswordAgain }))
         break
       case 'newPasswordAgain':
-        dispatch(passwordUpdate(oldPassword, newPassword, text))
+        dispatch(actions.updatePasswordUpdate({ oldPassword, newPassword, newPasswordAgain: text }))
         break
       default:
         break
@@ -90,67 +81,52 @@ class UpdatePassword extends Component {
   confirmPress() {
     const { dispatch, oldPassword, newPassword, newPasswordAgain } = this.props
     if (!oldPassword.length) {
-      this.showAlert('请输入旧密码', 'warning')
+      Toast.message('请输入旧密码')
       return
     }
     if (!newPassword.length) {
-      this.showAlert('请输入新密码', 'warning')
+      Toast.message('请输入新密码')
       return
     }
     if (!newPasswordAgain.length) {
-      this.showAlert('请再次输入新密码', 'warning')
+      Toast.message('请再次输入新密码')
       return
     }
     if (newPassword !== newPasswordAgain) {
-      this.showAlert('新密码输入不一致', 'warning')
+      Toast.message('新密码输入不一致')
       return
     }
     if (newPassword.length < 6) {
-      this.showAlert('新密码至少为6位', 'warning')
+      Toast.message('新密码至少为6位')
       return
     }
-    dispatch(passwordRequest({
+    dispatch(actions.updatePassword({
       oldpassword: oldPassword,
       newpassword: newPassword,
     }))
   }
 
   handlePasswordRequest() {
-    const { dispatch, passwordVisible, passwordResponse, navigation } = this.props
-    if (!passwordVisible && !this.showPasswordResponse) return
+    const { updatePasswordVisible, updatePasswordResponse, navigation } = this.props
+    if (!updatePasswordVisible && !this.showUpdatePasswordResponse) return
 
-    if (passwordVisible) {
-      this.showPasswordResponse = true
+    if (updatePasswordVisible) {
+      this.showUpdatePasswordResponse = true
     } else {
-      this.showPasswordResponse = false
-      if (passwordResponse.success) {
-        this.showAlert(passwordResponse.result.message, 'success')
-        dispatch(passwordUpdate(undefined, undefined, undefined))
+      this.showUpdatePasswordResponse = false
+      if (updatePasswordResponse.success) {
+        Toast.success(updatePasswordResponse.result.message)
         navigation.goBack()
       } else {
-        this.showAlert(passwordResponse.error.message, 'error')
+        Toast.fail(updatePasswordResponse.error.message)
       }
     }
-  }
-
-  showAlert(message, alertType) {
-    MessageBarManager.showAlert({
-      message,
-      alertType,
-      duration: common.messageBarDur,
-      messageStyle: {
-        marginTop: common.margin10,
-        alignSelf: 'center',
-        color: 'white',
-        fontSize: common.font14,
-      },
-    })
   }
 
   render() {
     this.handlePasswordRequest()
 
-    const { oldPassword, newPassword, newPasswordAgain, passwordVisible } = this.props
+    const { oldPassword, newPassword, newPasswordAgain, updatePasswordVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -188,8 +164,8 @@ class UpdatePassword extends Component {
               marginLeft: common.margin10,
               marginRight: common.margin10,
             }}
-            onPress={this.confirmPress}
-            disabled={passwordVisible}
+            onPress={() => this.confirmPress()}
+            disabled={updatePasswordVisible}
             title="确认"
           />
         </ScrollView>
@@ -200,15 +176,10 @@ class UpdatePassword extends Component {
             alignSelf: 'center',
             marginTop: common.sh / 2 - common.h50 / 2,
           }}
-          isVisible={passwordVisible}
+          isVisible={updatePasswordVisible}
           size={common.h50}
           type={'Wave'}
           color={common.btnTextColor}
-        />
-        <MessageBar
-          ref={(e) => {
-            this.msgBar = e
-          }}
         />
       </KeyboardAvoidingView>
     )
@@ -217,12 +188,12 @@ class UpdatePassword extends Component {
 
 function mapStateToProps(state) {
   return {
-    oldPassword: state.me.oldPassword,
-    newPassword: state.me.newPassword,
-    newPasswordAgain: state.me.newPasswordAgain,
+    oldPassword: state.user.oldPassword,
+    newPassword: state.user.newPassword,
+    newPasswordAgain: state.user.newPasswordAgain,
 
-    passwordVisible: state.me.passwordVisible,
-    passwordResponse: state.me.passwordResponse,
+    updatePasswordVisible: state.user.updatePasswordVisible,
+    updatePasswordResponse: state.user.updatePasswordResponse,
   }
 }
 

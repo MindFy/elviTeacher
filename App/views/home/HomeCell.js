@@ -15,13 +15,13 @@ export default class HomeCell extends Component {
     let type = null
     if (this.props.rd[3] === 1) {
       dirImageSource = require('../../assets/箭头.png')
-      priceColor = common.askColor
-      rangeColor = common.bidColor
+      priceColor = common.redColor
+      rangeColor = common.greenColor
       type = '-'
     } else {
       dirImageSource = require('../../assets/箭头copy.png')
-      priceColor = common.bidColor
-      rangeColor = common.askColor
+      priceColor = common.greenColor
+      rangeColor = common.redColor
       type = '+'
     }
     return (

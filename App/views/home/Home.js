@@ -10,13 +10,14 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import {
-  findBannersRequest,
-  banndersAddUpdate,
-} from '../../actions/home'
-import { common } from '../common'
+  common,
+  storeRead,
+  storeDelete,
+} from '../common'
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
-import graphqlFindBanners from '../../schemas/home'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Home extends Component {
   constructor(props) {
@@ -30,21 +31,41 @@ class Home extends Component {
       ['TK', '0.00082722', '0.98%', 0],
     ]
 
+    this.showSyncResponse = false
     this.showFindBannersResponse = false
 
-    dispatch(findBannersRequest(graphqlFindBanners()))
+    this.readAndDisplay()
+    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+    dispatch(actions.findBanners(schemas.findBanners()))
   }
 
-  handleFindBannersRequest() {
-    const { findBannersVisible, findBannersResponse } = this.props
-    if (!findBannersVisible && !this.showFindBannersResponse) return
+  readAndDisplay() {
+    const { dispatch } = this.props
+    storeRead(common.user, (result) => {
+      const objectResult = JSON.parse(result)
+      dispatch(actions.findUserUpdate(objectResult))
+      dispatch(actions.sync())
+    })
+  }
 
-    if (findBannersVisible) {
-      this.showFindBannersResponse = true
+  handleSyncRequest() {
+    const { user, dispatch, syncVisible, syncResponse } = this.props
+    if (!syncVisible && !this.showSyncResponse) return
+
+    if (syncVisible) {
+      this.showSyncResponse = true
     } else {
-      this.showFindBannersResponse = false
-      if (!findBannersResponse.success) {
-        console.log('finderBannersResponse-error->', findBannersResponse.error.message)
+      this.showSyncResponse = false
+      if (syncResponse.success && !syncResponse.result.mobile.length) {
+        storeDelete(common.user, (error) => {
+          if (!error) {
+            dispatch(actions.findUserUpdate(undefined))
+          }
+        })
+      } else {
+        dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+        dispatch(actions.findUser(schemas.findUser(user.id)))
+        dispatch(actions.findListSelf(schemas.findListSelf(user.id)))
       }
     }
   }
@@ -61,9 +82,9 @@ class Home extends Component {
   }
 
   render() {
-    this.handleFindBannersRequest()
+    this.handleSyncRequest()
 
-    const { banners } = this.props
+    const { announcement, banners } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -129,6 +150,7 @@ class Home extends Component {
         />
         <ScrollView>
           <HomeSwiper
+            announcement={announcement}
             banners={banners}
           />
 
@@ -179,12 +201,14 @@ class Home extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    banners: state.home.banners,
+    announcement: store.announcement.announcement,
+    banners: store.banners.banners,
+    user: store.user.user,
 
-    findBannersVisible: state.home.findBannersVisible,
-    findBannersResponse: state.home.findBannersResponse,
+    syncVisible: store.user.syncVisible,
+    syncResponse: store.user.syncResponse,
   }
 }
 

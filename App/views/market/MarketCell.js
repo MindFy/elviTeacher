@@ -7,15 +7,17 @@ import { common } from '../common'
 
 export default class MarketCell extends Component {
   componentDidMount() { }
+
   render() {
+    const { rd } = this.props
     let type = null
     let typeColor = null
     if (this.props.rd[4] === 1) {
       type = '+'
-      typeColor = common.askColor
+      typeColor = common.redColor
     } else {
       type = '-'
-      typeColor = common.bidColor
+      typeColor = common.greenColor
     }
     return (
       <View>
@@ -33,7 +35,7 @@ export default class MarketCell extends Component {
               color: common.textColor,
               textAlign: 'center',
             }}
-          >{this.props.rd[0]}</Text>
+          >{rd.name}</Text>
           <Text
             style={{
               flex: 1,
@@ -43,7 +45,7 @@ export default class MarketCell extends Component {
               color: common.textColor,
               textAlign: 'center',
             }}
-          >{this.props.rd[1]}</Text>
+          >{rd.quantity}</Text>
           <Text
             style={{
               flex: 1,
@@ -53,7 +55,7 @@ export default class MarketCell extends Component {
               color: common.textColor,
               textAlign: 'center',
             }}
-          >{this.props.rd[2]}</Text>
+          >{rd.lastprice}</Text>
           <Text
             style={{
               flex: 1,
