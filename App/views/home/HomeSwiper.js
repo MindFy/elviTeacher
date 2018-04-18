@@ -35,36 +35,29 @@ export default class HomeSwiper extends Component {
 
   render() {
     const images = []
-    const { announcement } = this.props
-    for (let i = 0; i < announcement.length; i++) {
-      const element = announcement[i]
+    const { banners } = this.props
+    for (let i = 0; i < banners.length; i++) {
+      const element = banners[i]
       images.push(
-        <View>
-          <Image
-            key={element.id}
-            style={{
-              width: common.sw,
-              height: common.h234,
-            }}
-            resizeMode="stretch"
-            resizeMethod="scale"
-            source={require('../../assets/VCG21gic.png')}
-          />
-          <View
-            style={styles.noticeView}
-          >
-            <Text
-              style={styles.noticeTitle}
-            >{`公告: ${element.title}`}</Text>
-          </View>
-        </View>,
+        <Image
+          key={element.id}
+          style={{
+            width: common.sw,
+            height: common.h234,
+          }}
+          resizeMode="stretch"
+          resizeMethod="scale"
+          source={require('../../assets/VCG21gic.png')}
+        />,
       )
     }
 
     return (
-      <View>
+      <View
+        style={styles.swiper}
+      >
         {
-          !images.length ?
+          images.length ?
             <Swiper
               style={styles.swiper}
               showsButtons={false}
@@ -77,6 +70,13 @@ export default class HomeSwiper extends Component {
               {images}
             </Swiper> : null
         }
+        <View
+          style={styles.noticeView}
+        >
+          <Text
+            style={styles.noticeTitle}
+          >{'公告: '}</Text>
+        </View>
       </View>
     )
   }

@@ -1,6 +1,7 @@
 import {
   add,
   findAddress,
+  selectTokenUpdate,
 } from './address'
 import findAnnouncement from './announcement'
 import {
@@ -25,9 +26,11 @@ import {
 } from './delegate'
 import {
   cancelWithdraw,
-  findPaymentList,
+  findPaymentListRecharge,
+  findPaymentListWithdraw,
   recharge,
   withdraw,
+  rechargeOrWithdrawUpdate,
 } from './payment'
 import {
   checkVerificateCode,
@@ -44,11 +47,13 @@ import {
   resetPassword,
   sync,
   updatePassword,
+  updatePasswordUpdate,
 } from './user'
 
 const actions = {
   add,
   findAddress,
+  selectTokenUpdate,
 
   findAnnouncement,
 
@@ -72,9 +77,11 @@ const actions = {
   findDelegateSelf,
 
   cancelWithdraw,
-  findPaymentList,
+  findPaymentListRecharge,
+  findPaymentListWithdraw,
   recharge,
   withdraw,
+  rechargeOrWithdrawUpdate,
 
   checkVerificateCode,
   getVerificateCode,
@@ -90,5 +97,6 @@ const actions = {
   resetPassword,
   sync,
   updatePassword,
+  updatePasswordUpdate,
 }
 export default actions

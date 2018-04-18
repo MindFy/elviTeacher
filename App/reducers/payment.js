@@ -1,28 +1,15 @@
+import * as constants from '../constants/index'
 import {
-  CANCEL_WITH_DRAW_REQUEST,
-  CANCEL_WITH_DRAW_SUCCEED,
-  CANCEL_WITH_DRAW_FAILED,
-
-  FIND_PAYMENT_LIST_FAILED,
-  FIND_PAYMENT_LIST_REQUEST,
-  FIND_PAYMENT_LIST_SUCCEED,
-
-  RECHARGE_FAILED,
-  RECHARGE_REQUEST,
-  RECHARGE_SUCCEED,
-
-  WITH_DRAW_FAILED,
-  WITH_DRAW_REQUEST,
-  WITH_DRAW_SUCCEED,
-} from '../constants/index'
+  common,
+} from '../views/common'
 
 const initialState = {
+  paymentRecharge: [],
+  paymentWithdraw: [],
+  rechargeOrWithdraw: common.recharge,
 
   cancelWithDrawVisible: false,
   cancelWithDrawResponse: undefined,
-
-  findPaymentListVisible: false,
-  findPaymentListResponse: undefined,
 
   rechargeVisible: false,
   rechargeResponse: undefined,
@@ -35,84 +22,103 @@ export default function payment(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case CANCEL_WITH_DRAW_REQUEST:
+    case constants.CANCEL_WITH_DRAW_REQUEST:
       nextState = {
         ...state,
         cancelWithDrawVisible: true,
       }
       break
-    case CANCEL_WITH_DRAW_SUCCEED:
+    case constants.CANCEL_WITH_DRAW_SUCCEED:
       nextState = {
         ...state,
         cancelWithDrawVisible: false,
         cancelWithDrawResponse: action.response,
       }
       break
-    case CANCEL_WITH_DRAW_FAILED:
+    case constants.CANCEL_WITH_DRAW_FAILED:
       nextState = {
         ...state,
         cancelWithDrawVisible: false,
         cancelWithDrawResponse: action.response,
       }
       break
-    case FIND_PAYMENT_LIST_REQUEST:
+    case constants.FIND_PAYMENT_LIST_RECHARGE_REQUEST:
       nextState = {
         ...state,
-        findPaymentListVisible: true,
       }
       break
-    case FIND_PAYMENT_LIST_SUCCEED:
+    case constants.FIND_PAYMENT_LIST_RECHARGE_SUCCEED:
       nextState = {
         ...state,
-        findPaymentListVisible: false,
-        findPaymentListResponse: action.response,
+        paymentRecharge: action.response.result.data.find_payment,
       }
       break
-    case FIND_PAYMENT_LIST_FAILED:
+    case constants.FIND_PAYMENT_LIST_RECHARGE_FAILED:
       nextState = {
         ...state,
-        findPaymentListVisible: false,
-        findPaymentListResponse: action.response,
       }
       break
-    case RECHARGE_REQUEST:
+    case constants.FIND_PAYMENT_LIST_WITH_DRAW_REQUEST:
+      nextState = {
+        ...state,
+      }
+      break
+    case constants.FIND_PAYMENT_LIST_WITH_DRAW_SUCCEED:
+      nextState = {
+        ...state,
+        paymentWithdraw: action.response.result.data.find_payment,
+      }
+      break
+    case constants.FIND_PAYMENT_LIST_WITH_DRAW_FAILED:
+      nextState = {
+        ...state,
+      }
+      break
+    case constants.RECHARGE_REQUEST:
       nextState = {
         ...state,
         rechargeVisible: true,
       }
       break
-    case RECHARGE_SUCCEED:
+    case constants.RECHARGE_SUCCEED:
       nextState = {
         ...state,
         rechargeVisible: false,
         rechargeResponse: action.response,
       }
       break
-    case RECHARGE_FAILED:
+    case constants.RECHARGE_FAILED:
       nextState = {
         ...state,
         rechargeVisible: false,
         rechargeResponse: action.response,
       }
       break
-    case WITH_DRAW_REQUEST:
+    case constants.WITH_DRAW_REQUEST:
       nextState = {
         ...state,
         withDrawVisible: true,
       }
       break
-    case WITH_DRAW_SUCCEED:
+    case constants.WITH_DRAW_SUCCEED:
       nextState = {
         ...state,
         withDrawVisible: false,
         withDrawResponse: action.response,
       }
       break
-    case WITH_DRAW_FAILED:
+    case constants.WITH_DRAW_FAILED:
       nextState = {
         ...state,
         withDrawVisible: false,
         withDrawResponse: action.response,
+      }
+      break
+
+    case constants.RECHARGE_OR_WITHDRAW_UPDATE:
+      nextState = {
+        ...state,
+        rechargeOrWithdraw: action.data.rechargeOrWithdraw,
       }
       break
     default:

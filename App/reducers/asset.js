@@ -13,6 +13,32 @@ import {
 } from '../constants/index'
 
 const initialState = {
+  asset: [
+    {
+      amount: 0,
+      freezed: 0,
+      id: 1,
+      rechargeaddr: '',
+      token: { id: 1, name: 'TK' },
+    },
+    {
+      amount: 0,
+      freezed: 0,
+      id: 2,
+      rechargeaddr: '',
+      token: { id: 2, name: 'BTC' },
+    },
+    {
+      amount: 0,
+      freezed: 0,
+      id: 3,
+      rechargeaddr: '',
+      token: { id: 3, name: 'CNYT' },
+    },
+  ],
+
+  createAddress: '',
+
   createAddressVisible: false,
   createAddressResponse: undefined,
 
@@ -78,6 +104,7 @@ export default function asset(state = initialState, action) {
         ...state,
         findAssetListVisible: false,
         findAssetListResponse: action.resposne,
+        asset: action.response.result.data.find_asset,
       }
       break
     case FIND_ASSET_LIST_FAILED:

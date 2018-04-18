@@ -8,14 +8,13 @@ import {
 import Spinner from 'react-native-spinkit'
 import {
   common,
-  storeSave,
   storeRead,
   storeDelete,
 } from '../common'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
-import * as actions from '../../actions/index'
-import * as schemas from '../../schemas/index'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Me extends Component {
   static navigationOptions() {
@@ -37,23 +36,18 @@ class Me extends Component {
     super(props)
 
     this.showLogoutResponse = false
-    this.showFindUserResponse = false
-
-    this.logoutPress = this.logoutPress.bind(this)
   }
 
   /* 读取用户数据并展示 */
-  readAndDisplay(loginGoBack) {
-    if (loginGoBack) {
-      // 登录成功
-    }
+  readAndDisplay() {
     const { dispatch } = this.props
-    storeRead(common.userInfo, (result) => {
+    storeRead(common.user, (result) => {
       const objectResult = JSON.parse(result)
 
       dispatch(actions.findUserUpdate(objectResult))
       /* 发送获取用户个人信息请求 */
       dispatch(actions.findUser(schemas.findUser(objectResult.id)))
+      dispatch(actions.findAssetList(schemas.findAssetList(objectResult.id)))
     })
   }
 
@@ -61,32 +55,13 @@ class Me extends Component {
   navigateLogin() {
     const { navigation } = this.props
     navigation.navigate('LoginStack', {
-      goBackBlock: () => this.readAndDisplay(true),
+      goBackBlock: () => this.readAndDisplay(),
     })
   }
 
   logoutPress() {
     const { dispatch } = this.props
-    // dispatch(logoutRequest())
-  }
-
-  handleUserInfoRequest() {
-    const { dispatch, findUserVisible, findUserResponse } = this.props
-    if (!findUserVisible && !this.showFindUserResponse) return
-
-    if (findUserVisible) {
-      this.showFindUserResponse = true
-    } else {
-      this.showFindUserResponse = false
-      if (findUserResponse.success) {
-        const responseUserInfo = findUserResponse.result.data.user
-        storeSave(common.userInfo, responseUserInfo, (error) => {
-          if (!error) {
-            dispatch(actions.findUserUpdate(responseUserInfo))
-          }
-        })
-      }
-    }
+    dispatch(actions.logout())
   }
 
   handleLogoutRequest() {
@@ -98,14 +73,12 @@ class Me extends Component {
     } else {
       this.showLogoutResponse = false
       if (logoutResponse.success) {
-        storeDelete(common.userInfo, (error) => {
+        storeDelete(common.user, (error) => {
           if (!error) {
             // 清除页面数据
             dispatch(actions.findUserUpdate(undefined))
             // 返回登录页
             this.navigateLogin()
-          } else {
-            // 删除失败
           }
         })
       } else {
@@ -116,9 +89,8 @@ class Me extends Component {
 
   render() {
     this.handleLogoutRequest()
-    this.handleUserInfoRequest()
 
-    const { userInfo, logoutVisible } = this.props
+    const { user, logoutVisible } = this.props
 
     return (
       <View
@@ -134,7 +106,7 @@ class Me extends Component {
 
           <MeCell
             onPress={() => {
-              if (!userInfo) {
+              if (!user) {
                 this.navigateLogin()
               }
             }}
@@ -150,7 +122,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!userInfo ? '请登录' : userInfo.mobile}
+            title={!user ? '请登录' : user.mobile}
             rightImageHide
           />
           <MeCell
@@ -175,9 +147,9 @@ class Me extends Component {
           />
 
           {
-            !userInfo ? null :
+            !user ? null :
               (<BtnLogout
-                onPress={this.logoutPress}
+                onPress={() => this.logoutPress()}
                 disabled={logoutVisible}
                 title="退出登录"
               />)
@@ -200,14 +172,12 @@ class Me extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    userInfo: state.user.userInfo,
-    findUserVisible: state.user.findUserVisible,
-    findUserResponse: state.user.findUserResponse,
+    user: store.user.user,
 
-    logoutVisible: state.user.logoutVisible,
-    logoutResponse: state.user.logoutResponse,
+    logoutVisible: store.user.logoutVisible,
+    logoutResponse: store.user.logoutResponse,
   }
 }
 

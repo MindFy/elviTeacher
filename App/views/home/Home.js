@@ -11,19 +11,18 @@ import {
 } from 'react-native'
 import {
   common,
-  storeSave,
   storeRead,
   storeDelete,
 } from '../common'
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
-import * as actions from '../../actions/index'
-import * as schemas from '../../schemas/index'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Home extends Component {
   constructor(props) {
     super(props)
-    const { dispatch } = props
+    const { dispatch, user } = props
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
@@ -35,24 +34,25 @@ class Home extends Component {
     this.showSyncResponse = false
     this.showFindBannersResponse = false
 
-    // this.initialStoreUser()
-    // dispatch(findAnnouncementRequest(graphqlFindAnnouncement()))
-    // dispatch(findBannersRequest(graphqlFindBanners()))
+    this.readAndDisplay()
+    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+    dispatch(actions.findBanners(schemas.findBanners()))
+    if (user) {
+      dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+    }
   }
 
-  initialStoreUser() {
+  readAndDisplay() {
     const { dispatch } = this.props
-    storeRead(common.userInfo, (result) => {
+    storeRead(common.user, (result) => {
       const objectResult = JSON.parse(result)
-
-      // dispatch(userInfoUpdate(objectResult))
-      /* 发送获取用户个人信息请求 */
-      // dispatch(userInfoRequest(graphqlGet(objectResult.id)))
+      dispatch(actions.findUserUpdate(objectResult))
+      dispatch(actions.sync())
     })
   }
 
   handleSyncRequest() {
-    const { syncVisible, syncResponse } = this.props
+    const { user, dispatch, syncVisible, syncResponse } = this.props
     if (!syncVisible && !this.showSyncResponse) return
 
     if (syncVisible) {
@@ -60,7 +60,14 @@ class Home extends Component {
     } else {
       this.showSyncResponse = false
       if (syncResponse.success && !syncResponse.result.mobile.length) {
-        storeDelete(common.userInfo)
+        storeDelete(common.user, (error) => {
+          if (!error) {
+            dispatch(actions.findUserUpdate(undefined))
+          }
+        })
+      } else {
+        dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+        dispatch(actions.findUser(schemas.findUser(user.id)))
       }
     }
   }
@@ -79,7 +86,7 @@ class Home extends Component {
   render() {
     this.handleSyncRequest()
 
-    const { announcement } = this.props
+    const { announcement, banners } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -146,6 +153,7 @@ class Home extends Component {
         <ScrollView>
           <HomeSwiper
             announcement={announcement}
+            banners={banners}
           />
 
           <View
@@ -195,9 +203,14 @@ class Home extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    announcement: state.announcement.announcement,
+    announcement: store.announcement.announcement,
+    banners: store.banners.banners,
+    user: store.user.user,
+
+    syncVisible: store.user.syncVisible,
+    syncResponse: store.user.syncResponse,
   }
 }
 

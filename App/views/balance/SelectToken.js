@@ -7,26 +7,30 @@ import {
   ListView,
 } from 'react-native'
 import { common } from '../common'
+import actions from '../../actions/index'
 
-export default class SelectMoney extends Component {
+export default class SelectToken extends Component {
   constructor() {
     super()
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.state = {
-      title: '选择币种',
-      selected: false,
-      dataSource: this.ds.cloneWithRows(['BTC', 'CNYT', 'KT']),
-    }
+    this.dataSource = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
   }
+
   componentDidMount() { }
-  cellRightImagePress(selected) {
-    this.setState({
-      selected,
-    })
+
+  cellRightImagePress() {
+    const { dispatch, selectedToken, tokenListSelected } = this.props
+    dispatch(actions.selectTokenUpdate({
+      selectedToken,
+      tokenListSelected: !tokenListSelected,
+    }))
   }
+
   /* 根据选中状态修改单元格右侧箭头宽高 */
-  changeCellRightImageSize(selected) {
-    if (selected) {
+  changeCellRightImageSize() {
+    const { tokenListSelected } = this.props
+    if (tokenListSelected) {
       return {
         width: common.h20,
         height: common.w10,
@@ -37,18 +41,21 @@ export default class SelectMoney extends Component {
       height: common.h20,
     }
   }
-  rowPress(rd, selected) {
-    this.setState({
-      title: rd,
-      selected: !selected,
-    })
-    this.props.selectedMoney(rd)
+
+  rowPress(rd) {
+    const { dispatch, tokenListSelected, selectedTokenBlock } = this.props
+    dispatch(actions.selectTokenUpdate({
+      selectedToken: rd,
+      tokenListSelected: !tokenListSelected,
+    }))
+    selectedTokenBlock(rd.id)
   }
-  renderRow(rd, selected) {
+
+  renderRow(rd) {
     return (
       <TouchableOpacity
         activeOpacity={common.activeOpacity}
-        onPress={() => this.rowPress(rd, selected)}
+        onPress={() => this.rowPress(rd)}
       >
         <View
           style={{
@@ -66,18 +73,19 @@ export default class SelectMoney extends Component {
               color: common.textColor,
               alignSelf: 'center',
             }}
-          >{rd}</Text>
+          >{rd.token.name}</Text>
         </View>
       </TouchableOpacity>
     )
   }
 
-  renderMoneyList(selected) {
-    if (selected) {
+  renderTokenList() {
+    const { asset, tokenListSelected } = this.props
+    if (tokenListSelected) {
       return (
         <ListView
-          dataSource={this.state.dataSource}
-          renderRow={rd => this.renderRow(rd, selected)}
+          dataSource={this.dataSource(asset)}
+          renderRow={rd => this.renderRow(rd)}
           enableEmptySections
         />
       )
@@ -85,11 +93,12 @@ export default class SelectMoney extends Component {
     return null
   }
   render() {
+    const { selectedToken, tokenListSelected } = this.props
     return (
       <View>
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
-          onPress={() => this.cellRightImagePress(!this.state.selected)}
+          onPress={() => this.cellRightImagePress()}
         >
           <View
             style={{
@@ -107,7 +116,10 @@ export default class SelectMoney extends Component {
                 color: common.textColor,
                 alignSelf: 'center',
               }}
-            >{this.state.title}</Text>
+            >{
+                selectedToken === common.selectedTokenDefault ?
+                  common.selectedTokenDefault : selectedToken.token.name
+              }</Text>
             <View
               style={{
                 alignSelf: 'center',
@@ -119,8 +131,8 @@ export default class SelectMoney extends Component {
                   height: common.h20,
                   width: common.w10,
                 },
-                this.changeCellRightImageSize(this.state.selected)]}
-                source={(this.state.selected ?
+                this.changeCellRightImageSize(tokenListSelected)]}
+                source={(tokenListSelected ?
                   require('../../assets/下拉--向下.png') :
                   require('../../assets/下拉--向右.png'))}
               />
@@ -128,7 +140,7 @@ export default class SelectMoney extends Component {
           </View>
         </TouchableOpacity>
 
-        {this.renderMoneyList(this.state.selected)}
+        {this.renderTokenList()}
       </View>
     )
   }

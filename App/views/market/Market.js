@@ -7,9 +7,9 @@ import {
   ListView,
 } from 'react-native'
 import ScrollableTab from 'react-native-scrollable-tab-view'
-import * as actions from '../../actions/index'
 import { common } from '../common'
 import MarketCell from './MarketCell'
+import actions from '../../actions/index'
 
 class Market extends Component {
   static navigationOptions() {
@@ -35,7 +35,7 @@ class Market extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
-    // dispatch(getRoseRequest())
+    dispatch(actions.getRose())
   }
 
   componentDidMount() { }
@@ -149,9 +149,9 @@ class Market extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    rose: state.dealstat.rose,
+    rose: store.dealstat.rose,
   }
 }
 

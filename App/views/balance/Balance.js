@@ -4,14 +4,15 @@ import {
   View,
   Text,
   Image,
+  ListView,
   StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
 import BalanceCell from './BalanceCell'
-import * as actions from '../../actions/index'
-import * as schemas from '../../schemas/index'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Balance extends Component {
   static navigationOptions(props) {
@@ -26,38 +27,54 @@ class Balance extends Component {
         fontSize: common.font16,
       },
       headerRight:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.navigate('History')}
-        >
-          <Text
-            style={{
-              marginRight: common.margin10,
-              fontSize: common.font16,
-              color: 'white',
-            }}
-          >历史记录</Text>
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.navigate('History')}
+          >
+            <Text
+              style={{
+                marginRight: common.margin10,
+                fontSize: common.font16,
+                color: 'white',
+              }}
+            >历史记录</Text>
+          </TouchableOpacity>
+        ),
     }
   }
 
   constructor(props) {
     super(props)
-    const { dispatch } = props
-    
-    // dispatch(findAssetListRequest(graphqlFindAssetList()))
+    const { dispatch, user } = props
+
+    this.dataSource = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
   }
 
   componentDidMount() { }
+
   rechargePress() {
     this.props.navigation.navigate('Recharge')
   }
+
   cashPress() {
     this.props.navigation.navigate('Cash')
   }
+
+  renderRow(rd) {
+    return (
+      <BalanceCell
+        leftImageSource={require('../../assets/111.png')}
+        title={rd.token.name}
+        detail={rd.amount}
+      />
+    )
+  }
+
   render() {
+    const { asset } = this.props
     return (
       <View
         style={{
@@ -81,7 +98,7 @@ class Balance extends Component {
               fontSize: common.font30,
               alignSelf: 'center',
             }}
-            >0.12345678</Text>
+            >{asset ? 0.12345678 : 0}</Text>
             <Text style={{
               marginLeft: common.margin5,
               fontSize: common.font10,
@@ -155,28 +172,13 @@ class Balance extends Component {
             </View>
           </View>
 
-          <View
+          <ListView
             style={{
               marginTop: common.margin10,
             }}
-          >
-            <BalanceCell
-              leftImageSource={require('../../assets/111.png')}
-              title={'BTC'}
-              detail={'8.880000'}
-            />
-          </View>
-
-          <BalanceCell
-            leftImageSource={require('../../assets/111.png')}
-            title={'BTC'}
-            detail={'8.880000'}
-          />
-
-          <BalanceCell
-            leftImageSource={require('../../assets/111.png')}
-            title={'BTC'}
-            detail={'8.880000'}
+            dataSource={this.dataSource(!asset ? [] : asset)}
+            renderRow={rd => this.renderRow(rd)}
+            enableEmptySections
           />
 
         </ScrollView>
@@ -185,9 +187,10 @@ class Balance extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    rose: state.dealstat.rose,
+    user: store.user.user,
+    asset: store.asset.asset,
   }
 }
 

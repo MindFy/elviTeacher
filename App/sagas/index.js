@@ -24,7 +24,8 @@ export default function* rootSaga() {
     fork(user.updatePassword),
 
     fork(payment.cancelWithdraw),
-    fork(payment.findPaymentList),
+    fork(payment.findPaymentListRecharge),
+    fork(payment.findPaymentListWithdraw),
     fork(payment.recharge),
     fork(payment.withdraw),
 

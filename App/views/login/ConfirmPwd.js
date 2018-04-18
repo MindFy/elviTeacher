@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   StatusBar,
   ScrollView,
-  DeviceEventEmitter,
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'

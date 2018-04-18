@@ -1,4 +1,8 @@
 import * as constants from '../constants/index'
+import {
+  common,
+  storeSave,
+} from '../views/common'
 
 const initialState = {
   user: undefined,
@@ -94,27 +98,29 @@ export default function user(state = initialState, action) {
         getVerificateCodeResponse: action.response,
       }
       break
-    case constants.GET_USER_REQUEST:
+    case constants.FIND_USER_REQUEST:
       nextState = {
         ...state,
         findUserVisible: true,
       }
       break
-    case constants.GET_USER_SUCCEED:
+    case constants.FIND_USER_SUCCEED:
+      nextState = {
+        ...state,
+        findUserVisible: false,
+        findUserResponse: action.response,
+        user: action.response.result.data.user,
+      }
+      storeSave(common.user, nextState.user)
+      break
+    case constants.FIND_USER_FAILED:
       nextState = {
         ...state,
         findUserVisible: false,
         findUserResponse: action.response,
       }
       break
-    case constants.GET_USER_FAILED:
-      nextState = {
-        ...state,
-        findUserVisible: false,
-        findUserResponse: action.response,
-      }
-      break
-    case constants.GET_USER_UPDATE:
+    case constants.FIND_USER_UPDATE:
       nextState = {
         ...state,
         user: action.user,
@@ -296,7 +302,14 @@ export default function user(state = initialState, action) {
         updatePasswordResponse: action.response,
       }
       break
-
+    case constants.UPDATE_PASSWORD_UPDATE:
+      nextState = {
+        ...state,
+        oldPassword: action.data.oldPassword,
+        newPassword: action.data.newPassword,
+        newPasswordAgain: action.data.newPasswordAgain,
+      }
+      break
     default:
       break
   }

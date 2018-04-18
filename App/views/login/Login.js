@@ -67,7 +67,7 @@ class Login extends Component {
       this.showLoginResponse = false
       if (loginResponse.success) {
         Toast.success('登录成功')
-        storeSave(common.userInfo, loginResponse.result, (error) => {
+        storeSave(common.user, loginResponse.result, (error) => {
           if (!error) {
             navigation.state.params.goBackBlock()
             screenProps.dismiss()

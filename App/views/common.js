@@ -8,8 +8,11 @@ const sw = Dimensions.get('window').width
 const w = 375
 
 const common = {
-  userInfo: 'userInfo',
-  resetPasswordGoBack: 'resetPasswordGoBack',
+  user: 'user',
+  selectedTokenDefault: '选择币种',
+  recharge: 'recharge',
+  withdraw: 'withdraw',
+  btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
 
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',

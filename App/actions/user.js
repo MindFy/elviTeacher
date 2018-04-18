@@ -16,14 +16,14 @@ export function getVerificateCode(data) {
 
 export function findUser(schema) {
   return {
-    type: constants.GET_USER_REQUEST,
+    type: constants.FIND_USER_REQUEST,
     schema,
   }
 }
 
 export function findUserUpdate(user) {
   return {
-    type: constants.GET_USER_UPDATE,
+    type: constants.FIND_USER_UPDATE,
     user,
   }
 }
@@ -56,10 +56,9 @@ export function loginUpdate(data) {
   }
 }
 
-export function logout(data) {
+export function logout() {
   return {
     type: constants.LOGOUT_REQUEST,
-    data,
   }
 }
 
@@ -84,16 +83,22 @@ export function resetPassword(data) {
   }
 }
 
-export function sync(data) {
+export function sync() {
   return {
     type: constants.SYNC_REQUEST,
-    data,
   }
 }
 
 export function updatePassword(data) {
   return {
     type: constants.UPDATE_PASSWORD_REQUEST,
+    data,
+  }
+}
+
+export function updatePasswordUpdate(data) {
+  return {
+    type: constants.UPDATE_PASSWORD_UPDATE,
     data,
   }
 }

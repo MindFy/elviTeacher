@@ -14,14 +14,25 @@ export function* cancelWithdraw() {
   }
 }
 /* 获取个人交易信息列表 */
-export function* findPaymentList() {
+export function* findPaymentListRecharge() {
   while (true) {
-    const request = yield take(constants.FIND_PAYMENT_LIST_REQUEST)
+    const request = yield take(constants.FIND_PAYMENT_LIST_RECHARGE_REQUEST)
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
-      yield put({ type: constants.FIND_PAYMENT_LIST_SUCCEED, response })
+      yield put({ type: constants.FIND_PAYMENT_LIST_RECHARGE_SUCCEED, response })
     } else {
-      yield put({ type: constants.FIND_PAYMENT_LIST_FAILED, response })
+      yield put({ type: constants.FIND_PAYMENT_LIST_RECHARGE_FAILED, response })
+    }
+  }
+}
+export function* findPaymentListWithdraw() {
+  while (true) {
+    const request = yield take(constants.FIND_PAYMENT_LIST_WITH_DRAW_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) {
+      yield put({ type: constants.FIND_PAYMENT_LIST_WITH_DRAW_SUCCEED, response })
+    } else {
+      yield put({ type: constants.FIND_PAYMENT_LIST_WITH_DRAW_FAILED, response })
     }
   }
 }

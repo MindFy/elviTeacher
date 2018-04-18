@@ -1,14 +1,13 @@
+import * as constants from '../constants/index'
 import {
-  ADD_REQUEST,
-  ADD_SUCCEED,
-  ADD_FAILED,
-
-  FIND_ADDRESS_REQUEST,
-  FIND_ADDRESS_SUCCEED,
-  FIND_ADDRESS_FAILED,
-} from '../constants/index'
+  common,
+} from '../views/common'
 
 const initialState = {
+  address: [],
+  selectedToken: common.selectedTokenDefault,
+  tokenListSelected: false,
+
   addVisible: false,
   addResponse: undefined,
 
@@ -20,44 +19,52 @@ export default function address(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case ADD_REQUEST:
+    case constants.ADD_REQUEST:
       nextState = {
         ...state,
         addVisible: true,
       }
       break
-    case ADD_SUCCEED:
+    case constants.ADD_SUCCEED:
       nextState = {
         ...state,
         addVisible: false,
         addResponse: action.response,
       }
       break
-    case ADD_FAILED:
+    case constants.ADD_FAILED:
       nextState = {
         ...state,
         addVisible: false,
         addResponse: action.response,
       }
       break
-    case FIND_ADDRESS_REQUEST:
+    case constants.FIND_ADDRESS_REQUEST:
       nextState = {
         ...state,
         findAddressVisible: true,
       }
       break
-    case FIND_ADDRESS_SUCCEED:
+    case constants.FIND_ADDRESS_SUCCEED:
       nextState = {
         ...state,
         findAddressVisible: false,
         findAddressResponse: action.response,
       }
       break
-    case FIND_ADDRESS_FAILED:
+    case constants.FIND_ADDRESS_FAILED:
       nextState = {
         ...state,
         findAddressVisible: false,
         findAddressResponse: action.response,
+      }
+      break
+
+    case constants.SELECT_TOKEN_UPDATE:
+      nextState = {
+        ...state,
+        selectedToken: action.data.selectedToken,
+        tokenListSelected: action.data.tokenListSelected,
       }
       break
     default:

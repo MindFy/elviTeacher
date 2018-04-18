@@ -5,6 +5,8 @@ import {
 } from '../constants/index'
 
 const initialState = {
+  banners: [],
+
   findBannersVisible: false,
   findBannersResponse: undefined,
 }
@@ -24,6 +26,7 @@ export default function banners(state = initialState, action) {
         ...state,
         findBannersVisible: false,
         findBannersResponse: action.response,
+        banners: action.response.result.data.find_banners,
       }
       break
     case FIND_ADDRESS_FAILED:

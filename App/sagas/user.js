@@ -25,10 +25,10 @@ export function* getVerificateCode() {
 /* 获取单个用户的信息 */
 export function* findUser() {
   while (true) {
-    const request = yield take(constants.GET_USER_REQUEST)
+    const request = yield take(constants.FIND_USER_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.GET_USER_SUCCEED, response })
-    else yield put({ type: constants.GET_USER_FAILED, response })
+    if (response.success) yield put({ type: constants.FIND_USER_SUCCEED, response })
+    else yield put({ type: constants.FIND_USER_FAILED, response })
   }
 }
 /* 提交身份认证审核 */
@@ -61,8 +61,8 @@ export function* login() {
 /* 注销用户 */
 export function* logout() {
   while (true) {
-    const request = yield take(constants.LOGOUT_REQUEST)
-    const response = yield call(api.logout, request.data)
+    yield take(constants.LOGOUT_REQUEST)
+    const response = yield call(api.logout)
     if (response.success) yield put({ type: constants.LOGOUT_SUCCEED, response })
     else yield put({ type: constants.LOGOUT_FAILED, response })
   }
@@ -88,8 +88,8 @@ export function* resetPassword() {
 /* app、web状态同步 */
 export function* sync() {
   while (true) {
-    const request = yield take(constants.SYNC_REQUEST)
-    const response = yield call(api.sync, request.data)
+    yield take(constants.SYNC_REQUEST)
+    const response = yield call(api.sync)
     if (response.success) yield put({ type: constants.SYNC_SUCCEED, response })
     else yield put({ type: constants.SYNC_FAILED, response })
   }

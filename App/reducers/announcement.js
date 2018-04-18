@@ -26,7 +26,7 @@ export default function announcement(state = initialState, action) {
         ...state,
         announcementVisible: false,
         announcementResponse: action.response,
-        // announcement: action.reponse.data.
+        announcement: action.response.result.data.find_announcement,
       }
       break
     case FIND_ANNOUNCEMENT_FAILED:
