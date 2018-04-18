@@ -8,6 +8,9 @@
   "env": {
       "jest": true
   },
+  "globals": {
+    "fetch": false
+  },
   "rules": {
     "semi": [
       2,
