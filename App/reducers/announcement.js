@@ -6,6 +6,9 @@ import {
 
 const initialState = {
   announcement: [],
+
+  announcementVisible: false,
+  announcementResponse: undefined,
 }
 
 export default function announcement(state = initialState, action) {
@@ -15,17 +18,22 @@ export default function announcement(state = initialState, action) {
     case FIND_ANNOUNCEMENT_REQUEST:
       nextState = {
         ...state,
+        announcementVisible: true,
       }
       break
     case FIND_ANNOUNCEMENT_SUCCEED:
       nextState = {
         ...state,
+        announcementVisible: false,
+        announcementResponse: action.response,
         // announcement: action.reponse.data.
       }
       break
     case FIND_ANNOUNCEMENT_FAILED:
       nextState = {
         ...state,
+        announcementVisible: false,
+        announcementResponse: action.response,
       }
       break
     default:

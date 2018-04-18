@@ -3,40 +3,46 @@ import {
   CHECK_VERIFICATE_CODE_SUCCEED,
   CHECK_VERIFICATE_CODE_FAILED,
 
-  
-  GET_USER_UPDATE,
+  GET_VERIFICATE_CODE_FAILED,
+  GET_VERIFICATE_CODE_REQUEST,
+  GET_VERIFICATE_CODE_SUCCEED,
+
+  GET_USER_FAILED,
   GET_USER_REQUEST,
   GET_USER_SUCCEED,
-  GET_USER_FAILED,
+  GET_USER_UPDATE,
 
-  LOGIN_UPDATE,
+  ID_CARD_AUTH_FAILED,
+  ID_CARD_AUTH_REQUEST,
+  ID_CARD_AUTH_SUCCEED,
+
+  IS_EXIST_FAILED,
+  IS_EXIST_REQUEST,
+  IS_EXIST_SUCCEED,
+
   LOGIN_FAILED,
   LOGIN_REQUEST,
   LOGIN_SUCCEED,
 
+  LOGOUT_FAILED,
   LOGOUT_REQUEST,
   LOGOUT_SUCCEED,
-  LOGOUT_FAILED,
 
-  PASSWORD_UPDATE,
-  PASSWORD_REQUEST,
-  PASSWORD_SUCCEED,
-  PASSWORD_FAILED,
-
-  REGISTER_UPDATE,
+  REGISTER_FAILED,
   REGISTER_REQUEST,
   REGISTER_SUCCEED,
-  REGISTER_FAILED,
 
-  GET_VERIFICATE_CODE_REQUEST,
-  GET_VERIFICATE_CODE_SUCCEED,
-  GET_VERIFICATE_CODE_FAILED,
-
-  RESET_PASSWORD_UPDATE,
+  RESET_PASSWORD_FAILED,
   RESET_PASSWORD_REQUEST,
   RESET_PASSWORD_SUCCEED,
-  RESET_PASSWORD_FAILED,
 
+  SYNC_FAILED,
+  SYNC_REQUEST,
+  SYNC_SUCCEED,
+
+  UPDATE_PASSWORD_FAILED,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_SUCCEED,
 } from '../constants/index'
 
 const initialState = {
@@ -51,115 +57,62 @@ const initialState = {
   newPassword: '',
   newPasswordAgain: '',
 
-  isVisible: false,
-  registerResponse: undefined,
+  checkVerificateCodeVisible: false,
+  checkVerificateCodeResponse: undefined,
 
   getVerificateCodeVisible: false,
   getVerificateCodeResponse: undefined,
 
-  loginResponse: undefined,
-
-  resetPasswordResponse: undefined,
-
-  checkVerificateCodeVisible: false,
-  checkVerificateCodeResponse: undefined,
-
   getUserVisible: false,
   getUserResponse: undefined,
+
+  idCardAuthVisible: false,
+  idCardAuthResponse: undefined,
+
+  isExistVisible: false,
+  isExistResponse: undefined,
+
+  loginVisible: false,
+  loginResponse: undefined,
 
   logoutVisible: false,
   logoutResponse: undefined,
 
-  passwordVisible: false,
-  passwordResponse: undefined,
+  registerVisible: false,
+  registerResponse: undefined,
+
+  resetPasswordVisible: false,
+  resetPasswordResponse: undefined,
+
+  syncVisible: false,
+  syncResponse: undefined,
+
+  updatePasswordVisible: false,
+  updatePasswordResponse: undefined,
 }
 
 export default function user(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case LOGIN_UPDATE:
+    case CHECK_VERIFICATE_CODE_REQUEST:
       nextState = {
         ...state,
-        mobile: action.mobile,
-        password: action.password,
+        checkVerificateCodeVisible: true,
       }
       break
-    case LOGIN_REQUEST:
+    case CHECK_VERIFICATE_CODE_SUCCEED:
       nextState = {
         ...state,
-        isVisible: true,
+        checkVerificateCodeVisible: false,
+        checkVerificateCodeResponse: action.response,
       }
       break
-    case LOGIN_SUCCEED:
+    case CHECK_VERIFICATE_CODE_FAILED:
       nextState = {
         ...state,
-        isVisible: false,
-        loginResponse: action.response,
-      }
-      break
-    case LOGIN_FAILED:
-      nextState = {
-        ...state,
-        isVisible: false,
-        loginResponse: action.response,
-      }
-      break
-
-    case GET_USER_UPDATE:
-      nextState = {
-        ...state,
-        user: action.user,
-      }
-      break
-    case GET_USER_REQUEST:
-      nextState = {
-        ...state,
-        userInfoVisible: true,
-      }
-      break
-    case GET_USER_SUCCEED:
-      nextState = {
-        ...state,
-        userInfoVisible: false,
-        userInfoResponse: action.response,
-      }
-      break
-    case GET_USER_FAILED:
-      nextState = {
-        ...state,
-        userInfoVisible: false,
-        userInfoResponse: action.response,
-      }
-      break
-
-    case REGISTER_UPDATE:
-      nextState = {
-        ...state,
-        mobile: action.mobile,
-        code: action.code,
-        password: action.password,
-        passwordAgain: action.passwordAgain,
-      }
-      break
-    case REGISTER_REQUEST:
-      nextState = {
-        ...state,
-        isVisible: true,
-      }
-      break
-    case REGISTER_SUCCEED:
-      nextState = {
-        ...state,
-        isVisible: false,
-        registerResponse: action.response,
-      }
-      break
-    case REGISTER_FAILED:
-      nextState = {
-        ...state,
-        isVisible: false,
-        registerResponse: action.response,
+        checkVerificateCodeVisible: false,
+        checkVerificateCodeResponse: action.response,
       }
       break
     case GET_VERIFICATE_CODE_REQUEST:
@@ -182,57 +135,92 @@ export default function user(state = initialState, action) {
         getVerificateCodeResponse: action.response,
       }
       break
-
-    case RESET_PASSWORD_UPDATE:
+    case GET_USER_REQUEST:
       nextState = {
         ...state,
-        mobile: action.mobile,
-        code: action.code,
-        password: action.password,
-        passwordAgain: action.passwordAgain,
+        getUserVisible: true,
       }
       break
-    case RESET_PASSWORD_REQUEST:
+    case GET_USER_SUCCEED:
       nextState = {
         ...state,
-        isVisible: true,
+        getUserVisible: false,
+        getUserResponse: action.response,
       }
       break
-    case RESET_PASSWORD_SUCCEED:
+    case GET_USER_FAILED:
       nextState = {
         ...state,
-        isVisible: false,
-        resetPasswordResponse: action.response,
+        getUserVisible: false,
+        getUserResponse: action.response,
       }
       break
-    case RESET_PASSWORD_FAILED:
+    case GET_USER_UPDATE:
       nextState = {
         ...state,
-        isVisible: false,
-        resetPasswordResponse: action.response,
+        user: action.user,
       }
       break
-    case CHECK_VERIFICATE_CODE_REQUEST:
+    case ID_CARD_AUTH_REQUEST:
       nextState = {
         ...state,
-        checkVerificateCodeVisible: true,
+        idCardAuthVisible: true,
       }
       break
-    case CHECK_VERIFICATE_CODE_SUCCEED:
+    case ID_CARD_AUTH_SUCCEED:
       nextState = {
         ...state,
-        checkVerificateCodeVisible: false,
-        checkVerificateCodeResponse: action.response,
+        idCardAuthVisible: false,
+        idCardAuthResponse: action.response,
       }
       break
-    case CHECK_VERIFICATE_CODE_FAILED:
+    case ID_CARD_AUTH_FAILED:
       nextState = {
         ...state,
-        checkVerificateCodeVisible: false,
-        checkVerificateCodeResponse: action.response,
+        idCardAuthVisible: false,
+        idCardAuthResponse: action.response,
       }
       break
-
+    case IS_EXIST_REQUEST:
+      nextState = {
+        ...state,
+        isExistVisible: true,
+      }
+      break
+    case IS_EXIST_SUCCEED:
+      nextState = {
+        ...state,
+        isExistVisible: false,
+        isExistResponse: action.response,
+      }
+      break
+    case IS_EXIST_FAILED:
+      nextState = {
+        ...state,
+        isExistVisible: false,
+        isExistResponse: action.response,
+      }
+      break
+    case LOGIN_REQUEST:
+      nextState = {
+        ...state,
+        loginVisible: true,
+      }
+      break
+    case LOGIN_SUCCEED:
+      nextState = {
+        ...state,
+        loginVisible: false,
+        loginResponse: action.response,
+      }
+      break
+    case LOGIN_FAILED:
+      nextState = {
+        ...state,
+        loginVisible: false,
+        loginResponse: action.response,
+      }
+      break
     case LOGOUT_REQUEST:
       nextState = {
         ...state,
@@ -253,34 +241,87 @@ export default function user(state = initialState, action) {
         logoutResponse: action.response,
       }
       break
-    case PASSWORD_UPDATE:
+    case REGISTER_REQUEST:
       nextState = {
         ...state,
-        oldPassword: action.oldPassword,
-        newPassword: action.newPassword,
-        newPasswordAgain: action.newPasswordAgain,
+        registerVisible: true,
       }
       break
-    case PASSWORD_REQUEST:
+    case REGISTER_SUCCEED:
       nextState = {
         ...state,
-        passwordVisible: true,
+        registerVisible: false,
+        registerResponse: action.response,
       }
       break
-    case PASSWORD_SUCCEED:
+    case REGISTER_FAILED:
       nextState = {
         ...state,
-        passwordVisible: false,
-        passwordResponse: action.response,
+        registerVisible: false,
+        registerResponse: action.response,
       }
       break
-    case PASSWORD_FAILED:
+    case RESET_PASSWORD_REQUEST:
       nextState = {
         ...state,
-        passwordVisible: false,
-        passwordResponse: action.response,
+        resetPasswordVisible: true,
       }
       break
+    case RESET_PASSWORD_SUCCEED:
+      nextState = {
+        ...state,
+        resetPasswordVisible: false,
+        resetPasswordResponse: action.response,
+      }
+      break
+    case RESET_PASSWORD_FAILED:
+      nextState = {
+        ...state,
+        resetPasswordVisible: false,
+        resetPasswordResponse: action.response,
+      }
+      break
+    case SYNC_REQUEST:
+      nextState = {
+        ...state,
+        syncVisible: true,
+      }
+      break
+    case SYNC_SUCCEED:
+      nextState = {
+        ...state,
+        syncVisible: false,
+        syncResponse: action.response,
+      }
+      break
+    case SYNC_FAILED:
+      nextState = {
+        ...state,
+        syncVisible: false,
+        syncResponse: action.response,
+      }
+      break
+    case UPDATE_PASSWORD_REQUEST:
+      nextState = {
+        ...state,
+        updatePasswordVisible: true,
+      }
+      break
+    case UPDATE_PASSWORD_SUCCEED:
+      nextState = {
+        ...state,
+        updatePasswordVisible: false,
+        updatePasswordResponse: action.response,
+      }
+      break
+    case UPDATE_PASSWORD_FAILED:
+      nextState = {
+        ...state,
+        updatePasswordVisible: false,
+        updatePasswordResponse: action.response,
+      }
+      break
+
     default:
       break
   }

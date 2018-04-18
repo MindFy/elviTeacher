@@ -1,16 +1,17 @@
 import {
-  ADDRESS_ADD_REQUEST,
+  ADD_REQUEST,
+
   FIND_ADDRESS_REQUEST,
 } from '../constants/index'
 
-export function addressAddRequest(data) {
+export function add(data) {
   return {
-    type: ADDRESS_ADD_REQUEST,
+    type: ADD_REQUEST,
     data,
   }
 }
 
-export function findAddressRequest(schema) {
+export function findAddress(schema) {
   return {
     type: FIND_ADDRESS_REQUEST,
     schema,
