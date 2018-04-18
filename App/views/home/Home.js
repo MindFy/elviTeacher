@@ -10,15 +10,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import {
-  findBannersRequest,
-  findAnnouncementRequest,
-  syncRequest,
-} from '../../actions/home'
-import {
-  userInfoUpdate,
-  userInfoRequest,
-} from '../../actions/me'
-import {
   common,
   storeSave,
   storeRead,
@@ -26,8 +17,8 @@ import {
 } from '../common'
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
-import graphqlFindBanners from '../../schemas/home'
-import graphqlFindAnnouncement from '../../schemas/announcement'
+import * as actions from '../../actions/index'
+import * as schemas from '../../schemas/index'
 
 class Home extends Component {
   constructor(props) {
@@ -44,10 +35,9 @@ class Home extends Component {
     this.showSyncResponse = false
     this.showFindBannersResponse = false
 
-    this.initialStoreUser()
-    dispatch(syncRequest())
-    dispatch(findAnnouncementRequest(graphqlFindAnnouncement()))
-    dispatch(findBannersRequest(graphqlFindBanners()))
+    // this.initialStoreUser()
+    // dispatch(findAnnouncementRequest(graphqlFindAnnouncement()))
+    // dispatch(findBannersRequest(graphqlFindBanners()))
   }
 
   initialStoreUser() {
@@ -55,9 +45,9 @@ class Home extends Component {
     storeRead(common.userInfo, (result) => {
       const objectResult = JSON.parse(result)
 
-      dispatch(userInfoUpdate(objectResult))
+      // dispatch(userInfoUpdate(objectResult))
       /* 发送获取用户个人信息请求 */
-      dispatch(userInfoRequest(graphqlGet(objectResult.id)))
+      // dispatch(userInfoRequest(graphqlGet(objectResult.id)))
     })
   }
 
@@ -207,14 +197,7 @@ class Home extends Component {
 
 function mapStateToProps(state) {
   return {
-    banners: state.home.banners,
     announcement: state.announcement.announcement,
-
-    findBannersVisible: state.home.findBannersVisible,
-    findBannersResponse: state.home.findBannersResponse,
-
-    syncVisible: state.home.syncVisible,
-    syncResponse: state.home.syncResponse,
   }
 }
 

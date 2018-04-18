@@ -8,41 +8,29 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native'
-import {
-  MessageBar,
-  MessageBarManager,
-} from 'react-native-message-bar'
+import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import {
-  registerUpdate,
-  registerRequest,
-  getVerificateCodeRequest,
-} from '../../actions/login'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import TextInputCode from './TextInputCode'
 import BtnLogin from './BtnLogin'
+import actions from '../../actions/index'
 
 class Register extends Component {
   constructor() {
     super()
     this.showRegisterResponse = false
     this.showGetVerificateCodeResponse = false
-
-    this.msgBar = undefined
-
-    this.codePress = this.codePress.bind(this)
-  }
-
-  componentDidMount() {
-    MessageBarManager.registerMessageBar(this.msgBar)
   }
 
   componentWillUnmount() {
-    const { dispatch, registerResponse, navigation } = this.props
-    MessageBarManager.unregisterMessageBar()
-    navigation.state.params.goBackBlock(registerResponse)
-    dispatch(registerUpdate('', '', '', ''))
+    const { dispatch } = this.props
+    dispatch(actions.registerUpdate({
+      mobile: '',
+      code: '',
+      password: '',
+      passwordAgain: '',
+    }))
   }
 
   onChange(event, tag) {
@@ -51,16 +39,16 @@ class Register extends Component {
 
     switch (tag) {
       case 'mobile':
-        dispatch(registerUpdate(text, code, password, passwordAgain))
+        dispatch(actions.registerUpdate({ mobile: text, code, password, passwordAgain }))
         break
       case 'code':
-        dispatch(registerUpdate(mobile, text, password, passwordAgain))
+        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
         break
       case 'password':
-        dispatch(registerUpdate(mobile, code, text, passwordAgain))
+        dispatch(actions.registerUpdate({ mobile, code, password: text, passwordAgain }))
         break
       case 'passwordAgain':
-        dispatch(registerUpdate(mobile, code, password, text))
+        dispatch(actions.registerUpdate({ mobile, code, password, passwordAgain: text }))
         break
       default:
         break
@@ -70,11 +58,11 @@ class Register extends Component {
   codePress(count) {
     const { dispatch, mobile } = this.props
     if (!common.reg.test(mobile)) {
-      this.showAlert('请输入正确的手机号', 'warning')
+      Toast.message('请输入正确的手机号')
       return
     }
     count()
-    dispatch(getVerificateCodeRequest({
+    dispatch(actions.getVerificateCode({
       mobile,
       service: 'register',
     }))
@@ -83,15 +71,15 @@ class Register extends Component {
   registerPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
     if (!mobile.length) {
-      this.showAlert('请输入手机号', 'warning')
+      Toast.message('请输入手机号')
       return
     }
     if (!password.length) {
-      this.showAlert('请设置密码', 'warning')
+      Toast.message('请设置密码')
       return
     }
     if (!passwordAgain.length) {
-      this.showAlert('请再次设置密码', 'warning')
+      Toast.message('请再次设置密码')
       return
     }
     if (password !== passwordAgain) {
@@ -99,21 +87,20 @@ class Register extends Component {
       return
     }
     if (!common.reg.test(mobile)) {
-      this.showAlert('请输入正确的手机号', 'warning')
+      Toast.message('请输入正确的手机号')
       return
     }
     if (password.length < 6) {
-      this.showAlert('密码至少为6位', 'warning')
+      Toast.message('密码至少为6位')
       return
     }
-    dispatch(registerRequest({
+    dispatch(actions.register({
       mobile,
       code,
       password,
     }))
   }
 
-  /* 请求结果处理 */
   handleGetVerificateCodeRequest() {
     const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
@@ -123,49 +110,36 @@ class Register extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        this.showAlert(getVerificateCodeResponse.result.message, 'success')
+        Toast.success(getVerificateCodeResponse.result.message)
       } else {
-        this.showAlert(getVerificateCodeResponse.error.message, 'error')
+        Toast.message(getVerificateCodeResponse.error.message)
       }
     }
   }
 
-  /* 请求结果处理 */
   handleRegisterRequest() {
-    const { isVisible, registerResponse, navigation } = this.props
-    if (!isVisible && !this.showRegisterResponse) return
+    const { registerVisible, registerResponse, navigation } = this.props
+    if (!registerVisible && !this.showRegisterResponse) return
 
-    if (isVisible) {
+    if (registerVisible) {
       this.showRegisterResponse = true
     } else {
       this.showRegisterResponse = false
+
       if (registerResponse.success) {
+        Toast.success('注册成功')
         navigation.goBack()
       } else {
-        this.showAlert(registerResponse.error.message, 'error')
+        Toast.fail(registerResponse.error.message)
       }
     }
-  }
-
-  showAlert(message, alertType) {
-    MessageBarManager.showAlert({
-      message,
-      alertType,
-      duration: common.messageBarDur,
-      messageStyle: {
-        marginTop: common.margin10,
-        alignSelf: 'center',
-        color: 'white',
-        fontSize: common.font14,
-      },
-    })
   }
 
   render() {
     this.handleGetVerificateCodeRequest()
     this.handleRegisterRequest()
 
-    const { navigation, mobile, code, password, passwordAgain, isVisible } = this.props
+    const { navigation, mobile, code, password, passwordAgain, registerVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -198,7 +172,7 @@ class Register extends Component {
             keyboardType="number-pad"
             value={code}
             maxLength={6}
-            codePress={this.codePress}
+            codePress={count => this.codePress(count)}
             onChange={e => this.onChange(e, 'code')}
           />
 
@@ -275,7 +249,7 @@ class Register extends Component {
               marginTop: common.margin40,
             }}
             title="注册"
-            disabled={isVisible}
+            disabled={registerVisible}
             onPress={() => this.registerPress()}
           />
         </ScrollView>
@@ -286,33 +260,28 @@ class Register extends Component {
             alignSelf: 'center',
             marginTop: common.sh / 2 - common.h50 / 2,
           }}
-          isVisible={isVisible}
+          isVisible={registerVisible}
           size={common.h50}
           type={'Wave'}
           color={common.btnTextColor}
-        />
-        <MessageBar
-          ref={(e) => {
-            this.msgBar = e
-          }}
         />
       </KeyboardAvoidingView>
     )
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    mobile: state.register.mobile,
-    code: state.register.code,
-    password: state.register.password,
-    passwordAgain: state.register.passwordAgain,
+    mobile: store.user.mobileRegister,
+    code: store.user.codeRegister,
+    password: store.user.passwordRegister,
+    passwordAgain: store.user.passwordAgainRegister,
 
-    isVisible: state.register.isVisible,
-    registerResponse: state.register.registerResponse,
+    registerVisible: store.user.registerVisible,
+    registerResponse: store.user.registerResponse,
 
-    getVerificateCodeVisible: state.register.getVerificateCodeVisible,
-    getVerificateCodeResponse: state.register.getVerificateCodeResponse,
+    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
+    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
   }
 }
 

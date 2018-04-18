@@ -12,13 +12,10 @@ import {
   MessageBarManager,
 } from 'react-native-message-bar'
 import Spinner from 'react-native-spinkit'
-import {
-  passwordUpdate,
-  passwordRequest,
-} from '../../actions/me'
 import { common } from '../common'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'
+import * as actions from '../../actions/index'
 
 class UpdatePassword extends Component {
   static navigationOptions(props) {
@@ -74,13 +71,13 @@ class UpdatePassword extends Component {
 
     switch (tag) {
       case 'oldPassword':
-        dispatch(passwordUpdate(text, newPassword, newPasswordAgain))
+        // dispatch(passwordUpdate(text, newPassword, newPasswordAgain))
         break
       case 'newPassword':
-        dispatch(passwordUpdate(oldPassword, text, newPasswordAgain))
+        // dispatch(passwordUpdate(oldPassword, text, newPasswordAgain))
         break
       case 'newPasswordAgain':
-        dispatch(passwordUpdate(oldPassword, newPassword, text))
+        // dispatch(passwordUpdate(oldPassword, newPassword, text))
         break
       default:
         break
@@ -217,12 +214,12 @@ class UpdatePassword extends Component {
 
 function mapStateToProps(state) {
   return {
-    oldPassword: state.me.oldPassword,
-    newPassword: state.me.newPassword,
-    newPasswordAgain: state.me.newPasswordAgain,
+    oldPassword: state.user.oldPassword,
+    newPassword: state.user.newPassword,
+    newPasswordAgain: state.user.newPasswordAgain,
 
-    passwordVisible: state.me.passwordVisible,
-    passwordResponse: state.me.passwordResponse,
+    passwordVisible: state.user.passwordVisible,
+    passwordResponse: state.user.passwordResponse,
   }
 }
 

@@ -12,7 +12,6 @@
     "native-echarts": "^0.4.0",
     "react": "^16.3.0-alpha.1",
     "react-native": "0.54.2",
-    "react-native-message-bar": "1.6.0",
     "react-native-scrollable-tab-view": "^0.8.0",
     "react-native-spinkit": "1.1.1",
     "react-native-swiper": "^1.5.13",

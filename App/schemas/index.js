@@ -10,7 +10,7 @@ import findAssetList from './asset'
 import findAnnouncement from './announcement'
 import findAddress from './address'
 
-exports.module = {
+const schemas = {
   findUser,
   findPaymentList,
   findDelegateList,
@@ -21,3 +21,4 @@ exports.module = {
   findAnnouncement,
   findAddress,
 }
+export default schemas

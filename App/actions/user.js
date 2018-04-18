@@ -1,108 +1,99 @@
-import {
-  CHECK_VERIFICATE_CODE_REQUEST,
-
-  GET_VERIFICATE_CODE_REQUEST,
-
-  GET_USER_REQUEST,
-  GET_USER_UPDATE,
-
-  ID_CARD_AUTH_REQUEST,
-
-  IS_EXIST_REQUEST,
-
-  LOGIN_REQUEST,
-
-  LOGOUT_REQUEST,
-
-  REGISTER_REQUEST,
-
-  RESET_PASSWORD_REQUEST,
-
-  SYNC_REQUEST,
-
-  UPDATE_PASSWORD_REQUEST,
-} from '../constants/index'
+import * as constants from '../constants/index'
 
 export function checkVerificateCode(data) {
   return {
-    type: CHECK_VERIFICATE_CODE_REQUEST,
+    type: constants.CHECK_VERIFICATE_CODE_REQUEST,
     data,
   }
 }
 
 export function getVerificateCode(data) {
   return {
-    type: GET_VERIFICATE_CODE_REQUEST,
+    type: constants.GET_VERIFICATE_CODE_REQUEST,
     data,
   }
 }
 
 export function findUser(schema) {
   return {
-    type: GET_USER_REQUEST,
+    type: constants.GET_USER_REQUEST,
     schema,
   }
 }
 
 export function findUserUpdate(user) {
   return {
-    type: GET_USER_UPDATE,
+    type: constants.GET_USER_UPDATE,
     user,
   }
 }
 
 export function idCardAuth(data) {
   return {
-    type: ID_CARD_AUTH_REQUEST,
+    type: constants.ID_CARD_AUTH_REQUEST,
     data,
   }
 }
 
 export function isExist(data) {
   return {
-    type: IS_EXIST_REQUEST,
+    type: constants.IS_EXIST_REQUEST,
     data,
   }
 }
 
 export function login(data) {
   return {
-    type: LOGIN_REQUEST,
+    type: constants.LOGIN_REQUEST,
+    data,
+  }
+}
+
+export function loginUpdate(data) {
+  return {
+    type: constants.LOGIN_UPDATE,
     data,
   }
 }
 
 export function logout(data) {
   return {
-    type: LOGOUT_REQUEST,
+    type: constants.LOGOUT_REQUEST,
     data,
   }
 }
 
 export function register(data) {
   return {
-    type: REGISTER_REQUEST,
+    type: constants.REGISTER_REQUEST,
+    data,
+  }
+}
+
+export function registerUpdate(data) {
+  return {
+    type: constants.REGISTER_UPDATE,
     data,
   }
 }
 
 export function resetPassword(data) {
   return {
-    type: RESET_PASSWORD_REQUEST,
+    type: constants.RESET_PASSWORD_REQUEST,
     data,
   }
 }
 
 export function sync(data) {
   return {
-    type: SYNC_REQUEST,
+    type: constants.SYNC_REQUEST,
     data,
   }
 }
 
 export function updatePassword(data) {
   return {
-    type: UPDATE_PASSWORD_REQUEST,
+    type: constants.UPDATE_PASSWORD_REQUEST,
     data,
   }
 }

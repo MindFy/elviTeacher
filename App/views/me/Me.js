@@ -7,19 +7,15 @@ import {
 } from 'react-native'
 import Spinner from 'react-native-spinkit'
 import {
-  userInfoUpdate,
-  userInfoRequest,
-  logoutRequest,
-} from '../../actions/me'
-import {
   common,
   storeSave,
   storeRead,
   storeDelete,
 } from '../common'
-import graphqlGet from '../../schemas/user'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
+import * as actions from '../../actions/index'
+import * as schemas from '../../schemas/index'
 
 class Me extends Component {
   static navigationOptions() {
@@ -41,7 +37,7 @@ class Me extends Component {
     super(props)
 
     this.showLogoutResponse = false
-    this.showUserInfoResponse = false
+    this.showFindUserResponse = false
 
     this.logoutPress = this.logoutPress.bind(this)
   }
@@ -55,9 +51,9 @@ class Me extends Component {
     storeRead(common.userInfo, (result) => {
       const objectResult = JSON.parse(result)
 
-      dispatch(userInfoUpdate(objectResult))
+      dispatch(actions.findUserUpdate(objectResult))
       /* 发送获取用户个人信息请求 */
-      dispatch(userInfoRequest(graphqlGet(objectResult.id)))
+      dispatch(actions.findUser(schemas.findUser(objectResult.id)))
     })
   }
 
@@ -71,22 +67,22 @@ class Me extends Component {
 
   logoutPress() {
     const { dispatch } = this.props
-    dispatch(logoutRequest())
+    // dispatch(logoutRequest())
   }
 
   handleUserInfoRequest() {
-    const { dispatch, userInfoVisible, userInfoResponse } = this.props
-    if (!userInfoVisible && !this.showUserInfoResponse) return
+    const { dispatch, findUserVisible, findUserResponse } = this.props
+    if (!findUserVisible && !this.showFindUserResponse) return
 
-    if (userInfoVisible) {
-      this.showUserInfoResponse = true
+    if (findUserVisible) {
+      this.showFindUserResponse = true
     } else {
-      this.showUserInfoResponse = false
-      if (userInfoResponse.success) {
-        const responseUserInfo = userInfoResponse.result.data.user
+      this.showFindUserResponse = false
+      if (findUserResponse.success) {
+        const responseUserInfo = findUserResponse.result.data.user
         storeSave(common.userInfo, responseUserInfo, (error) => {
           if (!error) {
-            dispatch(userInfoUpdate(responseUserInfo))
+            dispatch(actions.findUserUpdate(responseUserInfo))
           }
         })
       }
@@ -105,7 +101,7 @@ class Me extends Component {
         storeDelete(common.userInfo, (error) => {
           if (!error) {
             // 清除页面数据
-            dispatch(userInfoUpdate(undefined))
+            dispatch(actions.findUserUpdate(undefined))
             // 返回登录页
             this.navigateLogin()
           } else {
@@ -206,12 +202,12 @@ class Me extends Component {
 
 function mapStateToProps(state) {
   return {
-    userInfo: state.me.userInfo,
-    userInfoVisible: state.me.userInfoVisible,
-    userInfoResponse: state.me.userInfoResponse,
+    userInfo: state.user.userInfo,
+    findUserVisible: state.user.findUserVisible,
+    findUserResponse: state.user.findUserResponse,
 
-    logoutVisible: state.me.logoutVisible,
-    logoutResponse: state.me.logoutResponse,
+    logoutVisible: state.user.logoutVisible,
+    logoutResponse: state.user.logoutResponse,
   }
 }
 

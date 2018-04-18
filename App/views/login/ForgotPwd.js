@@ -5,41 +5,29 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native'
-import {
-  MessageBar,
-  MessageBarManager,
-} from 'react-native-message-bar'
+import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import {
-  getVerificateCodeRequest,
-  checkVerificateCodeRequest,
-  resetPasswordUpdate,
-} from '../../actions/login'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import TextInputCode from './TextInputCode'
 import BtnLogin from './BtnLogin'
+import actions from '../../actions/index'
 
 class ForgotPwd extends Component {
   constructor() {
     super()
     this.showGetVerificateCodeResponse = false
     this.showCheckVerificateCodeResponse = false
-
-    this.msgBar = undefined
-
-    this.codePress = this.codePress.bind(this)
-  }
-
-  componentDidMount() {
-    MessageBarManager.registerMessageBar(this.msgBar)
   }
 
   componentWillUnmount() {
-    const { dispatch, navigation } = this.props
-    MessageBarManager.unregisterMessageBar()
-    navigation.state.params.goBackBlock()
-    dispatch(resetPasswordUpdate('', '', '', ''))
+    const { dispatch } = this.props
+    dispatch(actions.registerUpdate({
+      mobile: '',
+      code: '',
+      password: '',
+      passwordAgain: '',
+    }))
   }
 
   onChange(event, tag) {
@@ -48,10 +36,10 @@ class ForgotPwd extends Component {
 
     switch (tag) {
       case 'mobile':
-        dispatch(resetPasswordUpdate(text, code, '', ''))
+        dispatch(actions.registerUpdate({ mobile: text, code, password: '', passwordAgain: '' }))
         break
       case 'code':
-        dispatch(resetPasswordUpdate(mobile, text, '', ''))
+        dispatch(actions.registerUpdate({ mobile, code: text, password: '', passwordAgain: '' }))
         break
       default:
         break
@@ -61,11 +49,11 @@ class ForgotPwd extends Component {
   codePress(count) {
     const { dispatch, mobile } = this.props
     if (!common.reg.test(mobile)) {
-      this.showAlert('请输入正确的手机号', 'warning')
+      Toast.message('请输入正确的手机号')
       return
     }
     count()
-    dispatch(getVerificateCodeRequest({
+    dispatch(actions.getVerificateCode({
       mobile,
       service: 'reset',
     }))
@@ -74,18 +62,18 @@ class ForgotPwd extends Component {
   nextPress() {
     const { dispatch, mobile, code } = this.props
     if (!mobile.length) {
-      this.showAlert('请输入手机号', 'warning')
+      Toast.message('请输入手机号')
       return
     }
     if (!code.length) {
-      this.showAlert('请输入验证码', 'warning')
+      Toast.message('请输入验证码')
       return
     }
     if (!common.reg.test(mobile)) {
-      this.showAlert('请输入正确的手机号', 'warning')
+      Toast.message('请输入正确的手机号')
       return
     }
-    dispatch(checkVerificateCodeRequest({
+    dispatch(actions.checkVerificateCode({
       mobile,
       service: 'reset',
       code,
@@ -102,9 +90,9 @@ class ForgotPwd extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        this.showAlert(getVerificateCodeResponse.result.message, 'success')
+        Toast.success(getVerificateCodeResponse.result.message)
       } else {
-        this.showAlert(getVerificateCodeResponse.error.message, 'error')
+        Toast.fail(getVerificateCodeResponse.error.message)
       }
     }
   }
@@ -119,31 +107,11 @@ class ForgotPwd extends Component {
     } else {
       this.showCheckVerificateCodeResponse = false
       if (checkVerificateCodeResponse.success) {
-        navigation.navigate('ConfirmPwd', {
-          goBackBlock: () => this.goBackBlock(),
-        })
+        navigation.navigate('ConfirmPwd')
       } else {
-        this.showAlert(checkVerificateCodeResponse.error.message, 'error')
+        Toast.fail(checkVerificateCodeResponse.error.message)
       }
     }
-  }
-
-  showAlert(message, alertType) {
-    MessageBarManager.showAlert({
-      message,
-      alertType,
-      duration: common.messageBarDur,
-      messageStyle: {
-        marginTop: common.margin10,
-        alignSelf: 'center',
-        color: 'white',
-        fontSize: common.font14,
-      },
-    })
-  }
-
-  goBackBlock() {
-    MessageBarManager.registerMessageBar(this.msgBar)
   }
 
   render() {
@@ -183,7 +151,7 @@ class ForgotPwd extends Component {
             keyboardType="number-pad"
             value={code}
             maxLength={6}
-            codePress={this.codePress}
+            codePress={count => this.codePress(count)}
             onChange={e => this.onChange(e, 'code')}
           />
 
@@ -208,26 +176,21 @@ class ForgotPwd extends Component {
           type={'Wave'}
           color={common.btnTextColor}
         />
-        <MessageBar
-          ref={(e) => {
-            this.msgBar = e
-          }}
-        />
       </KeyboardAvoidingView>
     )
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    mobile: state.resetPassword.mobile,
-    code: state.resetPassword.code,
+    mobile: store.user.mobileRegister,
+    code: store.user.codeRegister,
 
-    getVerificateCodeVisible: state.resetPassword.getVerificateCodeVisible,
-    getVerificateCodeResponse: state.resetPassword.getVerificateCodeResponse,
+    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
+    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
 
-    checkVerificateCodeVisible: state.resetPassword.checkVerificateCodeVisible,
-    checkVerificateCodeResponse: state.resetPassword.checkVerificateCodeResponse,
+    checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
+    checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
   }
 }
 

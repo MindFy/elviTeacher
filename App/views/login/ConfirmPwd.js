@@ -6,40 +6,27 @@ import {
   DeviceEventEmitter,
   KeyboardAvoidingView,
 } from 'react-native'
-import {
-  MessageBar,
-  MessageBarManager,
-} from 'react-native-message-bar'
+import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import {
-  resetPasswordUpdate,
-  resetPasswordRequest,
-} from '../../actions/login'
 import { common } from '../common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
+import actions from '../../actions/index'
 
 class ConfirmPwd extends Component {
   constructor() {
     super()
     this.showResetPasswordResponse = false
-
-    this.msgBar = undefined
-  }
-
-  componentDidMount() {
-    MessageBarManager.registerMessageBar(this.msgBar)
   }
 
   componentWillUnmount() {
-    const { dispatch, mobile, code, resetPasswordResponse } = this.props
-    MessageBarManager.unregisterMessageBar()
-    if (resetPasswordResponse && resetPasswordResponse.success) {
-      DeviceEventEmitter.emit(common.resetPasswordGoBack)
-      dispatch(resetPasswordUpdate('', '', '', ''))
-    } else {
-      dispatch(resetPasswordUpdate(mobile, code, '', ''))
-    }
+    const { dispatch, mobile, code } = this.props
+    dispatch(actions.registerUpdate({
+      mobile,
+      code,
+      password: '',
+      passwordAgain: '',
+    }))
   }
 
   onChange(event, tag) {
@@ -48,10 +35,10 @@ class ConfirmPwd extends Component {
 
     switch (tag) {
       case 'password':
-        dispatch(resetPasswordUpdate(mobile, code, text, passwordAgain))
+        dispatch(actions.registerUpdate({ mobile, code, password: text, passwordAgain }))
         break
       case 'passwordAgain':
-        dispatch(resetPasswordUpdate(mobile, code, password, text))
+        dispatch(actions.registerUpdate({ mobile, code, password, passwordAgain: text }))
         break
       default:
         break
@@ -61,63 +48,49 @@ class ConfirmPwd extends Component {
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
     if (!password.length) {
-      this.showAlert('请设置密码', 'warning')
+      Toast.message('请设置密码')
       return
     }
     if (!passwordAgain.length) {
-      this.showAlert('请再次设置密码', 'warning')
+      Toast.message('请再次设置密码')
       return
     }
     if (password !== passwordAgain) {
-      this.showAlert('两次密码输入不一致', 'warning')
+      Toast.message('两次密码输入不一致')
       return
     }
     if (password.length < 6) {
-      this.showAlert('密码至少为6位', 'warning')
+      Toast.message('密码至少为6位')
       return
     }
-    dispatch(resetPasswordRequest({
+    dispatch(actions.resetPassword({
       mobile,
       code,
       newpassword: password,
     }))
   }
 
-  /* 请求结果处理 */
   HandleResetPasswordRequest() {
-    const { isVisible, resetPasswordResponse, navigation } = this.props
-    if (!isVisible && !this.showResetPasswordResponse) return
+    const { resetPasswordVisible, resetPasswordResponse, navigation } = this.props
+    if (!resetPasswordVisible && !this.showResetPasswordResponse) return
 
-    if (isVisible) {
+    if (resetPasswordVisible) {
       this.showResetPasswordResponse = true
     } else {
       this.showResetPasswordResponse = false
       if (resetPasswordResponse.success) {
+        Toast.success('重置密码成功')
         navigation.goBack('Login')
       } else {
-        this.showAlert(resetPasswordResponse.error.message, 'error')
+        Toast.fail(resetPasswordResponse.error.message)
       }
     }
-  }
-
-  showAlert(message, alertType) {
-    MessageBarManager.showAlert({
-      message,
-      alertType,
-      duration: common.messageBarDur,
-      messageStyle: {
-        marginTop: common.margin10,
-        alignSelf: 'center',
-        color: 'white',
-        fontSize: common.font14,
-      },
-    })
   }
 
   render() {
     this.HandleResetPasswordRequest()
 
-    const { password, passwordAgain, isVisible } = this.props
+    const { password, passwordAgain, resetPasswordVisible } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -162,7 +135,7 @@ class ConfirmPwd extends Component {
             }}
             title="确定"
             onPress={() => this.confirmPress()}
-            disabled={isVisible}
+            disabled={resetPasswordVisible}
           />
         </ScrollView>
 
@@ -172,30 +145,25 @@ class ConfirmPwd extends Component {
             alignSelf: 'center',
             marginTop: common.sh / 2 - common.h50 / 2,
           }}
-          isVisible={isVisible}
+          isVisible={resetPasswordVisible}
           size={common.h50}
           type={'Wave'}
           color={common.btnTextColor}
-        />
-        <MessageBar
-          ref={(e) => {
-            this.msgBar = e
-          }}
         />
       </KeyboardAvoidingView>
     )
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    mobile: state.resetPassword.mobile,
-    code: state.resetPassword.code,
-    password: state.resetPassword.password,
-    passwordAgain: state.resetPassword.passwordAgain,
+    mobile: store.user.mobileRegister,
+    code: store.user.codeRegister,
+    password: store.user.passwordRegister,
+    passwordAgain: store.user.passwordAgainRegister,
 
-    isVisible: state.resetPassword.isVisible,
-    resetPasswordResponse: state.resetPassword.resetPasswordResponse,
+    resetPasswordVisible: store.user.resetPasswordVisible,
+    resetPasswordResponse: store.user.resetPasswordResponse,
   }
 }
 

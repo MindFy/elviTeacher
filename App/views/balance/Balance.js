@@ -8,12 +8,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import {
-  findAssetListRequest,
-} from '../../actions/recharge'
 import { common } from '../common'
 import BalanceCell from './BalanceCell'
-import graphqlFindAssetList from '../../schemas/asset'
+import * as actions from '../../actions/index'
+import * as schemas from '../../schemas/index'
 
 class Balance extends Component {
   static navigationOptions(props) {

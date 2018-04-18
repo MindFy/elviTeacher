@@ -7,7 +7,7 @@ import {
   ListView,
 } from 'react-native'
 import ScrollableTab from 'react-native-scrollable-tab-view'
-import getRoseRequest from '../../actions/market'
+import * as actions from '../../actions/index'
 import { common } from '../common'
 import MarketCell from './MarketCell'
 
@@ -35,7 +35,7 @@ class Market extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
-    dispatch(getRoseRequest())
+    // dispatch(getRoseRequest())
   }
 
   componentDidMount() { }

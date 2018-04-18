@@ -11,18 +11,11 @@ import {
 } from 'react-native'
 import Menu from 'teaset/components/Menu/Menu'
 import Toast from 'teaset/components/Toast/Toast'
-import {
-  buyOrSellUpdate,
-  TextInputDelegateUpdate,
-  getShelvesRequest,
-  latestDealsRequest,
-  currentTokensUpdate,
-  delegateCreateRequest,
-} from '../../actions/transactions'
 import { common } from '../common'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'
+import * as actions from '../../actions/index'
 
 class Transactions extends Component {
   static navigationOptions() {
@@ -69,14 +62,14 @@ class Transactions extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
-    dispatch(getShelvesRequest({
-      goods_id: goods.id,
-      currency_id: currency.id,
-    }))
-    dispatch(latestDealsRequest({
-      goods_id: goods.id,
-      currency_id: currency.id,
-    }))
+    // dispatch(getShelvesRequest({
+    //   goods_id: goods.id,
+    //   currency_id: currency.id,
+    // }))
+    // dispatch(latestDealsRequest({
+    //   goods_id: goods.id,
+    //   currency_id: currency.id,
+    // }))
   }
 
   componentDidMount() { }
@@ -90,16 +83,16 @@ class Transactions extends Component {
     let a
 
     if (tag === 'price') {
-      dispatch(TextInputDelegateUpdate(text, quantity, amount))
+      // dispatch(TextInputDelegateUpdate(text, quantity, amount))
     } else if (tag === 'quantity') {
       n = !text.length ? 0 : parseInt(text, 0)
       a = p * n === 0 ? amount : p * n
-      dispatch(TextInputDelegateUpdate(price, text, `${a}`))
+      // dispatch(TextInputDelegateUpdate(price, text, `${a}`))
     } else if (tag === 'amount') {
       a = !text.length ? 0 : parseInt(text, 0)
       n = a / p === 0 ? quantity : Number(a / p).toFixed(0)
 
-      dispatch(TextInputDelegateUpdate(price, `${n}`, text))
+      // dispatch(TextInputDelegateUpdate(price, `${n}`, text))
     }
   }
 
@@ -109,25 +102,25 @@ class Transactions extends Component {
       {
         title: `${tokenList[0].name}/${tokenList[1].name}`,
         onPress: () => {
-          dispatch(currentTokensUpdate(tokenList[0], tokenList[1]))
+          // dispatch(actions.(tokenList[0], tokenList[1]))
         },
       },
       {
         title: `${tokenList[0].name}/${tokenList[2].name}`,
         onPress: () => {
-          dispatch(currentTokensUpdate(tokenList[0], tokenList[2]))
+          // dispatch(currentTokensUpdate(tokenList[0], tokenList[2]))
         },
       },
       {
         title: `${tokenList[0].name}/${tokenList[3].name}`,
         onPress: () => {
-          dispatch(currentTokensUpdate(tokenList[0], tokenList[3]))
+          // dispatch(currentTokensUpdate(tokenList[0], tokenList[3]))
         },
       },
       {
         title: `${tokenList[1].name}/${tokenList[2].name}`,
         onPress: () => {
-          dispatch(currentTokensUpdate(tokenList[1], tokenList[2]))
+          // dispatch(currentTokensUpdate(tokenList[1], tokenList[2]))
         },
       },
     ]
@@ -140,20 +133,20 @@ class Transactions extends Component {
   topBarPress(b) {
     const { dispatch, buyOrSell } = this.props
     if (buyOrSell !== b) {
-      dispatch(buyOrSellUpdate(b))
-      dispatch(TextInputDelegateUpdate('', '', ''))
+      // dispatch(buyOrSellUpdate(b))
+      // dispatch(TextInputDelegateUpdate('', '', ''))
     }
   }
 
   buyOrSellPress() {
     const { dispatch, goods, currency, buyOrSell, price, quantity } = this.props
-    dispatch(delegateCreateRequest({
-      currency_id: goods.id,
-      goods_id: currency.id,
-      direct: buyOrSell ? 'buy' : 'sell',
-      price: Number(price),
-      quantity: Number(quantity),
-    }))
+    // dispatch(delegateCreateRequest({
+    //   currency_id: goods.id,
+    //   goods_id: currency.id,
+    //   direct: buyOrSell ? 'buy' : 'sell',
+    //   price: Number(price),
+    //   quantity: Number(quantity),
+    // }))
   }
 
   handleDelegateCreateRequest() {

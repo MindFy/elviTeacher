@@ -33,17 +33,20 @@ import {
   checkVerificateCode,
   getVerificateCode,
   findUser,
+  findUserUpdate,
   idCardAuth,
   isExist,
   login,
+  loginUpdate,
   logout,
   register,
+  registerUpdate,
   resetPassword,
   sync,
   updatePassword,
 } from './user'
 
-exports.module = {
+const actions = {
   add,
   findAddress,
 
@@ -76,12 +79,16 @@ exports.module = {
   checkVerificateCode,
   getVerificateCode,
   findUser,
+  findUserUpdate,
   idCardAuth,
   isExist,
   login,
+  loginUpdate,
   logout,
   register,
+  registerUpdate,
   resetPassword,
   sync,
   updatePassword,
 }
+export default actions
