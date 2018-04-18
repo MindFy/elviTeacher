@@ -1,4 +1,4 @@
-export default function graphqlFindAddress(uid) {
+export default function findAddress(uid) {
   return `{
     find_address(
         skip: 0,

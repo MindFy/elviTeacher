@@ -25,3 +25,21 @@ export function* findPaymentList() {
     }
   }
 }
+/* 充值接口 */
+export function* recharge() {
+  while (true) {
+    const request = yield take(constants.RECHARGE_REQUEST)
+    const response = yield call(api.recharge, request.data)
+    if (response.success) yield put({ type: constants.RECHARGE_SUCCEED, response })
+    else yield put({ type: constants.RECHARGE_FAILED, response })
+  }
+}
+/* 提币操作 */
+export function* withdraw() {
+  while (true) {
+    const request = yield take(constants.CANCEL_WITH_DRAW_REQUEST)
+    const response = yield call(api.withdraw, request.data)
+    if (response.success) yield put({ type: constants.WITH_DRAW_SUCCEED, response })
+    else yield put({ type: constants.WITH_DRAW_FAILED, response })
+  }
+}

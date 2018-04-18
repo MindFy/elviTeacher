@@ -1,4 +1,4 @@
-export default function graphqlFindAnnouncement() {
+export default function findAnnouncement() {
   return `{
     find_announcement{
         id,

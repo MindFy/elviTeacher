@@ -1,4 +1,4 @@
-export default function graphqlFindAssetList(userId) {
+export default function findAssetList(userId) {
   return `{
     find_asset(
     where:{
