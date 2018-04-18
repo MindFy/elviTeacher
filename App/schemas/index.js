@@ -1,5 +1,5 @@
 import findPaymentList from './payment'
-import getUser from './user'
+import findUser from './user'
 import {
   findDelegateList,
   findDelegateSelf,
@@ -11,7 +11,7 @@ import findAnnouncement from './announcement'
 import findAddress from './address'
 
 exports.module = {
-  getUser,
+  findUser,
   findPaymentList,
   findDelegateList,
   findDelegateSelf,

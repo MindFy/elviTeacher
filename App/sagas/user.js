@@ -23,7 +23,7 @@ export function* getVerificateCode() {
   }
 }
 /* 获取单个用户的信息 */
-export function* getUser() {
+export function* findUser() {
   while (true) {
     const request = yield take(constants.GET_USER_REQUEST)
     const response = yield call(api.graphql, request.schema)

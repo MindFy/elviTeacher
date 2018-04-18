@@ -32,7 +32,7 @@ import {
 import {
   checkVerificateCode,
   getVerificateCode,
-  getUser,
+  findUser,
   idCardAuth,
   isExist,
   login,
@@ -75,7 +75,7 @@ exports.module = {
 
   checkVerificateCode,
   getVerificateCode,
-  getUser,
+  findUser,
   idCardAuth,
   isExist,
   login,

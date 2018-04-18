@@ -13,7 +13,7 @@ export default function* rootSaga() {
   yield [
     fork(user.checkVerificateCode),
     fork(user.getVerificateCode),
-    fork(user.getUser),
+    fork(user.findUser),
     fork(user.idCardAuth),
     fork(user.isExist),
     fork(user.login),

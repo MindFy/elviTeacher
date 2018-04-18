@@ -37,14 +37,14 @@ export function getVerificateCode(data) {
   }
 }
 
-export function getUser(schema) {
+export function findUser(schema) {
   return {
     type: GET_USER_REQUEST,
     schema,
   }
 }
 
-export function getUserUpdate(user) {
+export function findUserUpdate(user) {
   return {
     type: GET_USER_UPDATE,
     user,

@@ -1,4 +1,4 @@
-export default function graphqlGet(id) {
+export default function findUser(id) {
   return `{
     user(id:"${id}"){
         id,

@@ -63,8 +63,8 @@ const initialState = {
   getVerificateCodeVisible: false,
   getVerificateCodeResponse: undefined,
 
-  getUserVisible: false,
-  getUserResponse: undefined,
+  findUserVisible: false,
+  findUserResponse: undefined,
 
   idCardAuthVisible: false,
   idCardAuthResponse: undefined,
@@ -138,21 +138,21 @@ export default function user(state = initialState, action) {
     case GET_USER_REQUEST:
       nextState = {
         ...state,
-        getUserVisible: true,
+        findUserVisible: true,
       }
       break
     case GET_USER_SUCCEED:
       nextState = {
         ...state,
-        getUserVisible: false,
-        getUserResponse: action.response,
+        findUserVisible: false,
+        findUserResponse: action.response,
       }
       break
     case GET_USER_FAILED:
       nextState = {
         ...state,
-        getUserVisible: false,
-        getUserResponse: action.response,
+        findUserVisible: false,
+        findUserResponse: action.response,
       }
       break
     case GET_USER_UPDATE:
