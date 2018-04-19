@@ -18,6 +18,8 @@ const common = {
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
   greenColor: 'rgb(36,199,139)',
+  blackColor: 'rgb(24,27,42)',
+
   navBgColor: 'rgb(38,43,65)', // 导航栏背景色
   borderColor: 'rgb(52,60,92)',
   borderColor05: 'rgba(52,60,92,0.5)',
@@ -87,6 +89,7 @@ const common = {
   reg: /^1[0-9]{10}/, // 手机号正则
 
   textInputMaxLenPwd: 20,
+  textInputMaxLenIdNo: 18,
 
   messageBarDur: 2000,
 }

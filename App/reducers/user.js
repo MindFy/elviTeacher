@@ -7,6 +7,10 @@ import {
 const initialState = {
   user: undefined,
 
+  name: '',
+  idNo: '',
+  idCardImages: {},
+
   mobileLogin: '',
   passwordLogin: '',
 
@@ -55,6 +59,7 @@ const initialState = {
 
 export default function user(state = initialState, action) {
   let nextState = state
+  console.log('action->', action)
 
   switch (action.type) {
     case constants.CHECK_VERIFICATE_CODE_REQUEST:
@@ -143,6 +148,14 @@ export default function user(state = initialState, action) {
         ...state,
         idCardAuthVisible: false,
         idCardAuthResponse: action.response,
+      }
+      break
+    case constants.ID_CARD_AUTH_UPDATE:
+      nextState = {
+        ...state,
+        name: action.data.name,
+        idNo: action.data.idNo,
+        idCardImages: action.data.idCardImages,
       }
       break
     case constants.IS_EXIST_REQUEST:

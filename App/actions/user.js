@@ -35,6 +35,13 @@ export function idCardAuth(data) {
   }
 }
 
+export function idCardAuthUpdate(data) {
+  return {
+    type: constants.ID_CARD_AUTH_UPDATE,
+    data,
+  }
+}
+
 export function isExist(data) {
   return {
     type: constants.IS_EXIST_REQUEST,
