@@ -17,7 +17,6 @@ import SelectImage from './SelectImage'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'
 import actions from '../../actions/index'
-import schemas from '../../schemas/index'
 
 class Authentication extends Component {
   static navigationOptions(props) {

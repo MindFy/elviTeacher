@@ -25,7 +25,43 @@ const initialState = {
   ],
 
   shelves: [],
-  depthMap: undefined,
+  depthMap: {
+    buy: [
+      {
+        price: 103,
+        sum_quantity: 10,
+        totalamount: 6,
+      },
+      {
+        price: 105,
+        sum_quantity: 10,
+        totalamount: 10,
+      },
+      {
+        price: 110,
+        sum_quantity: 10,
+        totalamount: 20,
+      },
+    ],
+    sell: [
+      {
+        price: 90,
+        sum_quantity: 8,
+        totalamount: 18,
+      },
+      {
+        price: 92,
+        sum_quantity: 8,
+        totalamount: 8,
+      },
+      {
+        price: 95,
+        sum_quantity: 10,
+        totalamount: 10,
+      },
+    ],
+    lastprice: 100,
+  },
 
   allCancelVisible: false,
   allCancelResponse: undefined,

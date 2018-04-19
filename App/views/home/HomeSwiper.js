@@ -35,7 +35,7 @@ export default class HomeSwiper extends Component {
 
   render() {
     const images = []
-    const { banners } = this.props
+    const { banners, imgHashApi } = this.props
     for (let i = 0; i < banners.length; i++) {
       const element = banners[i]
       images.push(
@@ -47,7 +47,7 @@ export default class HomeSwiper extends Component {
           }}
           resizeMode="stretch"
           resizeMethod="scale"
-          source={require('../../assets/VCG21gic.png')}
+          source={{ uri: `${imgHashApi}${element.imghash}` }}
         />,
       )
     }

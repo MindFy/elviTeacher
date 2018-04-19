@@ -1,11 +1,9 @@
-import {
-  FIND_BANNERS_REQUEST,
-  FIND_BANNERS_SUCCEED,
-  FIND_ADDRESS_FAILED,
-} from '../constants/index'
+import * as constants from '../constants/index'
+import * as api from '../services/api'
 
 const initialState = {
   banners: [],
+  imgHashApi: api.imgHashApi,
 
   findBannersVisible: false,
   findBannersResponse: undefined,
@@ -15,25 +13,23 @@ export default function banners(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case FIND_BANNERS_REQUEST:
+    case constants.FIND_BANNERS_REQUEST:
       nextState = {
         ...state,
         findBannersVisible: true,
       }
       break
-    case FIND_BANNERS_SUCCEED:
+    case constants.FIND_BANNERS_SUCCEED:
       nextState = {
         ...state,
         findBannersVisible: false,
-        findBannersResponse: action.response,
-        banners: action.response.result.data.find_banners,
+        banners: action.banners,
       }
       break
-    case FIND_ADDRESS_FAILED:
+    case constants.FIND_ADDRESS_FAILED:
       nextState = {
         ...state,
         findBannersVisible: false,
-        findBannersResponse: action.response,
       }
       break
     default:

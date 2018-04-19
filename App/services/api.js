@@ -64,6 +64,7 @@ export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
 export const cancelWithdraw = makePostAPI('/1.0/payment/cancelWithdraw')
 export const recharge = makePostAPI('/1.0/payment/recharge')
 export const withdraw = makePostAPI('/1.0/payment/withdraw')
+export const qrApi = `${API_ROOT}/qr/`
 // Delegate
 export const allCancel = makePostAPI('/1.0/app/delegate/allCancel')
 export const cancel = makePostAPI('/1.0/app/delegate/cancel')
@@ -74,6 +75,9 @@ export const getShelves = makePostAPI('/1.0/app/delegate/getShelves')
 export const getRose = makePostAPI('/1.0/app/dealstat/getRose')
 // Deal
 export const latestDeals = makePostAPI('/1.0/app/deal/latestDeals')
+// Banners
+export const imgHashApi = `${API_ROOT}/1.0/fileProc/`
+
 // Asset
 export const createAddress = makePostAPI('/1.0/app/asset/createAddress')
 export const getAssets = makePostAPI('/1.0/app/asset/getAssets')

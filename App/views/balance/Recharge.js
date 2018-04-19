@@ -4,12 +4,18 @@ import {
   View,
   Text,
   Image,
+  Clipboard,
   StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
+import {
+  Toast,
+  Overlay,
+} from 'teaset'
 import { common } from '../common'
 import SelectToken from './SelectToken'
+import actions from '../../actions/index'
 
 class Recharge extends Component {
   static navigationOptions(props) {
@@ -57,7 +63,86 @@ class Recharge extends Component {
     }
   }
 
-  componentDidMount() { }
+  componentWillUnmount() {
+    const { dispatch } = this.props
+    dispatch(actions.selectTokenUpdate({
+      selectedToken: common.selectedTokenDefault,
+      tokenListSelected: false,
+    }))
+  }
+
+  clipPress() {
+    const { selectedToken } = this.props
+    Clipboard.setString(selectedToken.rechargeaddr)
+    Toast.message('以复制到剪贴板')
+  }
+
+  qrPress() {
+    const { selectedToken, qrApi } = this.props
+    const overlayView = (
+      <Overlay.View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <View
+          style={{
+            backgroundColor: '#fff',
+            top: -common.w40,
+            borderRadius: common.radius6,
+            height: 2 * common.h100,
+            width: 2 * common.h100,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              position: 'absolute',
+              top: common.margin10,
+              fontSize: common.font14,
+              color: common.blackColor,
+            }}
+          >{`${selectedToken.token.name}充值地址`}</Text>
+          {
+            selectedToken.rechargeaddr.length ?
+              <Image
+                style={{
+                  height: common.h100,
+                  width: common.h100,
+                  alignSelf: 'center',
+                }}
+                source={{ uri: `${qrApi}${selectedToken.rechargeaddr}` }}
+              /> : null
+          }
+          {
+            selectedToken.rechargeaddr.length ?
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  bottom: common.margin10,
+                }}
+                activeOpacity={common.activeOpacity}
+                onPress={() => {
+                  // 保存图片
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: common.font14,
+                    color: common.btnTextColor,
+                  }}
+                >保存二维码</Text>
+              </TouchableOpacity> : null
+          }
+        </View>
+      </Overlay.View>
+    )
+    Overlay.show(overlayView)
+  }
 
   renderBottomCell() {
     const { selectedToken } = this.props
@@ -94,6 +179,7 @@ class Recharge extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
+              onPress={() => this.clipPress()}
             >
               <Text
                 style={{
@@ -105,6 +191,7 @@ class Recharge extends Component {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
+              onPress={() => this.qrPress()}
             >
               <Text
                 style={{
@@ -152,6 +239,8 @@ function mapStateToProps(store) {
   return {
     asset: store.asset.asset,
     createAddress: store.asset.createAddress,
+
+    qrApi: store.payment.qrApi,
 
     selectedToken: store.address.selectedToken,
     tokenListSelected: store.address.tokenListSelected,

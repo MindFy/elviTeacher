@@ -84,7 +84,7 @@ class Home extends Component {
   render() {
     this.handleSyncRequest()
 
-    const { announcement, banners } = this.props
+    const { announcement, banners, imgHashApi } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -152,6 +152,7 @@ class Home extends Component {
           <HomeSwiper
             announcement={announcement}
             banners={banners}
+            imgHashApi={imgHashApi}
           />
 
           <View
@@ -205,8 +206,9 @@ function mapStateToProps(store) {
   return {
     announcement: store.announcement.announcement,
     banners: store.banners.banners,
-    user: store.user.user,
+    imgHashApi: store.banners.imgHashApi,
 
+    user: store.user.user,
     syncVisible: store.user.syncVisible,
     syncResponse: store.user.syncResponse,
   }
