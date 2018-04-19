@@ -7,6 +7,10 @@ import {
 const initialState = {
   user: undefined,
 
+  name: '',
+  idNo: '',
+  idCardImages: {},
+
   mobileLogin: '',
   passwordLogin: '',
 
@@ -143,6 +147,14 @@ export default function user(state = initialState, action) {
         ...state,
         idCardAuthVisible: false,
         idCardAuthResponse: action.response,
+      }
+      break
+    case constants.ID_CARD_AUTH_UPDATE:
+      nextState = {
+        ...state,
+        name: action.data.name,
+        idNo: action.data.idNo,
+        idCardImages: action.data.idCardImages,
       }
       break
     case constants.IS_EXIST_REQUEST:

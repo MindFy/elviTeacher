@@ -1,4 +1,5 @@
 import * as constants from '../constants/index'
+import * as api from '../services/api'
 import {
   common,
 } from '../views/common'
@@ -7,6 +8,8 @@ const initialState = {
   paymentRecharge: [],
   paymentWithdraw: [],
   rechargeOrWithdraw: common.recharge,
+
+  qrApi: api.qrApi,
 
   cancelWithDrawVisible: false,
   cancelWithDrawResponse: undefined,

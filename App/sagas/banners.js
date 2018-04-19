@@ -9,7 +9,11 @@ export default function* findBanners() {
   while (true) {
     const request = yield take(constants.FIND_BANNERS_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_BANNERS_SUCCEED, response })
-    else yield put({ type: constants.FIND_BANNERS_FAILED, response })
+    if (response.success) {
+      const banners = response.result.data.find_banners
+      yield put({ type: constants.FIND_BANNERS_SUCCEED, banners })
+    } else {
+      yield put({ type: constants.FIND_BANNERS_FAILED, response })
+    }
   }
 }

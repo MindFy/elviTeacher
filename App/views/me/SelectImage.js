@@ -5,41 +5,33 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
+import ImagePicker from 'react-native-image-picker'
 import { common } from '../common'
-// import ImagePicker from 'react-native-image-picker'
 
-// const options = {
-//   title: 'Select Avatar',
-//   customButtons: [],
-//   storageOptions: {
-//     skipBackup: true,
-//     path: 'images',
-//   },
-// }
+const options = {
+  title: 'Select Avatar',
+  customButtons: [],
+  storageOptions: {
+    skipBackup: true,
+    path: 'images',
+  },
+}
 
 export default class SelectImage extends Component {
-  constructor() {
-    super()
-    this.state = {
-      avatarSource: null,
-    }
-  }
   componentDidMount() { }
+
   showImagePicker() {
-    // ImagePicker.showImagePicker(options, (response) => {
-    //   if (response.didCancel) {
-    //   } else if (response.error) {
-    //   } else if (response.customButton) {
-    //   } else {
-    //     const source = { uri: response.uri }
-    //     this.setState({
-    //       avatarSource: source,
-    //     })
-    //   }
-    // })
+    const { imagePickerBlock } = this.props
+    ImagePicker.showImagePicker(options, (response) => {
+      if (response.data && response.data.length) {
+        imagePickerBlock(response)
+      }
+    })
   }
+
   render() {
-    if (this.state.avatarSource) {
+    const { title, avatarSource } = this.props
+    if (avatarSource) {
       return (
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -55,7 +47,7 @@ export default class SelectImage extends Component {
               borderColor: common.borderColor,
               borderWidth: 1,
             }}
-            source={this.state.avatarSource}
+            source={{ uri: avatarSource }}
           />
         </TouchableOpacity>
       )
@@ -73,15 +65,19 @@ export default class SelectImage extends Component {
         }}
       >
         <TouchableOpacity
+          style={{
+            marginTop: common.margin28,
+            width: common.w40,
+            height: common.w40,
+            alignSelf: 'center',
+          }}
           activeOpacity={common.activeOpacity}
           onPress={() => this.showImagePicker()}
         >
           <Image
             style={{
-              marginTop: common.margin28,
               width: common.w40,
               height: common.w40,
-              alignSelf: 'center',
             }}
             source={require('../../assets/添加copy2.png')}
           />
@@ -93,7 +89,7 @@ export default class SelectImage extends Component {
             fontSize: common.font14,
             alignSelf: 'center',
           }}
-        >{this.props.title}</Text>
+        >{title}</Text>
       </View>
     )
   }

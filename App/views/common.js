@@ -18,6 +18,8 @@ const common = {
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
   greenColor: 'rgb(36,199,139)',
+  blackColor: 'rgb(24,27,42)',
+
   navBgColor: 'rgb(38,43,65)', // 导航栏背景色
   borderColor: 'rgb(52,60,92)',
   borderColor05: 'rgba(52,60,92,0.5)',
@@ -70,6 +72,7 @@ const common = {
   h70: 70 / w * sw, // 首页Cell高度
   h80: 80 / w * sw,
   h97: 97 / w * sw,
+  h100: 100 / w * sw, // 二维码宽高
   h120: 120 / w * sw,
   h234: 234 / w * sw, // 首页公告图片高度
 
@@ -87,6 +90,7 @@ const common = {
   reg: /^1[0-9]{10}/, // 手机号正则
 
   textInputMaxLenPwd: 20,
+  textInputMaxLenIdNo: 18,
 
   messageBarDur: 2000,
 }

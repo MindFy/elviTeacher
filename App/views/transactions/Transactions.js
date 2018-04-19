@@ -103,16 +103,6 @@ class Transactions extends Component {
     const { dispatch, tokenList } = this.props
     const items = [
       {
-        title: `${tokenList[0].name}/${tokenList[1].name}`,
-        onPress: () => {
-          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
-          dispatch(actions.latestDeals({
-            goods_id: tokenList[0],
-            currency_id: tokenList[1],
-          }))
-        },
-      },
-      {
         title: `${tokenList[0].name}/${tokenList[2].name}`,
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[2]))
@@ -123,22 +113,22 @@ class Transactions extends Component {
         },
       },
       {
-        title: `${tokenList[0].name}/${tokenList[3].name}`,
-        onPress: () => {
-          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[3]))
-          dispatch(actions.latestDeals({
-            goods_id: tokenList[0],
-            currency_id: tokenList[3],
-          }))
-        },
-      },
-      {
         title: `${tokenList[1].name}/${tokenList[2].name}`,
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[1], tokenList[2]))
           dispatch(actions.latestDeals({
             goods_id: tokenList[1],
             currency_id: tokenList[2],
+          }))
+        },
+      },
+      {
+        title: `${tokenList[0].name}/${tokenList[1].name}`,
+        onPress: () => {
+          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0],
+            currency_id: tokenList[1],
           }))
         },
       },
@@ -342,7 +332,7 @@ class Transactions extends Component {
   }
 
   render() {
-    const { buyOrSell, navigation, delegateCreateVisible,
+    const { buyOrSell, navigation, delegateCreateVisible, depthMap,
       goods, currency, price, quantity, amount, deal, latestDeals,
     } = this.props
     this.handleDelegateCreateRequest()
@@ -554,6 +544,7 @@ class Transactions extends Component {
           </View>
 
           <Depth
+            depthMap={depthMap}
             width={common.sw}
             height={common.sw * common.sw / common.sh}
           />
