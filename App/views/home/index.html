@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>TOK交易所</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+
+  <style>
+    iframe {
+      /* height: 100% !important; */
+    }
+  </style>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+
+  <script type="text/javascript" src="charting_library/charting_library.min.js"></script>
+  <script type="text/javascript" src="charting_library/datafeed/udf/polyfills.js"></script>
+  <script type="text/javascript" src="charting_library/datafeed/udf/bundle.js"></script>
+
+
+</head>
+
+<body style="margin:0px;">
+  <div id="tv_chart_container"></div>
+</body>
+
+<script>
+  function loadChart() {
+    const symbol = 'TK/CNTY'
+    window.tvWidget = new window.TradingView.widget({
+      symbol: symbol,
+      interval: 'D',
+      timezone: 'Asia/Shanghai',
+      container_id: "tv_chart_container",
+      locale: "en",
+      datafeed: new window.Datafeeds.UDFCompatibleDatafeed("http://127.0.0.1:8080/1.0/chart"),
+      debug: false,
+      library_path: "charting_library/",
+      fullscreen: true,
+      autoSize: true,
+      toolbar_bg: '#171a2a',
+      drawings_access: {
+        type: 'black',
+        tools: [{
+          name: "Regression Trend"
+        }]
+      },
+      numeric_formatting: {
+        decimal_sign: ",",
+      },
+      overrides: {
+        'volumePaneSize': "large",
+        'paneProperties.background': '#171a2a',
+        'paneProperties.vertGridProperties.color': "gray",
+        'paneProperties.vertGridProperties.style': 0,
+        'paneProperties.horzGridProperties.color': "white",
+        'paneProperties.horzGridProperties.style': 0,
+        'paneProperties.crossHairProperties.color': "white",
+        'paneProperties.topMargin': 5,
+        'paneProperties.bottomMargin': 5,
+        'paneProperties.leftAxisProperties.autoScale': false,
+        'paneProperties.leftAxisProperties.autoScaleDisabled': true,
+        'paneProperties.leftAxisProperties.percentage': false,
+        'paneProperties.leftAxisProperties.percentageDisabled': true,
+        'paneProperties.leftAxisProperties.log': false,
+        'paneProperties.leftAxisProperties.logDisabled': true,
+        'paneProperties.leftAxisProperties.alignLabels': false,
+        'paneProperties.legendProperties.showStudyArguments': false,
+        'paneProperties.legendProperties.showStudyTitles': false,
+        'paneProperties.legendProperties.showStudyValues': false,
+        'paneProperties.legendProperties.showSeriesTitle': false,
+        'paneProperties.legendProperties.showSeriesOHLC': false,
+        'scalesProperties.showLeftScale': false,
+        'scalesProperties.showRightScale': true,
+        'scalesProperties.backgroundColor': "yellow",
+        'scalesProperties.lineColor': "#555",
+        'scalesProperties.textColor': "#555",
+        'scalesProperties.scaleSeriesOnly': false,
+        'timeScale.rightOffset': 5,
+        'mainSeriesProperties.style': 1,
+        'mainSeriesProperties.showCountdown': false,
+        'mainSeriesProperties.showLastValue': false,
+        'mainSeriesProperties.visible': false,
+        'mainSeriesProperties.showPriceLine': false,
+        'mainSeriesProperties.priceLineWidth': 1,
+        'mainSeriesProperties.lockScale': true,
+        'mainSeriesProperties.minTick': "default",
+        'mainSeriesProperties.extendedHours': false,
+        'mainSeriesProperties.priceAxisProperties.autoScale': false,
+        'mainSeriesProperties.priceAxisProperties.autoScaleDisabled': true,
+        'mainSeriesProperties.priceAxisProperties.percentage': false,
+        'mainSeriesProperties.priceAxisProperties.percentageDisabled': true,
+        'mainSeriesProperties.priceAxisProperties.log': false,
+        'mainSeriesProperties.priceAxisProperties.logDisabled': true,
+
+        'mainSeriesProperties.candleStyle.upColor': "#6ba583",
+        'mainSeriesProperties.candleStyle.downColor': "#d75442",
+        'mainSeriesProperties.candleStyle.drawWick': true,
+        'mainSeriesProperties.candleStyle.drawBorder': true,
+        'mainSeriesProperties.candleStyle.borderColor': "#378658",
+        'mainSeriesProperties.candleStyle.borderUpColor': "#225437",
+        'mainSeriesProperties.candleStyle.borderDownColor': "#5b1a13",
+        'mainSeriesProperties.candleStyle.wickUpColor': 'rgba( 115, 115, 117, 1)',
+        'mainSeriesProperties.candleStyle.wickDownColor': 'rgba( 115, 115, 117, 1)',
+        'mainSeriesProperties.candleStyle.barColorsOnPrevClose': false,
+      },
+      disabled_features: [
+        "go_to_date",
+        // "adaptive_logo",
+        "border_around_the_chart",
+        "use_localstorage_for_settings",
+        "left_toolbar",
+        "edit_buttons_in_legend",
+        "pane_context_menu",
+        "move_logo_to_main_pane",
+
+        "countdown",
+        "control_bar",
+        "caption_buttons_text_if_possible",
+
+        "display_market_status",
+        "dont_show_boolean_study_arguments",
+
+        "symbol_info",
+        "show_chart_property_page",
+        "show_logo_on_all_charts",
+
+        "hide_last_na_study_output",
+        "header_symbol_search",
+        "header_resolutions",
+        "header_chart_type",
+        "header_settings",
+        "header_indicators",
+        "header_compare",
+        "header_undo_redo",
+        "header_fullscreen_button",
+        'header_saveload',
+        "header_widget_dom_node",
+        "header_screenshot",
+        "header_template",
+        "header_setting",
+
+        "timezone_menu",
+        "timeframes_toolbar",
+      ],
+      enabled_features: [
+        "study_templates",
+        "create_volume_indicator_by_default",
+        "volume_force_overlay",
+      ],
+      charts_storage_url: 'https://saveload.tradingview.com',
+      charts_storage_api_version: "1.1",
+      client_id: 'tradingview.com',
+      user_id: 'public_user_id',
+      loading_screen: {
+        backgroundColor: "#171a2a"
+      },
+
+      custom_css_url: './mychart.css',
+    })
+
+    window.tvWidget.onChartReady(() => {
+      window.tvWidget.chart().createStudy('Volume', true, true)
+      window.tvWidget.chart().createStudy('Moving Average', true, true, [5], null, { 'Plot.linewidth': 1 })
+      window.tvWidget.chart().createStudy('Moving Average', true, true, [10], null, { 'Plot.linewidth': 1 })
+      window.tvWidget.chart().createStudy('Moving Average', true, true, [30], null, { 'Plot.linewidth': 1 })
+      window.tvWidget.chart().createStudy('Moving Average', true, true, [60], null, { 'Plot.linewidth': 1 })
+
+      // const s1 = window.document.createElement('span')
+      // s1.innerHTML = '分时'
+      // s1.className = 'relabel'
+      // window.tvWidget.createButton()
+      //     .append(s1);
+
+      // reMap.forEach(({title, resolution}) => {
+
+      //     const s = window.document.createElement('span')
+      //     s.innerHTML = title
+      //     s.className = "rebutton"
+      //     window.tvWidget.createButton()
+      //         .attr('title', title)
+      //         .on('click', function (e) {
+      //             window.tvWidget.chart().setResolution(resolution)
+      //         })
+      //         .append(s);
+
+      // })
+    })
+  }
+
+  window.TradingView.onready(() => {
+    loadChart()
+  })
+
+</script>
+
+</html>

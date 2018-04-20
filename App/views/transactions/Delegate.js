@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -8,8 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
-export default class Delegate extends Component {
+class Delegate extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '我的委托',
@@ -22,57 +25,69 @@ export default class Delegate extends Component {
         fontSize: common.font16,
       },
       headerLeft:
-      (
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
-        >
-          <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
-            source={require('../../assets/下拉copy.png')}
-          />
-        </TouchableOpacity>
-      ),
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
+      headerRight:
+        (
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => { }}
+          >
+            <Image
+              style={{
+                marginRight: common.margin10,
+                width: common.w20,
+                height: common.h20,
+              }}
+              source={require('../../assets/筛选.png')}
+            />
+          </TouchableOpacity>
+        ),
     }
   }
-  constructor() {
-    super()
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
-    this.state = {
-      dataSource: this.ds.cloneWithRows([
-        ['TK/BTC', '2018/02/02 18:00:00', '0.09999999', '1.5555555', '1.2222', 1],
-        ['TK/BTC', '2018/02/02 18:00:00', '0.09999999', '1.5555555', '1.2222', 0],
-      ]),
-      isCurrentPress: true,
-    }
+
+  constructor(props) {
+    super(props)
+    const { dispatch, user, goods, currency } = this.props
+    this.dataSource = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
+
+    // dispatch(actions.findDelegateList(schemas.findDelegateList(user.id, goods.id, currency.id, ['waiting', 'dealing'])))
+    // dispatch(actions.findDelegateSelf(schemas.findDelegateSelf(user.id, ['complete', 'cancel'])))
   }
+
   componentDidMount() { }
-  topBarPress(isCurrentPress) {
-    let data = null
-    if (isCurrentPress) {
-      data = [
-        ['TK/BTC', '2018/02/02 18:00:00', '0.09999999', '1.5555555', '1.2222', 1],
-        ['TK/BTC', '2018/02/02 18:00:00', '0.09999999', '1.5555555', '1.2222', 0],
-      ]
-    } else {
-      data = [
-        ['TK / BTC', '0.012345678', '2345.35'],
-      ]
+
+  topBarPress(tag) {
+    const { dispatch, currentOrHistory } = this.props
+    if (currentOrHistory !== tag) {
+      dispatch(actions.currentOrHistoryUpdate({
+        currentOrHistory: tag,
+      }))
     }
-    this.setState({
-      isCurrentPress,
-      dataSource: this.ds.cloneWithRows(data),
-    })
   }
-  renderHeader(isCurrentPress) {
-    if (isCurrentPress) {
+
+  renderHeader() {
+    const { currentOrHistory } = this.props
+    if (currentOrHistory === common.current) {
       return (
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
+          onPress={() => { }}
         >
           <Text
             style={{
@@ -86,6 +101,7 @@ export default class Delegate extends Component {
         </TouchableOpacity>
       )
     }
+
     return (
       <View
         style={{
@@ -141,8 +157,10 @@ export default class Delegate extends Component {
       </View>
     )
   }
-  renderRow(rd, isCurrentPress) {
-    if (isCurrentPress) {
+
+  renderRow(rd) {
+    const { currentOrHistory } = this.props
+    if (currentOrHistory === common.current) {
       return (
         <View
           style={{
@@ -176,15 +194,15 @@ export default class Delegate extends Component {
                   fontSize: common.font12,
                   alignSelf: 'center',
                 }}
-              >{rd[0]}</Text>
+              >{`${rd.goods.name}/${rd.currency.name}`}</Text>
               <Text
                 style={{
                   marginLeft: common.margin10,
-                  color: rd[5] === 1 ? common.redColor : common.greenColor,
+                  color: rd.direct === 'sell' ? common.redColor : common.greenColor,
                   fontSize: common.font12,
                   alignSelf: 'center',
                 }}
-              >{rd[5] ? '买入' : '卖出'}</Text>
+              >{rd.direct === 'sell' ? '买入' : '卖出'}</Text>
               <Text
                 style={{
                   marginLeft: common.margin10,
@@ -192,7 +210,7 @@ export default class Delegate extends Component {
                   fontSize: common.font12,
                   alignSelf: 'center',
                 }}
-              >{rd[1]}</Text>
+              >{rd.createdAt}</Text>
             </View>
             <TouchableOpacity
               style={{
@@ -224,7 +242,7 @@ export default class Delegate extends Component {
                 fontSize: common.font10,
                 alignSelf: 'center',
               }}
-            >{`价格:${rd[2]}`}</Text>
+            >{`价格:${rd.price}`}</Text>
             <Text
               style={{
                 marginLeft: common.margin5,
@@ -232,7 +250,7 @@ export default class Delegate extends Component {
                 fontSize: common.font10,
                 alignSelf: 'center',
               }}
-            >{`数量:${rd[3]}`}</Text>
+            >{`数量:${rd.quantity}`}</Text>
             <Text
               style={{
                 marginLeft: common.margin5,
@@ -240,7 +258,7 @@ export default class Delegate extends Component {
                 fontSize: common.font10,
                 alignSelf: 'center',
               }}
-            >{`已成交:${rd[4]}`}</Text>
+            >{`已成交:${rd.dealled}`}</Text>
           </View>
         </View >
       )
@@ -260,23 +278,25 @@ export default class Delegate extends Component {
             fontSize: common.font10,
             color: common.textColor,
           }}
-        >{rd[0]}</Text>
+        >{`${rd.goods.name}/${rd.currency.name}`}</Text>
         <Text
           style={{
             fontSize: common.font10,
             color: common.textColor,
           }}
-        >{rd[1]}</Text>
+        >{rd.price}</Text>
         <Text
           style={{
             fontSize: common.font10,
             color: common.textColor,
           }}
-        >{rd[2]}</Text>
+        >{rd.dealamount}</Text>
       </View>
     )
   }
+
   render() {
+    const { currentOrHistory, delegateList, delegateSelf } = this.props
     return (
       <View style={{
         flex: 1,
@@ -299,13 +319,13 @@ export default class Delegate extends Component {
         >
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => this.topBarPress(true)}
+            onPress={() => this.topBarPress(common.current)}
           >
             <View
               style={{
                 flex: 1,
                 width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: this.state.isCurrentPress ? common.borderColor : common.navBgColor,
+                backgroundColor: currentOrHistory === common.current ? common.borderColor : common.navBgColor,
                 alignSelf: 'center',
                 justifyContent: 'center',
               }}
@@ -314,20 +334,21 @@ export default class Delegate extends Component {
                 style={{
                   fontSize: common.font14,
                   alignSelf: 'center',
-                  color: this.state.isCurrentPress ? common.btnTextColor : common.textColor,
+                  color: currentOrHistory === common.current ?
+                    common.btnTextColor : common.textColor,
                 }}
               >我的委托</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => this.topBarPress(false)}
+            onPress={() => this.topBarPress(common.history)}
           >
             <View
               style={{
                 flex: 1,
                 width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: !this.state.isCurrentPress ?
+                backgroundColor: currentOrHistory === common.current ?
                   common.borderColor :
                   common.navBgColor,
                 alignSelf: 'center',
@@ -338,7 +359,8 @@ export default class Delegate extends Component {
                 style={{
                   fontSize: common.font14,
                   alignSelf: 'center',
-                  color: !this.state.isCurrentPress ? common.btnTextColor : common.textColor,
+                  color: currentOrHistory === common.current ?
+                    common.btnTextColor : common.textColor,
                 }}
               >历史委托</Text>
             </View>
@@ -346,12 +368,29 @@ export default class Delegate extends Component {
         </View>
 
         <ListView
-          dataSource={this.state.dataSource}
-          renderHeader={() => this.renderHeader(this.state.isCurrentPress)}
-          renderRow={rd => this.renderRow(rd, this.state.isCurrentPress)}
+          dataSource={this.dataSource(currentOrHistory ? delegateList : delegateSelf)}
+          renderHeader={() => this.renderHeader()}
+          renderRow={rd => this.renderRow(rd)}
           enableEmptySections
         />
       </View>
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    delegateList: store.delegate.delegateList,
+    delegateSelf: store.delegate.delegateSelf,
+    currentOrHistory: store.delegate.currentOrHistory,
+
+    user: store.user.user,
+
+    goods: store.deal.goods,
+    currency: store.deal.currency,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Delegate)

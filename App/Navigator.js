@@ -1,4 +1,12 @@
+import React from 'react'
 import { StackNavigator, TabNavigator } from 'react-navigation'
+import {
+  Image,
+} from 'react-native'
+import {
+  common,
+} from './views/common'
+
 import Home from './views/home/Home'
 import Detail from './views/home/Detail'
 import Market from './views/market/Market'
@@ -22,11 +30,93 @@ import ConfirmPwd from './views/login/ConfirmPwd'
 
 const TabBar = TabNavigator(
   {
-    Home: { screen: Home, navigationOptions: { header: null } },
-    Market: { screen: Market },
-    Transaction: { screen: Transactions },
-    Balance: { screen: Balance },
-    Me: { screen: Me },
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        header: null,
+        tabBarLabel: '首页',
+        tabBarIcon: ({ focused }) => (
+          <Image
+            style={{
+              height: common.h20,
+              width: common.h20,
+            }}
+            source={focused ? require('./assets/首页.png') : require('./assets/首页copy2.png')}
+          />
+        ),
+      },
+    },
+    Market: {
+      screen: Market,
+      navigationOptions: {
+        tabBarLabel: '市场',
+        tabBarIcon: ({ focused }) => (
+          <Image
+            style={{
+              height: common.h20,
+              width: common.h20,
+            }}
+            source={focused ? require('./assets/市场分析.png') : require('./assets/市场分析.png')}
+          />
+        ),
+      },
+    },
+    Transaction: {
+      screen: Transactions,
+      navigationOptions: {
+        tabBarLabel: '交易',
+        tabBarIcon: ({ focused }) => (
+          <Image
+            style={{
+              height: common.h20,
+              width: common.h20,
+            }}
+            source={focused ? require('./assets/交易copy2.png') : require('./assets/交易.png')}
+          />
+        ),
+      },
+    },
+    Balance: {
+      screen: Balance,
+      navigationOptions: {
+        tabBarLabel: '资金',
+        tabBarIcon: ({ focused }) => (
+          <Image
+            style={{
+              height: common.h20,
+              width: common.h20,
+            }}
+            source={focused ? require('./assets/个人资金copy.png') : require('./assets/个人资金.png')}
+          />
+        ),
+      },
+    },
+    Me: {
+      screen: Me,
+      navigationOptions: {
+        tabBarLabel: '我的',
+        tabBarIcon: ({ focused }) => (
+          <Image
+            style={{
+              height: common.h20,
+              width: common.h20,
+            }}
+            source={focused ? require('./assets/我的copy4.png') : require('./assets/我的.png')}
+          />
+        ),
+      },
+    },
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: common.btnTextColor,
+      activeBackgroundColor: common.navBgColor,
+      inactiveTintColor: common.placeholderColor,
+      inactiveBackgroundColor: common.navBgColor,
+      labelStyle: {
+        fontSize: common.font12,
+      },
+    },
   },
 )
 

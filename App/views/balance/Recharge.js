@@ -73,8 +73,10 @@ class Recharge extends Component {
 
   clipPress() {
     const { selectedToken } = this.props
-    Clipboard.setString(selectedToken.rechargeaddr)
-    Toast.message('以复制到剪贴板')
+    if (selectedToken.rechargeaddr.length) {
+      Clipboard.setString(selectedToken.rechargeaddr)
+      Toast.message('以复制到剪贴板')
+    }
   }
 
   qrPress() {

@@ -48,3 +48,10 @@ export function findDelegateSelf(schema) {
     schema,
   }
 }
+
+export function currentOrHistoryUpdate(data) {
+  return {
+    type: constants.CURRENT_OR_HISTORY_UPDATE,
+    data,
+  }
+}

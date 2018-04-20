@@ -1,4 +1,7 @@
 import * as constants from '../constants/index'
+import {
+  common,
+} from '../views/common'
 
 const initialState = {
   tokenList: [
@@ -26,42 +29,13 @@ const initialState = {
 
   shelves: [],
   depthMap: {
-    buy: [
-      {
-        price: 103,
-        sum_quantity: 10,
-        totalamount: 6,
-      },
-      {
-        price: 105,
-        sum_quantity: 10,
-        totalamount: 10,
-      },
-      {
-        price: 110,
-        sum_quantity: 10,
-        totalamount: 20,
-      },
-    ],
-    sell: [
-      {
-        price: 90,
-        sum_quantity: 8,
-        totalamount: 18,
-      },
-      {
-        price: 92,
-        sum_quantity: 8,
-        totalamount: 8,
-      },
-      {
-        price: 95,
-        sum_quantity: 10,
-        totalamount: 10,
-      },
-    ],
+    buy: [],
+    sell: [],
     lastprice: 100,
   },
+  delegateList: [],
+  delegateSelf: [],
+  currentOrHistory: common.current,
 
   allCancelVisible: false,
   allCancelResponse: undefined,
@@ -160,6 +134,7 @@ export default function delegate(state = initialState, action) {
         ...state,
         getDepthMapVisible: false,
         getDepthMapResponse: action.response,
+        depthMap: action.response.result,
       }
       break
     case constants.GET_DEPTH_MAP_FAILED:
@@ -200,6 +175,7 @@ export default function delegate(state = initialState, action) {
         ...state,
         findDelegateListVisible: false,
         findDelegateListResponse: action.response,
+        // delegateList: action.response.result.data.find_delegate,
       }
       break
     case constants.FIND_DELEGATE_LIST_FAILED:
@@ -220,6 +196,7 @@ export default function delegate(state = initialState, action) {
         ...state,
         findDelegateSelfVisible: false,
         findDelegateSelfResponse: action.response,
+        delegateSelf: action.response.result.data.find_delegate,
       }
       break
     case constants.FIND_DELEGATE_SELF_FAILED:
@@ -227,6 +204,13 @@ export default function delegate(state = initialState, action) {
         ...state,
         findDelegateSelfVisible: false,
         findDelegateSelfResponse: action.response,
+      }
+      break
+
+    case constants.CURRENT_OR_HISTORY_UPDATE:
+      nextState = {
+        ...state,
+        currentOrHistory: action.data.currentOrHistory,
       }
       break
     default:

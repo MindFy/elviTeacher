@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../common'
-import KLine from './KLine'
+import KLine from './KLineWeb'
 
 export default class Detail extends Component {
   static navigationOptions(props) {

@@ -44,6 +44,7 @@ class History extends Component {
         ),
     }
   }
+
   constructor(props) {
     super(props)
     const { dispatch, user } = props

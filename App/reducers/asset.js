@@ -104,7 +104,8 @@ export default function asset(state = initialState, action) {
         ...state,
         findAssetListVisible: false,
         findAssetListResponse: action.resposne,
-        asset: action.response.result.data.find_asset,
+        asset: action.response.result.data.find_asset.length ?
+          action.response.result.data.find_asset : state.asset,
       }
       break
     case FIND_ASSET_LIST_FAILED:
