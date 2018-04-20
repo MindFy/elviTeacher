@@ -11,12 +11,10 @@ export default class Depth extends Component {
     const amountsBuy = [] // 存放买入
     const amountsSell = [] // 存放卖出
 
-    let amountBuy = 0
+    const amountBuy = 0
     for (let i = 0; i < depthMap.buy.length; i++) {
-      amountBuy += depthMap.buy[i].totalamount
-
-      prices.unshift(depthMap.buy[i].price)
-      amountsBuy.unshift(amountBuy)
+      prices.push(depthMap.buy[i].price)
+      amountsBuy.unshift(depthMap.buy[i].totalamount)
       amountsSell.unshift('-')
     }
 
@@ -24,12 +22,10 @@ export default class Depth extends Component {
     amountsBuy.push(0)
     amountsSell.push(0)
 
-    let amountSell = 0
-    for (let i = depthMap.sell.length - 1; i >= 0; i--) {
-      amountSell += depthMap.sell[i].totalamount
-
+    const amountSell = 0
+    for (let i = 0; i < depthMap.sell.length; i++) {
       prices.push(depthMap.sell[i].price)
-      amountsSell.push(amountSell)
+      amountsSell.push(depthMap.sell[i].totalamount)
       amountsBuy.push('-')
     }
 
@@ -42,6 +38,9 @@ export default class Depth extends Component {
 
   render() {
     const { prices, amountsBuy, amountsSell } = this.processData()
+    console.log('prices->', prices)
+    console.log('amountsBuy->', amountsBuy)
+    console.log('amountsSell->', amountsSell)
 
     const option = {
       title: {
@@ -95,7 +94,8 @@ export default class Depth extends Component {
         type: 'category',
         inverse: false,
         boundaryGap: false,
-        scale: false,
+        min: 92,
+        max: 100,
         slient: false,
         data: prices,
         axisLine: {
@@ -213,12 +213,12 @@ export default class Depth extends Component {
           if (params[0].data !== '-') {
             const name = params[0].name
             const data = Number(params[0].data).toFixed(2)
-            const str = `价格: ${name}<br />` + `数量: ${data}`
+            const str = `价格: ${name}<br />数量: ${data}`
             return str
           }
           const name = params[1].name
           const data = Number(params[1].data).toFixed(2)
-          const str = `价格: ${name}<br />` + `数量: ${data}`
+          const str = `价格: ${name}<br />数量: ${data}`
           return str
         },
         data: [{

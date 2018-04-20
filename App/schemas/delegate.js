@@ -1,14 +1,14 @@
-export function findDelegateList() {
+export function findDelegateList(userId, goodsId, currencyId, status) {
   return `{
     find_delegate(
         skip: 0,
         limit: 10,
         where: {
-            user_id: 1,
-                goods_id:1,
-                currency_id:3,
+            user_id: ${userId},
+                goods_id: ${goodsId},
+                currency_id: ${currencyId},
             status:{
-                in: ["waiting",'dealing']
+                in: ${status}
             }
         },
         order: "-createdAt"
@@ -33,15 +33,15 @@ export function findDelegateList() {
 }`
 }
 
-export function findDelegateSelf() {
+export function findDelegateSelf(userId, status) {
   return `{
     find_delegate(
         skip: 0,
         limit: 10,
         where: {
-            user_id: 1,
+            user_id: ${userId},
             status:{
-                in: ["waiting",'dealing']
+                in: ${status}
             }
         },
         order: "-createdAt"

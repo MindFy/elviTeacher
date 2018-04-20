@@ -26,6 +26,7 @@ import {
   getShelves,
   findDelegateList,
   findDelegateSelf,
+  currentOrHistoryUpdate,
 } from './delegate'
 import {
   cancelWithdraw,
@@ -82,6 +83,7 @@ const actions = {
   getShelves,
   findDelegateList,
   findDelegateSelf,
+  currentOrHistoryUpdate,
 
   cancelWithdraw,
   findPaymentListRecharge,

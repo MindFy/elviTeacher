@@ -117,7 +117,7 @@ class Cash extends Component {
             alignSelf: 'center',
             color: 'white',
           }}
-          >{`133${selectedToken.amount}`}</Text>
+          >{selectedToken.amount}</Text>
           <TextInput
             style={{
               marginTop: common.margin35,
@@ -219,6 +219,7 @@ class Cash extends Component {
             selectedToken={selectedToken}
             tokenListSelected={tokenListSelected}
             dispatch={dispatch}
+            selectedTokenBlock={() => { }}
           />
 
           {this.renderBottomView()}
