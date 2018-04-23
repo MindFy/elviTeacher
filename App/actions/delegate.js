@@ -1,16 +1,16 @@
 import * as constants from '../constants/index'
 
-export function allCancel(data) {
+export function allCancel() {
   return {
     type: constants.ALL_CANCEL_REQUEST,
-    data,
   }
 }
 
-export function cancel(data) {
+export function cancel(data, index) {
   return {
     type: constants.CANCEL_REQUEST,
     data,
+    index,
   }
 }
 

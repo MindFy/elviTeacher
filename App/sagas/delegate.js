@@ -7,8 +7,8 @@ import * as api from '../services/api'
 /* 取消所有委托单(只有dealing状态的才可以取消) */
 export function* allCancel() {
   while (true) {
-    const request = yield take(constants.ALL_CANCEL_REQUEST)
-    const response = yield call(api.allCancel, request.data)
+    yield take(constants.ALL_CANCEL_REQUEST)
+    const response = yield call(api.allCancel)
     if (response.success) yield put({ type: constants.ALL_CANCEL_SUCCEED, response })
     else yield put({ type: constants.ALL_CANCEL_FAILED, response })
   }
@@ -18,8 +18,15 @@ export function* cancel() {
   while (true) {
     const request = yield take(constants.CANCEL_REQUEST)
     const response = yield call(api.cancel, request.data)
-    if (response.success) yield put({ type: constants.CANCEL_SUCCEED, response })
-    else yield put({ type: constants.CANCEL_FAILED, response })
+    if (response.success) {
+      yield put({
+        type: constants.CANCEL_SUCCEED,
+        response,
+        index: request.index,
+      })
+    } else {
+      yield put({ type: constants.CANCEL_FAILED, response })
+    }
   }
 }
 /* 创建委托单 */
@@ -45,8 +52,25 @@ export function* getShelves() {
   while (true) {
     const request = yield take(constants.GET_SHELVES_REQUEST)
     const response = yield call(api.getShelves, request.data)
-    if (response.success) yield put({ type: constants.GET_ASSETS_SUCCEED, response })
-    else yield put({ type: constants.GET_SHELVES_FAILED, response })
+    if (response.success) {
+      let shelvesBuy = []
+      let shelvesSell = []
+      shelvesBuy = response.result.buy.length > 5 ?
+        response.result.buy.slice(0, 5) :
+        response.result.buy
+      shelvesSell = response.result.sell.length > 5 ?
+        response.result.sell.slice(0, 5) :
+        response.result.sell
+      yield put({
+        type: constants.GET_SHELVES_SUCCEED,
+        data: {
+          shelvesBuy,
+          shelvesSell,
+        },
+      })
+    } else {
+      yield put({ type: constants.GET_SHELVES_FAILED, response })
+    }
   }
 }
 /* 用户获取委托单列表（按币币对） */

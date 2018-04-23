@@ -10,12 +10,14 @@ export default class MarketCell extends Component {
 
   render() {
     const { rd } = this.props
-    let type = null
-    let typeColor = null
-    if (this.props.rd[4] === 1) {
+    let type = 0
+    let typeColor = common.textColor
+    const s = (rd.cprice - rd.lastprice) / rd.lastprice === 0 ? 0 :
+      Number((rd.cprice - rd.lastprice) / rd.lastprice).toFixed(2)
+    if (s > 0) {
       type = '+'
       typeColor = common.redColor
-    } else {
+    } else if (s <= 0) {
       type = '-'
       typeColor = common.greenColor
     }
@@ -55,7 +57,7 @@ export default class MarketCell extends Component {
               color: common.textColor,
               textAlign: 'center',
             }}
-          >{rd.lastprice}</Text>
+          >{rd.cprice}</Text>
           <Text
             style={{
               flex: 1,
@@ -65,7 +67,7 @@ export default class MarketCell extends Component {
               color: typeColor,
               textAlign: 'center',
             }}
-          >{`${type}${this.props.rd[3]}`}</Text>
+          >{`${type}${s}`}</Text>
         </View>
 
         <View

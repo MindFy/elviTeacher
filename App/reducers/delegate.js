@@ -27,7 +27,8 @@ const initialState = {
     },
   ],
 
-  shelves: [],
+  shelvesBuy: [],
+  shelvesSell: [],
   depthMap: {
     buy: [],
     sell: [],
@@ -74,6 +75,7 @@ export default function delegate(state = initialState, action) {
         ...state,
         allCancelVisible: false,
         allCancelResponse: action.response,
+        delegateList: [],
       }
       break
     case constants.ALL_CANCEL_FAILED:
@@ -90,10 +92,12 @@ export default function delegate(state = initialState, action) {
       }
       break
     case constants.CANCEL_SUCCEED:
+      state.delegateList.splice(action.index, 1)
       nextState = {
         ...state,
         cancelVisible: false,
         cancelResponse: action.response,
+        delegateList: state.delegateList.concat(),
       }
       break
     case constants.CANCEL_FAILED:
@@ -154,7 +158,8 @@ export default function delegate(state = initialState, action) {
       nextState = {
         ...state,
         getShelvesVisible: false,
-        getShelvesResponse: action.response,
+        shelvesBuy: action.data.shelvesBuy,
+        shelvesSell: action.data.shelvesSell,
       }
       break
     case constants.GET_SHELVES_FAILED:
@@ -175,7 +180,7 @@ export default function delegate(state = initialState, action) {
         ...state,
         findDelegateListVisible: false,
         findDelegateListResponse: action.response,
-        // delegateList: action.response.result.data.find_delegate,
+        delegateList: action.response.result.data.find_delegate,
       }
       break
     case constants.FIND_DELEGATE_LIST_FAILED:

@@ -15,6 +15,7 @@ import { common } from '../common'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'
+import ShelvesListView from './ShelvesListView'
 import actions from '../../actions/index'
 
 class Transactions extends Component {
@@ -55,7 +56,10 @@ class Transactions extends Component {
 
     this.showDelegateCreateResponse = false
 
-    this.shelvesDS = data => new ListView.DataSource({
+    this.shelvesBuyDS = data => new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1 !== r2,
+    }).cloneWithRows(data)
+    this.shelvesSellDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
     this.latestDealsDS = data => new ListView.DataSource({
@@ -107,12 +111,16 @@ class Transactions extends Component {
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[2]))
           dispatch(actions.getShelves({
-            goods_id: tokenList[0],
-            currency_id: tokenList[2],
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[2].id,
+          }))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[2].id,
           }))
           dispatch(actions.getDepthMap({
-            goods_id: tokenList[0],
-            currency_id: tokenList[2],
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[2].id,
           }))
         },
       },
@@ -121,12 +129,16 @@ class Transactions extends Component {
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[1], tokenList[2]))
           dispatch(actions.getShelves({
-            goods_id: tokenList[1],
-            currency_id: tokenList[2],
+            goods_id: tokenList[1].id,
+            currency_id: tokenList[2].id,
+          }))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[1].id,
+            currency_id: tokenList[2].id,
           }))
           dispatch(actions.getDepthMap({
-            goods_id: tokenList[1],
-            currency_id: tokenList[2],
+            goods_id: tokenList[1].id,
+            currency_id: tokenList[2].id,
           }))
         },
       },
@@ -135,12 +147,16 @@ class Transactions extends Component {
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
           dispatch(actions.getShelves({
-            goods_id: tokenList[0],
-            currency_id: tokenList[1],
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[1].id,
+          }))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[1].id,
           }))
           dispatch(actions.getDepthMap({
-            goods_id: tokenList[0],
-            currency_id: tokenList[1],
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[1].id,
           }))
         },
       },
@@ -184,66 +200,6 @@ class Transactions extends Component {
         Toast.fail(delegateCreateResponse.error.message)
       }
     }
-  }
-
-  renderShelvesRow(rd, sid, rid) {
-    let textColor = null
-    let marginTop = null
-    // if (rd.endDirect === 'sell') {
-    textColor = common.redColor
-    // } else {
-    //   textColor = common.greenColor
-    // }
-    if (rid === 0) {
-      marginTop = common.margin10
-    } else {
-      marginTop = common.margin8
-    }
-    return (
-      <View style={{
-        marginTop,
-        marginLeft: common.margin10 / 2,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-      >
-        <Text style={{
-          color: textColor,
-          fontSize: common.font12,
-        }}
-        >{rd.price}</Text>
-        <Text style={{
-          color: 'white',
-          fontSize: common.font12,
-        }}
-        >{rd.sum_quantity}</Text>
-      </View>
-    )
-  }
-
-  renderShelvesHeader() {
-    return (
-      <View style={{
-        marginTop: 2 * common.margin10,
-        marginLeft: common.margin10 / 2,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-      >
-        <Text style={{
-          color: common.placeholderColor,
-          fontSize: common.font10,
-        }}
-        >价格(BTC)</Text>
-        <Text style={{
-          color: common.placeholderColor,
-          fontSize: common.font10,
-        }}
-        >数量(ETH)</Text>
-      </View>
-    )
   }
 
   renderLatestDealsRow(rd) {
@@ -344,7 +300,7 @@ class Transactions extends Component {
 
   render() {
     const { buyOrSell, navigation, delegateCreateVisible, depthMap,
-      goods, currency, price, quantity, amount, shelves, latestDeals,
+      goods, currency, price, quantity, amount, shelvesBuy, shelvesSell, latestDeals,
     } = this.props
     this.handleDelegateCreateRequest()
 
@@ -442,7 +398,11 @@ class Transactions extends Component {
                 style={{
                   marginLeft: common.margin10,
                   marginTop: common.margin10,
+                  width: '50%',
                   flexDirection: 'row',
+                  paddingBottom: 8,
+                  borderBottomWidth: 1,
+                  borderBottomColor: common.placeholderColor,
                 }}
                 activeOpacity={common.activeOpacity}
                 onPress={() => this.menuPress()}
@@ -464,6 +424,9 @@ class Transactions extends Component {
               </TouchableOpacity>
 
               <TextInputTransactions
+                textInputStyle={{
+                  marginTop: common.margin10,
+                }}
                 placeholder="0.987652"
                 keyboardType="number-pad"
                 value={price}
@@ -543,15 +506,21 @@ class Transactions extends Component {
               </TouchableOpacity>
             </View>
 
-            <ListView
+            <View
               style={{
                 width: common.sw / 2,
+                flexDirection: 'column',
               }}
-              dataSource={this.shelvesDS(shelves)}
-              renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
-              renderHeader={() => this.renderShelvesHeader()}
-              enableEmptySections
-            />
+            >
+              <ShelvesListView
+                type={common.buy}
+                dataSource={this.shelvesBuyDS(shelvesBuy)}
+              />
+              <ShelvesListView
+                type={common.sell}
+                dataSource={this.shelvesSellDS(shelvesSell)}
+              />
+            </View>
           </View>
 
           <Depth
@@ -588,7 +557,8 @@ function mapStateToProps(store) {
     user: store.user.user,
 
     tokenList: store.delegate.tokenList,
-    shelves: store.delegate.shelves,
+    shelvesBuy: store.delegate.shelvesBuy,
+    shelvesSell: store.delegate.shelvesSell,
     depthMap: store.delegate.depthMap,
 
     delegateCreateVisible: store.delegate.delegateCreateVisible,

@@ -22,10 +22,12 @@ export default class Depth extends Component {
     amountsBuy.push(0)
     amountsSell.push(0)
 
-    const amountSell = 0
+    let amountSell = 0
     for (let i = 0; i < depthMap.sell.length; i++) {
+      amountSell += depthMap.sell[i].sum_quantity
+
       prices.push(depthMap.sell[i].price)
-      amountsSell.push(depthMap.sell[i].totalamount)
+      amountsSell.push(amountSell)
       amountsBuy.push('-')
     }
 
@@ -38,9 +40,6 @@ export default class Depth extends Component {
 
   render() {
     const { prices, amountsBuy, amountsSell } = this.processData()
-    console.log('prices->', prices)
-    console.log('amountsBuy->', amountsBuy)
-    console.log('amountsSell->', amountsSell)
 
     const option = {
       title: {
@@ -213,12 +212,12 @@ export default class Depth extends Component {
           if (params[0].data !== '-') {
             const name = params[0].name
             const data = Number(params[0].data).toFixed(2)
-            const str = `价格: ${name}<br />数量: ${data}`
+            const str = '价格: ' + name + '<br />数量: ' + data
             return str
           }
           const name = params[1].name
           const data = Number(params[1].data).toFixed(2)
-          const str = `价格: ${name}<br />数量: ${data}`
+          const str = '价格: ' + name + '<br />数量: ' + data
           return str
         },
         data: [{
