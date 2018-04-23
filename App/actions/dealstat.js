@@ -1,9 +1,14 @@
-import {
-  GET_ROSE_REQUEST,
-} from '../constants/index'
+import * as constants from '../constants/index'
 
-export default function getRose() {
+export function getRose() {
   return {
-    type: GET_ROSE_REQUEST,
+    type: constants.GET_ROSE_REQUEST,
+  }
+}
+
+export function marketListUpdate(data) {
+  return {
+    type: constants.MARKET_LIST_UPDATE,
+    data,
   }
 }

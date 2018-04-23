@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
-  StatusBar,
   ListView,
+  StatusBar,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native'
-import ScrollableTab from 'react-native-scrollable-tab-view'
 import { common } from '../common'
 import MarketCell from './MarketCell'
 import actions from '../../actions/index'
@@ -39,6 +40,11 @@ class Market extends Component {
   }
 
   componentDidMount() { }
+
+  tabBarPress(selectedIndex) {
+    const { dispatch } = this.props
+    dispatch(actions.marketListUpdate({ selectedIndex }))
+  }
 
   renderRow(rd) {
     return (
@@ -98,20 +104,35 @@ class Market extends Component {
   }
 
   render() {
-    const { rose } = this.props
+    const { rose, selectedIndex } = this.props
     const tabViews = []
     if (rose.length) {
       for (let i = 0; i < rose.length; i++) {
         const element = rose[i]
+        const textColor = selectedIndex === i ? common.btnTextColor : common.textColor
         tabViews.push(
-          <ListView
+          <View
+            style={{
+              width: common.sw / 4,
+              justifyContent: 'center',
+            }}
             key={element.id}
-            tabLabel={element.name}
-            dataSource={this.listDS(element.sub)}
-            renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
-            renderHeader={() => this.renderHeader()}
-            enableEmptySections
-          />,
+          >
+            <TouchableOpacity
+              style={{
+                alignSelf: 'center',
+              }}
+              activeOpacity={common.activeOpacity}
+              onPress={() => this.tabBarPress(i)}
+            >
+              <Text
+                style={{
+                  color: textColor,
+                  fontSize: common.font14,
+                }}
+              >{element.name}</Text>
+            </TouchableOpacity>
+          </View>,
         )
       }
     }
@@ -126,24 +147,25 @@ class Market extends Component {
           barStyle={'light-content'}
         />
 
-        {
-          tabViews.length ?
-            <ScrollableTab
-              style={{
-                backgroundColor: common.navBgColor,
-              }}
-              tabBarUnderlineStyle={{
-                height: 0,
-              }}
-              tabBarTextStyle={{
-                fontSize: common.font14,
-              }}
-              tabBarActiveTextColor={common.btnTextColor}
-              tabBarInactiveTextColor={common.textColor}
-            >
-              {tabViews}
-            </ScrollableTab> : null
-        }
+        <View
+          style={{
+            backgroundColor: common.navBgColor,
+            height: common.h32,
+          }}
+        >
+          <ScrollView
+            horizontal
+            alwaysBounceHorizontal={false}
+          >
+            {tabViews}
+          </ScrollView>
+        </View>
+        <ListView
+          dataSource={this.listDS(rose.length === 0 ? [] : rose[selectedIndex].sub)}
+          renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
+          renderHeader={() => this.renderHeader()}
+          enableEmptySections
+        />
       </View>
     )
   }
@@ -152,6 +174,7 @@ class Market extends Component {
 function mapStateToProps(store) {
   return {
     rose: store.dealstat.rose,
+    selectedIndex: store.dealstat.selectedIndex,
   }
 }
 

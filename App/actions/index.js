@@ -17,7 +17,10 @@ import {
   currentTokensUpdate,
   textInputDelegateUpdate,
 } from './deal'
-import getRose from './dealstat'
+import {
+  getRose,
+  marketListUpdate,
+} from './dealstat'
 import {
   allCancel,
   cancel,
@@ -75,6 +78,7 @@ const actions = {
   textInputDelegateUpdate,
 
   getRose,
+  marketListUpdate,
 
   allCancel,
   cancel,
