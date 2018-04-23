@@ -17,7 +17,7 @@ export default class MarketCell extends Component {
     if (s > 0) {
       type = '+'
       typeColor = common.redColor
-    } else if (s < 0) {
+    } else if (s <= 0) {
       type = '-'
       typeColor = common.greenColor
     }

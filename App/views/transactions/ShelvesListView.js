@@ -80,6 +80,9 @@ export default class ShelvesListView extends Component {
     const { dataSource } = this.props
     return (
       <ListView
+        style={{
+          flex: 1,
+        }}
         dataSource={dataSource}
         renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
         renderHeader={() => this.renderShelvesHeader()}

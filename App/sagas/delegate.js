@@ -18,12 +18,15 @@ export function* cancel() {
   while (true) {
     const request = yield take(constants.CANCEL_REQUEST)
     const response = yield call(api.cancel, request.data)
-    if (response.success) yield put({
-      type: constants.CANCEL_SUCCEED,
-      response,
-      index: request.index,
-    })
-    else yield put({ type: constants.CANCEL_FAILED, response })
+    if (response.success) {
+      yield put({
+        type: constants.CANCEL_SUCCEED,
+        response,
+        index: request.index,
+      })
+    } else {
+      yield put({ type: constants.CANCEL_FAILED, response })
+    }
   }
 }
 /* 创建委托单 */

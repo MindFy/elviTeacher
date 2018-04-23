@@ -509,6 +509,7 @@ class Transactions extends Component {
             <View
               style={{
                 width: common.sw / 2,
+                flexDirection: 'column',
               }}
             >
               <ShelvesListView
