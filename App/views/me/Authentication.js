@@ -12,7 +12,7 @@ import {
 import md5 from 'md5'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'

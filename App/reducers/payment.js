@@ -2,7 +2,7 @@ import * as constants from '../constants/index'
 import * as api from '../services/api'
 import {
   common,
-} from '../views/common'
+} from '../constants/common'
 
 const initialState = {
   paymentRecharge: [],

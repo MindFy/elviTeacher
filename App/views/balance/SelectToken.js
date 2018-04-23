@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import actions from '../../actions/index'
 
 export default class SelectToken extends Component {

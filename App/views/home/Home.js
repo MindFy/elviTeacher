@@ -13,7 +13,7 @@ import {
   common,
   storeRead,
   storeDelete,
-} from '../common'
+} from '../../constants/common'
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'

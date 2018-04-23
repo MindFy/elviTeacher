@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import ImagePicker from 'react-native-image-picker'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 const options = {
   title: 'Select Avatar',

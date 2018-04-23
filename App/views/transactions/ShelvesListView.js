@@ -6,7 +6,7 @@ import {
 } from 'react-native'
 import {
   common,
-} from '../common'
+} from '../../constants/common'
 
 export default class ShelvesListView extends Component {
   componentDidMount() { }

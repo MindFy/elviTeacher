@@ -8,7 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import MarketCell from './MarketCell'
 import actions from '../../actions/index'
 

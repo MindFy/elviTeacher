@@ -68,6 +68,7 @@ const common = {
   h20: 20 / w * sw,
   h32: 32 / w * sw,
   h35: 35 / w * sw,
+  h36: 36 / w * sw,
   h40: 40 / w * sw,
   h44: 44, // 导航栏高度
   h50: 50 / w * sw,

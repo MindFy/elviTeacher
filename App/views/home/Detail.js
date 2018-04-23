@@ -8,7 +8,8 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
+import TKSelectionBar from '../../components/TKSelectionBar'
 import KLine from './KLineWeb'
 
 export default class Detail extends Component {
@@ -478,63 +479,12 @@ export default class Detail extends Component {
             height={common.sw * 0.8}
           />
 
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h35,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => this.orderPress(true)}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  width: (common.sw - common.margin10 * 2) / 2,
-                  backgroundColor: !this.state.isOrderPress ?
-                    common.navBgColor :
-                    common.borderColor,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: common.font14,
-                    alignSelf: 'center',
-                    color: (this.state.isOrderPress ? common.btnTextColor : common.textColor),
-                  }}
-                >委托订单</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => this.orderPress(false)}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  width: (common.sw - common.margin10 * 2) / 2,
-                  backgroundColor: this.state.isOrderPress ? common.navBgColor : common.borderColor,
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: common.font14,
-                    alignSelf: 'center',
-                    color: (!this.state.isOrderPress ? common.btnTextColor : common.textColor),
-                  }}
-                >最新成交</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          <TKSelectionBar
+            leftTitle={'委托订单'}
+            rightTitle={'最新成交'}
+            leftBlock={() => this.orderPress(true)}
+            rightBlock={() => this.orderPress(false)}
+          />
           <ListView
             dataSource={this.state.dataSource}
             renderHeader={() => this.renderHeader(this.state.isOrderPress)}

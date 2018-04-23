@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import {
-  Text,
   View,
   Image,
   TouchableOpacity,
 } from 'react-native'
 import {
   common,
-} from '../common'
+} from '../../constants/common'
 
 export default class LegalDealDetail extends Component {
   static navigationOptions(props) {

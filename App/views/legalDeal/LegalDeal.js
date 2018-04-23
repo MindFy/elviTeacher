@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import {
   common,
-} from '../common'
+} from '../../constants/common'
 
 export default class LegalDeal extends Component {
   static navigationOptions(props) {

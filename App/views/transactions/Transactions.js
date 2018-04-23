@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import Menu from 'teaset/components/Menu/Menu'
 import Toast from 'teaset/components/Toast/Toast'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import Depth from './Depth'
 import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'

@@ -4,7 +4,7 @@ import {
   Text,
   Image,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class HomeCell extends Component {
   componentDidMount() { }

@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 import {
   common,
-} from './views/common'
+} from './constants/common'
 
 import Home from './views/home/Home'
 import Detail from './views/home/Detail'

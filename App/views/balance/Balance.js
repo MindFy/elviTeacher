@@ -9,7 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import BalanceCell from './BalanceCell'
 
 class Balance extends Component {

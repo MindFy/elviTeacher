@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import Swiper from 'react-native-swiper'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 const styles = StyleSheet.create({
   swiper: {

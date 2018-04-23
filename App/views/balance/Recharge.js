@@ -13,7 +13,7 @@ import {
   Toast,
   Overlay,
 } from 'teaset'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
 

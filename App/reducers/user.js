@@ -2,7 +2,7 @@ import * as constants from '../constants/index'
 import {
   common,
   storeSave,
-} from '../views/common'
+} from '../constants/common'
 
 const initialState = {
   user: undefined,

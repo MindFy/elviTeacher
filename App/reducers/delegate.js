@@ -1,7 +1,7 @@
 import * as constants from '../constants/index'
 import {
   common,
-} from '../views/common'
+} from '../constants/common'
 
 const initialState = {
   tokenList: [

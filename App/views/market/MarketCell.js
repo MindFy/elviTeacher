@@ -3,7 +3,7 @@ import {
   View,
   Text,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class MarketCell extends Component {
   componentDidMount() { }

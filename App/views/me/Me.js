@@ -10,7 +10,7 @@ import {
   common,
   storeRead,
   storeDelete,
-} from '../common'
+} from '../../constants/common'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 import actions from '../../actions/index'

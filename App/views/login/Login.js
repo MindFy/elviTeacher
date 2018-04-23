@@ -14,7 +14,7 @@ import Spinner from 'react-native-spinkit'
 import {
   common,
   storeSave,
-} from '../common'
+} from '../../constants/common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
 import actions from '../../actions/index'
