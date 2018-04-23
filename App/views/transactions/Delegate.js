@@ -66,8 +66,10 @@ class Delegate extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
-    // dispatch(actions.findDelegateList(schemas.findDelegateList(user.id, goods.id, currency.id, ['waiting', 'dealing'])))
-    // dispatch(actions.findDelegateSelf(schemas.findDelegateSelf(user.id, ['complete', 'cancel'])))
+    if (user) {
+      // dispatch(actions.findDelegateList(schemas.findDelegateList(user.id, goods.id, currency.id, ['waiting', 'dealing'])))
+      dispatch(actions.findDelegateSelf(schemas.findDelegateSelf(user.id, ['complete', 'cancel'])))
+    }
   }
 
   componentDidMount() { }

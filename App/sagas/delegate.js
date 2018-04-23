@@ -45,8 +45,25 @@ export function* getShelves() {
   while (true) {
     const request = yield take(constants.GET_SHELVES_REQUEST)
     const response = yield call(api.getShelves, request.data)
-    if (response.success) yield put({ type: constants.GET_ASSETS_SUCCEED, response })
-    else yield put({ type: constants.GET_SHELVES_FAILED, response })
+    if (response.success) {
+      let shelvesBuy = []
+      let shelvesSell = []
+      shelvesBuy = response.result.buy.length > 5 ?
+        response.result.buy.slice(0, 5) :
+        response.result.buy
+      shelvesSell = response.result.sell.length > 5 ?
+        response.result.sell.slice(0, 5) :
+        response.result.sell
+      yield put({
+        type: constants.GET_SHELVES_SUCCEED,
+        data: {
+          shelvesBuy,
+          shelvesSell,
+        },
+      })
+    } else {
+      yield put({ type: constants.GET_SHELVES_FAILED, response })
+    }
   }
 }
 /* 用户获取委托单列表（按币币对） */

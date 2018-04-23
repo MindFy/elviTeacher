@@ -10,6 +10,8 @@ const w = 375
 const common = {
   user: 'user',
   selectedTokenDefault: '选择币种',
+  buy: 'buy',
+  sell: 'sell',
   recharge: 'recharge',
   withdraw: 'withdraw',
   current: 'current',

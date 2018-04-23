@@ -27,7 +27,8 @@ const initialState = {
     },
   ],
 
-  shelves: [],
+  shelvesBuy: [],
+  shelvesSell: [],
   depthMap: {
     buy: [],
     sell: [],
@@ -154,7 +155,8 @@ export default function delegate(state = initialState, action) {
       nextState = {
         ...state,
         getShelvesVisible: false,
-        getShelvesResponse: action.response,
+        shelvesBuy: action.data.shelvesBuy,
+        shelvesSell: action.data.shelvesSell,
       }
       break
     case constants.GET_SHELVES_FAILED:

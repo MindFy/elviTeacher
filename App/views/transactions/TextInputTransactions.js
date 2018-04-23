@@ -8,10 +8,10 @@ export default class TextInputTranscations extends Component {
   componentDidMount() { }
 
   render() {
-    const { placeholder, value, onChange, keyboardType } = this.props
+    const { textInputStyle, placeholder, value, onChange, keyboardType } = this.props
     return (
       <TextInput
-        style={{
+        style={[{
           marginLeft: common.margin10,
           marginRight: common.margin10 / 2,
           borderColor: common.borderColor,
@@ -22,7 +22,7 @@ export default class TextInputTranscations extends Component {
           fontSize: common.font12,
           textAlign: 'center',
           color: 'white',
-        }}
+        }, textInputStyle]}
         keyboardType={keyboardType}
         placeholder={placeholder}
         placeholderTextColor={common.placeholderColor}
