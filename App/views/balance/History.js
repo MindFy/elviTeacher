@@ -52,8 +52,10 @@ class History extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
-    dispatch(actions.findPaymentListRecharge(schemas.findPaymentList(user.id, common.recharge)))
-    dispatch(actions.findPaymentListWithdraw(schemas.findPaymentList(user.id, common.withdraw)))
+    if (user) {
+      dispatch(actions.findPaymentListRecharge(schemas.findPaymentList(user.id, common.recharge)))
+      dispatch(actions.findPaymentListWithdraw(schemas.findPaymentList(user.id, common.withdraw)))
+    }
   }
 
   componentDidMount() { }

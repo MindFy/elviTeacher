@@ -32,6 +32,13 @@ import {
   currentOrHistoryUpdate,
 } from './delegate'
 import {
+  legalDealCancel,
+  confirmPay,
+  legalDealCreate,
+  findLegalDeal,
+  havedPay,
+} from './legalDeal'
+import {
   cancelWithdraw,
   findPaymentListRecharge,
   findPaymentListWithdraw,
@@ -88,6 +95,12 @@ const actions = {
   findDelegateList,
   findDelegateSelf,
   currentOrHistoryUpdate,
+
+  legalDealCancel,
+  confirmPay,
+  legalDealCreate,
+  findLegalDeal,
+  havedPay,
 
   cancelWithdraw,
   findPaymentListRecharge,
