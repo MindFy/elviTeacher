@@ -114,6 +114,10 @@ class Transactions extends Component {
             goods_id: tokenList[0].id,
             currency_id: tokenList[2].id,
           }))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[2].id,
+          }))
           dispatch(actions.getDepthMap({
             goods_id: tokenList[0].id,
             currency_id: tokenList[2].id,
@@ -128,6 +132,10 @@ class Transactions extends Component {
             goods_id: tokenList[1].id,
             currency_id: tokenList[2].id,
           }))
+          dispatch(actions.latestDeals({
+            goods_id: tokenList[1].id,
+            currency_id: tokenList[2].id,
+          }))
           dispatch(actions.getDepthMap({
             goods_id: tokenList[1].id,
             currency_id: tokenList[2].id,
@@ -139,6 +147,10 @@ class Transactions extends Component {
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
           dispatch(actions.getShelves({
+            goods_id: tokenList[0].id,
+            currency_id: tokenList[1].id,
+          }))
+          dispatch(actions.latestDeals({
             goods_id: tokenList[0].id,
             currency_id: tokenList[1].id,
           }))

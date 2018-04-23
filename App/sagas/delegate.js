@@ -7,8 +7,8 @@ import * as api from '../services/api'
 /* 取消所有委托单(只有dealing状态的才可以取消) */
 export function* allCancel() {
   while (true) {
-    const request = yield take(constants.ALL_CANCEL_REQUEST)
-    const response = yield call(api.allCancel, request.data)
+    yield take(constants.ALL_CANCEL_REQUEST)
+    const response = yield call(api.allCancel)
     if (response.success) yield put({ type: constants.ALL_CANCEL_SUCCEED, response })
     else yield put({ type: constants.ALL_CANCEL_FAILED, response })
   }
@@ -18,7 +18,11 @@ export function* cancel() {
   while (true) {
     const request = yield take(constants.CANCEL_REQUEST)
     const response = yield call(api.cancel, request.data)
-    if (response.success) yield put({ type: constants.CANCEL_SUCCEED, response })
+    if (response.success) yield put({
+      type: constants.CANCEL_SUCCEED,
+      response,
+      index: request.index,
+    })
     else yield put({ type: constants.CANCEL_FAILED, response })
   }
 }
