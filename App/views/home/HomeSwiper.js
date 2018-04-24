@@ -31,13 +31,19 @@ const styles = StyleSheet.create({
 })
 
 export default class HomeSwiper extends Component {
-  componentDidMount() { }
+  constructor() {
+    super()
+    this.state = {
+      currentIndex: 0,
+    }
+  }
 
   render() {
     const images = []
-    const { banners, imgHashApi } = this.props
-    for (let i = 0; i < banners.length; i++) {
-      const element = banners[i]
+    const { announcement, imgHashApi } = this.props
+    const { currentIndex } = this.state
+    for (let i = 0; i < announcement.length; i++) {
+      const element = announcement[i]
       images.push(
         <Image
           key={element.id}
@@ -66,6 +72,11 @@ export default class HomeSwiper extends Component {
               activeDotStyle={styles.dot}
               dotColor={common.borderColor}
               activeDotColor={common.placeholderColor}
+              onIndexChanged={(index) => {
+                this.setState({
+                  currentIndex: index,
+                })
+              }}
             >
               {images}
             </Swiper> : null
@@ -75,7 +86,7 @@ export default class HomeSwiper extends Component {
         >
           <Text
             style={styles.noticeTitle}
-          >{'公告: '}</Text>
+          >{`公告: ${announcement.length ? announcement[currentIndex].title : ''}`}</Text>
         </View>
       </View>
     )

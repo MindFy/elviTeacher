@@ -1,10 +1,10 @@
-export default function findLegalDeal() {
+export default function findLegalDeal(id) {
   return `{
     find_legalDeal(
         skip: 0,
         limit: 10,
         where: {
-          creater_id: 1
+          creater_id: ${id}
         },
         order: "-createdAt"
     ){

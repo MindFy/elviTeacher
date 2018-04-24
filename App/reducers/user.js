@@ -1,8 +1,4 @@
 import * as constants from '../constants/index'
-import {
-  common,
-  storeSave,
-} from '../constants/common'
 
 const initialState = {
   user: undefined,
@@ -53,9 +49,6 @@ const initialState = {
 
   resetPasswordVisible: false,
   resetPasswordResponse: undefined,
-
-  syncVisible: false,
-  syncResponse: undefined,
 
   updatePasswordVisible: false,
   updatePasswordResponse: undefined,
@@ -108,26 +101,10 @@ export default function user(state = initialState, action) {
         getVerificateCodeResponse: action.response,
       }
       break
-    case constants.FIND_USER_REQUEST:
-      nextState = {
-        ...state,
-        findUserVisible: true,
-      }
-      break
     case constants.FIND_USER_SUCCEED:
       nextState = {
         ...state,
-        findUserVisible: false,
-        findUserResponse: action.response,
-        user: action.response.result.data.user,
-      }
-      storeSave(common.user, nextState.user)
-      break
-    case constants.FIND_USER_FAILED:
-      nextState = {
-        ...state,
-        findUserVisible: false,
-        findUserResponse: action.response,
+        user: action.user,
       }
       break
     case constants.FIND_USER_UPDATE:
@@ -278,26 +255,6 @@ export default function user(state = initialState, action) {
         ...state,
         resetPasswordVisible: false,
         resetPasswordResponse: action.response,
-      }
-      break
-    case constants.SYNC_REQUEST:
-      nextState = {
-        ...state,
-        syncVisible: true,
-      }
-      break
-    case constants.SYNC_SUCCEED:
-      nextState = {
-        ...state,
-        syncVisible: false,
-        syncResponse: action.response,
-      }
-      break
-    case constants.SYNC_FAILED:
-      nextState = {
-        ...state,
-        syncVisible: false,
-        syncResponse: action.response,
       }
       break
     case constants.UPDATE_PASSWORD_REQUEST:

@@ -164,7 +164,7 @@ class Delegate extends Component {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
+            marginTop: common.sh / 2 - common.h50 / 2 - 64,
           }}
           isVisible={allCancelVisible}
           size={common.h50}

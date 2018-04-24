@@ -174,7 +174,7 @@ class UpdatePassword extends Component {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
+            marginTop: common.sh / 2 - common.h50 / 2 - 64,
           }}
           isVisible={updatePasswordVisible}
           size={common.h50}
@@ -186,14 +186,14 @@ class UpdatePassword extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(store) {
   return {
-    oldPassword: state.user.oldPassword,
-    newPassword: state.user.newPassword,
-    newPasswordAgain: state.user.newPasswordAgain,
+    oldPassword: store.user.oldPassword,
+    newPassword: store.user.newPassword,
+    newPasswordAgain: store.user.newPasswordAgain,
 
-    updatePasswordVisible: state.user.updatePasswordVisible,
-    updatePasswordResponse: state.user.updatePasswordResponse,
+    updatePasswordVisible: store.user.updatePasswordVisible,
+    updatePasswordResponse: store.user.updatePasswordResponse,
   }
 }
 

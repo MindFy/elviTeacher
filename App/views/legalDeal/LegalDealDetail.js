@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -9,8 +10,10 @@ import {
 import {
   common,
 } from '../../constants/common'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
-export default class LegalDealDetail extends Component {
+class LegalDealDetail extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '交易订单',
@@ -40,11 +43,16 @@ export default class LegalDealDetail extends Component {
         ),
     }
   }
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    const { dispatch, user } = props
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+
+    if (user) {
+      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+    }
   }
 
   paymentPress() {
@@ -221,14 +229,26 @@ export default class LegalDealDetail extends Component {
   }
 
   render() {
+    const { legalDeal } = this.props
     return (
       <ListView
         style={{
           backgroundColor: common.blackColor,
         }}
-        dataSource={this.dataSource([1, 1])}
+        dataSource={this.dataSource(legalDeal)}
         renderRow={() => this.renderRow()}
       />
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    legalDeal: store.legalDeal.legalDeal,
+    user: store.user.user,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(LegalDealDetail)

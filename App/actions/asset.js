@@ -1,28 +1,29 @@
-import {
-  CREATE_ADDRESS_REQUEST,
-
-  GET_ASSETS_REQUEST,
-
-  FIND_ASSET_LIST_REQUEST,
-} from '../constants/index'
+import * as constants from '../constants/index'
 
 export function createAddress(data) {
   return {
-    type: CREATE_ADDRESS_REQUEST,
+    type: constants.CREATE_ADDRESS_REQUEST,
     data,
   }
 }
 
 export function getAssets(data) {
   return {
-    type: GET_ASSETS_REQUEST,
+    type: constants.GET_ASSETS_REQUEST,
     data,
   }
 }
 
 export function findAssetList(schema) {
   return {
-    type: FIND_ASSET_LIST_REQUEST,
+    type: constants.FIND_ASSET_LIST_REQUEST,
     schema,
+  }
+}
+
+export function findAssetListUpdate(data) {
+  return {
+    type: constants.FIND_ASSET_LIST_UPDATE,
+    data,
   }
 }

@@ -28,6 +28,5 @@ export function* findAssetList() {
     const request = yield take(constants.FIND_ASSET_LIST_REQUEST)
     const response = yield call(api.graphql, request.schema)
     if (response.success) yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, response })
-    else yield put({ type: constants.FIND_ADDRESS_FAILED, response })
   }
 }

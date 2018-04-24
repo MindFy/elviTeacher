@@ -50,12 +50,8 @@ class Transactions extends Component {
         ),
     }
   }
-  constructor(props) {
-    super(props)
-    const { dispatch, goods, currency } = props
-
-    this.showDelegateCreateResponse = false
-
+  constructor() {
+    super()
     this.shelvesBuyDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
@@ -66,6 +62,11 @@ class Transactions extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
+    this.showDelegateCreateResponse = false
+  }
+
+  componentWillMount() {
+    const { dispatch, goods, currency } = this.props
     dispatch(actions.getShelves({
       goods_id: goods.id,
       currency_id: currency.id,
@@ -79,8 +80,6 @@ class Transactions extends Component {
       currency_id: currency.id,
     }))
   }
-
-  componentDidMount() { }
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
@@ -176,7 +175,19 @@ class Transactions extends Component {
   }
 
   buyOrSellPress() {
-    const { dispatch, goods, currency, buyOrSell, price, quantity } = this.props
+    const { dispatch, navigation, user, goods, currency, buyOrSell, price, quantity } = this.props
+    if (!user) {
+      navigation.navigate('LoginStack')
+      return
+    }
+    if (!price.length) {
+      Toast.message('请输入价格')
+      return
+    }
+    if (!quantity.length) {
+      Toast.message('请输入数量')
+      return
+    }
     dispatch(actions.create({
       currency_id: goods.id,
       goods_id: currency.id,
@@ -299,7 +310,7 @@ class Transactions extends Component {
   }
 
   render() {
-    const { buyOrSell, navigation, delegateCreateVisible, depthMap,
+    const { buyOrSell, navigation, delegateCreateVisible, depthMap, user,
       goods, currency, price, quantity, amount, shelvesBuy, shelvesSell, latestDeals,
     } = this.props
     this.handleDelegateCreateRequest()
@@ -369,7 +380,13 @@ class Transactions extends Component {
           >
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('Delegate')}
+              onPress={() => {
+                if (!user) {
+                  navigation.navigate('LoginStack')
+                } else {
+                  navigation.navigate('Delegate')
+                }
+              }}
             >
               <Text
                 style={{
@@ -427,7 +444,7 @@ class Transactions extends Component {
                 textInputStyle={{
                   marginTop: common.margin10,
                 }}
-                placeholder="0.987652"
+                placeholder={`价格（${currency.name}）`}
                 keyboardType="number-pad"
                 value={price}
                 onChange={e => this.onChange(e, 'price')}
@@ -441,7 +458,7 @@ class Transactions extends Component {
               >= ¥4.43</Text>
 
               <TextInputTransactions
-                placeholder="数量（ETH）"
+                placeholder={`数量（${goods.name}）`}
                 keyboardType="number-pad"
                 value={quantity}
                 onChange={e => this.onChange(e, 'quantity')}
@@ -455,7 +472,7 @@ class Transactions extends Component {
               />
 
               <TextInputTransactions
-                placeholder="成交金额（BTC）"
+                placeholder={`成交金额（${currency.name}）`}
                 keyboardType="number-pad"
                 value={amount}
                 onChange={e => this.onChange(e, 'amount')}
@@ -479,7 +496,7 @@ class Transactions extends Component {
                   color: common.textColor,
                   fontSize: common.font10,
                 }}
-                >12 BTC</Text>
+                >0 BTC</Text>
               </View>
 
               <TouchableOpacity
@@ -514,6 +531,8 @@ class Transactions extends Component {
             >
               <ShelvesListView
                 type={common.buy}
+                goods={goods}
+                currency={currency}
                 dataSource={this.shelvesBuyDS(shelvesBuy)}
               />
               <ShelvesListView

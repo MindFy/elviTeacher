@@ -4,7 +4,7 @@ import {
 } from '../constants/common'
 
 const initialState = {
-
+  legalDeal: [],
   direct: common.buy,
   price: 1,
   quantity: 0,

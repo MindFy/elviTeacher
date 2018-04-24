@@ -30,16 +30,10 @@ class Market extends Component {
 
   constructor(props) {
     super(props)
-    const { dispatch } = props
-
     this.listDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
-
-    dispatch(actions.getRose())
   }
-
-  componentDidMount() { }
 
   tabBarPress(selectedIndex) {
     const { dispatch } = this.props

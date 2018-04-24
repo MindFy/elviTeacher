@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
 import TKButtonGetVerificateCode from '../../components/TKButtonGetVerificateCode'

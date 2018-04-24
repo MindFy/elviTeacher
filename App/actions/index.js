@@ -8,6 +8,7 @@ import {
   createAddress,
   getAssets,
   findAssetList,
+  findAssetListUpdate,
 } from './asset'
 import findBanners from './banners'
 import {
@@ -78,6 +79,7 @@ const actions = {
   createAddress,
   getAssets,
   findAssetList,
+  findAssetListUpdate,
 
   findBanners,
 

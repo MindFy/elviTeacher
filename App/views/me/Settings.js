@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Image,
   StatusBar,
@@ -8,7 +9,7 @@ import {
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 
-export default class Settings extends Component {
+class Settings extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '设置',
@@ -40,6 +41,7 @@ export default class Settings extends Component {
   }
   componentDidMount() { }
   render() {
+    const { navigation, user } = this.props
     return (
       <ScrollView
         style={{
@@ -56,17 +58,20 @@ export default class Settings extends Component {
             marginTop: common.margin10,
           }}
           leftImageHide
-          onPress={() => this.props.navigation.navigate('UpdatePassword')}
+          onPress={() => {
+            if (user) navigation.navigate('UpdatePassword')
+            else navigation.navigate('LoginStack')
+          }}
           title="修改密码"
         />
         <MeCell
           leftImageHide
-          onPress={() => {}}
+          onPress={() => { }}
           title="语言选择"
         />
         <MeCell
           leftImageHide
-          onPress={() => {}}
+          onPress={() => { }}
           title="版本显示"
         />
 
@@ -74,3 +79,13 @@ export default class Settings extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    user: store.user.user,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Settings)

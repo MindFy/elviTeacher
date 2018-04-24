@@ -296,7 +296,7 @@ class UpdateBank extends Component {
   }
 
   handleCheckVerificateCodeRequest() {
-    const { checkVerificateCodeVisible, checkVerificateCodeResponse, navigation } = this.props
+    const { checkVerificateCodeVisible, checkVerificateCodeResponse } = this.props
     if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
 
     if (checkVerificateCodeVisible) {
