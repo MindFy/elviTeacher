@@ -83,7 +83,7 @@ class Register extends Component {
       return
     }
     if (password !== passwordAgain) {
-      this.showAlert('两次密码输入不一致', 'warning')
+      Toast.message('两次密码输入不一致', 'warning')
       return
     }
     if (!common.reg.test(mobile)) {
@@ -172,7 +172,7 @@ class Register extends Component {
             keyboardType="number-pad"
             value={code}
             maxLength={6}
-            codePress={count => this.codePress(count)}
+            onPress={count => this.codePress(count)}
             onChange={e => this.onChange(e, 'code')}
           />
 

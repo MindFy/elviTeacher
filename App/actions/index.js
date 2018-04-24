@@ -37,6 +37,7 @@ import {
   legalDealCreate,
   findLegalDeal,
   havedPay,
+  legalDealUpdate,
 } from './legalDeal'
 import {
   cancelWithdraw,
@@ -63,6 +64,8 @@ import {
   sync,
   updatePassword,
   updatePasswordUpdate,
+  updateBankUpdate,
+  updateBank,
 } from './user'
 
 const actions = {
@@ -101,6 +104,7 @@ const actions = {
   legalDealCreate,
   findLegalDeal,
   havedPay,
+  legalDealUpdate,
 
   cancelWithdraw,
   findPaymentListRecharge,
@@ -125,5 +129,7 @@ const actions = {
   sync,
   updatePassword,
   updatePasswordUpdate,
+  updateBankUpdate,
+  updateBank,
 }
 export default actions

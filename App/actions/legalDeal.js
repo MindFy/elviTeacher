@@ -34,3 +34,10 @@ export function havedPay(data) {
     data,
   }
 }
+
+export function legalDealUpdate(data) {
+  return {
+    type: constants.LEGAL_DEAL_UPDATE,
+    data,
+  }
+}

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
+import TKButtonGetVerificateCode from '../../components/TKButtonGetVerificateCode'
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -30,92 +31,48 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     fontSize: common.font12,
-    width: '45%',
+    width: '48%',
     color: 'white',
-  },
-  btnTextStyle: {
-    color: common.btnTextColor,
-    textAlign: 'center',
-    fontSize: common.font12,
   },
 })
 
-let count = 60
-
 export default class TextInputCode extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      btnTitle: '获取验证码',
-      disabled: false,
-    }
-
-    this.codePress = this.codePress.bind(this)
-  }
   componentDidMount() { }
 
-  codePress() {
-    this.props.codePress(() => {
-      this.setState({
-        btnTitle: `${count}`,
-        disabled: true,
-      })
-      this.timer = setInterval(() => {
-        count--
-        if (count === 0) {
-          this.setState({
-            btnTitle: '获取验证码',
-            disabled: false,
-          })
-          clearInterval(this.timer)
-          count = 60
-        } else {
-          this.setState({
-            btnTitle: `${count}`,
-          })
-        }
-      }, 1000)
-    })
-  }
-
   render() {
+    const { viewStyle, textStyle, textInputStyle, placeholder,
+      keyboardType, maxLength, value, onChange, onPress } = this.props
     return (
       <View
-        style={[styles.viewStyle, this.props.viewStyle]}
+        style={[styles.viewStyle, viewStyle]}
       >
         <View
           style={{
             flexDirection: 'row',
+            // justifyContent: 'space-between',
           }}
         >
           <Text
-            style={[styles.textStyle, this.props.textStyle]}
+            style={[styles.textStyle, textStyle]}
           >验证码</Text>
           <TextInput
-            style={[styles.textInputStyle, this.props.textInputStyle]}
-            placeholder={this.props.placeholder || '请输入短信验证码'}
+            style={[styles.textInputStyle, textInputStyle]}
+            placeholder={placeholder || '请输入短信验证码'}
             placeholderTextColor={common.placeholderColor}
-            keyboardType={this.props.keyboardType}
-            maxLength={this.props.maxLength}
-            value={this.props.value}
-            onChange={this.props.onChange}
+            keyboardType={keyboardType}
+            maxLength={maxLength}
+            value={value}
+            onChange={onChange}
           />
         </View>
-        <TouchableOpacity
-          style={{
+        <TKButtonGetVerificateCode
+          viewStyle={{
             position: 'absolute',
-            alignSelf: 'center',
-            right: common.margin10,
+            marginRight: 0,
+            right: 10,
           }}
-          activeOpacity={common.activeOpacity}
-          disabled={this.state.disabled}
-          onPress={this.codePress}
-        >
-          <Text
-            style={[styles.btnTextStyle, this.props.btnTextStyle]}
-          >{this.state.btnTitle}</Text>
-        </TouchableOpacity>
+          onPress={onPress}
+        />
       </View>
     )
   }

@@ -23,6 +23,10 @@ const initialState = {
   newPassword: '',
   newPasswordAgain: '',
 
+  bankName: '中国人民银行',
+  subbankName: '南京支行',
+  bankNo: '6222022462426230354',
+
   checkVerificateCodeVisible: false,
   checkVerificateCodeResponse: undefined,
 
@@ -55,6 +59,9 @@ const initialState = {
 
   updatePasswordVisible: false,
   updatePasswordResponse: undefined,
+
+  updateBankVisible: false,
+  updateBankResponse: undefined,
 }
 
 export default function user(state = initialState, action) {
@@ -319,6 +326,35 @@ export default function user(state = initialState, action) {
         oldPassword: action.data.oldPassword,
         newPassword: action.data.newPassword,
         newPasswordAgain: action.data.newPasswordAgain,
+      }
+      break
+
+    case constants.UPDATE_BANK_UPDATE:
+      nextState = {
+        ...state,
+        bankName: action.data.bankName,
+        subbankName: action.data.subbankName,
+        bankNo: action.data.bankNo,
+      }
+      break
+    case constants.UPDATE_BANK_REQUEST:
+      nextState = {
+        ...state,
+        updateBankVisible: true,
+      }
+      break
+    case constants.UPDATE_BANK_SUCCEED:
+      nextState = {
+        ...state,
+        updateBankVisible: false,
+        updateBankResponse: action.response,
+      }
+      break
+    case constants.UPDATE_BANK_FAILED:
+      nextState = {
+        ...state,
+        updateBankVisible: false,
+        updateBankResponse: action.response,
       }
       break
     default:

@@ -1,6 +1,13 @@
 import * as constants from '../constants/index'
+import {
+  common,
+} from '../constants/common'
 
 const initialState = {
+
+  direct: common.buy,
+  price: 1,
+  quantity: 0,
 
   legalDealCancelVisible: false,
   legalDealCancelResponse: undefined,
@@ -120,6 +127,14 @@ export default function legalDeal(state = initialState, action) {
         ...state,
         havedPayVisible: false,
         havedPayResponse: action.response,
+      }
+      break
+
+    case constants.LEGAL_DEAL_UPDATE:
+      nextState = {
+        ...state,
+        direct: action.data.direct,
+        quantity: action.data.quantity,
       }
       break
     default:

@@ -49,6 +49,7 @@ const common = {
   margin36: 36 / w * sw,
   margin38: 38 / w * sw,
   margin40: 40 / w * sw,
+  margin48: 48 / w * sw,
   margin60: 60 / w * sw,
   margin110: 110 / w * sw,
   margin127: 127 / w * sw,
@@ -66,6 +67,7 @@ const common = {
   h5: 5 / w * sw,
   h13: 13 / w * sw, // 首页详情页面中向上箭头高度
   h20: 20 / w * sw,
+  h30: 30 / w * sw,
   h32: 32 / w * sw,
   h35: 35 / w * sw,
   h36: 36 / w * sw,
@@ -79,6 +81,7 @@ const common = {
   h97: 97 / w * sw,
   h100: 100 / w * sw, // 二维码宽高
   h120: 120 / w * sw,
+  h154: 154 / w * sw, // 短信验证码视图高度
   h234: 234 / w * sw, // 首页公告图片高度
 
   font30: 30 / w * sw,
@@ -96,6 +99,7 @@ const common = {
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
+  textInputMaxLenBankNo: 19,
 
   messageBarDur: 2000,
 }

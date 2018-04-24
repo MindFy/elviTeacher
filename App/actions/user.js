@@ -109,3 +109,17 @@ export function updatePasswordUpdate(data) {
     data,
   }
 }
+
+export function updateBankUpdate(data) {
+  return {
+    type: constants.UPDATE_BANK_UPDATE,
+    data,
+  }
+}
+
+export function updateBank(data) {
+  return {
+    type: constants.UPDATE_BANK_REQUEST,
+    data,
+  }
+}
