@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest",
-    "lint": "eslint .",
-    "lint-fix": "eslint . --fix"
+    "upload2fir": "cd ios && fastlane fir",
+    "test": "jest"
   },
   "dependencies": {
     "md5": "^2.2.1",
