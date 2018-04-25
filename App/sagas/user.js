@@ -46,8 +46,12 @@ export function* idCardAuth() {
   while (true) {
     const request = yield take(constants.ID_CARD_AUTH_REQUEST)
     const response = yield call(api.idCardAuth, request.data)
-    if (response.success) yield put({ type: constants.ID_CARD_AUTH_SUCCEED, response })
-    else yield put({ type: constants.ID_CARD_AUTH_FAILED, response })
+    if (response.success) {
+      DeviceEventEmitter.emit(common.listenerNoti, constants.ID_CARD_AUTH_SUCCEED)
+      yield put({ type: constants.ID_CARD_AUTH_SUCCEED, response })
+    } else {
+      yield put({ type: constants.ID_CARD_AUTH_FAILED, response })
+    }
   }
 }
 /* 检查对象是否存在 */

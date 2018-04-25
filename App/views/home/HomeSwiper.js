@@ -31,64 +31,49 @@ const styles = StyleSheet.create({
 })
 
 export default class HomeSwiper extends Component {
-  constructor() {
-    super()
-    this.state = {
-      currentIndex: 0,
-    }
-  }
+  componentDidMount() { }
 
   render() {
     const images = []
     const { announcement, imgHashApi } = this.props
-    const { currentIndex } = this.state
     for (let i = 0; i < announcement.length; i++) {
       const element = announcement[i]
       images.push(
-        <Image
+        <View
           key={element.id}
-          style={{
-            width: common.sw,
-            height: common.h234,
-          }}
-          resizeMode="stretch"
-          resizeMethod="scale"
-          source={{ uri: `${imgHashApi}${element.imghash}` }}
-        />,
+        >
+          <Image
+            style={{
+              width: common.sw,
+              height: common.h234,
+            }}
+            resizeMode="stretch"
+            resizeMethod="scale"
+            source={{ uri: `${imgHashApi}${element.imghash}` }}
+          />
+          <View
+            style={styles.noticeView}
+          >
+            <Text
+              style={styles.noticeTitle}
+            >{`公告: ${element.title}`}</Text>
+          </View>
+        </View>,
       )
     }
 
     return (
-      <View
-        style={styles.swiper}
-      >
-        {
-          images.length ?
-            <Swiper
-              style={styles.swiper}
-              showsButtons={false}
-              paginationStyle
-              dotStyle={styles.dot}
-              activeDotStyle={styles.dot}
-              dotColor={common.borderColor}
-              activeDotColor={common.placeholderColor}
-              onIndexChanged={(index) => {
-                this.setState({
-                  currentIndex: index,
-                })
-              }}
-            >
-              {images}
-            </Swiper> : null
-        }
-        <View
-          style={styles.noticeView}
+      images.length ?
+        <Swiper
+          style={styles.swiper}
+          showsButtons={false}
+          dotStyle={styles.dot}
+          activeDotStyle={styles.dot}
+          dotColor={common.borderColor}
+          activeDotColor={common.placeholderColor}
         >
-          <Text
-            style={styles.noticeTitle}
-          >{`公告: ${announcement.length ? announcement[currentIndex].title : ''}`}</Text>
-        </View>
-      </View>
+          {images}
+        </Swiper> : <View style={styles.swiper} />
     )
   }
 }

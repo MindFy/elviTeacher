@@ -67,6 +67,7 @@ import {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+  authenticationAgainUpdate,
 } from './user'
 
 const actions = {

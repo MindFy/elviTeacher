@@ -31,7 +31,7 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    const { dispatch } = this.props
+    const { dispatch, user } = this.props
     dispatch(actions.sync())
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
@@ -78,6 +78,11 @@ class Home extends Component {
               }))
             }
           })
+          break
+        case constants.ID_CARD_AUTH_SUCCEED:
+          user.idCardAuthStatus = common.waiting
+          dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
+          dispatch(actions.findUser(schemas.findUser(user.id)))
           break
         default:
           break
