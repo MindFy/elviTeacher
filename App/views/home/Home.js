@@ -30,7 +30,7 @@ class Home extends Component {
     this.showFindBannersResponse = false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, user } = this.props
     dispatch(actions.sync())
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
@@ -41,10 +41,10 @@ class Home extends Component {
       switch (resp) {
         case constants.SYNC_SUCCEED:
           storeRead(common.user, (result) => {
-            const user = JSON.parse(result)
-            dispatch(actions.findUserUpdate(user))
-            dispatch(actions.findUser(schemas.findUser(user.id)))
-            dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+            const temp = JSON.parse(result)
+            dispatch(actions.findUserUpdate(temp))
+            dispatch(actions.findUser(schemas.findUser(temp.id)))
+            dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
           })
           break
         case constants.SYNC_FAILED:

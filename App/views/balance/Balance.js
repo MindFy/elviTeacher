@@ -91,7 +91,7 @@ class Balance extends Component {
               fontSize: common.font30,
               alignSelf: 'center',
             }}
-            >{asset ? 0 : 0}</Text>
+            >{0}</Text>
             <Text style={{
               marginLeft: common.margin5,
               fontSize: common.font10,
@@ -181,7 +181,7 @@ class Balance extends Component {
             style={{
               marginTop: common.margin10,
             }}
-            dataSource={this.dataSource(!asset ? [] : asset)}
+            dataSource={this.dataSource(asset)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
           />

@@ -65,7 +65,7 @@ class Transactions extends Component {
     this.showDelegateCreateResponse = false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, goods, currency } = this.props
     dispatch(actions.getShelves({
       goods_id: goods.id,

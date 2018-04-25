@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Image,
-  TextInput,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
@@ -16,7 +15,7 @@ import {
   common,
 } from '../../constants/common'
 import TextInputUpdateBank from './TextInputUpdateBank'
-import TKButtonGetVerificateCode from '../../components/TKButtonGetVerificateCode'
+import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import actions from '../../actions/index'
 
 class UpdateBank extends Component {
@@ -113,27 +112,9 @@ class UpdateBank extends Component {
     }))
   }
 
-  codePress(count) {
-    const { dispatch, user } = this.props
-    count()
-    dispatch(actions.getVerificateCode({
-      mobile: user.mobile,
-      service: 'auth',
-    }))
-  }
-
-  checkVerificateCodePress() {
-    const { dispatch, user, code } = this.props
-    dispatch(actions.checkVerificateCode({
-      mobile: user.mobile,
-      service: 'auth',
-      code,
-    }))
-  }
-
   showOverlay() {
-    const { user, code } = this.props
-    this.overlayView = (
+    const { dispatch, user, code } = this.props
+    const overlayView = (
       <Overlay.View
         style={{
           justifyContent: 'center',
@@ -141,158 +122,21 @@ class UpdateBank extends Component {
         modal={false}
         overlayOpacity={0}
       >
-        <View
-          style={{
-            backgroundColor: '#fff',
-            marginLeft: common.margin48,
-            marginRight: common.margin48,
-            height: common.h154,
+        <TKViewCheckAuthorize
+          mobile={user.mobile}
+          code={code}
+          onChange={e => this.onChange(e, 'code')}
+          codePress={() => {
+            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
-        >
-          <View
-            style={{
-              marginTop: common.margin20,
-              marginLeft: common.margin20,
-              marginRight: common.margin20,
-              flexDirection: 'row',
-            }}
-          >
-            <Text
-              style={{
-                color: common.blackColor,
-                fontSize: common.font12,
-                width: '40%',
-              }}
-            >手机号</Text>
-            <Text
-              style={{
-                color: common.blackColor,
-                fontSize: common.font12,
-                width: '50%',
-              }}
-            >{user.mobile}</Text>
-          </View>
-
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin20,
-              marginRight: common.margin20,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              style={{
-                color: common.blackColor,
-                fontSize: common.font12,
-                alignSelf: 'center',
-                width: '40%',
-              }}
-            >短信验证码</Text>
-            <View
-              style={{
-                borderColor: common.placeholderColor,
-                borderWidth: 1,
-                height: common.h30,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '60%',
-              }}
-            >
-              <TextInput
-                style={{
-                  marginLeft: common.margin5,
-                  color: common.blackColor,
-                  fontSize: common.font12,
-                  width: '50%',
-                }}
-                maxLength={6}
-                value={code}
-                onChange={e => this.onChange(e, 'code')}
-                keyboardType={'number-pad'}
-              />
-              <TKButtonGetVerificateCode
-                onPress={count => this.codePress(count)}
-              />
-            </View>
-          </View>
-
-          <View
-            style={{
-              left: common.margin20,
-              bottom: common.margin20,
-              right: common.margin20,
-              position: 'absolute',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                width: common.h70,
-                height: common.h30,
-                backgroundColor: common.btnTextColor,
-                justifyContent: 'center',
-              }}
-              activeOpacity={common.activeOpacity}
-              onPress={() => this.checkVerificateCodePress()}
-            >
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: common.font12,
-                  alignSelf: 'center',
-                }}
-              >确定</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                width: common.h70,
-                height: common.h30,
-                borderColor: common.placeholderColor,
-                borderWidth: 1,
-                justifyContent: 'center',
-              }}
-              activeOpacity={common.activeOpacity}
-              onPress={() => {
-                Overlay.hide(this.overlayView)
-              }}
-            >
-              <Text
-                style={{
-                  color: common.blackColor,
-                  fontSize: common.font12,
-                  alignSelf: 'center',
-                }}
-              >取消</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          confirmPress={() => {
+            dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
+          }}
+          cancelPress={() => Overlay.hide(this.overlayViewKey)}
+        />
       </Overlay.View>
     )
-    Overlay.show(this.overlayView)
-  }
-
-  handleUpdateBankRequest() {
-    const { navigation, updateBankVisible, updateBankResponse } = this.props
-    if (!updateBankVisible && !this.showUpdateBankResponse) return
-
-    if (updateBankVisible) {
-      this.showUpdateBankResponse = true
-    } else {
-      this.showUpdateBankResponse = false
-      if (updateBankResponse.success) {
-        Toast.success(updateBankResponse.result)
-        Overlay.hide(this.overlayView)
-        navigation.goBack()
-      } else {
-        Toast.fail(updateBankResponse.error.message)
-        if (updateBankResponse.error.code === 4000156) {
-          this.showOverlay()
-        }
-      }
-    }
+    this.overlayViewKey = Overlay.show(overlayView)
   }
 
   handleCheckVerificateCodeRequest() {
@@ -323,6 +167,27 @@ class UpdateBank extends Component {
         Toast.success(getVerificateCodeResponse.result.message)
       } else {
         Toast.message(getVerificateCodeResponse.error.message)
+      }
+    }
+  }
+
+  handleUpdateBankRequest() {
+    const { navigation, updateBankVisible, updateBankResponse } = this.props
+    if (!updateBankVisible && !this.showUpdateBankResponse) return
+
+    if (updateBankVisible) {
+      this.showUpdateBankResponse = true
+    } else {
+      this.showUpdateBankResponse = false
+      if (updateBankResponse.success) {
+        Toast.success(updateBankResponse.result)
+        Overlay.hide(this.overlayViewKey)
+        navigation.goBack()
+      } else {
+        Toast.fail(updateBankResponse.error.message)
+        if (updateBankResponse.error.code === 4000156) {
+          this.showOverlay()
+        }
       }
     }
   }

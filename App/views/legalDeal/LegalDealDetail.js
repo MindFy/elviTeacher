@@ -43,24 +43,60 @@ class LegalDealDetail extends Component {
         ),
     }
   }
-  constructor(props) {
-    super(props)
-    const { dispatch, user } = props
+  constructor() {
+    super()
+
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+  }
 
+  componentDidMount() {
+    const { dispatch, user } = this.props
     if (user) {
       dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
     }
   }
 
-  paymentPress() {
-    const { navigation } = this.props
-    navigation.navigate('Payment')
-  }
-
-  renderRow() {
+  renderRow(rd, sid, rid) {
+    const { navigation, dispatch, legalDeal } = this.props
+    const createdAt = common.df(rd.createdAt)
+    let textColor = 'white'
+    let status = ''
+    let direct = ''
+    let firBtnTitle = ''
+    let secBtnTitle = ''
+    let cancelBtnDisabled = true
+    let confirmBtnDisabled = true
+    if (rd.direct === common.buy) {
+      textColor = common.redColor
+      direct = '买入'
+      firBtnTitle = '付款信息'
+      secBtnTitle = '确认付款'
+    } else if (rd.direct === common.sell) {
+      textColor = common.greenColor
+      direct = '卖出'
+      firBtnTitle = '收款信息'
+      secBtnTitle = '我已收款'
+    }
+    switch (rd.status) {
+      case common.legalDeal.status.waitpay:
+        status = '待付款'
+        cancelBtnDisabled = false
+        break
+      case common.legalDeal.status.waitconfirm:
+        status = '待确认'
+        confirmBtnDisabled = false
+        break
+      case common.legalDeal.status.complete:
+        status = '已完成'
+        break
+      case common.legalDeal.status.cancel:
+        status = '已取消'
+        break
+      default:
+        break
+    }
     return (
       <View
         style={{
@@ -86,7 +122,7 @@ class LegalDealDetail extends Component {
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >CNYT</Text>
+          >{common.legalDeal.token}</Text>
           <TouchableOpacity
             style={{
               marginLeft: common.margin20,
@@ -95,10 +131,10 @@ class LegalDealDetail extends Component {
           >
             <Text
               style={{
-                color: common.redColor,
+                color: textColor,
                 fontSize: common.font12,
               }}
-            >买入</Text>
+            >{direct}</Text>
           </TouchableOpacity>
           <Text
             style={{
@@ -106,7 +142,7 @@ class LegalDealDetail extends Component {
               color: common.textColor,
               fontSize: common.font10,
             }}
-          >2018/02/02 18:00:00</Text>
+          >{createdAt}</Text>
           <Text
             style={{
               position: 'absolute',
@@ -114,7 +150,7 @@ class LegalDealDetail extends Component {
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >待付款</Text>
+          >{status}</Text>
         </View>
         <View
           style={{
@@ -136,7 +172,7 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >价格:¥1</Text>
+            >{`价格:¥${rd.dealPrice}`}</Text>
           </View>
           <View
             style={{
@@ -152,7 +188,7 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >数量:100 CNYT</Text>
+            >{`数量:${rd.quantity} ${common.legalDeal.token}`}</Text>
           </View>
           <View
             style={{
@@ -168,7 +204,7 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >总价:¥1.00</Text>
+            >{`总价:¥${Number(rd.dealPrice * rd.quantity).toFixed(2)}`}</Text>
           </View>
           <View
             style={{
@@ -184,20 +220,10 @@ class LegalDealDetail extends Component {
                 alignSelf: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.paymentPress()}
-            >
-              <Text
-                style={{
-                  color: common.btnTextColor,
-                  fontSize: common.font10,
-                }}
-              >付款信息</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              style={{
-                marginTop: common.margin8,
-                alignSelf: 'center',
+              onPress={() => {
+                navigation.navigate('Payment', {
+                  data: rd,
+                })
               }}
             >
               <Text
@@ -205,8 +231,30 @@ class LegalDealDetail extends Component {
                   color: common.btnTextColor,
                   fontSize: common.font10,
                 }}
-              >撤单</Text>
+              >{firBtnTitle}</Text>
             </TouchableOpacity>
+            {
+              rd.direct === common.buy ?
+                <TouchableOpacity
+                  activeOpacity={common.activeOpacity}
+                  style={{
+                    marginTop: common.margin8,
+                    alignSelf: 'center',
+                  }}
+                  disabled={cancelBtnDisabled}
+                  onPress={() => {
+                    legalDeal[rid].status = common.legalDeal.status.cancel
+                    dispatch(actions.legalDealCancel({ id: rd.id }, legalDeal.concat()))
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: cancelBtnDisabled ? common.placeholderColor : common.btnTextColor,
+                      fontSize: common.font10,
+                    }}
+                  >撤单</Text>
+                </TouchableOpacity> : null
+            }
             <TouchableOpacity
               activeOpacity={common.activeOpacity}
               style={{
@@ -214,13 +262,14 @@ class LegalDealDetail extends Component {
                 alignSelf: 'center',
                 marginBottom: common.margin10,
               }}
+              disabled={confirmBtnDisabled}
             >
               <Text
                 style={{
-                  color: common.btnTextColor,
+                  color: confirmBtnDisabled ? common.placeholderColor : common.btnTextColor,
                   fontSize: common.font10,
                 }}
-              >确认付款</Text>
+              >{secBtnTitle}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -236,7 +285,8 @@ class LegalDealDetail extends Component {
           backgroundColor: common.blackColor,
         }}
         dataSource={this.dataSource(legalDeal)}
-        renderRow={() => this.renderRow()}
+        renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
+        enableEmptySections
       />
     )
   }
@@ -245,6 +295,7 @@ class LegalDealDetail extends Component {
 function mapStateToProps(store) {
   return {
     legalDeal: store.legalDeal.legalDeal,
+
     user: store.user.user,
   }
 }

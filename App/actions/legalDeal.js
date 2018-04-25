@@ -1,9 +1,10 @@
 import * as constants from '../constants/index'
 
-export function legalDealCancel(data) {
+export function legalDealCancel(data, legalDeal) {
   return {
     type: constants.LEGAL_DEAL_CANCEL_REQUEST,
     data,
+    legalDeal,
   }
 }
 

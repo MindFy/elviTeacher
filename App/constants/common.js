@@ -24,6 +24,16 @@ const common = {
   pass: 'pass',
   refuse: 'refuse',
 
+  legalDeal: {
+    token: 'CNYT',
+    status: {
+      waitpay: 'waitpay',
+      waitconfirm: 'waitconfirm',
+      complete: 'complete',
+      cancel: 'cancel',
+    },
+  },
+
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
@@ -108,6 +118,28 @@ const common = {
   textInputMaxLenBankNo: 19,
 
   messageBarDur: 2000,
+
+  df(dateStr) {
+    const createdAtDate = new Date(dateStr)
+    const getYear = createdAtDate.getFullYear()
+    const getMonth = createdAtDate.getMonth() < 10 ?
+      `0${createdAtDate.getMonth()}` :
+      createdAtDate.getMonth()
+    const getDate = createdAtDate.getDate() < 10 ?
+      `0${createdAtDate.getDate()}` :
+      createdAtDate.getDate()
+    const getHours = createdAtDate.getHours() < 10 ?
+      `0${createdAtDate.getHours()}` :
+      createdAtDate.getHours()
+    const getMinutes = createdAtDate.getMinutes() < 10 ?
+      `0${createdAtDate.getMinutes()}` :
+      createdAtDate.getMinutes()
+    const getSeconds = createdAtDate.getSeconds() < 10 ?
+      `0${createdAtDate.getSeconds()}` :
+      createdAtDate.getSeconds()
+    const dfStr = `${getYear}/${getMonth}/${getDate} ${getHours}:${getMinutes}:${getSeconds}`
+    return dfStr
+  },
 }
 
 function storeSave(name, object, block) {

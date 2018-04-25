@@ -1,7 +1,4 @@
 import * as constants from '../constants/index'
-import {
-  common,
-} from '../constants/common'
 
 const initialState = {
   user: undefined,
