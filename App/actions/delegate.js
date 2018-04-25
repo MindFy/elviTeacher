@@ -6,11 +6,11 @@ export function allCancel() {
   }
 }
 
-export function cancel(data, index) {
+export function cancel(data, delegateSelfCurrent) {
   return {
     type: constants.CANCEL_REQUEST,
     data,
-    index,
+    delegateSelfCurrent,
   }
 }
 
@@ -35,16 +35,15 @@ export function getShelves(data) {
   }
 }
 
-export function findDelegateList(schema) {
+export function findDelegateSelfCurrent(schema) {
   return {
-    type: constants.FIND_DELEGATE_LIST_REQUEST,
+    type: constants.FIND_DELEGATE_SELF_CURRENT_REQUEST,
     schema,
   }
 }
-
-export function findDelegateSelf(schema) {
+export function findDelegateSelfHistory(schema) {
   return {
-    type: constants.FIND_DELEGATE_SELF_REQUEST,
+    type: constants.FIND_DELEGATE_SELF_HISTORY_REQUEST,
     schema,
   }
 }

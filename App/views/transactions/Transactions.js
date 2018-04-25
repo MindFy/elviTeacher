@@ -4,9 +4,10 @@ import {
   View,
   Text,
   Image,
+  ListView,
   StatusBar,
   ScrollView,
-  ListView,
+  RefreshControl,
   TouchableOpacity,
 } from 'react-native'
 import Menu from 'teaset/components/Menu/Menu'
@@ -52,6 +53,7 @@ class Transactions extends Component {
   }
   constructor() {
     super()
+
     this.shelvesBuyDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
@@ -61,24 +63,11 @@ class Transactions extends Component {
     this.latestDealsDS = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
-
-    this.showDelegateCreateResponse = false
   }
 
   componentDidMount() {
-    const { dispatch, goods, currency } = this.props
-    dispatch(actions.getShelves({
-      goods_id: goods.id,
-      currency_id: currency.id,
-    }))
-    dispatch(actions.latestDeals({
-      goods_id: goods.id,
-      currency_id: currency.id,
-    }))
-    dispatch(actions.getDepthMap({
-      goods_id: goods.id,
-      currency_id: currency.id,
-    }))
+    const { goods, currency } = this.props
+    this.getUIData(goods.id, currency.id)
   }
 
   onChange(event, tag) {
@@ -102,6 +91,13 @@ class Transactions extends Component {
     }
   }
 
+  getUIData(goodsId, currencyId) {
+    const { dispatch } = this.props
+    dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
+  }
+
   menuPress() {
     const { dispatch, tokenList } = this.props
     const items = [
@@ -109,61 +105,23 @@ class Transactions extends Component {
         title: `${tokenList[0].name}/${tokenList[2].name}`,
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[2]))
-          dispatch(actions.getShelves({
-            goods_id: tokenList[0].id,
-            currency_id: tokenList[2].id,
-          }))
-          dispatch(actions.latestDeals({
-            goods_id: tokenList[0].id,
-            currency_id: tokenList[2].id,
-          }))
-          dispatch(actions.getDepthMap({
-            goods_id: tokenList[0].id,
-            currency_id: tokenList[2].id,
-          }))
+          this.getUIData(tokenList[0].id, tokenList[2].id)
         },
-      },
-      {
+      }, {
         title: `${tokenList[1].name}/${tokenList[2].name}`,
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[1], tokenList[2]))
-          dispatch(actions.getShelves({
-            goods_id: tokenList[1].id,
-            currency_id: tokenList[2].id,
-          }))
-          dispatch(actions.latestDeals({
-            goods_id: tokenList[1].id,
-            currency_id: tokenList[2].id,
-          }))
-          dispatch(actions.getDepthMap({
-            goods_id: tokenList[1].id,
-            currency_id: tokenList[2].id,
-          }))
+          this.getUIData(tokenList[1].id, tokenList[2].id)
         },
-      },
-      {
+      }, {
         title: `${tokenList[0].name}/${tokenList[1].name}`,
         onPress: () => {
           dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
-          dispatch(actions.getShelves({
-            goods_id: tokenList[0].id,
-            currency_id: tokenList[1].id,
-          }))
-          dispatch(actions.latestDeals({
-            goods_id: tokenList[0].id,
-            currency_id: tokenList[1].id,
-          }))
-          dispatch(actions.getDepthMap({
-            goods_id: tokenList[0].id,
-            currency_id: tokenList[1].id,
-          }))
+          this.getUIData(tokenList[0].id, tokenList[1].id)
         },
       },
     ]
-    Menu.show({
-      x: 50,
-      y: 126,
-    }, items)
+    Menu.show({ x: 50, y: 126 }, items)
   }
 
   topBarPress(b) {
@@ -195,22 +153,6 @@ class Transactions extends Component {
       price: Number(price),
       quantity: Number(quantity),
     }))
-  }
-
-  handleDelegateCreateRequest() {
-    const { delegateCreateVisible, delegateCreateResponse } = this.props
-    if (!delegateCreateVisible && !this.showDelegateCreateResponse) return
-
-    if (delegateCreateVisible) {
-      this.showDelegateCreateResponse = true
-    } else {
-      this.showDelegateCreateResponse = false
-      if (delegateCreateResponse.success) {
-        Toast.success('挂单成功')
-      } else {
-        Toast.fail(delegateCreateResponse.error.message)
-      }
-    }
   }
 
   renderLatestDealsRow(rd) {
@@ -312,8 +254,8 @@ class Transactions extends Component {
   render() {
     const { buyOrSell, navigation, delegateCreateVisible, depthMap, user,
       goods, currency, price, quantity, amount, shelvesBuy, shelvesSell, latestDeals,
+      latestDealsVisible, getShelvesVisible, getDepthMapVisible,
     } = this.props
-    this.handleDelegateCreateRequest()
 
     return (
       <View style={{
@@ -400,7 +342,24 @@ class Transactions extends Component {
           </View>
         </View>
 
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => {
+                this.getUIData(goods.id, currency.id)
+              }}
+              refreshing={
+                !latestDealsVisible && !getShelvesVisible && !getDepthMapVisible
+                  ? false : true
+              }
+              colors={[common.textColor]}
+              progressBackgroundColor={common.navBgColor}
+              size={common.w20}
+              progressViewOffset={0}
+              tintColor={common.textColor}
+            />
+          }
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -565,13 +524,14 @@ class Transactions extends Component {
 
 function mapStateToProps(store) {
   return {
-    latestDeals: store.deal.latestDeals,
     goods: store.deal.goods,
     currency: store.deal.currency,
     price: store.deal.price,
     quantity: store.deal.quantity,
     amount: store.deal.amount,
     buyOrSell: store.deal.buyOrSell,
+    latestDeals: store.deal.latestDeals,
+    latestDealsVisible: store.deal.latestDealsVisible,
 
     user: store.user.user,
 
@@ -579,10 +539,8 @@ function mapStateToProps(store) {
     shelvesBuy: store.delegate.shelvesBuy,
     shelvesSell: store.delegate.shelvesSell,
     depthMap: store.delegate.depthMap,
-
+    getShelvesVisible: store.delegate.getShelvesVisible,
     delegateCreateVisible: store.delegate.delegateCreateVisible,
-    delegateCreateResponse: store.delegate.delegateCreateResponse,
-
     getDepthMapVisible: store.delegate.getDepthMapVisible,
     getDepthMapResponse: store.delegate.getDepthMapResponse,
   }

@@ -46,15 +46,13 @@ class Balance extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
 
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
   }
-
-  componentDidMount() { }
 
   renderRow(rd) {
     return (

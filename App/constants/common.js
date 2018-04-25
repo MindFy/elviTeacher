@@ -11,6 +11,7 @@ const common = {
   user: 'user',
   selectedTokenDefault: '选择币种',
   listenerNoti: 'listenerNoti',
+  delegateListenerNoti: 'delegateListenerNoti',
   buy: 'buy',
   sell: 'sell',
   recharge: 'recharge',
@@ -23,6 +24,15 @@ const common = {
   waiting: 'waiting',
   pass: 'pass',
   refuse: 'refuse',
+
+  delegate: {
+    status: {
+      dealing: 'dealing',
+      waiting: 'waiting',
+      complete: 'complete',
+      cancel: 'cancel',
+    },
+  },
 
   legalDeal: {
     token: 'CNYT',
