@@ -1,0 +1,15 @@
+stages:
+- build
+- cleanup_build
+
+build_job:
+  stage: build
+  script:
+  - npm install
+  - react-native link
+  - npm run upload2fir
+
+cleanup_build_job:
+  stage: cleanup_build
+  script:
+  - rm -rf builds
