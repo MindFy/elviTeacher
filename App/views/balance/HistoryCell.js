@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class History extends Component {
   componentDidMount() { }

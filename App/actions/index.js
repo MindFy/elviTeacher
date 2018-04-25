@@ -8,6 +8,7 @@ import {
   createAddress,
   getAssets,
   findAssetList,
+  findAssetListUpdate,
 } from './asset'
 import findBanners from './banners'
 import {
@@ -31,6 +32,14 @@ import {
   findDelegateSelf,
   currentOrHistoryUpdate,
 } from './delegate'
+import {
+  legalDealCancel,
+  confirmPay,
+  legalDealCreate,
+  findLegalDeal,
+  havedPay,
+  legalDealUpdate,
+} from './legalDeal'
 import {
   cancelWithdraw,
   findPaymentListRecharge,
@@ -56,6 +65,8 @@ import {
   sync,
   updatePassword,
   updatePasswordUpdate,
+  updateBankUpdate,
+  updateBank,
 } from './user'
 
 const actions = {
@@ -68,6 +79,7 @@ const actions = {
   createAddress,
   getAssets,
   findAssetList,
+  findAssetListUpdate,
 
   findBanners,
 
@@ -88,6 +100,13 @@ const actions = {
   findDelegateList,
   findDelegateSelf,
   currentOrHistoryUpdate,
+
+  legalDealCancel,
+  confirmPay,
+  legalDealCreate,
+  findLegalDeal,
+  havedPay,
+  legalDealUpdate,
 
   cancelWithdraw,
   findPaymentListRecharge,
@@ -112,5 +131,7 @@ const actions = {
   sync,
   updatePassword,
   updatePasswordUpdate,
+  updateBankUpdate,
+  updateBank,
 }
 export default actions

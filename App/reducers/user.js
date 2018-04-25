@@ -1,8 +1,4 @@
 import * as constants from '../constants/index'
-import {
-  common,
-  storeSave,
-} from '../views/common'
 
 const initialState = {
   user: undefined,
@@ -22,6 +18,10 @@ const initialState = {
   oldPassword: '',
   newPassword: '',
   newPasswordAgain: '',
+
+  bankName: '中国人民银行',
+  subbankName: '南京支行',
+  bankNo: '6222022462426230354',
 
   checkVerificateCodeVisible: false,
   checkVerificateCodeResponse: undefined,
@@ -50,11 +50,11 @@ const initialState = {
   resetPasswordVisible: false,
   resetPasswordResponse: undefined,
 
-  syncVisible: false,
-  syncResponse: undefined,
-
   updatePasswordVisible: false,
   updatePasswordResponse: undefined,
+
+  updateBankVisible: false,
+  updateBankResponse: undefined,
 }
 
 export default function user(state = initialState, action) {
@@ -101,26 +101,10 @@ export default function user(state = initialState, action) {
         getVerificateCodeResponse: action.response,
       }
       break
-    case constants.FIND_USER_REQUEST:
-      nextState = {
-        ...state,
-        findUserVisible: true,
-      }
-      break
     case constants.FIND_USER_SUCCEED:
       nextState = {
         ...state,
-        findUserVisible: false,
-        findUserResponse: action.response,
-        user: action.response.result.data.user,
-      }
-      storeSave(common.user, nextState.user)
-      break
-    case constants.FIND_USER_FAILED:
-      nextState = {
-        ...state,
-        findUserVisible: false,
-        findUserResponse: action.response,
+        user: action.user,
       }
       break
     case constants.FIND_USER_UPDATE:
@@ -273,26 +257,6 @@ export default function user(state = initialState, action) {
         resetPasswordResponse: action.response,
       }
       break
-    case constants.SYNC_REQUEST:
-      nextState = {
-        ...state,
-        syncVisible: true,
-      }
-      break
-    case constants.SYNC_SUCCEED:
-      nextState = {
-        ...state,
-        syncVisible: false,
-        syncResponse: action.response,
-      }
-      break
-    case constants.SYNC_FAILED:
-      nextState = {
-        ...state,
-        syncVisible: false,
-        syncResponse: action.response,
-      }
-      break
     case constants.UPDATE_PASSWORD_REQUEST:
       nextState = {
         ...state,
@@ -319,6 +283,35 @@ export default function user(state = initialState, action) {
         oldPassword: action.data.oldPassword,
         newPassword: action.data.newPassword,
         newPasswordAgain: action.data.newPasswordAgain,
+      }
+      break
+
+    case constants.UPDATE_BANK_UPDATE:
+      nextState = {
+        ...state,
+        bankName: action.data.bankName,
+        subbankName: action.data.subbankName,
+        bankNo: action.data.bankNo,
+      }
+      break
+    case constants.UPDATE_BANK_REQUEST:
+      nextState = {
+        ...state,
+        updateBankVisible: true,
+      }
+      break
+    case constants.UPDATE_BANK_SUCCEED:
+      nextState = {
+        ...state,
+        updateBankVisible: false,
+        updateBankResponse: action.response,
+      }
+      break
+    case constants.UPDATE_BANK_FAILED:
+      nextState = {
+        ...state,
+        updateBankVisible: false,
+        updateBankResponse: action.response,
       }
       break
     default:

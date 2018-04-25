@@ -5,7 +5,7 @@ import {
   ListView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class Delegate extends Component {
   componentDidMount() { }
@@ -41,20 +41,13 @@ export default class Delegate extends Component {
           justifyContent: 'space-between',
         }}
       >
-        <View
+        <Text
           style={{
             flex: 1,
             color: common.placeholderColor,
             fontSize: common.font12,
           }}
-        >
-          <Text
-            style={{
-              color: common.placeholderColor,
-              fontSize: common.font12,
-            }}
-          >市场</Text>
-        </View>
+        >市场</Text>
         <View
           style={{
             flex: 1,

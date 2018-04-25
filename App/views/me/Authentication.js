@@ -12,7 +12,7 @@ import {
 import md5 from 'md5'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'
@@ -51,9 +51,6 @@ class Authentication extends Component {
 
   constructor() {
     super()
-    this.state = {
-      authenticationState: -1, // -1普通状态，1成功，0失败
-    }
     this.showIdCardAuthResponse = false
   }
 
@@ -157,10 +154,10 @@ class Authentication extends Component {
     }
   }
 
-  renderScrollView(state) {
-    const { name, idNo, idCardImages } = this.props
-    switch (state) {
-      case -1:
+  renderScrollView() {
+    const { name, idNo, idCardImages, user } = this.props
+    switch (user.idCardAuthStatus) {
+      case common.never:
         return (
           <KeyboardAvoidingView
             behavior="padding"
@@ -206,7 +203,7 @@ class Authentication extends Component {
             </ScrollView>
           </KeyboardAvoidingView>
         )
-      case 1:
+      case common.pass:
         return (
           <ScrollView>
             <Image
@@ -229,7 +226,7 @@ class Authentication extends Component {
             >恭喜！身份认证成功！</Text>
           </ScrollView>
         )
-      case 0:
+      case common.refuse:
         return (
           <ScrollView>
             <Image
@@ -293,7 +290,7 @@ class Authentication extends Component {
         }}
       >
         <StatusBar barStyle={'light-content'} />
-        {this.renderScrollView(this.state.authenticationState)}
+        {this.renderScrollView()}
         {
           idCardAuthResponse && idCardAuthResponse.success ?
             <View
@@ -325,7 +322,7 @@ class Authentication extends Component {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
+            marginTop: common.sh / 2 - common.h50 / 2 - 64,
           }}
           isVisible={idCardAuthVisible}
           size={common.h50}

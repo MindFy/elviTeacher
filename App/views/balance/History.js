@@ -9,7 +9,8 @@ import {
   ListView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
+import TKSelectionBar from '../../components/TKSelectionBar'
 import HistoryCell from './HistoryCell'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
@@ -52,8 +53,10 @@ class History extends Component {
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
 
-    dispatch(actions.findPaymentListRecharge(schemas.findPaymentList(user.id, common.recharge)))
-    dispatch(actions.findPaymentListWithdraw(schemas.findPaymentList(user.id, common.withdraw)))
+    if (user) {
+      dispatch(actions.findPaymentListRecharge(schemas.findPaymentList(user.id, common.recharge)))
+      dispatch(actions.findPaymentListWithdraw(schemas.findPaymentList(user.id, common.withdraw)))
+    }
   }
 
   componentDidMount() { }
@@ -129,71 +132,20 @@ class History extends Component {
           barStyle={'light-content'}
         />
 
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            height: common.h40,
-            flexDirection: 'row',
-            justifyContent: 'center',
+        <TKSelectionBar
+          leftTitle={'充值记录'}
+          rightTitle={'提现记录'}
+          leftBlock={() => {
+            dispatch(actions.rechargeOrWithdrawUpdate({
+              rechargeOrWithdraw: common.recharge,
+            }))
           }}
-        >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => {
-              dispatch(actions.rechargeOrWithdrawUpdate({
-                rechargeOrWithdraw: common.recharge,
-              }))
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: common.navBgColor,
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                  color: (rechargeOrWithdraw === common.recharge ?
-                    common.btnTextColor : common.textColor),
-                }}
-              >充值记录</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => {
-              dispatch(actions.rechargeOrWithdrawUpdate({
-                rechargeOrWithdraw: common.withdraw,
-              }))
-            }}
-          >
-            <View
-              style={{
-                flex: 1,
-                width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: common.navBgColor,
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                  color: (rechargeOrWithdraw === common.withdraw ?
-                    common.btnTextColor : common.textColor),
-                }}
-              >提现记录</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+          rightBlock={() => {
+            dispatch(actions.rechargeOrWithdrawUpdate({
+              rechargeOrWithdraw: common.withdraw,
+            }))
+          }}
+        />
 
         <ListView
           dataSource={this.dataSource(rechargeOrWithdraw === common.recharge ?

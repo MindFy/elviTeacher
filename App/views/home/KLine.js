@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Echarts from 'native-echarts'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class KLine extends Component {
   constructor(props) {

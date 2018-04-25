@@ -3,22 +3,17 @@ import {
   View,
   Text,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class MarketCell extends Component {
   componentDidMount() { }
 
   render() {
     const { rd } = this.props
-    let type = 0
     let typeColor = common.textColor
-    const s = (rd.cprice - rd.lastprice) / rd.lastprice === 0 ? 0 :
-      Number((rd.cprice - rd.lastprice) / rd.lastprice).toFixed(2)
-    if (s > 0) {
-      type = '+'
+    if (rd.rose > 0) {
       typeColor = common.redColor
-    } else if (s <= 0) {
-      type = '-'
+    } else if (rd.rose <= 0) {
       typeColor = common.greenColor
     }
     return (
@@ -67,7 +62,7 @@ export default class MarketCell extends Component {
               color: typeColor,
               textAlign: 'center',
             }}
-          >{`${type}${s}`}</Text>
+          >{`${rd.rose}%`}</Text>
         </View>
 
         <View

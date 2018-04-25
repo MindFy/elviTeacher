@@ -10,7 +10,7 @@ import {
   common,
   storeRead,
   storeDelete,
-} from '../common'
+} from '../../constants/common'
 import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 import actions from '../../actions/index'
@@ -48,16 +48,13 @@ class Me extends Component {
       /* 发送获取用户个人信息请求 */
       dispatch(actions.findUser(schemas.findUser(objectResult.id)))
       dispatch(actions.findAssetList(schemas.findAssetList(objectResult.id)))
-      dispatch(actions.findListSelf(schemas.findListSelf(objectResult.id)))
     })
   }
 
   /* 跳转到登录页面 */
   navigateLogin() {
     const { navigation } = this.props
-    navigation.navigate('LoginStack', {
-      goBackBlock: () => this.readAndDisplay(),
-    })
+    navigation.navigate('LoginStack')
   }
 
   logoutPress() {
@@ -78,6 +75,31 @@ class Me extends Component {
           if (!error) {
             // 清除页面数据
             dispatch(actions.findUserUpdate(undefined))
+            dispatch(actions.findAssetListUpdate({
+              asset: [
+                {
+                  amount: 0,
+                  freezed: 0,
+                  id: 1,
+                  rechargeaddr: '',
+                  token: { id: 1, name: 'TK' },
+                },
+                {
+                  amount: 0,
+                  freezed: 0,
+                  id: 2,
+                  rechargeaddr: '',
+                  token: { id: 2, name: 'BTC' },
+                },
+                {
+                  amount: 0,
+                  freezed: 0,
+                  id: 3,
+                  rechargeaddr: '',
+                  token: { id: 3, name: 'CNYT' },
+                },
+              ],
+            }))
             // 返回登录页
             this.navigateLogin()
           }
@@ -91,7 +113,7 @@ class Me extends Component {
   render() {
     this.handleLogoutRequest()
 
-    const { user, logoutVisible } = this.props
+    const { user, logoutVisible, navigation } = this.props
 
     return (
       <View
@@ -127,7 +149,10 @@ class Me extends Component {
             rightImageHide
           />
           <MeCell
-            onPress={() => this.props.navigation.navigate('Authentication')}
+            onPress={() => {
+              if (user) navigation.navigate('Authentication')
+              else navigation.navigate('LoginStack')
+            }}
             leftImageSource={require('../../assets/手机认证copy.png')}
             title="身份认证"
           />
@@ -142,7 +167,7 @@ class Me extends Component {
             title="超级返利"
           />
           <MeCell
-            onPress={() => this.props.navigation.navigate('Settings')}
+            onPress={() => navigation.navigate('Settings')}
             leftImageSource={require('../../assets/手机认证copy4.png')}
             title="设置"
           />
@@ -161,7 +186,7 @@ class Me extends Component {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            marginTop: common.sh / 2,
+            marginTop: common.sh / 2 - common.h50 / 2 - 64,
           }}
           isVisible={logoutVisible}
           size={common.h50}

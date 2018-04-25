@@ -9,11 +9,12 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import BalanceCell from './BalanceCell'
 
 class Balance extends Component {
   static navigationOptions(props) {
+    const { navigation, user } = props
     return {
       headerTitle: '资产',
       headerStyle: {
@@ -28,7 +29,10 @@ class Balance extends Component {
         (
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.navigate('History')}
+            onPress={() => {
+              if (user) navigation.navigate('History')
+              else navigation.navigate('LoginStack')
+            }}
           >
             <Text
               style={{
@@ -52,14 +56,6 @@ class Balance extends Component {
 
   componentDidMount() { }
 
-  rechargePress() {
-    this.props.navigation.navigate('Recharge')
-  }
-
-  cashPress() {
-    this.props.navigation.navigate('Cash')
-  }
-
   renderRow(rd) {
     return (
       <BalanceCell
@@ -71,7 +67,7 @@ class Balance extends Component {
   }
 
   render() {
-    const { asset } = this.props
+    const { asset, user, navigation } = this.props
     return (
       <View
         style={{
@@ -95,7 +91,7 @@ class Balance extends Component {
               fontSize: common.font30,
               alignSelf: 'center',
             }}
-            >{asset ? 0.12345678 : 0}</Text>
+            >{asset ? 0 : 0}</Text>
             <Text style={{
               marginLeft: common.margin5,
               fontSize: common.font10,
@@ -124,7 +120,13 @@ class Balance extends Component {
             <View>
               <TouchableOpacity
                 activeOpacity={common.activeOpacity}
-                onPress={() => this.rechargePress()}
+                onPress={() => {
+                  if (user) {
+                    navigation.navigate('Recharge')
+                  } else {
+                    navigation.navigate('LoginStack')
+                  }
+                }}
               >
                 <Image
                   style={{
@@ -147,7 +149,13 @@ class Balance extends Component {
             <View>
               <TouchableOpacity
                 activeOpacity={common.activeOpacity}
-                onPress={() => this.cashPress()}
+                onPress={() => {
+                  if (user) {
+                    navigation.navigate('Cash')
+                  } else {
+                    navigation.navigate('LoginStack')
+                  }
+                }}
               >
                 <Image
                   style={{

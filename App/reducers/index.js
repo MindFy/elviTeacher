@@ -6,6 +6,7 @@ import banners from './banners'
 import deal from './deal'
 import dealstat from './dealstat'
 import delegate from './delegate'
+import legalDeal from './legalDeal'
 import payment from './payment'
 import user from './user'
 
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   deal,
   dealstat,
   delegate,
+  legalDeal,
   payment,
   user,
 })

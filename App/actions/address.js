@@ -1,28 +1,22 @@
-import {
-  ADD_REQUEST,
-
-  FIND_ADDRESS_REQUEST,
-
-  SELECT_TOKEN_UPDATE,
-} from '../constants/index'
+import * as constants from '../constants/index'
 
 export function add(data) {
   return {
-    type: ADD_REQUEST,
+    type: constants.ADD_REQUEST,
     data,
   }
 }
 
 export function findAddress(schema) {
   return {
-    type: FIND_ADDRESS_REQUEST,
+    type: constants.FIND_ADDRESS_REQUEST,
     schema,
   }
 }
 
 export function selectTokenUpdate(data) {
   return {
-    type: SELECT_TOKEN_UPDATE,
+    type: constants.SELECT_TOKEN_UPDATE,
     data,
   }
 }

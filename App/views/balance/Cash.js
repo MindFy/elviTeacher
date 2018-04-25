@@ -10,7 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'

@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 import {
   common,
-} from './views/common'
+} from './constants/common'
 
 import Home from './views/home/Home'
 import Detail from './views/home/Detail'
@@ -21,6 +21,10 @@ import Me from './views/me/Me'
 import Authentication from './views/me/Authentication'
 import Settings from './views/me/Settings'
 import UpdatePassword from './views/me/UpdatePassword'
+import LegalDeal from './views/legalDeal/LegalDeal'
+import LegalDealDetail from './views/legalDeal/LegalDealDetail'
+import Payment from './views/legalDeal/Payment'
+import UpdateBank from './views/legalDeal/UpdateBank'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -131,6 +135,10 @@ const TabBarStack = StackNavigator({
   Authentication,
   Settings,
   UpdatePassword,
+  LegalDeal,
+  LegalDealDetail,
+  Payment,
+  UpdateBank,
 })
 
 const LoginStack = DismissableStackNavigator({

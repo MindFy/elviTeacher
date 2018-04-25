@@ -1,23 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  ScrollView,
   View,
   Text,
   Image,
+  StatusBar,
+  ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
-  StatusBar,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
 import {
   common,
   storeSave,
-} from '../common'
+} from '../../constants/common'
 import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
 import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Login extends Component {
   constructor() {
@@ -58,7 +59,7 @@ class Login extends Component {
   }
 
   handleLoginRequest() {
-    const { loginVisible, loginResponse, navigation, screenProps } = this.props
+    const { dispatch, loginVisible, loginResponse, screenProps } = this.props
     if (!loginVisible && !this.showLoginResponse) return
 
     if (loginVisible) {
@@ -67,9 +68,11 @@ class Login extends Component {
       this.showLoginResponse = false
       if (loginResponse.success) {
         Toast.success('登录成功')
-        storeSave(common.user, loginResponse.result, (error) => {
+        const user = loginResponse.result
+        storeSave(common.user, user, (error) => {
           if (!error) {
-            navigation.state.params.goBackBlock()
+            dispatch(actions.findUser(schemas.findUser(user.id)))
+            dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
             screenProps.dismiss()
           }
         })
@@ -82,7 +85,7 @@ class Login extends Component {
   render() {
     this.handleLoginRequest()
 
-    const { loginVisible, navigation, mobile, password } = this.props
+    const { loginVisible, navigation, mobile, password, screenProps } = this.props
     return (
       <KeyboardAvoidingView
         style={{
@@ -95,6 +98,26 @@ class Login extends Component {
           <StatusBar
             barStyle={'light-content'}
           />
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: common.margin40,
+              left: common.margin20,
+              width: common.w40,
+              height: common.h20,
+              justifyContent: 'center',
+            }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => screenProps.dismiss()}
+          >
+            <Text
+              style={{
+                color: 'white',
+                fontSize: common.font14,
+                alignSelf: 'center',
+              }}
+            >返回</Text>
+          </TouchableOpacity>
 
           <Image
             style={{

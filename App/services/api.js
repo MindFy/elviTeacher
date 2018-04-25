@@ -65,6 +65,11 @@ export const cancelWithdraw = makePostAPI('/1.0/payment/cancelWithdraw')
 export const recharge = makePostAPI('/1.0/payment/recharge')
 export const withdraw = makePostAPI('/1.0/payment/withdraw')
 export const qrApi = `${API_ROOT}/qr/`
+// LegalDeal
+export const legalDealCancel = makePostAPI('/1.0/app/legalDeal/cancel')
+export const confirmPay = makePostAPI('/1.0/app/legalDeal/confirmPay')
+export const legalDealCreate = makePostAPI('/1.0/app/legalDeal/create')
+export const havedPay = makePostAPI('/1.0/app/legalDeal/havedPay')
 // Delegate
 export const allCancel = makePostAPI('/1.0/app/delegate/allCancel')
 export const cancel = makePostAPI('/1.0/app/delegate/cancel')

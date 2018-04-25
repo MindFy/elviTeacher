@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
-  Text,
   Image,
   StatusBar,
   ListView,
@@ -10,7 +9,8 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import { common } from '../common'
+import { common } from '../../constants/common'
+import TKSelectionBar from '../../components/TKSelectionBar'
 import DelegateListView from './DelegateListView'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
@@ -141,65 +141,12 @@ class Delegate extends Component {
           barStyle={'light-content'}
         />
 
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin15,
-            marginRight: common.margin15,
-            height: common.h35,
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.topBarPress(common.current)}
-          >
-            <View
-              style={{
-                flex: 1,
-                width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: currentOrHistory === common.current ?
-                  common.borderColor : common.navBgColor,
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                  color: currentOrHistory === common.current ?
-                    common.btnTextColor : common.textColor,
-                }}
-              >当前委托</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.topBarPress(common.history)}
-          >
-            <View
-              style={{
-                flex: 1,
-                width: (common.sw - common.margin10 * 2) / 2,
-                backgroundColor: currentOrHistory === common.history ?
-                  common.borderColor : common.navBgColor,
-                alignSelf: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: common.font14,
-                  alignSelf: 'center',
-                  color: currentOrHistory === common.history ?
-                    common.btnTextColor : common.textColor,
-                }}
-              >历史委托</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TKSelectionBar
+          leftTitle={'当前委托'}
+          rightTitle={'历史委托'}
+          leftBlock={() => this.topBarPress(common.current)}
+          rightBlock={() => this.topBarPress(common.history)}
+        />
 
         <DelegateListView
           currentOrHistory={currentOrHistory}
@@ -217,7 +164,7 @@ class Delegate extends Component {
           style={{
             position: 'absolute',
             alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
+            marginTop: common.sh / 2 - common.h50 / 2 - 64,
           }}
           isVisible={allCancelVisible}
           size={common.h50}

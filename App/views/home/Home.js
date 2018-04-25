@@ -8,73 +8,93 @@ import {
   ListView,
   ScrollView,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native'
 import {
   common,
   storeRead,
   storeDelete,
-} from '../common'
+} from '../../constants/common'
+import * as constants from '../../constants/index'
 import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
 class Home extends Component {
-  constructor(props) {
-    super(props)
-    const { dispatch } = props
+  constructor() {
+    super()
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
-    this.testdata = [
-      ['ETH', '0.00082722', '0.98%', 1],
-      ['TK', '0.00082722', '0.98%', 0],
-    ]
-
-    this.showSyncResponse = false
     this.showFindBannersResponse = false
-
-    this.readAndDisplay()
-    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-    dispatch(actions.findBanners(schemas.findBanners()))
   }
 
-  readAndDisplay() {
+  componentWillMount() {
     const { dispatch } = this.props
-    storeRead(common.user, (result) => {
-      const objectResult = JSON.parse(result)
-      dispatch(actions.findUserUpdate(objectResult))
-      dispatch(actions.sync())
+    dispatch(actions.sync())
+    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+    dispatch(actions.findBanners(schemas.findBanners()))
+    dispatch(actions.getRose())
+
+    this.listener = DeviceEventEmitter.addListener(common.listenerNoti, (resp) => {
+      switch (resp) {
+        case constants.SYNC_SUCCEED:
+          storeRead(common.user, (result) => {
+            const user = JSON.parse(result)
+            dispatch(actions.findUserUpdate(user))
+            dispatch(actions.findUser(schemas.findUser(user.id)))
+            dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+          })
+          break
+        case constants.SYNC_FAILED:
+          storeDelete(common.user, (error) => {
+            if (!error) {
+              dispatch(actions.findUserUpdate(undefined))
+              dispatch(actions.findAssetListUpdate({
+                asset: [
+                  {
+                    amount: 0,
+                    freezed: 0,
+                    id: 1,
+                    rechargeaddr: '',
+                    token: { id: 1, name: 'TK' },
+                  },
+                  {
+                    amount: 0,
+                    freezed: 0,
+                    id: 2,
+                    rechargeaddr: '',
+                    token: { id: 2, name: 'BTC' },
+                  },
+                  {
+                    amount: 0,
+                    freezed: 0,
+                    id: 3,
+                    rechargeaddr: '',
+                    token: { id: 3, name: 'CNYT' },
+                  },
+                ],
+              }))
+            }
+          })
+          break
+        default:
+          break
+      }
     })
   }
 
-  handleSyncRequest() {
-    const { user, dispatch, syncVisible, syncResponse } = this.props
-    if (!syncVisible && !this.showSyncResponse) return
-
-    if (syncVisible) {
-      this.showSyncResponse = true
-    } else {
-      this.showSyncResponse = false
-      if (syncResponse.success && !syncResponse.result.mobile.length) {
-        storeDelete(common.user, (error) => {
-          if (!error) {
-            dispatch(actions.findUserUpdate(undefined))
-          }
-        })
-      } else {
-        dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-        dispatch(actions.findUser(schemas.findUser(user.id)))
-        dispatch(actions.findListSelf(schemas.findListSelf(user.id)))
-      }
-    }
+  componentWillUnmount() {
+    this.listener.remove()
   }
 
   renderRow(rd) {
+    const { navigation } = this.props
     return (
       <TouchableOpacity
         activeOpacity={common.activeOpacity}
-        onPress={() => this.props.navigation.navigate('Detail')}
+        onPress={() => navigation.navigate('Detail')}
       >
         <HomeCell rd={rd} />
       </TouchableOpacity>
@@ -82,13 +102,11 @@ class Home extends Component {
   }
 
   render() {
-    this.handleSyncRequest()
-
-    const { announcement, banners, imgHashApi } = this.props
+    const { announcement, imgHashApi, navigation, user } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
-    const navigateKeys = ['Recharge', 'Cash', 'Delegate', '法币交易']
+    const navigateKeys = ['Recharge', 'Cash', 'Delegate', 'LegalDeal']
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {
@@ -114,7 +132,11 @@ class Home extends Component {
           }}
           activeOpacity={common.activeOpacity}
           onPress={() => {
-            this.props.navigation.navigate(navigateKeys[i])
+            if (user) {
+              navigation.navigate(navigateKeys[i])
+            } else {
+              navigation.navigate('LoginStack')
+            }
           }}
         >
           <Image
@@ -151,7 +173,6 @@ class Home extends Component {
         <ScrollView>
           <HomeSwiper
             announcement={announcement}
-            banners={banners}
             imgHashApi={imgHashApi}
           />
 
@@ -192,7 +213,7 @@ class Home extends Component {
           </View>
 
           <ListView
-            dataSource={this.dataSource(this.testdata)}
+            dataSource={this.dataSource([])}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
           />
@@ -205,12 +226,13 @@ class Home extends Component {
 function mapStateToProps(store) {
   return {
     announcement: store.announcement.announcement,
+
     banners: store.banners.banners,
     imgHashApi: store.banners.imgHashApi,
 
+    rose: store.dealstat.rose,
+
     user: store.user.user,
-    syncVisible: store.user.syncVisible,
-    syncResponse: store.user.syncResponse,
   }
 }
 

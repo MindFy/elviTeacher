@@ -4,7 +4,7 @@ import {
   Text,
   Slider,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 export default class TransactionsSlider extends Component {
   constructor() {

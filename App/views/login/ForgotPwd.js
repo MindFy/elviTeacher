@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
-import { common } from '../common'
+import { common } from '../../constants/common'
 import TextInputLogin from './TextInputLogin'
 import TextInputCode from './TextInputCode'
 import BtnLogin from './BtnLogin'

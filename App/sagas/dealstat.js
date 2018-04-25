@@ -10,6 +10,5 @@ export default function* getRose() {
     yield take(constants.GET_ROSE_REQUEST)
     const response = yield call(api.getRose)
     if (response.success) yield put({ type: constants.GET_ROSE_SUCCEED, response })
-    else yield put({ type: constants.GET_ROSE_FAILED, response })
   }
 }

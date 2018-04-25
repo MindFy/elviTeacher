@@ -4,7 +4,7 @@ import {
   TextInput,
   StyleSheet,
 } from 'react-native'
-import { common } from '../common'
+import { common } from '../../constants/common'
 
 const styles = StyleSheet.create({
   viewStyle: {
