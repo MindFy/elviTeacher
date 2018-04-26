@@ -354,7 +354,6 @@ class Transactions extends Component {
               }
               colors={[common.textColor]}
               progressBackgroundColor={common.navBgColor}
-              size={common.w20}
               progressViewOffset={0}
               tintColor={common.textColor}
             />
@@ -435,6 +434,7 @@ class Transactions extends Component {
                 keyboardType="number-pad"
                 value={amount}
                 onChange={e => this.onChange(e, 'amount')}
+                editable={false}
               />
 
               <View style={{
@@ -489,12 +489,18 @@ class Transactions extends Component {
               }}
             >
               <ShelvesListView
+                style={{
+                  height: common.margin8 * 5 + common.font12 * 5 + common.margin10 * 3,
+                }}
                 type={common.buy}
                 goods={goods}
                 currency={currency}
                 dataSource={this.shelvesBuyDS(shelvesBuy)}
               />
               <ShelvesListView
+                style={{
+                  height: common.margin8 * 5 + common.font12 * 5,
+                }}
                 type={common.sell}
                 dataSource={this.shelvesSellDS(shelvesSell)}
               />
