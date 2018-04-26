@@ -8,7 +8,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "md5": "^2.2.1",
     "native-echarts": "^0.4.0",
     "react": "^16.3.0-alpha.1",
     "react-native": "0.54.2",
@@ -19,6 +18,8 @@
     "react-redux": "^5.0.7",
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
+    "rn-image-picker-d3j": "^0.2.1",
+    "rn-put-object": "^0.2.3",
     "teaset": "0.5.6"
   },
   "devDependencies": {

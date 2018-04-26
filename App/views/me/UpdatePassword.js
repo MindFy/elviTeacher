@@ -169,7 +169,7 @@ class UpdatePassword extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        Toast.success(getVerificateCodeResponse.result.message)
+        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else {
         Toast.message(getVerificateCodeResponse.error.message)
       }

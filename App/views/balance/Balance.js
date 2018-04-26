@@ -14,7 +14,7 @@ import BalanceCell from './BalanceCell'
 
 class Balance extends Component {
   static navigationOptions(props) {
-    const { navigation, user } = props
+    const { navigation } = props
     return {
       headerTitle: '资产',
       headerStyle: {
@@ -30,8 +30,7 @@ class Balance extends Component {
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => {
-              if (user) navigation.navigate('History')
-              else navigation.navigate('LoginStack')
+              navigation.navigate('History')
             }}
           >
             <Text

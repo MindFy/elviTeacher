@@ -20,12 +20,7 @@ class ConfirmPwd extends Component {
 
   componentWillUnmount() {
     const { dispatch, mobile, code } = this.props
-    dispatch(actions.registerUpdate({
-      mobile,
-      code,
-      password: '',
-      passwordAgain: '',
-    }))
+    dispatch(actions.registerUpdate({ mobile, code, password: '', passwordAgain: '' }))
   }
 
   onChange(event, tag) {
@@ -73,7 +68,7 @@ class ConfirmPwd extends Component {
   }
 
   HandleResetPasswordRequest() {
-    const { resetPasswordVisible, resetPasswordResponse, navigation } = this.props
+    const { dispatch, resetPasswordVisible, resetPasswordResponse, navigation } = this.props
     if (!resetPasswordVisible && !this.showResetPasswordResponse) return
 
     if (resetPasswordVisible) {
@@ -82,6 +77,7 @@ class ConfirmPwd extends Component {
       this.showResetPasswordResponse = false
       if (resetPasswordResponse.success) {
         Toast.success('重置密码成功')
+        dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
         navigation.goBack('Login')
       } else {
         Toast.fail(resetPasswordResponse.error.message)

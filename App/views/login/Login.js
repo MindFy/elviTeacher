@@ -43,15 +43,8 @@ class Login extends Component {
       Toast.message('请输入账号')
       return
     }
-    if (!password.length || !common.regPassword.test(password)) {
-      Toast.show({
-        style: {
-          paddingLeft: common.margin20,
-          paddingRight: common.margin20,
-        },
-        text: common.regPasswordMsg,
-        position: 'bottom',
-      })
+    if (!password.length) {
+      Toast.message('请输入密码')
       return
     }
     if (!common.regMobile.test(mobile)) {
@@ -156,8 +149,6 @@ class Login extends Component {
             placeholder={'请输入密码'}
             secureTextEntry
             value={password}
-            password={password}
-            type={'login'}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />

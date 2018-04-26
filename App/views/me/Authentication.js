@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native'
-import md5 from 'md5'
 import Toast from 'teaset/components/Toast/Toast'
+import PutObject from 'rn-put-object'
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
@@ -97,13 +97,12 @@ class Authentication extends Component {
   }
 
   confirmPress() {
-    const { dispatch, name, idNo, idCardImages } = this.props
+    const { dispatch, name, idNo, idCardImages, imgHashApi } = this.props
     if (!name.length) {
       Toast.message('请输入姓名')
       return
     }
-    if (!idNo.length || !common.regIdCard18.test(idNo) ||
-      !common.regIdCard15.test(idNo)) {
+    if (!idNo.length || !common.regIdCard.test(idNo)) {
       Toast.message('请输入正确的身份证号')
       return
     }
@@ -119,28 +118,52 @@ class Authentication extends Component {
       Toast.message('请上传手持身份证照片')
       return
     }
-    dispatch(actions.idCardAuth({
-      name,
-      idNo: Number(idNo),
-      idCardImages: [
-        idCardImages.first.hash,
-        idCardImages.second.hash,
-        idCardImages.third.hash,
-      ],
-    }))
+    PutObject.putObject({
+      url: imgHashApi,
+      path: idCardImages.first.uri,
+      async: true,
+      header: [{
+        key: 'Content-Type',
+        value: 'application/octet-stream',
+      }],
+      method: 'POST',
+    }, (r) => {
+      console.log('----r----->', r)
+    })
+    PutObject.mulitPutObject({
+      url: imgHashApi,
+      path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
+      async: true,
+      header: [{
+        key: 'Content-Type',
+        value: 'application/octet-stream',
+      }],
+      method: 'POST',
+    }, (r) => {
+      console.log('----rs----->', r)
+    })
+    // dispatch(actions.idCardAuth({
+    //   name,
+    //   idNo: Number(idNo),
+    //   idCardImages: [
+    //     idCardImages.first.hash,
+    //     idCardImages.second.hash,
+    //     idCardImages.third.hash,
+    //   ],
+    // }))
   }
 
   imagePicker(response, tag) {
     const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
     switch (tag) {
       case 'first':
-        idCardImages.first = { uri: response.uri, hash: md5(response.data) }
+        idCardImages.first = { uri: response.uri, hash: '' }
         break
       case 'second':
-        idCardImages.second = { uri: response.uri, hash: md5(response.data) }
+        idCardImages.second = { uri: response.uri, hash: '' }
         break
       case 'third':
-        idCardImages.third = { uri: response.uri, hash: md5(response.data) }
+        idCardImages.third = { uri: response.uri, hash: '' }
         break
       default:
         break

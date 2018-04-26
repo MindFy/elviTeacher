@@ -44,7 +44,6 @@ export default class TextInputPwd extends Component {
             style={styles.inputStyle}
             placeholder={placeholder}
             placeholderTextColor={common.placeholderColor}
-            value={value}
             onChange={onChange}
             maxLength={maxLength}
             keyboardType={keyboardType}

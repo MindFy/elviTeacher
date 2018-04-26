@@ -4,7 +4,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
-import ImagePicker from 'react-native-image-picker'
+import ImagePicker from 'rn-image-picker-d3j'
 import { common } from '../../constants/common'
 
 const options = {
@@ -26,6 +26,8 @@ export default class SelectImage extends Component {
     const { imagePickerBlock } = this.props
     ImagePicker.showImagePicker(options, (response) => {
       if (response.data && response.data.length) {
+        console.log('resp---》', response)
+        
         imagePickerBlock(response)
       }
     })
