@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
     marginTop: common.margin40,
     marginLeft: common.margin38,
     marginRight: common.margin38,
-    height: common.h40,
     backgroundColor: common.navBgColor,
     borderColor: common.borderColor,
     borderRadius: 1,
     borderWidth: 1,
+    height: common.h40,
     flexDirection: 'row',
   },
   textStyle: {
@@ -28,32 +28,36 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     fontSize: common.font12,
-    width: '50%',
+    width: '55%',
     color: 'white',
   },
 })
 
 export default class TextInputLogin extends Component {
-  componentDidMount() {}
+  componentDidMount() { }
+
   render() {
+    const { viewStyle, textStyle, placeholder, secureTextEntry,
+      title, onChange, value, keyboardType, maxLength } = this.props
+
     return (
       <View
-        style={[styles.viewStyle, this.props.viewStyle]}
+        style={[styles.viewStyle, viewStyle]}
       >
         <Text
-          style={[styles.textStyle, this.props.textStyle]}
-        >{this.props.title}</Text>
+          style={[styles.textStyle, textStyle]}
+        >{title}</Text>
         <TextInput
           style={styles.textInputStyle}
           autoCapitalize="none"
-          placeholder={this.props.placeholder}
+          placeholder={placeholder}
           placeholderTextColor={common.placeholderColor}
-          password={this.props.password}
+          secureTextEntry={secureTextEntry}
           multiline={false}
-          onChange={this.props.onChange}
-          value={this.props.value}
-          keyboardType={this.props.keyboardType}
-          maxLength={this.props.maxLength}
+          onChange={onChange}
+          value={value}
+          keyboardType={keyboardType}
+          maxLength={maxLength}
           editable
         />
       </View>

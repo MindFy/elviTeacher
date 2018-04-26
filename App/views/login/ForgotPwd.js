@@ -48,7 +48,7 @@ class ForgotPwd extends Component {
 
   codePress(count) {
     const { dispatch, mobile } = this.props
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
@@ -69,7 +69,7 @@ class ForgotPwd extends Component {
       Toast.message('请输入验证码')
       return
     }
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }

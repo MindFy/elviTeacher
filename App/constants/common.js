@@ -122,7 +122,10 @@ const common = {
 
   activeOpacity: 0.7,
 
-  reg: /^1[0-9]{10}/, // 手机号正则
+  regMobile: /^1[0-9]{10}/, // 手机号正则
+  regMobileMsg: '请输入正确的手机号', // 手机号提示
+  regPassword: /^(?=.*[A-Z].*).{6,20}$/, // 密码正则
+  regPasswordMsg: '请输入6到20位密码,至少包含一个大写字母', // 密码提示
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,

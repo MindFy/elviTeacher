@@ -50,16 +50,23 @@ class ConfirmPwd extends Component {
       Toast.message('请设置密码')
       return
     }
+    if (!common.regPassword.test(password)) {
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: common.regPasswordMsg,
+        position: 'bottom',
+      })
+      return
+    }
     if (!passwordAgain.length) {
       Toast.message('请再次设置密码')
       return
     }
     if (password !== passwordAgain) {
       Toast.message('两次密码输入不一致')
-      return
-    }
-    if (password.length < 6) {
-      Toast.message('密码至少为6位')
       return
     }
     dispatch(actions.resetPassword({
@@ -115,6 +122,7 @@ class ConfirmPwd extends Component {
             value={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
+            secureTextEntry
           />
 
           <TextInputLogin
@@ -126,6 +134,7 @@ class ConfirmPwd extends Component {
             value={passwordAgain}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
+            secureTextEntry
           />
 
           <BtnLogin

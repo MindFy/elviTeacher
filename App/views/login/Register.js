@@ -57,7 +57,7 @@ class Register extends Component {
 
   codePress(count) {
     const { dispatch, mobile } = this.props
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
@@ -78,20 +78,31 @@ class Register extends Component {
       Toast.message('请设置密码')
       return
     }
+    if (!password.length || !common.regPassword.test(password)) {
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: common.regPasswordMsg,
+        position: 'bottom',
+      })
+      return
+    }
     if (!passwordAgain.length) {
       Toast.message('请再次设置密码')
       return
     }
     if (password !== passwordAgain) {
-      Toast.message('两次密码输入不一致', 'warning')
+      Toast.message('确认密码需要和密码保持一致')
       return
     }
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
-    if (password.length < 6) {
-      Toast.message('密码至少为6位')
+    if (!code.length) {
+      Toast.message('请输入验证码')
       return
     }
     dispatch(actions.register({
@@ -185,6 +196,7 @@ class Register extends Component {
             value={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
+            secureTextEntry
           />
 
           <TextInputLogin
@@ -196,6 +208,9 @@ class Register extends Component {
             value={passwordAgain}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
+            password={password}
+            passwordAgain={passwordAgain}
+            secureTextEntry
           />
 
           <View

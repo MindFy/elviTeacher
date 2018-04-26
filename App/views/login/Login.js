@@ -43,12 +43,19 @@ class Login extends Component {
       Toast.message('请输入账号')
       return
     }
-    if (!password.length) {
-      Toast.message('请输入密码')
+    if (!password.length || !common.regPassword.test(password)) {
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: common.regPasswordMsg,
+        position: 'bottom',
+      })
       return
     }
-    if (!common.reg.test(mobile)) {
-      Toast.message('请输入正确的手机号')
+    if (!common.regMobile.test(mobile)) {
+      Toast.message(common.regMobileMsg)
       return
     }
 
@@ -144,6 +151,7 @@ class Login extends Component {
           <TextInputLogin
             title="密码"
             placeholder="请输入密码"
+            secureTextEntry
             value={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
