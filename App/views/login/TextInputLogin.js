@@ -12,12 +12,6 @@ const styles = StyleSheet.create({
     marginTop: common.margin40,
     marginLeft: common.margin38,
     marginRight: common.margin38,
-    backgroundColor: common.navBgColor,
-    borderColor: common.borderColor,
-    borderRadius: 1,
-    borderWidth: 1,
-    height: common.h40,
-    flexDirection: 'row',
   },
   textStyle: {
     marginLeft: common.margin10,
@@ -28,7 +22,7 @@ const styles = StyleSheet.create({
   },
   textInputStyle: {
     fontSize: common.font12,
-    width: '55%',
+    width: '70%',
     color: 'white',
   },
 })
@@ -37,29 +31,61 @@ export default class TextInputLogin extends Component {
   componentDidMount() { }
 
   render() {
-    const { viewStyle, textStyle, placeholder, secureTextEntry,
-      title, onChange, value, keyboardType, maxLength } = this.props
+    const { viewStyle, textStyle, placeholder, secureTextEntry, password, type,
+      title, onChange, value, keyboardType, maxLength, textInputStyle } = this.props
 
     return (
       <View
         style={[styles.viewStyle, viewStyle]}
       >
-        <Text
-          style={[styles.textStyle, textStyle]}
-        >{title}</Text>
-        <TextInput
-          style={styles.textInputStyle}
-          autoCapitalize="none"
-          placeholder={placeholder}
-          placeholderTextColor={common.placeholderColor}
-          secureTextEntry={secureTextEntry}
-          multiline={false}
-          onChange={onChange}
-          value={value}
-          keyboardType={keyboardType}
-          maxLength={maxLength}
-          editable
-        />
+        <View
+          style={{
+            backgroundColor: common.navBgColor,
+            borderColor: common.borderColor,
+            borderRadius: 1,
+            borderWidth: 1,
+            height: common.h40,
+            flexDirection: 'row',
+          }}
+        >
+          <Text
+            style={[styles.textStyle, textStyle]}
+          >{title}</Text>
+          <TextInput
+            style={[styles.textInputStyle, textInputStyle]}
+            autoCapitalize="none"
+            placeholder={placeholder}
+            placeholderTextColor={common.placeholderColor}
+            secureTextEntry={secureTextEntry}
+            multiline={false}
+            onChange={onChange}
+            value={value}
+            keyboardType={keyboardType}
+            maxLength={maxLength}
+            editable
+          />
+        </View>
+        {
+          ((password && !common.regPassword.test(password)) ||
+            (password && !common.regSpace.test(password))) ?
+            (<Text
+              style={
+                type && type === 'login' ?
+                  {
+                    marginTop: common.margin5,
+                    color: common.redColor,
+                    fontSize: common.font12,
+                    textAlign: 'right',
+                  } : {
+                    position: 'absolute',
+                    top: common.margin5 + common.margin40,
+                    right: 0,
+                    color: common.redColor,
+                    fontSize: common.font12,
+                  }
+              }
+            >{common.regPasswordMsg}</Text>) : null
+        }
       </View>
     )
   }

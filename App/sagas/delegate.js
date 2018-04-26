@@ -103,8 +103,6 @@ export function* findDelegateSelfCurrent() {
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
       yield put({ type: constants.FIND_DELEGATE_SELF_CURRENT_SUCCEED, response })
-    } else {
-
     }
   }
 }
@@ -113,6 +111,8 @@ export function* findDelegateSelfHistory() {
   while (true) {
     const request = yield take(constants.FIND_DELEGATE_SELF_HISTORY_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_DELEGATE_SELF_HISTORY_SUCCEED, response })
+    if (response.success) {
+      yield put({ type: constants.FIND_DELEGATE_SELF_HISTORY_SUCCEED, response })
+    }
   }
 }

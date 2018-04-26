@@ -93,8 +93,9 @@ class UpdatePassword extends Component {
       Toast.message('请输入旧密码')
       return
     }
-    if (!newPassword.length) {
-      Toast.message('请输入新密码')
+    if (!newPassword.length || !common.regPassword.test(newPassword)
+      || !common.regSpace.test(newPassword)) {
+      Toast.message(common.regPasswordMsg)
       return
     }
     if (!newPasswordAgain.length) {
@@ -103,10 +104,6 @@ class UpdatePassword extends Component {
     }
     if (newPassword !== newPasswordAgain) {
       Toast.message('新密码输入不一致')
-      return
-    }
-    if (newPassword.length < 6) {
-      Toast.message('新密码至少为6位')
       return
     }
     this.showOverlay()
@@ -221,10 +218,13 @@ class UpdatePassword extends Component {
             value={oldPassword}
             onChange={e => this.onChange(e, 'oldPassword')}
             maxLength={common.textInputMaxLenPwd}
+            secureTextEntry
           />
           <TextInputPwd
             placeholder={'输入密码'}
             value={newPassword}
+            password={newPassword}
+            secureTextEntry
             onChange={e => this.onChange(e, 'newPassword')}
             maxLength={common.textInputMaxLenPwd}
           />
@@ -233,6 +233,7 @@ class UpdatePassword extends Component {
             value={newPasswordAgain}
             onChange={e => this.onChange(e, 'newPasswordAgain')}
             maxLength={common.textInputMaxLenPwd}
+            secureTextEntry
           />
 
           <BtnLogout

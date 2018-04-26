@@ -14,7 +14,7 @@ import BalanceCell from './BalanceCell'
 
 class Balance extends Component {
   static navigationOptions(props) {
-    const { navigation, user } = this.props
+    const { navigation, user } = props
     return {
       headerTitle: '资产',
       headerStyle: {

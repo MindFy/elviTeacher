@@ -149,10 +149,15 @@ class Login extends Component {
           />
 
           <TextInputLogin
+            textInputStyle={{
+              width: '80%',
+            }}
             title="密码"
-            placeholder="请输入密码"
+            placeholder={'请输入密码'}
             secureTextEntry
             value={password}
+            password={password}
+            type={'login'}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
           />

@@ -59,7 +59,7 @@ const common = {
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
 
-  bgColor: '#171B29', // 视图背景色
+  bgColor: 'rgb(24,27,42)', // 视图背景色
 
   sw,
   sh,
@@ -122,10 +122,13 @@ const common = {
 
   activeOpacity: 0.7,
 
-  regMobile: /^1[0-9]{10}/, // 手机号正则
+  regMobile: /^1[3|4|5|8][0-9]\d{4,8}$/,
   regMobileMsg: '请输入正确的手机号', // 手机号提示
-  regPassword: /^(?=.*[A-Z].*).{6,20}$/, // 密码正则
-  regPasswordMsg: '请输入6到20位密码,至少包含一个大写字母', // 密码提示
+  regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
+  regSpace: /^[^ ]+$/, // 空格正则
+  regPasswordMsg: '密码为6-20位数字和字符, 至少一个大写字母', // 密码提示
+  regIdCard18: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+  regIdCard15: /^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/,
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,

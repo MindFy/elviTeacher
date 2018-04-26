@@ -349,8 +349,7 @@ class Transactions extends Component {
                 this.getUIData(goods.id, currency.id)
               }}
               refreshing={
-                !latestDealsVisible && !getShelvesVisible && !getDepthMapVisible
-                  ? false : true
+                !(!latestDealsVisible && !getShelvesVisible && !getDepthMapVisible)
               }
               colors={[common.textColor]}
               progressBackgroundColor={common.navBgColor}

@@ -102,8 +102,9 @@ class Authentication extends Component {
       Toast.message('请输入姓名')
       return
     }
-    if (!idNo.length || idNo.length !== common.textInputMaxLenIdNo) {
-      Toast.message('请输入18位身份证号')
+    if (!idNo.length || !common.regIdCard18.test(idNo) ||
+      !common.regIdCard15.test(idNo)) {
+      Toast.message('请输入正确的身份证号')
       return
     }
     if (!idCardImages.first) {

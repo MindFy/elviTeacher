@@ -46,11 +46,7 @@ class ConfirmPwd extends Component {
 
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
-    if (!password.length) {
-      Toast.message('请设置密码')
-      return
-    }
-    if (!common.regPassword.test(password)) {
+    if (!password.length || !common.regPassword.test(password)) {
       Toast.show({
         style: {
           paddingLeft: common.margin20,
@@ -120,6 +116,7 @@ class ConfirmPwd extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
+            password={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
             secureTextEntry

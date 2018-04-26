@@ -156,6 +156,7 @@ class Home extends Component {
           <Text
             style={{
               marginTop: common.margin5,
+              marginBottom: common.margin10,
               alignSelf: 'center',
               color: common.textColor,
               fontSize: common.font14,

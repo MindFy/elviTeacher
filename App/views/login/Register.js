@@ -61,7 +61,7 @@ class Register extends Component {
       Toast.message('请输入正确的手机号')
       return
     }
-    count()
+    this.count = count
     dispatch(actions.getVerificateCode({
       mobile,
       service: 'register',
@@ -74,11 +74,8 @@ class Register extends Component {
       Toast.message('请输入手机号')
       return
     }
-    if (!password.length) {
-      Toast.message('请设置密码')
-      return
-    }
-    if (!password.length || !common.regPassword.test(password)) {
+    if (!password.length || !common.regPassword.test(password) ||
+      !common.regSpace.test(password)) {
       Toast.show({
         style: {
           paddingLeft: common.margin20,
@@ -121,6 +118,7 @@ class Register extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
+        this.count()
         Toast.success(getVerificateCodeResponse.result.message)
       } else {
         Toast.message(getVerificateCodeResponse.error.message)
@@ -194,6 +192,7 @@ class Register extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
+            password={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
             secureTextEntry
@@ -208,7 +207,6 @@ class Register extends Component {
             value={passwordAgain}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
-            password={password}
             passwordAgain={passwordAgain}
             secureTextEntry
           />

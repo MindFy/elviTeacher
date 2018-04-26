@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
-import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
