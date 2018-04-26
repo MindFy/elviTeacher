@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     marginTop: common.margin40,
     marginLeft: common.margin38,
     marginRight: common.margin38,
-    height: common.h35,
+    height: common.h40,
     backgroundColor: common.navBgColor,
     borderColor: common.borderColor,
     borderRadius: 1,

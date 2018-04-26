@@ -216,7 +216,7 @@ class Register extends Component {
                 style={{
                   alignSelf: 'center',
                   color: common.textColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >注册即同意</Text>
               <TouchableOpacity
@@ -226,7 +226,7 @@ class Register extends Component {
                 <Text
                   style={{
                     color: common.btnTextColor,
-                    fontSize: common.font10,
+                    fontSize: common.font12,
                   }}
                 >《xxx服务协议》</Text>
               </TouchableOpacity>
@@ -238,7 +238,7 @@ class Register extends Component {
               <Text
                 style={{
                   color: common.btnTextColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >已有账号？去登录</Text>
             </TouchableOpacity>

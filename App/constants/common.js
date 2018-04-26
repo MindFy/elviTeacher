@@ -55,6 +55,7 @@ const common = {
   borderColor05: 'rgba(52,60,92,0.5)',
   textColor: 'rgb(223,228,255)', // 单元格内文字颜色
   btnTextColor: 'rgb(255,213,2)',
+  loginBtnTitleColor: '#191B2B', // 登录/注册/下一步标题颜色
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
 

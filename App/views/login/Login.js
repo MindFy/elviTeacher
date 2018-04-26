@@ -165,7 +165,7 @@ class Login extends Component {
               <Text
                 style={{
                   color: common.btnTextColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >新用户注册</Text>
             </TouchableOpacity>
@@ -176,7 +176,7 @@ class Login extends Component {
               <Text
                 style={{
                   color: common.btnTextColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >忘记密码？</Text>
             </TouchableOpacity>
