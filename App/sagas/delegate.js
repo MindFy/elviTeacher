@@ -1,7 +1,16 @@
 import {
+  DeviceEventEmitter,
+} from 'react-native'
+import {
   take, call, put,
 } from 'redux-saga/effects'
+import {
+  Toast,
+} from 'teaset'
 import * as constants from '../constants/index'
+import {
+  common,
+} from '../constants/common'
 import * as api from '../services/api'
 
 /* 取消所有委托单(只有dealing状态的才可以取消) */
@@ -9,8 +18,14 @@ export function* allCancel() {
   while (true) {
     yield take(constants.ALL_CANCEL_REQUEST)
     const response = yield call(api.allCancel)
-    if (response.success) yield put({ type: constants.ALL_CANCEL_SUCCEED, response })
-    else yield put({ type: constants.ALL_CANCEL_FAILED, response })
+    if (response.success) {
+      Toast.success(response.result)
+      DeviceEventEmitter.emit(common.delegateListenerNoti)
+      yield put({ type: constants.ALL_CANCEL_SUCCEED, response })
+    } else {
+      Toast.fail(response.error.message)
+      yield put({ type: constants.ALL_CANCEL_FAILED, response })
+    }
   }
 }
 /* 取消委托单(只有dealing状态的才可以取消) */
@@ -19,12 +34,15 @@ export function* cancel() {
     const request = yield take(constants.CANCEL_REQUEST)
     const response = yield call(api.cancel, request.data)
     if (response.success) {
+      Toast.success(response.result)
+      DeviceEventEmitter.emit(common.delegateListenerNoti)
       yield put({
         type: constants.CANCEL_SUCCEED,
         response,
-        index: request.index,
+        delegateSelfCurrent: request.delegateSelfCurrent,
       })
     } else {
+      Toast.fail(response.error.message)
       yield put({ type: constants.CANCEL_FAILED, response })
     }
   }
@@ -34,8 +52,13 @@ export function* create() {
   while (true) {
     const request = yield take(constants.CREATE_REQUEST)
     const response = yield call(api.create, request.data)
-    if (response.success) yield put({ type: constants.CREATE_SUCCEED, response })
-    else yield put({ type: constants.CREATE_FAILED, response })
+    if (response.success) {
+      Toast.success('挂单成功')
+      yield put({ type: constants.CREATE_SUCCEED, response })
+    } else {
+      Toast.fail(response.error.message)
+      yield put({ type: constants.CREATE_FAILED, response })
+    }
   }
 }
 /* 按交易币币对，查询深度图 */
@@ -73,21 +96,23 @@ export function* getShelves() {
     }
   }
 }
-/* 用户获取委托单列表（按币币对） */
-export function* findDelegateList() {
+/* 用户获取当前委托 */
+export function* findDelegateSelfCurrent() {
   while (true) {
-    const request = yield take(constants.FIND_DELEGATE_LIST_REQUEST)
+    const request = yield take(constants.FIND_DELEGATE_SELF_CURRENT_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_DELEGATE_LIST_SUCCEED, response })
-    else yield put({ type: constants.FIND_DELEGATE_LIST_FAILED, response })
+    if (response.success) {
+      yield put({ type: constants.FIND_DELEGATE_SELF_CURRENT_SUCCEED, response })
+    }
   }
 }
-/* 用户获取委托单列表 */
-export function* findDelegateSelf() {
+/* 用户获取历史委托 */
+export function* findDelegateSelfHistory() {
   while (true) {
-    const request = yield take(constants.FIND_DELEGATE_SELF_REQUEST)
+    const request = yield take(constants.FIND_DELEGATE_SELF_HISTORY_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_DELEGATE_SELF_SUCCEED, response })
-    else yield put({ type: constants.FIND_DELEGATE_SELF_FAILED, response })
+    if (response.success) {
+      yield put({ type: constants.FIND_DELEGATE_SELF_HISTORY_SUCCEED, response })
+    }
   }
 }

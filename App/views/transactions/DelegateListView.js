@@ -105,24 +105,7 @@ export default class Delegate extends Component {
   renderRow(rd, sid, rid) {
     const { currentOrHistory, cancelBlock } = this.props
     if (currentOrHistory === common.current) {
-      const createdAtDate = new Date(rd.createdAt)
-      const getYear = createdAtDate.getFullYear()
-      const getMonth = createdAtDate.getMonth() < 10 ?
-        `0${createdAtDate.getMonth()}` :
-        createdAtDate.getMonth()
-      const getDate = createdAtDate.getDate() < 10 ?
-        `0${createdAtDate.getDate()}` :
-        createdAtDate.getDate()
-      const getHours = createdAtDate.getHours() < 10 ?
-        `0${createdAtDate.getHours()}` :
-        createdAtDate.getHours()
-      const getMinutes = createdAtDate.getMinutes() < 10 ?
-        `0${createdAtDate.getMinutes()}` :
-        createdAtDate.getMinutes()
-      const getSeconds = createdAtDate.getSeconds() < 10 ?
-        `0${createdAtDate.getSeconds()}` :
-        createdAtDate.getSeconds()
-      const createdAt = `${getYear}/${getMonth}/${getDate} ${getHours}:${getMinutes}:${getSeconds}`
+      const createdAt = common.df(rd.createdAt)
 
       return (
         <View

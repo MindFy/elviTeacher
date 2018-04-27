@@ -30,8 +30,8 @@ class Home extends Component {
     this.showFindBannersResponse = false
   }
 
-  componentWillMount() {
-    const { dispatch } = this.props
+  componentDidMount() {
+    const { dispatch, user } = this.props
     dispatch(actions.sync())
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
@@ -41,10 +41,10 @@ class Home extends Component {
       switch (resp) {
         case constants.SYNC_SUCCEED:
           storeRead(common.user, (result) => {
-            const user = JSON.parse(result)
-            dispatch(actions.findUserUpdate(user))
-            dispatch(actions.findUser(schemas.findUser(user.id)))
-            dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+            const temp = JSON.parse(result)
+            dispatch(actions.findUserUpdate(temp))
+            dispatch(actions.findUser(schemas.findUser(temp.id)))
+            dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
           })
           break
         case constants.SYNC_FAILED:
@@ -78,6 +78,11 @@ class Home extends Component {
               }))
             }
           })
+          break
+        case constants.ID_CARD_AUTH_SUCCEED:
+          user.idCardAuthStatus = common.waiting
+          dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
+          dispatch(actions.findUser(schemas.findUser(user.id)))
           break
         default:
           break
@@ -151,6 +156,7 @@ class Home extends Component {
           <Text
             style={{
               marginTop: common.margin5,
+              marginBottom: common.margin10,
               alignSelf: 'center',
               color: common.textColor,
               fontSize: common.font14,

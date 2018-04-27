@@ -46,6 +46,7 @@ export default class Depth extends Component {
         show: false,
       },
       color: [common.bidColor, common.askColor],
+      backgroundColor: 'transparent',
       legend: {
         show: true,
         type: 'plain',

@@ -60,7 +60,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/市场分析.png') : require('./assets/市场分析.png')}
+            source={focused ? require('./assets/市场selected.png') : require('./assets/市场分析.png')}
           />
         ),
       },

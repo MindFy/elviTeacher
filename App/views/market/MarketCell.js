@@ -70,7 +70,7 @@ export default class MarketCell extends Component {
             marginLeft: common.margin10,
             marginRight: common.margin10,
             height: 1,
-            backgroundColor: common.textColor,
+            backgroundColor: common.placeholderColor,
           }}
         />
       </View>

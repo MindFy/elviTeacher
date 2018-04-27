@@ -17,7 +17,7 @@ export default class TKButtonGetVerificateCode extends Component {
   onPress() {
     const { onPress } = this.props
     onPress(() => {
-      this.setState({ title: `${count}`, disabled: true })
+      this.setState({ title: `${count}s`, disabled: true })
       this.timer = setInterval(() => {
         count--
         if (count === 0) {
@@ -25,7 +25,7 @@ export default class TKButtonGetVerificateCode extends Component {
           clearInterval(this.timer)
           this.setState({ title: '获取验证码', disabled: false })
         } else {
-          this.setState({ title: `${count}` })
+          this.setState({ title: `${count}s` })
         }
       }, 1000)
     })

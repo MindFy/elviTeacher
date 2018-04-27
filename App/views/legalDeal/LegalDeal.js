@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
+import Spinner from 'react-native-spinkit'
 import {
   common,
 } from '../../constants/common'
@@ -119,141 +120,154 @@ class LegalDeal extends Component {
   }
 
   render() {
-    const { direct, price, quantity } = this.props
+    const { direct, price, quantity, legalDealCreateVisible } = this.props
     this.handleLegalDealCreateRequest()
 
     return (
-      <ScrollView
+      <View
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
         }}
       >
-        <TKSelectionBar
-          leftTitle={'买入'}
-          rightTitle={'卖出'}
-          leftBlock={() => this.selectionBarPress(common.buy)}
-          rightBlock={() => this.selectionBarPress(common.sell)}
-        />
-
-        <View
-          style={{
-            marginTop: common.margin20,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            height: common.h40,
-            borderWidth: 1,
-            borderColor: common.borderColor,
-            backgroundColor: common.navBgColor,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font14,
-              alignSelf: 'center',
-            }}
-          >{Number(price).toFixed(2)}</Text>
-          <Text
-            style={{
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font14,
-              alignSelf: 'center',
-            }}
-          >元</Text>
-        </View>
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            height: common.h40,
-            borderWidth: 1,
-            borderColor: common.borderColor,
-            backgroundColor: common.navBgColor,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <TextInput
-            style={{
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font14,
-              width: '70%',
-              alignSelf: 'center',
-            }}
-            placeholder={`${direct === common.buy ? '买入' : '卖出'}数量`}
-            placeholderTextColor={common.placeholderColor}
-            keyboardType={'number-pad'}
-            value={quantity === 0 ? '' : `${quantity}`}
-            onChange={e => this.quantityOnChange(e)}
+        <ScrollView>
+          <TKSelectionBar
+            leftTitle={'买入'}
+            rightTitle={'卖出'}
+            leftBlock={() => this.selectionBarPress(common.buy)}
+            rightBlock={() => this.selectionBarPress(common.sell)}
           />
+
+          <View
+            style={{
+              marginTop: common.margin20,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              height: common.h40,
+              borderWidth: 1,
+              borderColor: common.borderColor,
+              backgroundColor: common.navBgColor,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.textColor,
+                fontSize: common.font14,
+                alignSelf: 'center',
+              }}
+            >{Number(price).toFixed(2)}</Text>
+            <Text
+              style={{
+                marginRight: common.margin10,
+                color: common.textColor,
+                fontSize: common.font14,
+                alignSelf: 'center',
+              }}
+            >元</Text>
+          </View>
+          <View
+            style={{
+              marginTop: common.margin10,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              height: common.h40,
+              borderWidth: 1,
+              borderColor: common.borderColor,
+              backgroundColor: common.navBgColor,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <TextInput
+              style={{
+                marginLeft: common.margin10,
+                color: common.textColor,
+                fontSize: common.font14,
+                width: '70%',
+                alignSelf: 'center',
+              }}
+              placeholder={`${direct === common.buy ? '买入' : '卖出'}数量`}
+              placeholderTextColor={common.placeholderColor}
+              keyboardType={'number-pad'}
+              value={quantity === 0 ? '' : `${quantity}`}
+              onChange={e => this.quantityOnChange(e)}
+            />
+            <Text
+              style={{
+                marginRight: common.margin10,
+                color: common.textColor,
+                fontSize: common.font14,
+                alignSelf: 'center',
+              }}
+            >CNYT</Text>
+          </View>
+
           <Text
             style={{
-              marginRight: common.margin10,
+              marginTop: common.margin10,
+              marginLeft: common.margin10,
               color: common.textColor,
               fontSize: common.font14,
-              alignSelf: 'center',
             }}
-          >CNYT</Text>
-        </View>
+          >{`${
+              direct === common.buy ? '买入' : '卖出'
+            }总计:${Number(price * quantity).toFixed(2)}元`}</Text>
 
-        <Text
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            color: common.textColor,
-            fontSize: common.font14,
-          }}
-        >{`${
-            direct === common.buy ? '买入' : '卖出'
-          }总计:${Number(price * quantity).toFixed(2)}元`}</Text>
+          <TouchableOpacity
+            style={{
+              marginTop: common.margin10,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              backgroundColor: common.navBgColor,
+              height: common.h40,
+              justifyContent: 'center',
+            }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.createPress()}
+          >
+            <Text
+              style={{
+                color: common.btnTextColor,
+                fontSize: common.font14,
+                alignSelf: 'center',
+              }}
+            >{direct === common.buy ? '买入' : '卖出'}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            backgroundColor: common.navBgColor,
-            height: common.h40,
-            justifyContent: 'center',
-          }}
-          activeOpacity={common.activeOpacity}
-          onPress={() => this.createPress()}
-        >
           <Text
             style={{
-              color: common.btnTextColor,
-              fontSize: common.font14,
-              alignSelf: 'center',
+              marginTop: common.margin15,
+              marginLeft: common.margin10,
+              color: common.textColor,
+              fontSize: common.font12,
             }}
-          >{direct === common.buy ? '买入' : '卖出'}</Text>
-        </TouchableOpacity>
-
-        <Text
+          >温馨提示</Text>
+          <Text
+            style={{
+              marginTop: common.margin10,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              color: common.textColor,
+              fontSize: common.font10,
+              lineHeight: 14,
+            }}
+          >{'1. 买卖商户均为实地考察认证商户，并提供100万usdt保证金，您每次兑换会冻结商户资产，商户资产不够时，不能接单，可放心兑换；\n2. 买卖商户均为实名认证商户，可放心兑换；\n3. 请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会退款。（禁止微信和支付宝）'}</Text>
+        </ScrollView>
+        <Spinner
           style={{
-            marginTop: common.margin15,
-            marginLeft: common.margin10,
-            color: common.textColor,
-            fontSize: common.font12,
+            position: 'absolute',
+            alignSelf: 'center',
+            marginTop: common.sh / 2 - common.h50 / 2 - 64,
           }}
-        >温馨提示</Text>
-        <Text
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            color: common.textColor,
-            fontSize: common.font10,
-            lineHeight: 14,
-          }}
-        >{'1. 买卖商户均为实地考察认证商户，并提供100万usdt保证金，您每次兑换会冻结商户资产，商户资产不够时，不能接单，可放心兑换；\n2. 买卖商户均为实名认证商户，可放心兑换；\n3. 请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会退款。（禁止微信和支付宝）'}</Text>
-      </ScrollView>
+          isVisible={legalDealCreateVisible}
+          size={common.h50}
+          type={'Wave'}
+          color={common.btnTextColor}
+        />
+      </View>
     )
   }
 }

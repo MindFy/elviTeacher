@@ -14,7 +14,7 @@ import BalanceCell from './BalanceCell'
 
 class Balance extends Component {
   static navigationOptions(props) {
-    const { navigation, user } = props
+    const { navigation } = props
     return {
       headerTitle: '资产',
       headerStyle: {
@@ -30,8 +30,7 @@ class Balance extends Component {
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => {
-              if (user) navigation.navigate('History')
-              else navigation.navigate('LoginStack')
+              navigation.navigate('History')
             }}
           >
             <Text
@@ -46,15 +45,13 @@ class Balance extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
+  constructor() {
+    super()
 
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
   }
-
-  componentDidMount() { }
 
   renderRow(rd) {
     return (
@@ -91,7 +88,7 @@ class Balance extends Component {
               fontSize: common.font30,
               alignSelf: 'center',
             }}
-            >{asset ? 0 : 0}</Text>
+            >{0}</Text>
             <Text style={{
               marginLeft: common.margin5,
               fontSize: common.font10,
@@ -181,7 +178,7 @@ class Balance extends Component {
             style={{
               marginTop: common.margin10,
             }}
-            dataSource={this.dataSource(!asset ? [] : asset)}
+            dataSource={this.dataSource(asset)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
           />

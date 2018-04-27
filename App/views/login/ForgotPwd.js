@@ -48,11 +48,11 @@ class ForgotPwd extends Component {
 
   codePress(count) {
     const { dispatch, mobile } = this.props
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
-    count()
+    this.count = count
     dispatch(actions.getVerificateCode({
       mobile,
       service: 'reset',
@@ -69,7 +69,7 @@ class ForgotPwd extends Component {
       Toast.message('请输入验证码')
       return
     }
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
@@ -91,6 +91,7 @@ class ForgotPwd extends Component {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
         Toast.success(getVerificateCodeResponse.result.message)
+        this.count()
       } else {
         Toast.fail(getVerificateCodeResponse.error.message)
       }
@@ -151,7 +152,7 @@ class ForgotPwd extends Component {
             keyboardType="number-pad"
             value={code}
             maxLength={6}
-            codePress={count => this.codePress(count)}
+            onPress={count => this.codePress(count)}
             onChange={e => this.onChange(e, 'code')}
           />
 

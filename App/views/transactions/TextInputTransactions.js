@@ -8,7 +8,7 @@ export default class TextInputTranscations extends Component {
   componentDidMount() { }
 
   render() {
-    const { textInputStyle, placeholder, value, onChange, keyboardType } = this.props
+    const { textInputStyle, placeholder, value, onChange, keyboardType, editable } = this.props
     return (
       <TextInput
         style={[{
@@ -29,6 +29,7 @@ export default class TextInputTranscations extends Component {
         autoCorrect={false}
         value={value}
         onChange={onChange}
+        editable={editable}
       />
     )
   }

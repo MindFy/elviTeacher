@@ -12,8 +12,9 @@ import {
 
 export default class Payment extends Component {
   static navigationOptions(props) {
+    const { navigation } = props
     return {
-      headerTitle: '付款/收款信息',
+      headerTitle: navigation.state.params.data.direct === common.buy ? '付款信息' : '收款信息',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -43,6 +44,29 @@ export default class Payment extends Component {
   componentDidMount() { }
 
   render() {
+    const { navigation } = this.props
+    const rd = navigation.state.params.data
+    let titleName = ''
+    let titleBankName = ''
+    let titleBankNo = ''
+    const name = ''
+    let bankName = ''
+    let bankNo = ''
+    if (rd.direct === common.buy) {
+      // name = rd.trader.name
+      bankName = rd.traderPayinfo.bankName
+      bankNo = rd.traderPayinfo.bankNo
+      titleName = '收款方户名'
+      titleBankName = '收款方开户行'
+      titleBankNo = '收款方账号'
+    } else if (rd.direct === common.sell) {
+      // name = rd.creater.name
+      bankName = rd.createrPayinfo.bankName
+      bankNo = rd.createrPayinfo.bankNo
+      titleName = '汇款方户名'
+      titleBankName = '汇款方开户行'
+      titleBankNo = '汇款方账号'
+    }
     return (
       <ScrollView
         style={{
@@ -65,7 +89,7 @@ export default class Payment extends Component {
             color: common.textColor,
             alignSelf: 'center',
           }}
-        >¥100</Text>
+        >{`¥${rd.dealPrice * rd.quantity}`}</Text>
 
         <View
           style={{
@@ -80,14 +104,14 @@ export default class Payment extends Component {
               color: common.placeholderColor,
               fontSize: common.font12,
             }}
-          >收款方户名</Text>
+          >{titleName}</Text>
           <Text
             style={{
               marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >万梦婧</Text>
+          >{name}</Text>
         </View>
         <View
           style={{
@@ -102,14 +126,14 @@ export default class Payment extends Component {
               color: common.placeholderColor,
               fontSize: common.font12,
             }}
-          >收款方开户行</Text>
+          >{titleBankName}</Text>
           <Text
             style={{
               marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >中国工商银行</Text>
+          >{bankName}</Text>
         </View>
         <View
           style={{
@@ -124,14 +148,14 @@ export default class Payment extends Component {
               color: common.placeholderColor,
               fontSize: common.font12,
             }}
-          >收款方账号</Text>
+          >{titleBankNo}</Text>
           <Text
             style={{
               marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >61234152364512634516</Text>
+          >{bankNo}</Text>
         </View>
         <View
           style={{

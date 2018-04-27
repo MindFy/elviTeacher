@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
 import {
-  View,
   Text,
   Image,
   TouchableOpacity,
 } from 'react-native'
-import ImagePicker from 'react-native-image-picker'
+import ImagePicker from 'rn-image-picker-d3j'
 import { common } from '../../constants/common'
 
 const options = {
-  title: 'Select Avatar',
+  title: '请选择一张图片',
+  cancelButtonTitle: '取消',
+  takePhotoButtonTitle: '拍照',
+  chooseFromLibraryButtonTitle: '从相册选择',
   customButtons: [],
   storageOptions: {
     skipBackup: true,
@@ -24,6 +26,8 @@ export default class SelectImage extends Component {
     const { imagePickerBlock } = this.props
     ImagePicker.showImagePicker(options, (response) => {
       if (response.data && response.data.length) {
+        console.log('resp---》', response)
+        
         imagePickerBlock(response)
       }
     })
@@ -53,7 +57,7 @@ export default class SelectImage extends Component {
       )
     }
     return (
-      <View
+      <TouchableOpacity
         style={{
           marginTop: common.margin10,
           marginLeft: common.margin10,
@@ -63,25 +67,18 @@ export default class SelectImage extends Component {
           borderColor: common.borderColor,
           borderWidth: 1,
         }}
+        activeOpacity={common.activeOpacity}
+        onPress={() => this.showImagePicker()}
       >
-        <TouchableOpacity
+        <Image
           style={{
             marginTop: common.margin28,
             width: common.w40,
             height: common.w40,
             alignSelf: 'center',
           }}
-          activeOpacity={common.activeOpacity}
-          onPress={() => this.showImagePicker()}
-        >
-          <Image
-            style={{
-              width: common.w40,
-              height: common.w40,
-            }}
-            source={require('../../assets/添加copy2.png')}
-          />
-        </TouchableOpacity>
+          source={require('../../assets/添加copy2.png')}
+        />
         <Text
           style={{
             marginTop: common.margin20,
@@ -90,7 +87,7 @@ export default class SelectImage extends Component {
             alignSelf: 'center',
           }}
         >{title}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 }
