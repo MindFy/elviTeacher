@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import logger from 'redux-logger'
 import rootReducer from '../reducers/index'
 import rootSaga from '../sagas'
 
@@ -8,7 +9,7 @@ const configureStore = (preloadedState) => {
   const store = createStore(
     rootReducer,
     preloadedState,
-    applyMiddleware(sagaMiddleware),
+    applyMiddleware(sagaMiddleware, logger),
   )
 
   sagaMiddleware.run(rootSaga)
