@@ -1,16 +1,6 @@
 import * as constants from '../constants/index'
 
 const initialState = {
-  goods: {
-    id: 1,
-    name: 'TK',
-    description: 'this is TK',
-  },
-  currency: {
-    id: 3,
-    name: 'CNYT',
-    description: 'this is CNYT',
-  },
   deal: [],
   latestDeals: [],
 

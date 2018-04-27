@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -12,7 +13,7 @@ import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import KLine from './KLineWeb'
 
-export default class Detail extends Component {
+class Detail extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '详情',
@@ -490,6 +491,7 @@ export default class Detail extends Component {
             renderHeader={() => this.renderHeader(this.state.isOrderPress)}
             renderRow={rd => this.renderRow(rd, this.state.isOrderPress)}
             enableEmptySections
+            removeClippedSubviews={false}
           />
 
         </ScrollView>
@@ -554,3 +556,20 @@ export default class Detail extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    shelvesBuy: store.delegate.shelvesBuy,
+    shelvesSell: store.delegate.shelvesSell,
+    depthMap: store.delegate.depthMap,
+
+    latestDeals: store.deal.latestDeals,
+
+    homeRose: store.dealstat.homeRose,
+    homeRoseSelected: store.dealstat.homeRoseSelected,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Detail)

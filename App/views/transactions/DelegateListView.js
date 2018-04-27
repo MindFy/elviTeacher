@@ -255,6 +255,7 @@ export default class Delegate extends Component {
         renderHeader={() => this.renderHeader()}
         renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
         enableEmptySections
+        removeClippedSubviews={false}
       />
     )
   }

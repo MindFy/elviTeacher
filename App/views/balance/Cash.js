@@ -168,6 +168,7 @@ class Cash extends Component {
             dataSource={this.dataSource(address)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
+            removeClippedSubviews={false}
           />
           {
             selectedToken.id === 2 ?

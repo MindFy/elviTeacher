@@ -181,6 +181,7 @@ class Balance extends Component {
             dataSource={this.dataSource(asset)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
+            removeClippedSubviews={false}
           />
 
         </ScrollView>

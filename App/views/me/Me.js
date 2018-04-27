@@ -149,6 +149,9 @@ class Me extends Component {
             rightImageHide
           />
           <MeCell
+            viewStyle={{
+              marginTop: common.margin10,
+            }}
             onPress={() => {
               if (user) navigation.navigate('Authentication')
               else navigation.navigate('LoginStack')

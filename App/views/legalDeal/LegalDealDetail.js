@@ -287,6 +287,7 @@ class LegalDealDetail extends Component {
         dataSource={this.dataSource(legalDeal)}
         renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
         enableEmptySections
+        removeClippedSubviews={false}
       />
     )
   }

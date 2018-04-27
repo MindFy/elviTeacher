@@ -37,8 +37,8 @@ class Home extends Component {
     dispatch(actions.findBanners(schemas.findBanners()))
     dispatch(actions.getRose())
 
-    this.listener = DeviceEventEmitter.addListener(common.listenerNoti, (resp) => {
-      switch (resp) {
+    this.listener = DeviceEventEmitter.addListener(common.listenerNoti, (type, resp) => {
+      switch (type) {
         case constants.SYNC_SUCCEED:
           storeRead(common.user, (result) => {
             const temp = JSON.parse(result)
@@ -79,6 +79,11 @@ class Home extends Component {
             }
           })
           break
+        case constants.GET_ROSE_SUCCEED:
+          dispatch(actions.getShelves({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          break
         default:
           break
       }
@@ -102,7 +107,7 @@ class Home extends Component {
   }
 
   render() {
-    const { announcement, imgHashApi, navigation, user } = this.props
+    const { announcement, imgHashApi, navigation, user, homeRose } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -132,10 +137,10 @@ class Home extends Component {
           }}
           activeOpacity={common.activeOpacity}
           onPress={() => {
-            if (user) {
-              navigation.navigate(navigateKeys[i])
-            } else {
+            if (!user) {
               navigation.navigate('LoginStack')
+            } else {
+              navigation.navigate(navigateKeys[i])
             }
           }}
         >
@@ -214,9 +219,10 @@ class Home extends Component {
           </View>
 
           <ListView
-            dataSource={this.dataSource([])}
+            dataSource={this.dataSource(homeRose)}
             renderRow={rd => this.renderRow(rd)}
             enableEmptySections
+            removeClippedSubviews={false}
           />
         </ScrollView>
       </View>
@@ -231,7 +237,7 @@ function mapStateToProps(store) {
     banners: store.banners.banners,
     imgHashApi: store.banners.imgHashApi,
 
-    rose: store.dealstat.rose,
+    homeRose: store.dealstat.homeRose,
 
     user: store.user.user,
   }

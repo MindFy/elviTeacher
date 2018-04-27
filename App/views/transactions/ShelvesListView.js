@@ -49,7 +49,7 @@ export default class ShelvesListView extends Component {
   }
 
   renderShelvesHeader() {
-    const { type, goods, currency } = this.props
+    const { type, goodsName, currencyName } = this.props
     if (type === common.buy) {
       return (
         <View style={{
@@ -64,12 +64,12 @@ export default class ShelvesListView extends Component {
             color: common.placeholderColor,
             fontSize: common.font10,
           }}
-          >{`价格(${currency.name})`}</Text>
+          >{`价格(${currencyName})`}</Text>
           <Text style={{
             color: common.placeholderColor,
             fontSize: common.font10,
           }}
-          >{`数量(${goods.name})`}</Text>
+          >{`数量(${goodsName})`}</Text>
         </View>
       )
     }
@@ -84,6 +84,7 @@ export default class ShelvesListView extends Component {
         renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
         renderHeader={() => this.renderShelvesHeader()}
         enableEmptySections
+        removeClippedSubviews={false}
       />
     )
   }
