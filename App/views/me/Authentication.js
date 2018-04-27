@@ -7,6 +7,7 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  DeviceEventEmitter,
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
@@ -17,6 +18,7 @@ import SelectImage from './SelectImage'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'
 import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Authentication extends Component {
   static navigationOptions(props) {
@@ -54,7 +56,7 @@ class Authentication extends Component {
     this.showIdCardAuthResponse = false
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { dispatch, user, imgHashApi, authenticationAgain } = this.props
 
     dispatch(actions.idCardAuthUpdate({
@@ -68,6 +70,11 @@ class Authentication extends Component {
         } : {},
       authenticationAgain,
     }))
+    this.listener = DeviceEventEmitter.addListener(common.authenticationListenerNoti, () => {
+      user.idCardAuthStatus = common.waiting
+      dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
+      dispatch(actions.findUser(schemas.findUser(user.id)))
+    })
   }
 
   componentWillUnmount() {
@@ -78,6 +85,7 @@ class Authentication extends Component {
       idCardImages: {},
       authenticationAgain: false,
     }))
+    this.listener.remove()
   }
 
   onChange(event, tag) {
@@ -118,18 +126,6 @@ class Authentication extends Component {
       Toast.message('请上传手持身份证照片')
       return
     }
-    PutObject.putObject({
-      url: imgHashApi,
-      path: idCardImages.first.uri,
-      async: true,
-      header: [{
-        key: 'Content-Type',
-        value: 'application/octet-stream',
-      }],
-      method: 'POST',
-    }, (r) => {
-      console.log('----r----->', r)
-    })
     PutObject.mulitPutObject({
       url: imgHashApi,
       path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
@@ -140,30 +136,30 @@ class Authentication extends Component {
       }],
       method: 'POST',
     }, (r) => {
-      console.log('----rs----->', r)
+      if (r.result && r.res[0].length) {
+        const h1 = JSON.parse(r.res[0])
+        const h2 = JSON.parse(r.res[1])
+        const h3 = JSON.parse(r.res[2])
+        dispatch(actions.idCardAuth({
+          name,
+          idNo,
+          idCardImages: [h1.hash, h2.hash, h3.hash],
+        }))
+      }
     })
-    // dispatch(actions.idCardAuth({
-    //   name,
-    //   idNo: Number(idNo),
-    //   idCardImages: [
-    //     idCardImages.first.hash,
-    //     idCardImages.second.hash,
-    //     idCardImages.third.hash,
-    //   ],
-    // }))
   }
 
-  imagePicker(response, tag) {
+  imagePicker(uri, tag) {
     const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
     switch (tag) {
       case 'first':
-        idCardImages.first = { uri: response.uri, hash: '' }
+        idCardImages.first = { uri, hash: '' }
         break
       case 'second':
-        idCardImages.second = { uri: response.uri, hash: '' }
+        idCardImages.second = { uri, hash: '' }
         break
       case 'third':
-        idCardImages.third = { uri: response.uri, hash: '' }
+        idCardImages.third = { uri, hash: '' }
         break
       default:
         break

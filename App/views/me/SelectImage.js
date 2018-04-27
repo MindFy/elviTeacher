@@ -25,10 +25,9 @@ export default class SelectImage extends Component {
   showImagePicker() {
     const { imagePickerBlock } = this.props
     ImagePicker.showImagePicker(options, (response) => {
-      if (response.data && response.data.length) {
-        console.log('resp---》', response)
-        
-        imagePickerBlock(response)
+      if (response.uri && response.uri.length) {
+        const uri = response.uri.replace('file://', '')
+        imagePickerBlock(uri)
       }
     })
   }

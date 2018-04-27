@@ -12,6 +12,7 @@ const common = {
   selectedTokenDefault: '选择币种',
   listenerNoti: 'listenerNoti',
   delegateListenerNoti: 'delegateListenerNoti',
+  authenticationListenerNoti: 'authenticationListenerNoti',
   buy: 'buy',
   sell: 'sell',
   recharge: 'recharge',

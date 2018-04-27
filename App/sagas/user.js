@@ -47,7 +47,7 @@ export function* idCardAuth() {
     const request = yield take(constants.ID_CARD_AUTH_REQUEST)
     const response = yield call(api.idCardAuth, request.data)
     if (response.success) {
-      DeviceEventEmitter.emit(common.listenerNoti, constants.ID_CARD_AUTH_SUCCEED)
+      DeviceEventEmitter.emit(common.authenticationListenerNoti)
       yield put({ type: constants.ID_CARD_AUTH_SUCCEED, response })
     } else {
       yield put({ type: constants.ID_CARD_AUTH_FAILED, response })
