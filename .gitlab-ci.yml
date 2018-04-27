@@ -5,7 +5,7 @@ stages:
 build_job:
   stage: build
   script:
-  - nrm use taobao
+  - nrm use d3j
   - npm install
   - react-native link
   - npm run upload2fir
