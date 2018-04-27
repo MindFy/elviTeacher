@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontSize: common.font16,
-    color: 'white',
+    color: common.loginBtnTitleColor,
     textAlign: 'center',
   },
 })

@@ -20,12 +20,7 @@ class ConfirmPwd extends Component {
 
   componentWillUnmount() {
     const { dispatch, mobile, code } = this.props
-    dispatch(actions.registerUpdate({
-      mobile,
-      code,
-      password: '',
-      passwordAgain: '',
-    }))
+    dispatch(actions.registerUpdate({ mobile, code, password: '', passwordAgain: '' }))
   }
 
   onChange(event, tag) {
@@ -46,8 +41,15 @@ class ConfirmPwd extends Component {
 
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
-    if (!password.length) {
-      Toast.message('请设置密码')
+    if (!password.length || !common.regPassword.test(password)) {
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: common.regPasswordMsg,
+        position: 'bottom',
+      })
       return
     }
     if (!passwordAgain.length) {
@@ -58,10 +60,6 @@ class ConfirmPwd extends Component {
       Toast.message('两次密码输入不一致')
       return
     }
-    if (password.length < 6) {
-      Toast.message('密码至少为6位')
-      return
-    }
     dispatch(actions.resetPassword({
       mobile,
       code,
@@ -70,7 +68,7 @@ class ConfirmPwd extends Component {
   }
 
   HandleResetPasswordRequest() {
-    const { resetPasswordVisible, resetPasswordResponse, navigation } = this.props
+    const { dispatch, resetPasswordVisible, resetPasswordResponse, navigation } = this.props
     if (!resetPasswordVisible && !this.showResetPasswordResponse) return
 
     if (resetPasswordVisible) {
@@ -79,6 +77,7 @@ class ConfirmPwd extends Component {
       this.showResetPasswordResponse = false
       if (resetPasswordResponse.success) {
         Toast.success('重置密码成功')
+        dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
         navigation.goBack('Login')
       } else {
         Toast.fail(resetPasswordResponse.error.message)
@@ -113,8 +112,10 @@ class ConfirmPwd extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
+            password={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
+            secureTextEntry
           />
 
           <TextInputLogin
@@ -126,6 +127,7 @@ class ConfirmPwd extends Component {
             value={passwordAgain}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
+            secureTextEntry
           />
 
           <BtnLogin

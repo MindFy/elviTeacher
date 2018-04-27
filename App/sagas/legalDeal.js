@@ -1,6 +1,9 @@
 import {
   take, call, put,
 } from 'redux-saga/effects'
+import {
+  Toast,
+} from 'teaset'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
 
@@ -9,8 +12,15 @@ export function* legalDealCancel() {
   while (true) {
     const request = yield take(constants.LEGAL_DEAL_CANCEL_REQUEST)
     const response = yield call(api.legalDealCancel, request.data)
-    if (response.success) yield put({ type: constants.LEGAL_DEAL_CANCEL_SUCCEED, response })
-    else yield put({ type: constants.LEGAL_DEAL_CANCEL_FAILED, response })
+    if (response.success) {
+      Toast.success(response.result)
+      yield put({
+        type: constants.LEGAL_DEAL_CANCEL_SUCCEED,
+        legalDeal: request.legalDeal,
+      })
+    } else {
+      Toast.fail(response.error.message)
+    }
   }
 }
 
@@ -39,8 +49,8 @@ export function* findLegalDeal() {
   while (true) {
     const request = yield take(constants.FIND_LEGAL_DEAL_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_LEGAL_DEAL_SUCCEED, response })
-    else yield put({ type: constants.FIND_LEGAL_DEAL_FAILED, response })
+    const legalDeal = response.result.data.find_legalDeal
+    if (response.success) yield put({ type: constants.FIND_LEGAL_DEAL_SUCCEED, legalDeal })
   }
 }
 

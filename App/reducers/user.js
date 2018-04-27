@@ -6,6 +6,7 @@ const initialState = {
   name: '',
   idNo: '',
   idCardImages: {},
+  authenticationAgain: false,
 
   mobileLogin: '',
   passwordLogin: '',
@@ -139,6 +140,7 @@ export default function user(state = initialState, action) {
         name: action.data.name,
         idNo: action.data.idNo,
         idCardImages: action.data.idCardImages,
+        authenticationAgain: action.data.authenticationAgain,
       }
       break
     case constants.IS_EXIST_REQUEST:

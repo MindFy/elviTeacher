@@ -9,9 +9,6 @@ const initialState = {
   price: 1,
   quantity: 0,
 
-  legalDealCancelVisible: false,
-  legalDealCancelResponse: undefined,
-
   confirmPayVisible: false,
   confirmPayResponse: undefined,
 
@@ -29,24 +26,10 @@ export default function legalDeal(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case constants.LEGAL_DEAL_CANCEL_REQUEST:
-      nextState = {
-        ...state,
-        legalDealCancelVisible: true,
-      }
-      break
     case constants.LEGAL_DEAL_CANCEL_SUCCEED:
       nextState = {
         ...state,
-        legalDealCancelVisible: false,
-        legalDealCancelResponse: action.response,
-      }
-      break
-    case constants.LEGAL_DEAL_CANCEL_FAILED:
-      nextState = {
-        ...state,
-        legalDealCancelVisible: false,
-        legalDealCancelResponse: action.response,
+        legalDeal: action.legalDeal,
       }
       break
     case constants.CONFIRM_PAY_REQUEST:
@@ -89,24 +72,10 @@ export default function legalDeal(state = initialState, action) {
         legalDealCreateResponse: action.response,
       }
       break
-    case constants.FIND_LEGAL_DEAL_REQUEST:
-      nextState = {
-        ...state,
-        findLegalDealVisible: true,
-      }
-      break
     case constants.FIND_LEGAL_DEAL_SUCCEED:
       nextState = {
         ...state,
-        findLegalDealVisible: false,
-        findLegalDealResponse: action.response,
-      }
-      break
-    case constants.FIND_LEGAL_DEAL_FAILED:
-      nextState = {
-        ...state,
-        findLegalDealVisible: false,
-        findLegalDealResponse: action.response,
+        legalDeal: action.legalDeal,
       }
       break
     case constants.HAVED_PAY_REQUEST:

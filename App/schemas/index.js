@@ -1,7 +1,7 @@
 import findUser from './user'
 import {
-  findDelegateList,
-  findDelegateSelf,
+  findDelegateSelfCurrent,
+  findDelegateSelfHistory,
 } from './delegate'
 import findLegalDeal from './legalDeal'
 import findPaymentList from './payment'
@@ -14,8 +14,8 @@ import findAddress from './address'
 const schemas = {
   findUser,
   findPaymentList,
-  findDelegateList,
-  findDelegateSelf,
+  findDelegateSelfCurrent,
+  findDelegateSelfHistory,
   findLegalDeal,
   findListSelf,
   findBanners,

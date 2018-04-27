@@ -11,6 +11,7 @@ const common = {
   user: 'user',
   selectedTokenDefault: '选择币种',
   listenerNoti: 'listenerNoti',
+  delegateListenerNoti: 'delegateListenerNoti',
   buy: 'buy',
   sell: 'sell',
   recharge: 'recharge',
@@ -24,6 +25,25 @@ const common = {
   pass: 'pass',
   refuse: 'refuse',
 
+  delegate: {
+    status: {
+      dealing: 'dealing',
+      waiting: 'waiting',
+      complete: 'complete',
+      cancel: 'cancel',
+    },
+  },
+
+  legalDeal: {
+    token: 'CNYT',
+    status: {
+      waitpay: 'waitpay',
+      waitconfirm: 'waitconfirm',
+      complete: 'complete',
+      cancel: 'cancel',
+    },
+  },
+
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
@@ -35,10 +55,11 @@ const common = {
   borderColor05: 'rgba(52,60,92,0.5)',
   textColor: 'rgb(223,228,255)', // 单元格内文字颜色
   btnTextColor: 'rgb(255,213,2)',
+  loginBtnTitleColor: '#191B2B', // 登录/注册/下一步标题颜色
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
 
-  bgColor: '#171B29', // 视图背景色
+  bgColor: 'rgb(24,27,42)', // 视图背景色
 
   sw,
   sh,
@@ -101,13 +122,40 @@ const common = {
 
   activeOpacity: 0.7,
 
-  reg: /^1[0-9]{10}/, // 手机号正则
+  regMobile: /^1[3|4|5|8][0-9]\d{4,8}$/,
+  regMobileMsg: '请输入正确的手机号', // 手机号提示
+  regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
+  regSpace: /^[^ ]+$/, // 空格正则
+  regPasswordMsg: '密码为6-20位数字和字符, 至少一个大写字母', // 密码提示
+  regIdCard: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
   textInputMaxLenBankNo: 19,
 
   messageBarDur: 2000,
+
+  df(dateStr) {
+    const createdAtDate = new Date(dateStr)
+    const getYear = createdAtDate.getFullYear()
+    const getMonth = createdAtDate.getMonth() < 10 ?
+      `0${createdAtDate.getMonth()}` :
+      createdAtDate.getMonth()
+    const getDate = createdAtDate.getDate() < 10 ?
+      `0${createdAtDate.getDate()}` :
+      createdAtDate.getDate()
+    const getHours = createdAtDate.getHours() < 10 ?
+      `0${createdAtDate.getHours()}` :
+      createdAtDate.getHours()
+    const getMinutes = createdAtDate.getMinutes() < 10 ?
+      `0${createdAtDate.getMinutes()}` :
+      createdAtDate.getMinutes()
+    const getSeconds = createdAtDate.getSeconds() < 10 ?
+      `0${createdAtDate.getSeconds()}` :
+      createdAtDate.getSeconds()
+    const dfStr = `${getYear}/${getMonth}/${getDate} ${getHours}:${getMinutes}:${getSeconds}`
+    return dfStr
+  },
 }
 
 function storeSave(name, object, block) {

@@ -34,8 +34,8 @@ const initialState = {
     sell: [],
     lastprice: 100,
   },
-  delegateList: [],
-  delegateSelf: [],
+  delegateSelfCurrent: [],
+  delegateSelfHistory: [],
   currentOrHistory: common.current,
 
   allCancelVisible: false,
@@ -52,12 +52,6 @@ const initialState = {
 
   getShelvesVisible: false,
   getShelvesResponse: undefined,
-
-  findDelegateListVisible: false,
-  findDelegateListResponse: undefined,
-
-  findDelegateSelfVisible: false,
-  findDelegateSelfResponse: undefined,
 }
 
 export default function delegate(state = initialState, action) {
@@ -75,7 +69,7 @@ export default function delegate(state = initialState, action) {
         ...state,
         allCancelVisible: false,
         allCancelResponse: action.response,
-        delegateList: [],
+        delegateSelfCurrent: [],
       }
       break
     case constants.ALL_CANCEL_FAILED:
@@ -92,12 +86,11 @@ export default function delegate(state = initialState, action) {
       }
       break
     case constants.CANCEL_SUCCEED:
-      state.delegateList.splice(action.index, 1)
       nextState = {
         ...state,
         cancelVisible: false,
         cancelResponse: action.response,
-        delegateList: state.delegateList.concat(),
+        delegateSelfCurrent: action.delegateSelfCurrent,
       }
       break
     case constants.CANCEL_FAILED:
@@ -169,46 +162,16 @@ export default function delegate(state = initialState, action) {
         getShelvesResponse: action.response,
       }
       break
-    case constants.FIND_DELEGATE_LIST_REQUEST:
+    case constants.FIND_DELEGATE_SELF_CURRENT_SUCCEED:
       nextState = {
         ...state,
-        findDelegateListVisible: true,
+        delegateSelfCurrent: action.response.result.data.find_delegate,
       }
       break
-    case constants.FIND_DELEGATE_LIST_SUCCEED:
+    case constants.FIND_DELEGATE_SELF_HISTORY_SUCCEED:
       nextState = {
         ...state,
-        findDelegateListVisible: false,
-        findDelegateListResponse: action.response,
-        delegateList: action.response.result.data.find_delegate,
-      }
-      break
-    case constants.FIND_DELEGATE_LIST_FAILED:
-      nextState = {
-        ...state,
-        findDelegateListVisible: false,
-        findDelegateListResponse: action.response,
-      }
-      break
-    case constants.FIND_DELEGATE_SELF_REQUEST:
-      nextState = {
-        ...state,
-        findDelegateSelfVisible: true,
-      }
-      break
-    case constants.FIND_DELEGATE_SELF_SUCCEED:
-      nextState = {
-        ...state,
-        findDelegateSelfVisible: false,
-        findDelegateSelfResponse: action.response,
-        delegateSelf: action.response.result.data.find_delegate,
-      }
-      break
-    case constants.FIND_DELEGATE_SELF_FAILED:
-      nextState = {
-        ...state,
-        findDelegateSelfVisible: false,
-        findDelegateSelfResponse: action.response,
+        delegateSelfHistory: action.response.result.data.find_delegate,
       }
       break
 

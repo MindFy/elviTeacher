@@ -1,4 +1,5 @@
-const API_ROOT = 'http://47.52.34.160:8080'
+// const API_ROOT = 'http://47.52.34.160:8080'
+const API_ROOT = 'http://127.0.0.1:8080'
 
 function makePostAPI(endpoint) {
   return params => fetch(`${API_ROOT}${endpoint}`, {

@@ -47,8 +47,8 @@ class Login extends Component {
       Toast.message('请输入密码')
       return
     }
-    if (!common.reg.test(mobile)) {
-      Toast.message('请输入正确的手机号')
+    if (!common.regMobile.test(mobile)) {
+      Toast.message(common.regMobileMsg)
       return
     }
 
@@ -142,8 +142,12 @@ class Login extends Component {
           />
 
           <TextInputLogin
+            textInputStyle={{
+              width: '80%',
+            }}
             title="密码"
-            placeholder="请输入密码"
+            placeholder={'请输入密码'}
+            secureTextEntry
             value={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
@@ -165,7 +169,7 @@ class Login extends Component {
               <Text
                 style={{
                   color: common.btnTextColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >新用户注册</Text>
             </TouchableOpacity>
@@ -176,7 +180,7 @@ class Login extends Component {
               <Text
                 style={{
                   color: common.btnTextColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >忘记密码？</Text>
             </TouchableOpacity>

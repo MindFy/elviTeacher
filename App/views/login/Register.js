@@ -57,11 +57,11 @@ class Register extends Component {
 
   codePress(count) {
     const { dispatch, mobile } = this.props
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
-    count()
+    this.count = count
     dispatch(actions.getVerificateCode({
       mobile,
       service: 'register',
@@ -74,8 +74,16 @@ class Register extends Component {
       Toast.message('请输入手机号')
       return
     }
-    if (!password.length) {
-      Toast.message('请设置密码')
+    if (!password.length || !common.regPassword.test(password) ||
+      !common.regSpace.test(password)) {
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: common.regPasswordMsg,
+        position: 'bottom',
+      })
       return
     }
     if (!passwordAgain.length) {
@@ -83,15 +91,15 @@ class Register extends Component {
       return
     }
     if (password !== passwordAgain) {
-      Toast.message('两次密码输入不一致', 'warning')
+      Toast.message('确认密码需要和密码保持一致')
       return
     }
-    if (!common.reg.test(mobile)) {
+    if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
-    if (password.length < 6) {
-      Toast.message('密码至少为6位')
+    if (!code.length) {
+      Toast.message('请输入验证码')
       return
     }
     dispatch(actions.register({
@@ -110,6 +118,7 @@ class Register extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
+        this.count()
         Toast.success(getVerificateCodeResponse.result.message)
       } else {
         Toast.message(getVerificateCodeResponse.error.message)
@@ -183,8 +192,10 @@ class Register extends Component {
             title="密码"
             placeholder="请输入密码"
             value={password}
+            password={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
+            secureTextEntry
           />
 
           <TextInputLogin
@@ -196,6 +207,8 @@ class Register extends Component {
             value={passwordAgain}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
+            passwordAgain={passwordAgain}
+            secureTextEntry
           />
 
           <View
@@ -216,7 +229,7 @@ class Register extends Component {
                 style={{
                   alignSelf: 'center',
                   color: common.textColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >注册即同意</Text>
               <TouchableOpacity
@@ -226,7 +239,7 @@ class Register extends Component {
                 <Text
                   style={{
                     color: common.btnTextColor,
-                    fontSize: common.font10,
+                    fontSize: common.font12,
                   }}
                 >《xxx服务协议》</Text>
               </TouchableOpacity>
@@ -238,7 +251,7 @@ class Register extends Component {
               <Text
                 style={{
                   color: common.btnTextColor,
-                  fontSize: common.font10,
+                  fontSize: common.font12,
                 }}
               >已有账号？去登录</Text>
             </TouchableOpacity>

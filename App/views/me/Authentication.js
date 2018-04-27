@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native'
-import md5 from 'md5'
 import Toast from 'teaset/components/Toast/Toast'
+import PutObject from 'rn-put-object'
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
@@ -54,25 +54,42 @@ class Authentication extends Component {
     this.showIdCardAuthResponse = false
   }
 
+  componentWillMount() {
+    const { dispatch, user, imgHashApi, authenticationAgain } = this.props
+
+    dispatch(actions.idCardAuthUpdate({
+      name: user.name,
+      idNo: user.idNo ? user.idNo : '',
+      idCardImages: user.idCardImages && user.idCardImages.length === 3 ?
+        {
+          first: { uri: `${imgHashApi}${user.idCardImages[0]}`, hash: user.idCardImages[0] },
+          second: { uri: `${imgHashApi}${user.idCardImages[1]}`, hash: user.idCardImages[1] },
+          third: { uri: `${imgHashApi}${user.idCardImages[2]}`, hash: user.idCardImages[2] },
+        } : {},
+      authenticationAgain,
+    }))
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(actions.idCardAuthUpdate({
       name: '',
       idNo: '',
       idCardImages: {},
+      authenticationAgain: false,
     }))
   }
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, name, idNo, idCardImages } = this.props
+    const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
 
     switch (tag) {
       case 'name':
-        dispatch(actions.idCardAuthUpdate({ name: text, idNo, idCardImages }))
+        dispatch(actions.idCardAuthUpdate({ name: text, idNo, idCardImages, authenticationAgain }))
         break
       case 'idNo':
-        dispatch(actions.idCardAuthUpdate({ name, idNo: text, idCardImages }))
+        dispatch(actions.idCardAuthUpdate({ name, idNo: text, idCardImages, authenticationAgain }))
         break
       default:
         break
@@ -80,13 +97,13 @@ class Authentication extends Component {
   }
 
   confirmPress() {
-    const { dispatch, name, idNo, idCardImages } = this.props
+    const { dispatch, name, idNo, idCardImages, imgHashApi } = this.props
     if (!name.length) {
       Toast.message('请输入姓名')
       return
     }
-    if (!idNo.length || idNo.length !== common.textInputMaxLenIdNo) {
-      Toast.message('请输入18位身份证号')
+    if (!idNo.length || !common.regIdCard.test(idNo)) {
+      Toast.message('请输入正确的身份证号')
       return
     }
     if (!idCardImages.first) {
@@ -101,28 +118,52 @@ class Authentication extends Component {
       Toast.message('请上传手持身份证照片')
       return
     }
-    dispatch(actions.idCardAuth({
-      name,
-      idNo: Number(idNo),
-      idCardImages: [
-        idCardImages.first.hash,
-        idCardImages.second.hash,
-        idCardImages.third.hash,
-      ],
-    }))
+    PutObject.putObject({
+      url: imgHashApi,
+      path: idCardImages.first.uri,
+      async: true,
+      header: [{
+        key: 'Content-Type',
+        value: 'application/octet-stream',
+      }],
+      method: 'POST',
+    }, (r) => {
+      console.log('----r----->', r)
+    })
+    PutObject.mulitPutObject({
+      url: imgHashApi,
+      path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
+      async: true,
+      header: [{
+        key: 'Content-Type',
+        value: 'application/octet-stream',
+      }],
+      method: 'POST',
+    }, (r) => {
+      console.log('----rs----->', r)
+    })
+    // dispatch(actions.idCardAuth({
+    //   name,
+    //   idNo: Number(idNo),
+    //   idCardImages: [
+    //     idCardImages.first.hash,
+    //     idCardImages.second.hash,
+    //     idCardImages.third.hash,
+    //   ],
+    // }))
   }
 
   imagePicker(response, tag) {
-    const { dispatch, name, idNo, idCardImages } = this.props
+    const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
     switch (tag) {
       case 'first':
-        idCardImages.first = { uri: response.uri, hash: md5(response.data) }
+        idCardImages.first = { uri: response.uri, hash: '' }
         break
       case 'second':
-        idCardImages.second = { uri: response.uri, hash: md5(response.data) }
+        idCardImages.second = { uri: response.uri, hash: '' }
         break
       case 'third':
-        idCardImages.third = { uri: response.uri, hash: md5(response.data) }
+        idCardImages.third = { uri: response.uri, hash: '' }
         break
       default:
         break
@@ -135,6 +176,7 @@ class Authentication extends Component {
         second: idCardImages.second,
         third: idCardImages.third,
       },
+      authenticationAgain,
     }))
   }
 
@@ -155,54 +197,62 @@ class Authentication extends Component {
   }
 
   renderScrollView() {
-    const { name, idNo, idCardImages, user } = this.props
+    const { name, idNo, idCardImages } = this.props
+    return (
+      <KeyboardAvoidingView
+        behavior="padding"
+      >
+        <ScrollView>
+          <TextInputPwd
+            placeholder="姓名"
+            value={name}
+            onChange={e => this.onChange(e, 'name')}
+          />
+          <TextInputPwd
+            placeholder="身份证号"
+            value={idNo}
+            maxLength={common.textInputMaxLenIdNo}
+            onChange={e => this.onChange(e, 'idNo')}
+            keyboardType={'numbers-and-punctuation'}
+          />
+
+          <SelectImage
+            title={'请上传身份证正面照片'}
+            imagePickerBlock={response => this.imagePicker(response, 'first')}
+            avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
+          />
+          <SelectImage
+            title={'请上传身份证反面照片'}
+            imagePickerBlock={response => this.imagePicker(response, 'second')}
+            avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
+          />
+          <SelectImage
+            title={'请上传手持身份证照片'}
+            imagePickerBlock={response => this.imagePicker(response, 'third')}
+            avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
+          />
+
+          <BtnLogout
+            viewStyle={{
+              marginTop: common.margin40,
+              height: common.h44,
+            }}
+            onPress={() => this.confirmPress()}
+            title="确认"
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
+    )
+  }
+
+  renderContentView() {
+    const { dispatch, name, idNo, idCardImages, user, authenticationAgain } = this.props
+    if (!user.idCardAuthStatus) return null
+    if (authenticationAgain) return this.renderScrollView()
+
     switch (user.idCardAuthStatus) {
-      case common.never:
-        return (
-          <KeyboardAvoidingView
-            behavior="padding"
-          >
-            <ScrollView>
-              <TextInputPwd
-                placeholder="姓名"
-                value={name}
-                onChange={e => this.onChange(e, 'name')}
-              />
-              <TextInputPwd
-                placeholder="身份证号"
-                value={idNo}
-                maxLength={common.textInputMaxLenIdNo}
-                onChange={e => this.onChange(e, 'idNo')}
-                keyboardType={'numbers-and-punctuation'}
-              />
-
-              <SelectImage
-                title={'请上传身份证正面照片'}
-                imagePickerBlock={response => this.imagePicker(response, 'first')}
-                avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
-              />
-              <SelectImage
-                title={'请上传身份证反面照片'}
-                imagePickerBlock={response => this.imagePicker(response, 'second')}
-                avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
-              />
-              <SelectImage
-                title={'请上传手持身份证照片'}
-                imagePickerBlock={response => this.imagePicker(response, 'third')}
-                avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
-              />
-
-              <BtnLogout
-                viewStyle={{
-                  marginTop: common.margin40,
-                  height: common.h44,
-                }}
-                onPress={() => this.confirmPress()}
-                title="确认"
-              />
-            </ScrollView>
-          </KeyboardAvoidingView>
-        )
+      case common.never: case common.waiting:
+        return this.renderScrollView()
       case common.pass:
         return (
           <ScrollView>
@@ -261,7 +311,14 @@ class Authentication extends Component {
 
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.confirmPress()}
+              onPress={() => {
+                dispatch(actions.idCardAuthUpdate({
+                  name,
+                  idNo,
+                  idCardImages,
+                  authenticationAgain: true,
+                }))
+              }}
             >
               <Text
                 style={{
@@ -281,7 +338,7 @@ class Authentication extends Component {
 
   render() {
     this.handleIdCardAuthRequest()
-    const { idCardAuthVisible, idCardAuthResponse } = this.props
+    const { idCardAuthVisible, user } = this.props
     return (
       <View
         style={{
@@ -290,32 +347,39 @@ class Authentication extends Component {
         }}
       >
         <StatusBar barStyle={'light-content'} />
-        {this.renderScrollView()}
+        {this.renderContentView()}
         {
-          idCardAuthResponse && idCardAuthResponse.success ?
+          user.idCardAuthStatus && user.idCardAuthStatus === common.waiting ?
             <View
               style={{
                 position: 'absolute',
-                alignSelf: 'center',
-                top: '20%',
-                backgroundColor: 'white',
-                borderRadius: common.radius6,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'transparent',
               }}
             >
-              <Text
+              <View
                 style={{
-                  color: common.blackColor,
-                  fontSize: common.font16,
+                  position: 'absolute',
                   alignSelf: 'center',
+                  justifyContent: 'center',
+                  top: common.margin30,
+                  width: '50%',
+                  height: common.h60,
+                  backgroundColor: 'white',
+                  borderRadius: common.radius6,
                 }}
-              >提交成功</Text>
-              <Text
-                style={{
-                  color: common.blackColor,
-                  fontSize: common.font16,
-                  alignSelf: 'center',
-                }}
-              >请耐心等待后台审核</Text>
+              >
+                <Text
+                  style={{
+                    color: common.blackColor,
+                    fontSize: common.font16,
+                    alignSelf: 'center',
+                    textAlign: 'center',
+                    lineHeight: common.margin20,
+                  }}
+                >{'提交成功\n请耐心等待后台审核'}</Text>
+              </View>
             </View> : null
         }
         <Spinner
@@ -337,13 +401,14 @@ class Authentication extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
-
     name: store.user.name,
     idNo: store.user.idNo,
     idCardImages: store.user.idCardImages,
-
+    authenticationAgain: store.user.authenticationAgain,
     idCardAuthVisible: store.user.idCardAuthVisible,
     idCardAuthResponse: store.user.idCardAuthResponse,
+
+    imgHashApi: store.banners.imgHashApi,
   }
 }
 

@@ -6,8 +6,8 @@ import {
   StatusBar,
   ListView,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native'
-import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
@@ -62,26 +62,32 @@ class Delegate extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
-    const { dispatch, user, goods, currency } = this.props
+  constructor() {
+    super()
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+  }
 
-    this.showAllCancelResponse = false
-    this.showCancelResponse = false
-
+  componentDidMount() {
+    const { dispatch, user } = this.props
     if (user) {
-      dispatch(actions.findDelegateList(schemas.findDelegateList(
-        user.id,
-        goods.id,
-        currency.id,
-      )))
-      dispatch(actions.findDelegateSelf(schemas.findDelegateSelf(
-        user.id,
-      )))
+      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(user.id)))
+      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id)))
     }
+    this.listener = DeviceEventEmitter.addListener(common.delegateListenerNoti, () => {
+      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id)))
+    })
+  }
+
+  componentWillUnmount() {
+    const { dispatch, currentOrHistory } = this.props
+    if (currentOrHistory !== common.current) {
+      dispatch(actions.currentOrHistoryUpdate({
+        currentOrHistory: common.current,
+      }))
+    }
+    this.listener.remove()
   }
 
   topBarPress(tag) {
@@ -93,43 +99,9 @@ class Delegate extends Component {
     }
   }
 
-  handleAllCancelResponse() {
-    const { allCancelVisible, allCancelResponse } = this.props
-    if (!allCancelVisible && !this.showAllCancelResponse) return
-
-    if (allCancelVisible) {
-      this.showAllCancelResponse = true
-    } else {
-      this.showAllCancelResponse = false
-      if (allCancelResponse.success) {
-        Toast.success(allCancelResponse.result)
-      } else {
-        Toast.fail(allCancelResponse.error.message)
-      }
-    }
-  }
-
-  handleCancelResponse() {
-    const { cancelVisible, cancelResponse } = this.props
-    if (!cancelVisible && !this.showCancelResponse) return
-
-    if (cancelVisible) {
-      this.showCancelResponse = true
-    } else {
-      this.showCancelResponse = false
-      if (cancelResponse.success) {
-        Toast.success(cancelResponse.result)
-      } else {
-        Toast.fail(cancelResponse.error.message)
-      }
-    }
-  }
-
   render() {
-    const { dispatch, currentOrHistory, delegateList,
-      delegateSelf, allCancelVisible } = this.props
-    this.handleAllCancelResponse()
-    this.handleCancelResponse()
+    const { dispatch, currentOrHistory, delegateSelfCurrent,
+      delegateSelfHistory, allCancelVisible } = this.props
 
     return (
       <View style={{
@@ -151,14 +123,17 @@ class Delegate extends Component {
         <DelegateListView
           currentOrHistory={currentOrHistory}
           dataSource={this.dataSource(currentOrHistory === common.current ?
-            delegateList : delegateSelf)}
+            delegateSelfCurrent : delegateSelfHistory)}
           cancelAllBlock={() => {
             dispatch(actions.allCancel())
           }}
           cancelBlock={(rd, rid) => {
-            dispatch(actions.cancel({ id: rd.id }, rid))
+            const temp = delegateSelfCurrent.concat()
+            temp.splice(rid, 1)
+            dispatch(actions.cancel({ id: rd.id }, temp))
           }}
         />
+
 
         <Spinner
           style={{
@@ -178,8 +153,8 @@ class Delegate extends Component {
 
 function mapStateToProps(store) {
   return {
-    delegateList: store.delegate.delegateList,
-    delegateSelf: store.delegate.delegateSelf,
+    delegateSelfCurrent: store.delegate.delegateSelfCurrent,
+    delegateSelfHistory: store.delegate.delegateSelfHistory,
     currentOrHistory: store.delegate.currentOrHistory,
 
     allCancelVisible: store.delegate.allCancelVisible,
@@ -189,9 +164,6 @@ function mapStateToProps(store) {
     cancelResponse: store.delegate.cancelResponse,
 
     user: store.user.user,
-
-    goods: store.deal.goods,
-    currency: store.deal.currency,
   }
 }
 

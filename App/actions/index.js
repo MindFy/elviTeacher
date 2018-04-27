@@ -28,8 +28,8 @@ import {
   create,
   getDepthMap,
   getShelves,
-  findDelegateList,
-  findDelegateSelf,
+  findDelegateSelfCurrent,
+  findDelegateSelfHistory,
   currentOrHistoryUpdate,
 } from './delegate'
 import {
@@ -97,8 +97,8 @@ const actions = {
   create,
   getDepthMap,
   getShelves,
-  findDelegateList,
-  findDelegateSelf,
+  findDelegateSelfCurrent,
+  findDelegateSelfHistory,
   currentOrHistoryUpdate,
 
   legalDealCancel,
