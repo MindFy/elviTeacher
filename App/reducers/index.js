@@ -9,6 +9,7 @@ import delegate from './delegate'
 import legalDeal from './legalDeal'
 import payment from './payment'
 import user from './user'
+import ui from './ui'
 
 const rootReducer = combineReducers({
   address,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   legalDeal,
   payment,
   user,
+  ui,
 })
 
 export default rootReducer

@@ -27,6 +27,12 @@ export default function dealstat(state = initialState, action) {
         selectedIndex: action.data.selectedIndex,
       }
       break
+    case constants.HOME_ROSE_SELECTED_UPDATE:
+      nextState = {
+        ...state,
+        homeRoseSelected: action.data,
+      }
+      break
     default:
       break
   }

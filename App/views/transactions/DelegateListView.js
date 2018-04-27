@@ -105,7 +105,7 @@ export default class Delegate extends Component {
   renderRow(rd, sid, rid) {
     const { currentOrHistory, cancelBlock } = this.props
     if (currentOrHistory === common.current) {
-      const createdAt = common.df(rd.createdAt)
+      const createdAt = common.dfFullDate(rd.createdAt)
 
       return (
         <View

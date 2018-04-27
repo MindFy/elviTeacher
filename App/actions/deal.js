@@ -21,11 +21,10 @@ export function buyOrSellUpdate(buyOrSell) {
   }
 }
 
-export function currentTokensUpdate(goods, currency) {
+export function homeRoseSelectedUpdate(data) {
   return {
-    type: constants.CURRENT_TOKENS_UPDATE,
-    goods,
-    currency,
+    type: constants.HOME_ROSE_SELECTED_UPDATE,
+    data,
   }
 }
 

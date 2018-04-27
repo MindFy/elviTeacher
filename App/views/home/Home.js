@@ -31,11 +31,11 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
+    const { dispatch, homeRoseSelected } = this.props
     dispatch(actions.sync())
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
-    dispatch(actions.getRose())
+    dispatch(actions.getRose(homeRoseSelected))
 
     this.listener = DeviceEventEmitter.addListener(common.listenerNoti, (type, resp) => {
       switch (type) {
@@ -238,6 +238,7 @@ function mapStateToProps(store) {
     imgHashApi: store.banners.imgHashApi,
 
     homeRose: store.dealstat.homeRose,
+    homeRoseSelected: store.dealstat.homeRoseSelected,
 
     user: store.user.user,
   }

@@ -139,6 +139,7 @@ const TabBarStack = StackNavigator({
   LegalDealDetail,
   Payment,
   UpdateBank,
+  Transactions,
 })
 
 const LoginStack = DismissableStackNavigator({

@@ -15,7 +15,7 @@ export default class KLine extends Component {
         }}
         bounces={false}
         contentInset={{
-          top: -20,
+          top: 0,
           left: 0,
           bottom: 0,
           right: 0,

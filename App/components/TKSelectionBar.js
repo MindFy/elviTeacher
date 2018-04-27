@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -8,9 +9,7 @@ import {
 import {
   common,
 } from '../constants/common'
-
-const left = 'left'
-const right = 'right'
+import actions from '../actions/index'
 
 const styles = StyleSheet.create({
   style: {
@@ -33,56 +32,54 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class TKSelectionBar extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      leftOrRight: left,
-    }
+class TKSelectionBar extends Component {
+  componentWillUnmount() {
+    const { dispatch } = this.props
+    dispatch(actions.selectionBarUpdate(common.selectionBar.left))
   }
 
-  onPress(leftOrRight) {
-    const { leftBlock, rightBlock } = this.props
-    this.setState({
-      leftOrRight,
-    })
-    if (leftOrRight === left) {
+  onPress(type) {
+    const { dispatch, leftBlock, rightBlock } = this.props
+    dispatch(actions.selectionBarUpdate(type))
+    if (type === common.selectionBar.left) {
       leftBlock()
-    } else if (leftOrRight === right) {
+    } else if (type === common.selectionBar.right) {
       rightBlock()
     }
   }
 
   render() {
-    const { leftTitle, rightTitle } = this.props
-    const { leftOrRight } = this.state
+    const { selectionBarSelected, leftTitle, rightTitle } = this.props
     return (
       <View style={styles.style} >
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
-          onPress={() => this.onPress(left)}
+          onPress={() => this.onPress(common.selectionBar.left)}
         >
           <View style={[styles.leftViewStyle, {
-            backgroundColor: leftOrRight === left ? common.borderColor : common.navBgColor,
+            backgroundColor: selectionBarSelected === common.selectionBar.left
+              ? common.borderColor : common.navBgColor,
           }]}
           >
             <Text style={[styles.leftTitleStyle, {
-              color: leftOrRight === left ? common.btnTextColor : common.textColor,
+              color: selectionBarSelected === common.selectionBar.left
+                ? common.btnTextColor : common.textColor,
             }]}
             >{leftTitle}</Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
-          onPress={() => this.onPress(right)}
+          onPress={() => this.onPress(common.selectionBar.right)}
         >
           <View style={[styles.leftViewStyle, {
-            backgroundColor: leftOrRight === right ? common.borderColor : common.navBgColor,
+            backgroundColor: selectionBarSelected === common.selectionBar.right
+              ? common.borderColor : common.navBgColor,
           }]}
           >
             <Text style={[styles.leftTitleStyle, {
-              color: leftOrRight === right ? common.btnTextColor : common.textColor,
+              color: selectionBarSelected === common.selectionBar.right
+                ? common.btnTextColor : common.textColor,
             }]}
             >{rightTitle}</Text>
           </View>
@@ -91,3 +88,13 @@ export default class TKSelectionBar extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    selectionBarSelected: store.ui.selectionBarSelected,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(TKSelectionBar)

@@ -47,11 +47,6 @@ export default class KLine extends Component {
       },
     }
   }
-  componentDidMount() {
-    // this.timer = setInterval(() => {
-    //   this.fetchData()
-    // }, 5000)
-  }
 
   getOption(optionData) {
     return {

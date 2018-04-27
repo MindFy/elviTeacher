@@ -69,13 +69,6 @@ export default function deal(state = initialState, action) {
         buyOrSell: action.buyOrSell,
       }
       break
-    case constants.CURRENT_TOKENS_UPDATE:
-      nextState = {
-        ...state,
-        goods: action.goods,
-        currency: action.currency,
-      }
-      break
     case constants.TEXTINPUT_DELEGATE_UPDATE:
       nextState = {
         ...state,

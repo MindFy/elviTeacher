@@ -45,6 +45,16 @@ const common = {
     },
   },
 
+  selectionBar: {
+    left: 'left',
+    right: 'right',
+  },
+
+  ui: {
+    kLine: 'kLine',
+    depth: 'depth',
+  },
+
   redColor: 'rgb(213,69,80)',
   bidColor: 'rgba(0,205,0,1)',
   askColor: 'rgba(205,0,0,1)',
@@ -136,7 +146,7 @@ const common = {
 
   messageBarDur: 2000,
 
-  df(dateStr) {
+  dfFullDate(dateStr) {
     const createdAtDate = new Date(dateStr)
     const getYear = createdAtDate.getFullYear()
     const getMonth = createdAtDate.getMonth() < 10 ?
@@ -155,6 +165,20 @@ const common = {
       `0${createdAtDate.getSeconds()}` :
       createdAtDate.getSeconds()
     const dfStr = `${getYear}/${getMonth}/${getDate} ${getHours}:${getMinutes}:${getSeconds}`
+    return dfStr
+  },
+  dfTime(dateStr) {
+    const createdAtDate = new Date(dateStr)
+    const getHours = createdAtDate.getHours() < 10 ?
+      `0${createdAtDate.getHours()}` :
+      createdAtDate.getHours()
+    const getMinutes = createdAtDate.getMinutes() < 10 ?
+      `0${createdAtDate.getMinutes()}` :
+      createdAtDate.getMinutes()
+    const getSeconds = createdAtDate.getSeconds() < 10 ?
+      `0${createdAtDate.getSeconds()}` :
+      createdAtDate.getSeconds()
+    const dfStr = `${getHours}:${getMinutes}:${getSeconds}`
     return dfStr
   },
 }

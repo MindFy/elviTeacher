@@ -15,7 +15,7 @@ import {
   findListSelf,
   latestDeals,
   buyOrSellUpdate,
-  currentTokensUpdate,
+  homeRoseSelectedUpdate,
   textInputDelegateUpdate,
 } from './deal'
 import {
@@ -68,6 +68,10 @@ import {
   updateBankUpdate,
   updateBank,
 } from './user'
+import {
+  selectionBarUpdate,
+  kLineOrDepthUpdate,
+} from './ui'
 
 const actions = {
   add,
@@ -86,7 +90,7 @@ const actions = {
   findListSelf,
   latestDeals,
   buyOrSellUpdate,
-  currentTokensUpdate,
+  homeRoseSelectedUpdate,
   textInputDelegateUpdate,
 
   getRose,
@@ -133,5 +137,8 @@ const actions = {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+
+  selectionBarUpdate,
+  kLineOrDepthUpdate,
 }
 export default actions

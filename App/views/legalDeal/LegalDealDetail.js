@@ -60,7 +60,7 @@ class LegalDealDetail extends Component {
 
   renderRow(rd, sid, rid) {
     const { navigation, dispatch, legalDeal } = this.props
-    const createdAt = common.df(rd.createdAt)
+    const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
     let status = ''
     let direct = ''

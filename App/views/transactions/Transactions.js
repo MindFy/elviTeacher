@@ -100,7 +100,7 @@ class Transactions extends Component {
       items.push({
         title: `${element.goods.name}/${element.currency.name}`,
         onPress: () => {
-          dispatch(actions.currentTokensUpdate(element.goods, element.currency))
+          dispatch(actions.homeRoseSelectedUpdate(element))
           this.getUIData(element.goods.id, element.currency.id)
         },
       })
@@ -148,9 +148,7 @@ class Transactions extends Component {
     } else if (rd.endDirect === 'sell') {
       textColor = common.greenColor
     }
-    const date = new Date(rd.createdAt)
-    const zero1 = date.getMinutes() < 10 ? '0' : ''
-    const zero2 = date.getSeconds() < 10 ? '0' : ''
+    const createdAt = common.dfTime(rd.createdAt)
 
     return (
       <View
@@ -168,7 +166,7 @@ class Transactions extends Component {
           fontSize: common.font12,
           textAlign: 'left',
         }}
-        >{`${date.getHours()}:${zero1}${date.getMinutes()}:${zero2}${date.getSeconds()}`}</Text>
+        >{createdAt}</Text>
         <Text style={{
           flex: 1,
           color: textColor,

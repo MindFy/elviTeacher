@@ -13,12 +13,14 @@ import {
 /* 获取交易中心的涨幅，包含：左上角以及顶上数据 */
 export default function* getRose() {
   while (true) {
-    yield take(constants.GET_ROSE_REQUEST)
+    const request = yield take(constants.GET_ROSE_REQUEST)
     const response = yield call(api.getRose)
     if (response.success) {
       const homeRose = []
       const rose = response.result
-      let homeRoseSelected = {}
+      let homeRoseSelected = request.data
+      let homeRoseSelectedTemp = undefined
+      console.log('homeRoseSelected-1->', homeRoseSelected)
       for (let i = 0; i < rose.length; i++) {
         const currency = rose[i]
         const sub = currency.sub
@@ -34,10 +36,19 @@ export default function* getRose() {
           element.lprice = goods.lprice
           element.quantity = goods.quantity
           element.rose = goods.rose
-          if (i === 0 && j === 0) homeRoseSelected = element
+          if (homeRoseSelected) {
+            if ((homeRoseSelected.goods.id === element.goods.id)
+              && (homeRoseSelected.goods.id === element.goods.id)) {
+              homeRoseSelectedTemp = element
+            }
+          } else if (i === 0 && j === 0) {
+            homeRoseSelectedTemp = element
+          }
           homeRose.push(element)
         }
       }
+      homeRoseSelected = homeRoseSelectedTemp
+
       if (rose.length) {
         DeviceEventEmitter.emit(common.listenerNoti, (constants.GET_ROSE_SUCCEED, homeRoseSelected))
       }
