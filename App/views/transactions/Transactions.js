@@ -65,11 +65,6 @@ class Transactions extends Component {
     }).cloneWithRows(data)
   }
 
-  componentDidMount() {
-    const { goods, currency } = this.props
-    this.getUIData(goods.id, currency.id)
-  }
-
   onChange(event, tag) {
     const { text } = event.nativeEvent
     const { dispatch, price, quantity, amount } = this.props
@@ -99,28 +94,17 @@ class Transactions extends Component {
   }
 
   menuPress() {
-    const { dispatch, tokenList } = this.props
-    const items = [
-      {
-        title: `${tokenList[0].name}/${tokenList[2].name}`,
+    const { dispatch, homeRose } = this.props
+    const items = []
+    homeRose.forEach((element) => {
+      items.push({
+        title: `${element.goods.name}/${element.currency.name}`,
         onPress: () => {
-          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[2]))
-          this.getUIData(tokenList[0].id, tokenList[2].id)
+          dispatch(actions.homeRoseSelectedUpdate(element))
+          this.getUIData(element.goods.id, element.currency.id)
         },
-      }, {
-        title: `${tokenList[1].name}/${tokenList[2].name}`,
-        onPress: () => {
-          dispatch(actions.currentTokensUpdate(tokenList[1], tokenList[2]))
-          this.getUIData(tokenList[1].id, tokenList[2].id)
-        },
-      }, {
-        title: `${tokenList[0].name}/${tokenList[1].name}`,
-        onPress: () => {
-          dispatch(actions.currentTokensUpdate(tokenList[0], tokenList[1]))
-          this.getUIData(tokenList[0].id, tokenList[1].id)
-        },
-      },
-    ]
+      })
+    })
     Menu.show({ x: 50, y: 126 }, items)
   }
 
@@ -133,7 +117,7 @@ class Transactions extends Component {
   }
 
   buyOrSellPress() {
-    const { dispatch, navigation, user, goods, currency, buyOrSell, price, quantity } = this.props
+    const { dispatch, navigation, user, buyOrSell, price, quantity, homeRoseSelected } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
       return
@@ -146,13 +130,15 @@ class Transactions extends Component {
       Toast.message('请输入数量')
       return
     }
-    dispatch(actions.create({
-      currency_id: goods.id,
-      goods_id: currency.id,
-      direct: buyOrSell ? 'buy' : 'sell',
-      price: Number(price),
-      quantity: Number(quantity),
-    }))
+    if (homeRoseSelected) {
+      dispatch(actions.create({
+        goods_id: homeRoseSelected.goods.id,
+        currency_id: homeRoseSelected.currency.id,
+        direct: buyOrSell ? 'buy' : 'sell',
+        price: Number(price),
+        quantity: Number(quantity),
+      }))
+    }
   }
 
   renderLatestDealsRow(rd) {
@@ -162,9 +148,7 @@ class Transactions extends Component {
     } else if (rd.endDirect === 'sell') {
       textColor = common.greenColor
     }
-    const date = new Date(rd.createdAt)
-    const zero1 = date.getMinutes() < 10 ? '0' : ''
-    const zero2 = date.getSeconds() < 10 ? '0' : ''
+    const createdAt = common.dfTime(rd.createdAt)
 
     return (
       <View
@@ -182,7 +166,7 @@ class Transactions extends Component {
           fontSize: common.font12,
           textAlign: 'left',
         }}
-        >{`${date.getHours()}:${zero1}${date.getMinutes()}:${zero2}${date.getSeconds()}`}</Text>
+        >{createdAt}</Text>
         <Text style={{
           flex: 1,
           color: textColor,
@@ -253,9 +237,11 @@ class Transactions extends Component {
 
   render() {
     const { buyOrSell, navigation, delegateCreateVisible, depthMap, user,
-      goods, currency, price, quantity, amount, shelvesBuy, shelvesSell, latestDeals,
+      homeRoseSelected, price, quantity, amount, shelvesBuy, shelvesSell, latestDeals,
       latestDealsVisible, getShelvesVisible, getDepthMapVisible,
     } = this.props
+    const goodsName = homeRoseSelected ? homeRoseSelected.goods.name : ''
+    const currencyName = homeRoseSelected ? homeRoseSelected.currency.name : ''
 
     return (
       <View style={{
@@ -346,7 +332,9 @@ class Transactions extends Component {
           refreshControl={
             <RefreshControl
               onRefresh={() => {
-                this.getUIData(goods.id, currency.id)
+                if (homeRoseSelected) {
+                  this.getUIData(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
+                }
               }}
               refreshing={
                 !(!latestDealsVisible && !getShelvesVisible && !getDepthMapVisible)
@@ -357,6 +345,7 @@ class Transactions extends Component {
               tintColor={common.textColor}
             />
           }
+          removeClippedSubviews={false}
         >
           <View
             style={{
@@ -372,7 +361,7 @@ class Transactions extends Component {
                 style={{
                   marginLeft: common.margin10,
                   marginTop: common.margin10,
-                  width: '50%',
+                  width: '45%',
                   flexDirection: 'row',
                   paddingBottom: 8,
                   borderBottomWidth: 1,
@@ -385,7 +374,7 @@ class Transactions extends Component {
                   color: common.textColor,
                   fontSize: common.font16,
                 }}
-                >{`${goods.name}/${currency.name}`}</Text>
+                >{`${goodsName}/${currencyName}`}</Text>
                 <Image
                   style={{
                     marginLeft: common.margin5,
@@ -401,8 +390,7 @@ class Transactions extends Component {
                 textInputStyle={{
                   marginTop: common.margin10,
                 }}
-                placeholder={`价格（${currency.name}）`}
-                keyboardType="number-pad"
+                placeholder={`价格（${currencyName}）`}
                 value={price}
                 onChange={e => this.onChange(e, 'price')}
               />
@@ -415,8 +403,7 @@ class Transactions extends Component {
               >= ¥4.43</Text>
 
               <TextInputTransactions
-                placeholder={`数量（${goods.name}）`}
-                keyboardType="number-pad"
+                placeholder={`数量（${goodsName}）`}
                 value={quantity}
                 onChange={e => this.onChange(e, 'quantity')}
               />
@@ -429,8 +416,7 @@ class Transactions extends Component {
               />
 
               <TextInputTransactions
-                placeholder={`成交金额（${currency.name}）`}
-                keyboardType="number-pad"
+                placeholder={`成交金额（${currencyName}）`}
                 value={amount}
                 onChange={e => this.onChange(e, 'amount')}
                 editable={false}
@@ -492,8 +478,8 @@ class Transactions extends Component {
                   height: common.margin8 * 5 + common.font12 * 5 + common.margin10 * 3,
                 }}
                 type={common.buy}
-                goods={goods}
-                currency={currency}
+                goodsName={goodsName}
+                currencyName={currencyName}
                 dataSource={this.shelvesBuyDS(shelvesBuy)}
               />
               <ShelvesListView
@@ -520,6 +506,7 @@ class Transactions extends Component {
             renderRow={(rd, sid, rid) => this.renderLatestDealsRow(rd, sid, rid)}
             renderHeader={() => this.renderLatestDealsHeader()}
             enableEmptySections
+            removeClippedSubviews={false}
           />
         </ScrollView>
       </View>
@@ -529,8 +516,6 @@ class Transactions extends Component {
 
 function mapStateToProps(store) {
   return {
-    goods: store.deal.goods,
-    currency: store.deal.currency,
     price: store.deal.price,
     quantity: store.deal.quantity,
     amount: store.deal.amount,
@@ -540,7 +525,9 @@ function mapStateToProps(store) {
 
     user: store.user.user,
 
-    tokenList: store.delegate.tokenList,
+    homeRose: store.dealstat.homeRose,
+    homeRoseSelected: store.dealstat.homeRoseSelected,
+
     shelvesBuy: store.delegate.shelvesBuy,
     shelvesSell: store.delegate.shelvesSell,
     depthMap: store.delegate.depthMap,

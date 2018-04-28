@@ -76,8 +76,18 @@ class Login extends Component {
             screenProps.dismiss()
           }
         })
+      } else if (loginResponse.error.code === 4000114) {
+        Toast.fail('手机号不正确')
+      } else if (loginResponse.error.code === 4000115) {
+        Toast.fail('密码不正确')
+      } else if (loginResponse.error.code === 4000116) {
+        Toast.fail('手机号码未注册')
+      } else if (loginResponse.error.code === 4000117) {
+        Toast.fail('账号或密码错误')
+      } else if (loginResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.fail(loginResponse.error.message)
+        Toast.fail('登录失败，请重试')
       }
     }
   }

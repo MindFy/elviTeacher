@@ -35,6 +35,18 @@ export function idCardAuth(data) {
   }
 }
 
+export function imgHash() {
+  return {
+    type: constants.IMG_HASH_REQUEST,
+  }
+}
+
+export function imgHashFailed() {
+  return {
+    type: constants.IMG_HASH_FAILED,
+  }
+}
+
 export function idCardAuthUpdate(data) {
   return {
     type: constants.ID_CARD_AUTH_UPDATE,

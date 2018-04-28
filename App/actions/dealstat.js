@@ -1,8 +1,9 @@
 import * as constants from '../constants/index'
 
-export function getRose() {
+export function getRose(data) {
   return {
     type: constants.GET_ROSE_REQUEST,
+    data,
   }
 }
 

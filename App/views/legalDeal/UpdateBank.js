@@ -211,13 +211,11 @@ class UpdateBank extends Component {
           }}
           title={'开户银行'}
           placeholder={'请输入开户银行'}
-          value={bankName}
           onChange={e => this.onChange(e, 'bankName')}
         />
         <TextInputUpdateBank
           title={'开户支行'}
           placeholder={'请输入正确的开户支行名称'}
-          value={subbankName}
           onChange={e => this.onChange(e, 'subbankName')}
         />
         <TextInputUpdateBank

@@ -79,8 +79,18 @@ class ConfirmPwd extends Component {
         Toast.success('重置密码成功')
         dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
         navigation.goBack('Login')
+      } else if (resetPasswordResponse.error.code === 4000104) {
+        Toast.fail('手机号未注册')
+      } else if (resetPasswordResponse.error.code === 4000101) {
+        Toast.fail('验证码不能为空')
+      } else if (resetPasswordResponse.error.code === 4000102) {
+        Toast.fail('验证码错误')
+      } else if (resetPasswordResponse.error.code === 4000103) {
+        Toast.fail('验证码已过期，请重新获取')
+      } else if (resetPasswordResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.fail(resetPasswordResponse.error.message)
+        Toast.fail('重置密码失败，请稍后再试')
       }
     }
   }

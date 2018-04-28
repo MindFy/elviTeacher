@@ -15,7 +15,7 @@ import {
   findListSelf,
   latestDeals,
   buyOrSellUpdate,
-  currentTokensUpdate,
+  homeRoseSelectedUpdate,
   textInputDelegateUpdate,
 } from './deal'
 import {
@@ -54,6 +54,8 @@ import {
   findUser,
   findUserUpdate,
   idCardAuth,
+  imgHash,
+  imgHashFailed,
   idCardAuthUpdate,
   isExist,
   login,
@@ -68,6 +70,10 @@ import {
   updateBankUpdate,
   updateBank,
 } from './user'
+import {
+  selectionBarUpdate,
+  kLineOrDepthUpdate,
+} from './ui'
 
 const actions = {
   add,
@@ -86,7 +92,7 @@ const actions = {
   findListSelf,
   latestDeals,
   buyOrSellUpdate,
-  currentTokensUpdate,
+  homeRoseSelectedUpdate,
   textInputDelegateUpdate,
 
   getRose,
@@ -120,6 +126,8 @@ const actions = {
   findUser,
   findUserUpdate,
   idCardAuth,
+  imgHash,
+  imgHashFailed,
   idCardAuthUpdate,
   isExist,
   login,
@@ -133,5 +141,8 @@ const actions = {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+
+  selectionBarUpdate,
+  kLineOrDepthUpdate,
 }
 export default actions

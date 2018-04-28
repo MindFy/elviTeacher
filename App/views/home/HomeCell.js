@@ -9,20 +9,18 @@ import { common } from '../../constants/common'
 export default class HomeCell extends Component {
   componentDidMount() { }
   render() {
+    const { rd } = this.props
     let dirImageSource = null
     let priceColor = null
     let rangeColor = null
-    let type = null
-    if (this.props.rd[3] === 1) {
-      dirImageSource = require('../../assets/箭头.png')
-      priceColor = common.redColor
-      rangeColor = common.greenColor
-      type = '-'
-    } else {
-      dirImageSource = require('../../assets/箭头copy.png')
+    if (rd.rose > 0) {
       priceColor = common.greenColor
       rangeColor = common.redColor
-      type = '+'
+      dirImageSource = require('../../assets/箭头copy.png')
+    } else if (rd.rose <= 0) {
+      priceColor = common.redColor
+      rangeColor = common.greenColor
+      dirImageSource = require('../../assets/箭头.png')
     }
     return (
       <View
@@ -70,7 +68,7 @@ export default class HomeCell extends Component {
                 color: common.textColor,
                 fontSize: common.font20,
               }}
-            >{this.props.rd[0]}</Text>
+            >{`${rd.goods.name}`}</Text>
             <Text
               style={{
                 color: common.placeholderColor,
@@ -78,7 +76,7 @@ export default class HomeCell extends Component {
                 paddingBottom: 0,
                 alignSelf: 'flex-end',
               }}
-            >/BTC</Text>
+            >{`/${rd.currency.name}`}</Text>
           </View>
 
           <View
@@ -103,7 +101,7 @@ export default class HomeCell extends Component {
                 color: priceColor,
                 alignSelf: 'center',
               }}
-            >{this.props.rd[1]}</Text>
+            >{rd.cprice}</Text>
           </View>
         </View>
 
@@ -119,7 +117,7 @@ export default class HomeCell extends Component {
               color: rangeColor,
               alignSelf: 'center',
             }}
-          >{`${type}${this.props.rd[2]}`}</Text>
+          >{`${rd.rose}%`}</Text>
         </View>
 
       </View>

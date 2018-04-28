@@ -1,16 +1,6 @@
 import * as constants from '../constants/index'
 
 const initialState = {
-  goods: {
-    id: 1,
-    name: 'TK',
-    description: 'this is TK',
-  },
-  currency: {
-    id: 3,
-    name: 'CNYT',
-    description: 'this is CNYT',
-  },
   deal: [],
   latestDeals: [],
 
@@ -77,13 +67,6 @@ export default function deal(state = initialState, action) {
       nextState = {
         ...state,
         buyOrSell: action.buyOrSell,
-      }
-      break
-    case constants.CURRENT_TOKENS_UPDATE:
-      nextState = {
-        ...state,
-        goods: action.goods,
-        currency: action.currency,
       }
       break
     case constants.TEXTINPUT_DELEGATE_UPDATE:

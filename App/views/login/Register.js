@@ -74,6 +74,10 @@ class Register extends Component {
       Toast.message('请输入手机号')
       return
     }
+    if (!code.length) {
+      Toast.message('请输入验证码')
+      return
+    }
     if (!password.length || !common.regPassword.test(password) ||
       !common.regSpace.test(password)) {
       Toast.show({
@@ -98,10 +102,6 @@ class Register extends Component {
       Toast.message('请输入正确的手机号')
       return
     }
-    if (!code.length) {
-      Toast.message('请输入验证码')
-      return
-    }
     dispatch(actions.register({
       mobile,
       code,
@@ -120,8 +120,16 @@ class Register extends Component {
       if (getVerificateCodeResponse.success) {
         this.count()
         Toast.success(getVerificateCodeResponse.result.message)
+      } else if (getVerificateCodeResponse.error.code === 4000101) {
+        Toast.fail('手机号码或服务类型错误')
+      } else if (getVerificateCodeResponse.error.code === 4000102) {
+        Toast.fail('一分钟内不能重复发送验证码')
+      } else if (getVerificateCodeResponse.error.code === 4000104) {
+        Toast.fail('手机号码已注册')
+      } else if (getVerificateCodeResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.message(getVerificateCodeResponse.error.message)
+        Toast.fail('获取验证码失败，请重试')
       }
     }
   }
@@ -138,8 +146,20 @@ class Register extends Component {
       if (registerResponse.success) {
         Toast.success('注册成功')
         navigation.goBack()
+      } else if (registerResponse.error.code === 4000104) {
+        Toast.fail('注册用户失败')
+      } else if (registerResponse.error.code === 4000101) {
+        Toast.fail('验证码不能为空')
+      } else if (registerResponse.error.code === 4000102) {
+        Toast.fail('验证码错误')
+      } else if (registerResponse.error.code === 4000103) {
+        Toast.fail('验证码已过期，请重新获取')
+      } else if (registerResponse.error.code === 4000114) {
+        Toast.fail('手机号码已被注册')
+      } else if (registerResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.fail(registerResponse.error.message)
+        Toast.fail('注册失败，请重试')
       }
     }
   }
@@ -171,7 +191,6 @@ class Register extends Component {
             }}
             title="账号"
             placeholder="请输入11位手机号"
-            keyboardType="phone-pad"
             value={mobile}
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}

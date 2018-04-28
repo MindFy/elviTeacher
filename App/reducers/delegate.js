@@ -4,29 +4,6 @@ import {
 } from '../constants/common'
 
 const initialState = {
-  tokenList: [
-    {
-      id: 1,
-      name: 'TK',
-      description: 'this is TK',
-    },
-    {
-      id: 2,
-      name: 'BTC',
-      description: 'this is BTC',
-    },
-    {
-      id: 3,
-      name: 'CNYT',
-      description: 'this is CNYT',
-    },
-    {
-      id: 4,
-      name: 'CNY',
-      description: 'this is CNY',
-    },
-  ],
-
   shelvesBuy: [],
   shelvesSell: [],
   depthMap: {

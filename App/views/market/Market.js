@@ -132,10 +132,11 @@ class Market extends Component {
     }
 
     return (
-      <View style={{
-        flex: 1,
-        backgroundColor: common.bgColor,
-      }}
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: common.bgColor,
+        }}
       >
         <StatusBar
           barStyle={'light-content'}
@@ -159,6 +160,7 @@ class Market extends Component {
           renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
           renderHeader={() => this.renderHeader()}
           enableEmptySections
+          removeClippedSubviews={false}
         />
       </View>
     )
