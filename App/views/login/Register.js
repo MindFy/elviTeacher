@@ -253,7 +253,9 @@ class Register extends Component {
               >注册即同意</Text>
               <TouchableOpacity
                 activeOpacity={common.activeOpacity}
-                onPress={() => { }}
+                onPress={() => {
+                  navigation.navigate('Agreement')
+                }}
               >
                 <Text
                   style={{
