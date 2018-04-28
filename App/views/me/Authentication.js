@@ -70,6 +70,7 @@ class Authentication extends Component {
         } : {},
       authenticationAgain,
     }))
+    dispatch(actions.findUser(schemas.findUser(user.id)))
     this.listener = DeviceEventEmitter.addListener(common.authenticationListenerNoti, () => {
       user.idCardAuthStatus = common.waiting
       dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
@@ -126,6 +127,7 @@ class Authentication extends Component {
       Toast.message('请上传手持身份证照片')
       return
     }
+    dispatch(actions.imgHash())
     PutObject.mulitPutObject({
       url: imgHashApi,
       path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
@@ -136,15 +138,17 @@ class Authentication extends Component {
       }],
       method: 'POST',
     }, (r) => {
-      if (r.result && r.res[0].length) {
-        const h1 = JSON.parse(r.res[0])
-        const h2 = JSON.parse(r.res[1])
-        const h3 = JSON.parse(r.res[2])
+      if (r.result && r.res) {
+        const h1 = r.res[0] !== '' ? JSON.parse(r.res[0]).hash : ''
+        const h2 = r.res[1] !== '' ? JSON.parse(r.res[1]).hash : ''
+        const h3 = r.res[2] !== '' ? JSON.parse(r.res[2]).hash : ''
         dispatch(actions.idCardAuth({
           name,
           idNo,
-          idCardImages: [h1.hash, h2.hash, h3.hash],
+          idCardImages: [h1, h2, h3],
         }))
+      } else {
+        Toast.fail('图片上传失败')
       }
     })
   }
@@ -185,9 +189,13 @@ class Authentication extends Component {
     } else {
       this.showIdCardAuthResponse = false
       if (idCardAuthResponse.success) {
-        Toast.success(idCardAuthResponse.result.message)
+        Toast.success(idCardAuthResponse.result)
+      } else if (idCardAuthResponse.error.code === 4000150) {
+        Toast.fail('身份认证失败，请确认信息是否正确')
+      } else if (idCardAuthResponse.error.code === 4000151) {
+        Toast.fail('您已进行过认证操作')
       } else {
-        Toast.fail(idCardAuthResponse.error.message)
+        Toast.fail('身份认证失败')
       }
     }
   }
@@ -231,6 +239,8 @@ class Authentication extends Component {
           <BtnLogout
             viewStyle={{
               marginTop: common.margin40,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
               height: common.h44,
             }}
             onPress={() => this.confirmPress()}
@@ -242,7 +252,7 @@ class Authentication extends Component {
   }
 
   renderContentView() {
-    const { dispatch, name, idNo, idCardImages, user, authenticationAgain } = this.props
+    const { dispatch, name, idNo, user, authenticationAgain } = this.props
     if (!user.idCardAuthStatus) return null
     if (authenticationAgain) return this.renderScrollView()
 
@@ -303,15 +313,12 @@ class Authentication extends Component {
               }}
             >失败原因：照片不清晰</Text>
             <TouchableOpacity
-              style={{
-
-              }}
               activeOpacity={common.activeOpacity}
               onPress={() => {
                 dispatch(actions.idCardAuthUpdate({
                   name,
                   idNo,
-                  idCardImages,
+                  idCardImages: {},
                   authenticationAgain: true,
                 }))
               }}

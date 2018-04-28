@@ -391,7 +391,6 @@ class Transactions extends Component {
                   marginTop: common.margin10,
                 }}
                 placeholder={`价格（${currencyName}）`}
-                keyboardType="number-pad"
                 value={price}
                 onChange={e => this.onChange(e, 'price')}
               />
@@ -405,7 +404,6 @@ class Transactions extends Component {
 
               <TextInputTransactions
                 placeholder={`数量（${goodsName}）`}
-                keyboardType="number-pad"
                 value={quantity}
                 onChange={e => this.onChange(e, 'quantity')}
               />
@@ -419,7 +417,6 @@ class Transactions extends Component {
 
               <TextInputTransactions
                 placeholder={`成交金额（${currencyName}）`}
-                keyboardType="number-pad"
                 value={amount}
                 onChange={e => this.onChange(e, 'amount')}
                 editable={false}

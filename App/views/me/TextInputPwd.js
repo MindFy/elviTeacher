@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
 export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
-    const { placeholder, value, onChange, maxLength, keyboardType,
-      secureTextEntry, password } = this.props
+    const { placeholder, onChange, maxLength, keyboardType, type,
+      secureTextEntry, newPassword, newPasswordAgain } = this.props
     return (
       <View
         style={{
@@ -51,16 +51,26 @@ export default class TextInputPwd extends Component {
           />
         </View>
         {
-          ((password && !common.regPassword.test(password)) ||
-            (password && !common.regSpace.test(password))) ?
-            (<Text
+          type === 'newPassword' ?
+            <Text
               style={{
                 marginTop: common.margin5,
-                color: common.redColor,
+                color: common.placeholderColor,
                 fontSize: common.font12,
                 textAlign: 'right',
               }}
-            >{common.regPasswordMsg}</Text>) : null
+            >{common.regPasswordMsg}</Text> : null
+        }
+        {
+          ((type === 'newPasswordAgain') && (newPassword !== newPasswordAgain))
+            ? <Text
+              style={{
+                marginTop: common.margin5,
+                color: common.btnTextColor,
+                fontSize: common.font12,
+                textAlign: 'left',
+              }}
+            >请确保两次输入密码一致</Text> : null
         }
       </View>
     )

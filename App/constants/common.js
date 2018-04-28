@@ -8,6 +8,8 @@ const sw = Dimensions.get('window').width
 const w = 375
 
 const common = {
+  badNet: 'Network request failed',
+
   user: 'user',
   selectedTokenDefault: '选择币种',
   listenerNoti: 'listenerNoti',

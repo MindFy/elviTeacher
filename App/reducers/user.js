@@ -114,7 +114,7 @@ export default function user(state = initialState, action) {
         user: action.user,
       }
       break
-    case constants.ID_CARD_AUTH_REQUEST:
+    case constants.IMG_HASH_REQUEST:
       nextState = {
         ...state,
         idCardAuthVisible: true,

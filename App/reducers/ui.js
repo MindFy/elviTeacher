@@ -10,7 +10,6 @@ const initialState = {
 
 export default function ui(state = initialState, action) {
   let nextState = state
-  console.log('action->', action)
 
   switch (action.type) {
     case constants.SELECTION_BAR_UPDATE:

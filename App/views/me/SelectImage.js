@@ -4,14 +4,17 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native'
+import {
+  ActionSheet,
+} from 'teaset'
 import ImagePicker from 'rn-image-picker-d3j'
 import { common } from '../../constants/common'
 
 const options = {
-  title: '请选择一张图片',
-  cancelButtonTitle: '取消',
-  takePhotoButtonTitle: '拍照',
-  chooseFromLibraryButtonTitle: '从相册选择',
+  title: '',
+  
+  takePhotoButtonTitle: '',
+  chooseFromLibraryButtonTitle: '',
   customButtons: [],
   storageOptions: {
     skipBackup: true,
@@ -24,12 +27,38 @@ export default class SelectImage extends Component {
 
   showImagePicker() {
     const { imagePickerBlock } = this.props
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.uri && response.uri.length) {
-        const uri = response.uri.replace('file://', '')
-        imagePickerBlock(uri)
-      }
-    })
+
+    const items = [
+      {
+        title: '拍照',
+        onPress: () => {
+          ImagePicker.launchCamera({
+            cameraType: 'back',
+            allowsEditing: false,
+          }, (response) => {
+            if (response.uri && response.uri.length) {
+              const uri = response.uri.replace('file://', '')
+              imagePickerBlock(uri)
+            }
+          })
+        },
+      },
+      {
+        title: '从相册选择',
+        onPress: () => {
+          ImagePicker.launchImageLibrary({
+            allowsEditing: false,
+          }, (response) => {
+            if (response.uri && response.uri.length) {
+              const uri = response.uri.replace('file://', '')
+              imagePickerBlock(uri)
+            }
+          })
+        },
+      },
+    ]
+    const cancelItem = { title: '取消' }
+    ActionSheet.show(items, cancelItem)
   }
 
   render() {

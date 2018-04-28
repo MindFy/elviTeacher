@@ -9,13 +9,11 @@ import {
 } from 'react-native'
 import {
   Toast,
-  Overlay,
 } from 'teaset'
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TextInputPwd from './TextInputPwd'
 import BtnLogout from './BtnLogout'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import actions from '../../actions/index'
 
 class UpdatePassword extends Component {
@@ -55,8 +53,7 @@ class UpdatePassword extends Component {
   }
 
   componentWillUnmount() {
-    const { dispatch, mobile, password, passwordAgain } = this.props
-    dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
+    const { dispatch } = this.props
     dispatch(actions.updatePasswordUpdate({
       oldPassword: '',
       newPassword: '',
@@ -66,8 +63,7 @@ class UpdatePassword extends Component {
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, oldPassword, newPassword, newPasswordAgain,
-      mobile, password, passwordAgain } = this.props
+    const { dispatch, oldPassword, newPassword, newPasswordAgain } = this.props
 
     switch (tag) {
       case 'oldPassword':
@@ -78,9 +74,6 @@ class UpdatePassword extends Component {
         break
       case 'newPasswordAgain':
         dispatch(actions.updatePasswordUpdate({ oldPassword, newPassword, newPasswordAgain: text }))
-        break
-      case 'code':
-        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
         break
       default:
         break
@@ -95,7 +88,14 @@ class UpdatePassword extends Component {
     }
     if (!newPassword.length || !common.regPassword.test(newPassword)
       || !common.regSpace.test(newPassword)) {
-      Toast.message(common.regPasswordMsg)
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: `新${common.regPasswordMsg}`,
+        position: 'bottom',
+      })
       return
     }
     if (!newPasswordAgain.length) {
@@ -106,7 +106,7 @@ class UpdatePassword extends Component {
       Toast.message('新密码输入不一致')
       return
     }
-    this.showOverlay()
+    this.updatePassword()
   }
 
   updatePassword() {
@@ -115,65 +115,6 @@ class UpdatePassword extends Component {
       oldpassword: oldPassword,
       newpassword: newPassword,
     }))
-  }
-
-  showOverlay() {
-    const { dispatch, user, code } = this.props
-    const overlayView = (
-      <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
-        modal={false}
-        overlayOpacity={0}
-      >
-        <TKViewCheckAuthorize
-          mobile={user.mobile}
-          code={code}
-          onChange={e => this.onChange(e, 'code')}
-          codePress={() => {
-            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
-          }}
-          confirmPress={() => {
-            dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
-          }}
-          cancelPress={() => Overlay.hide(this.overlayViewKey)}
-        />
-      </Overlay.View>
-    )
-    this.overlayViewKey = Overlay.show(overlayView)
-  }
-
-  handleCheckVerificateCodeRequest() {
-    const { checkVerificateCodeVisible, checkVerificateCodeResponse } = this.props
-    if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
-
-    if (checkVerificateCodeVisible) {
-      this.showCheckVerificateCodeResponse = true
-    } else {
-      this.showCheckVerificateCodeResponse = false
-      if (checkVerificateCodeResponse.success) {
-        this.updatePassword()
-      } else {
-        Toast.fail(checkVerificateCodeResponse.error.message)
-      }
-    }
-  }
-
-  handleGetVerificateCodeRequest() {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
-
-    if (getVerificateCodeVisible) {
-      this.showGetVerificateCodeResponse = true
-    } else {
-      this.showGetVerificateCodeResponse = false
-      if (getVerificateCodeResponse.success) {
-        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
-      } else {
-        Toast.message(getVerificateCodeResponse.error.message)
-      }
-    }
   }
 
   handlePasswordRequest() {
@@ -186,18 +127,23 @@ class UpdatePassword extends Component {
       this.showUpdatePasswordResponse = false
       if (updatePasswordResponse.success) {
         Toast.success(updatePasswordResponse.result.message)
-        Overlay.hide(this.overlayViewKey)
         navigation.goBack()
+      } else if (updatePasswordResponse.error.code === 4030501) {
+        Toast.fail('原密码错误')
+      } else if (updatePasswordResponse.error.code === 4000120) {
+        Toast.fail('原密码错误')
+      } else if (updatePasswordResponse.error.code === 4000121) {
+        Toast.fail('原密码错误')
+      } else if (updatePasswordResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.fail(updatePasswordResponse.error.message)
+        Toast.fail('密码修改失败，请重试')
       }
     }
   }
 
   render() {
     this.handlePasswordRequest()
-    this.handleCheckVerificateCodeRequest()
-    this.handleGetVerificateCodeRequest()
 
     const { oldPassword, newPassword, newPasswordAgain, updatePasswordVisible } = this.props
     return (
@@ -223,7 +169,7 @@ class UpdatePassword extends Component {
           <TextInputPwd
             placeholder={'输入密码'}
             value={newPassword}
-            password={newPassword}
+            type={'newPassword'}
             secureTextEntry
             onChange={e => this.onChange(e, 'newPassword')}
             maxLength={common.textInputMaxLenPwd}
@@ -231,6 +177,9 @@ class UpdatePassword extends Component {
           <TextInputPwd
             placeholder={'再次输入密码'}
             value={newPasswordAgain}
+            type={'newPasswordAgain'}
+            newPassword={newPassword}
+            newPasswordAgain={newPasswordAgain}
             onChange={e => this.onChange(e, 'newPasswordAgain')}
             maxLength={common.textInputMaxLenPwd}
             secureTextEntry
@@ -271,18 +220,6 @@ function mapStateToProps(store) {
 
     updatePasswordVisible: store.user.updatePasswordVisible,
     updatePasswordResponse: store.user.updatePasswordResponse,
-
-    user: store.user.user,
-    mobile: store.user.mobileRegister,
-    code: store.user.codeRegister,
-    password: store.user.passwordRegister,
-    passwordAgain: store.user.passwordAgainRegister,
-
-    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
-
-    checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
-    checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
   }
 }
 
