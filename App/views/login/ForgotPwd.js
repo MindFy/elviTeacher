@@ -97,7 +97,7 @@ class ForgotPwd extends Component {
       } else if (getVerificateCodeResponse.error.code === 4000102) {
         Toast.fail('一分钟内不能重复发送验证码')
       } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail('手机号码已注册')
+        Toast.fail('手机号码未注册')
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
@@ -120,7 +120,7 @@ class ForgotPwd extends Component {
       } else if (checkVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
       } else if (checkVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('一分钟内不能重复发送验证码')
+        Toast.fail('验证码错误')
       } else if (checkVerificateCodeResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
@@ -156,14 +156,12 @@ class ForgotPwd extends Component {
             }}
             title="账号"
             placeholder="请输入11位手机号"
-            keyboardType="phone-pad"
             value={mobile}
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
           />
 
           <TextInputCode
-            keyboardType="number-pad"
             value={code}
             maxLength={6}
             onPress={count => this.codePress(count)}
