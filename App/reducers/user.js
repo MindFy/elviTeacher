@@ -120,6 +120,12 @@ export default function user(state = initialState, action) {
         idCardAuthVisible: true,
       }
       break
+    case constants.IMG_HASH_FAILED:
+      nextState = {
+        ...state,
+        idCardAuthVisible: false,
+      }
+      break
     case constants.ID_CARD_AUTH_SUCCEED:
       nextState = {
         ...state,

@@ -272,11 +272,11 @@ class Detail extends Component {
       quantity = homeRoseSelected.quantity
       rose = homeRoseSelected.rose
       if (rose > 0) {
-        cpriceColor = common.greenColor
-        dirImageSource = require('../../assets/箭头copy.png')
-      } else if (rose <= 0) {
         cpriceColor = common.redColor
         dirImageSource = require('../../assets/箭头.png')
+      } else if (rose <= 0) {
+        cpriceColor = common.greenColor
+        dirImageSource = require('../../assets/箭头copy.png')
       }
     }
 
@@ -376,14 +376,14 @@ class Detail extends Component {
                 <Text
                   style={{
                     fontSize: common.font14,
-                    color: common.redColor,
+                    color: cpriceColor,
                   }}
                 >{`${rose > 0 ? '+' : '-'}${lastprice}`}</Text>
                 <Text
                   style={{
                     marginLeft: common.margin10,
                     fontSize: common.font14,
-                    color: common.redColor,
+                    color: cpriceColor,
                   }}
                 >{`${rose}%`}</Text>
               </View>
