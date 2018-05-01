@@ -8,10 +8,11 @@ export function legalDealCancel(data, legalDeal) {
   }
 }
 
-export function confirmPay(data) {
+export function confirmPay(data, legalDeal) {
   return {
     type: constants.CONFIRM_PAY_REQUEST,
     data,
+    legalDeal,
   }
 }
 
@@ -29,10 +30,11 @@ export function findLegalDeal(schema) {
   }
 }
 
-export function havedPay(data) {
+export function havedPay(data, legalDeal) {
   return {
     type: constants.HAVED_PAY_REQUEST,
     data,
+    legalDeal,
   }
 }
 

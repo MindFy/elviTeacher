@@ -5,6 +5,7 @@ import {
   View,
   Image,
   ListView,
+  RefreshControl,
   TouchableOpacity,
 } from 'react-native'
 import {
@@ -58,35 +59,40 @@ class LegalDealDetail extends Component {
     }
   }
 
-  renderRow(rd, sid, rid) {
+  renderRow(rd, rid) {
     const { navigation, dispatch, legalDeal } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
     let status = ''
     let direct = ''
-    let firBtnTitle = ''
+    let paymentBtnTitle = ''
     let secBtnTitle = ''
     let cancelBtnDisabled = true
-    let confirmBtnDisabled = true
+    let confirmPayDisabled = true
+    let havedPayDisabled = true
+    let price = 0
     if (rd.direct === common.buy) {
+      price = rd.dealPrice
       textColor = common.redColor
       direct = '买入'
-      firBtnTitle = '付款信息'
+      paymentBtnTitle = '付款信息'
       secBtnTitle = '确认付款'
     } else if (rd.direct === common.sell) {
+      price = 0.99
       textColor = common.greenColor
       direct = '卖出'
-      firBtnTitle = '收款信息'
+      paymentBtnTitle = '收款信息'
       secBtnTitle = '我已收款'
     }
     switch (rd.status) {
       case common.legalDeal.status.waitpay:
         status = '待付款'
         cancelBtnDisabled = false
+        havedPayDisabled = false
         break
       case common.legalDeal.status.waitconfirm:
         status = '待确认'
-        confirmBtnDisabled = false
+        confirmPayDisabled = false
         break
       case common.legalDeal.status.complete:
         status = '已完成'
@@ -204,7 +210,7 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >{`总价:¥${Number(rd.dealPrice * rd.quantity).toFixed(2)}`}</Text>
+            >{`总价:¥${Number(price * rd.quantity).toFixed(2)}`}</Text>
           </View>
           <View
             style={{
@@ -231,7 +237,7 @@ class LegalDealDetail extends Component {
                   color: common.btnTextColor,
                   fontSize: common.font10,
                 }}
-              >{firBtnTitle}</Text>
+              >{paymentBtnTitle}</Text>
             </TouchableOpacity>
             {
               rd.direct === common.buy ?
@@ -255,22 +261,49 @@ class LegalDealDetail extends Component {
                   >撤单</Text>
                 </TouchableOpacity> : null
             }
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              style={{
-                marginTop: common.margin8,
-                alignSelf: 'center',
-                marginBottom: common.margin10,
-              }}
-              disabled={confirmBtnDisabled}
-            >
-              <Text
-                style={{
-                  color: confirmBtnDisabled ? common.placeholderColor : common.btnTextColor,
-                  fontSize: common.font10,
-                }}
-              >{secBtnTitle}</Text>
-            </TouchableOpacity>
+            {
+              rd.direct === common.buy
+                ? <TouchableOpacity
+                  activeOpacity={common.activeOpacity}
+                  style={{
+                    marginTop: common.margin8,
+                    alignSelf: 'center',
+                    marginBottom: common.margin10,
+                  }}
+                  disabled={havedPayDisabled}
+                  onPress={() => {
+                    legalDeal[rid].status = common.legalDeal.status.waitconfirm
+                    dispatch(actions.havedPay({ id: rd.id }, legalDeal.concat()))
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: havedPayDisabled ? common.placeholderColor : common.btnTextColor,
+                      fontSize: common.font10,
+                    }}
+                  >{secBtnTitle}</Text>
+                </TouchableOpacity>
+                : <TouchableOpacity
+                  activeOpacity={common.activeOpacity}
+                  style={{
+                    marginTop: common.margin8,
+                    alignSelf: 'center',
+                    marginBottom: common.margin10,
+                  }}
+                  disabled={confirmPayDisabled}
+                  onPress={() => {
+                    legalDeal[rid].status = common.legalDeal.status.complete
+                    dispatch(actions.confirmPay({ id: rd.id }, legalDeal.concat()))
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: confirmPayDisabled ? common.placeholderColor : common.btnTextColor,
+                      fontSize: common.font10,
+                    }}
+                  >{secBtnTitle}</Text>
+                </TouchableOpacity>
+            }
           </View>
         </View>
       </View>
@@ -278,16 +311,31 @@ class LegalDealDetail extends Component {
   }
 
   render() {
-    const { legalDeal } = this.props
+    const { dispatch, user, legalDeal, findLegalDealVisible } = this.props
+
     return (
       <ListView
         style={{
           backgroundColor: common.blackColor,
         }}
         dataSource={this.dataSource(legalDeal)}
-        renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
+        renderRow={(rd, sid, rid) => this.renderRow(rd, rid)}
         enableEmptySections
         removeClippedSubviews={false}
+        refreshControl={
+          <RefreshControl
+            onRefresh={() => {
+              if (user) {
+                dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+              }
+            }}
+            refreshing={findLegalDealVisible}
+            colors={[common.textColor]}
+            progressBackgroundColor={common.navBgColor}
+            progressViewOffset={0}
+            tintColor={common.textColor}
+          />
+        }
       />
     )
   }
@@ -296,6 +344,7 @@ class LegalDealDetail extends Component {
 function mapStateToProps(store) {
   return {
     legalDeal: store.legalDeal.legalDeal,
+    findLegalDealVisible: store.legalDeal.findLegalDealVisible,
 
     user: store.user.user,
   }

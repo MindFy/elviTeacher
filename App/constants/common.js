@@ -146,6 +146,10 @@ const common = {
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
   textInputMaxLenBankNo: 19,
+  textInputMaxLenLegalDeal: 7,
+
+  maxQuantityLegalDeal: 1000000,
+  minQuantityLegalDeal: 100,
 
   messageBarDur: 2000,
 

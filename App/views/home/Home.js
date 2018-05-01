@@ -187,8 +187,7 @@ class Home extends Component {
                 dispatch(actions.getRose(homeRoseSelected))
               }}
               refreshing={
-                (getRoseVisible || findBannersVisible || announcementVisible)
-                  ? true : false
+                !!((getRoseVisible || findBannersVisible || announcementVisible))
               }
               colors={[common.textColor]}
               progressBackgroundColor={common.navBgColor}
