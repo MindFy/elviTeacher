@@ -43,54 +43,16 @@ class LegalDealDetail extends Component {
         ),
     }
   }
-  constructor() {
-    super()
-    this.showFindLegalDealResponse = false
-    this.state = {
-      refreshState: RefreshState.Idle,
-    }
-  }
 
   componentDidMount() {
+    this.onHeaderRefresh()
+  }
+
+  onHeaderRefresh() {
     const { dispatch, user } = this.props
     if (user) {
-      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
-    }
-  }
-
-  onFooterRefresh() {
-    this.setState({ refreshState: RefreshState.FooterRefreshing })
-    // 模拟网络请求
-    setTimeout(() => {
-      // 模拟网络加载失败的情况
-      if (Math.random() < 0.2) {
-        this.setState({ refreshState: RefreshState.Failure })
-        return
-      }
-      // 获取测试数据
-      const dataList = this.getTestList(false)
-      this.setState({
-        dataList,
-        refreshState: dataList.length > 50 ? RefreshState.NoMoreData : RefreshState.Idle,
-      })
-    }, 2000)
-  }
-
-  handleFindLegalDealRequest() {
-    const { findLegalDealVisible, findLegalDealResponse, legalDeal } = this.props
-    if (!findLegalDealVisible && !this.showFindLegalDealResponse) return
-
-    if (findLegalDealVisible) {
-      this.showFindLegalDealResponse = true
-    } else {
-      this.showFindLegalDealResponse = false
-      if (findLegalDealResponse === true) {
-        this.setState({
-          refreshState: legalDeal.length < 1 ? RefreshState.EmptyData : RefreshState.Idle,
-        })
-      } else {
-        this.setState({ refreshState: RefreshState.Failure })
-      }
+      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0),
+        RefreshState.HeaderRefreshing))
     }
   }
 
@@ -346,8 +308,7 @@ class LegalDealDetail extends Component {
   }
 
   render() {
-    const { dispatch, user, legalDeal } = this.props
-    this.handleFindLegalDealRequest()
+    const { dispatch, user, legalDeal, refreshState, skip } = this.props
 
     return (
       <RefreshListView
@@ -356,22 +317,18 @@ class LegalDealDetail extends Component {
         }}
         data={legalDeal}
         renderItem={({ item, index }) => this.renderRow(item, index)}
-        refreshState={this.state.refreshState}
-        onHeaderRefresh={() => {
-          this.setState({ refreshState: RefreshState.HeaderRefreshing })
-          if (user) {
-            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+        refreshState={refreshState}
+        onHeaderRefresh={() => this.onHeaderRefresh()}
+        onFooterRefresh={() => {
+          if (user && refreshState !== RefreshState.NoMoreData) {
+            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 10 * skip),
+              RefreshState.FooterRefreshing))
           }
         }}
-        onFooterRefresh={() => {
-
+        footerTextStyle={{
+          color: common.textColor,
+          fontSize: common.font14,
         }}
-
-        // 可选
-        footerRefreshingText={'玩命加载中 >.<'}
-        footerFailureText={'我擦嘞，居然失败了 =.=!'}
-        footerNoMoreDataText={'-我是有底线的-'}
-        footerEmptyDataText={'-好像什么东西都没有-'}
       />
     )
   }
@@ -379,9 +336,10 @@ class LegalDealDetail extends Component {
 
 function mapStateToProps(store) {
   return {
+    skip: store.legalDeal.skip,
     legalDeal: store.legalDeal.legalDeal,
+    refreshState: store.legalDeal.refreshState,
     findLegalDealVisible: store.legalDeal.findLegalDealVisible,
-    findLegalDealResponse: store.legalDeal.findLegalDealResponse,
 
     user: store.user.user,
   }

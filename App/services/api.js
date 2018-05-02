@@ -4,5 +4,5 @@ import * as prod from './api.prod'
 if (process.env.NODE_ENV === 'production') {
   module.exports = prod
 } else {
-  module.exports = debug
+  module.exports = prod
 }

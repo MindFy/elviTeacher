@@ -23,10 +23,11 @@ export function legalDealCreate(data) {
   }
 }
 
-export function findLegalDeal(schema) {
+export function findLegalDeal(schema, refreshState) {
   return {
     type: constants.FIND_LEGAL_DEAL_REQUEST,
     schema,
+    refreshState,
   }
 }
 

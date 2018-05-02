@@ -1,7 +1,7 @@
-export default function findLegalDeal(id) {
+export default function findLegalDeal(id, skip) {
   return `{
       find_legalDeal(
-          skip: 0,
+          skip: ${skip},
           limit: 10,
           where: {
             creater_id: ${id}
