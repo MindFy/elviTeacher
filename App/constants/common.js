@@ -160,9 +160,10 @@ const common = {
   dfFullDate(dateStr) {
     const createdAtDate = new Date(dateStr)
     const getYear = createdAtDate.getFullYear()
-    const getMonth = createdAtDate.getMonth() < 10 ?
-      `0${createdAtDate.getMonth()}` :
-      createdAtDate.getMonth()
+    const getMonthTemp = createdAtDate.getMonth() + 1
+    const getMonth = getMonthTemp < 10 ?
+      `0${getMonthTemp}` :
+      getMonthTemp
     const getDate = createdAtDate.getDate() < 10 ?
       `0${createdAtDate.getDate()}` :
       createdAtDate.getDate()
