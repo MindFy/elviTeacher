@@ -166,7 +166,8 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
+              if (user) navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
+              else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/银行卡.png')}
             title="银行卡管理"

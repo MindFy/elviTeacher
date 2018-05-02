@@ -302,7 +302,7 @@ class UpdateBank extends Component {
               fontSize: common.font14,
               alignSelf: 'center',
             }}
-          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe') ? '重新添加' : '确认'}</Text>
+          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe' && bankName.length) ? '重新添加' : '确认'}</Text>
         </TouchableOpacity>
       </ScrollView>
     )
