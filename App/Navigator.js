@@ -9,6 +9,8 @@ import {
 
 import Home from './views/home/Home'
 import Detail from './views/home/Detail'
+import Banner from './views/home/Banner'
+import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
 import Transactions from './views/transactions/Transactions'
 import Delegate from './views/transactions/Delegate'
@@ -121,6 +123,9 @@ const TabBar = TabNavigator(
       labelStyle: {
         fontSize: common.font12,
       },
+      indicatorStyle: {
+        height: 0,
+      },
     },
   },
 )
@@ -141,6 +146,8 @@ const TabBarStack = StackNavigator({
   Payment,
   UpdateBank,
   Transactions,
+  Banner,
+  Announcement,
 })
 
 const LoginStack = DismissableStackNavigator({

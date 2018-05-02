@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import {
+  Text,
   Image,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { common } from '../../constants/common'
-import MeCell from './MeCell'
+import {
+  common,
+} from '../../constants/common'
 
-class Settings extends Component {
+export default class Announcement extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '设置',
+      headerTitle: '活动',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -40,8 +40,10 @@ class Settings extends Component {
     }
   }
   componentDidMount() { }
+
   render() {
-    const { navigation, user } = this.props
+    const { navigation } = this.props
+    const content = navigation.state.params.element.content
     return (
       <ScrollView
         style={{
@@ -49,38 +51,16 @@ class Settings extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
-
-        <MeCell
-          viewStyle={{
-            marginTop: common.margin10,
+        <Text
+          style={{
+            marginTop: common.margin60,
+            color: common.textColor,
+            fontSize: common.font14,
+            textAlign: 'center',
+            width: '100%',
           }}
-          leftImageHide
-          onPress={() => {
-            if (user) navigation.navigate('UpdatePassword')
-            else navigation.navigate('LoginStack')
-          }}
-          title="修改密码"
-        />
-        <MeCell
-          leftImageHide
-          onPress={() => { }}
-          title="版本显示"
-        />
-
+        >{content}</Text>
       </ScrollView>
     )
   }
 }
-
-function mapStateToProps(store) {
-  return {
-    user: store.user.user,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(Settings)

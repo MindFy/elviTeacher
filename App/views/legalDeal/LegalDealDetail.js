@@ -112,7 +112,6 @@ class LegalDealDetail extends Component {
             }
             legalDeal[rid].status = common.legalDeal.status.complete
             dispatch(actions.confirmPay({ id, code: this.props.code }, legalDeal.concat()))
-            // dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
           }}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
         />
