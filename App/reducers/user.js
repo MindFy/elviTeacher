@@ -20,9 +20,9 @@ const initialState = {
   newPassword: '',
   newPasswordAgain: '',
 
-  bankName: '中国人民银行',
-  subbankName: '南京支行',
-  bankNo: '6222022462426230354',
+  bankName: '',
+  subbankName: '',
+  bankNo: '',
 
   checkVerificateCodeVisible: false,
   checkVerificateCodeResponse: undefined,
@@ -313,6 +313,7 @@ export default function user(state = initialState, action) {
         ...state,
         updateBankVisible: false,
         updateBankResponse: action.response,
+        user: action.user,
       }
       break
     case constants.UPDATE_BANK_FAILED:

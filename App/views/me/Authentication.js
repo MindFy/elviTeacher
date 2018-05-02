@@ -229,7 +229,7 @@ class Authentication extends Component {
           <TextInputPwd
             placeholder="姓名"
             value={name}
-            onChange={e => this.onChange(e, 'name')}
+            onEndEditing={e => this.onChange(e, 'name')}
           />
           <TextInputPwd
             placeholder="身份证号"

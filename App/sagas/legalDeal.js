@@ -1,4 +1,7 @@
 import {
+  DeviceEventEmitter,
+} from 'react-native'
+import {
   take, call, put,
 } from 'redux-saga/effects'
 import {
@@ -40,6 +43,7 @@ export function* confirmPay() {
     const response = yield call(api.confirmPay, request.data)
     if (response.success) {
       Toast.success(response.result)
+      DeviceEventEmitter.emit(common.confirmPayNoti)
       yield put({ type: constants.CONFIRM_PAY_SUCCEED, legalDeal: request.legalDeal })
     } else {
       yield put({ type: constants.CONFIRM_PAY_FAILED, response })
@@ -49,6 +53,8 @@ export function* confirmPay() {
         Toast.fail('法币交易单号为空')
       } else if (response.error.code === 4001421) {
         Toast.fail('法币交易单不存在')
+      } else if (response.error.code === 4000156) {
+        Toast.fail('授权验证失败')
       } else {
         Toast.fail('操作失败，请重试')
       }

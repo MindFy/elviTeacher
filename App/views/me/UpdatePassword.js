@@ -90,12 +90,16 @@ class UpdatePassword extends Component {
       || !common.regSpace.test(newPassword)) {
       Toast.show({
         style: {
-          paddingLeft: common.margin20,
-          paddingRight: common.margin20,
+          paddingLeft: common.margin15,
+          paddingRight: common.margin15,
         },
         text: `新${common.regPasswordMsg}`,
         position: 'bottom',
       })
+      return
+    }
+    if (oldPassword === newPassword) {
+      Toast.message('新密码和旧密码不能一样')
       return
     }
     if (!newPasswordAgain.length) {
