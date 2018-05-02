@@ -68,8 +68,8 @@ class LegalDeal extends Component {
   }
 
   componentWillUnmount() {
-    const { dispatch, direct } = this.props
-    dispatch(actions.legalDealUpdate({ direct, quantity: 0 }))
+    const { dispatch } = this.props
+    dispatch(actions.legalDealUpdate({ direct: common.buy, quantity: 0 }))
   }
 
   selectionBarPress(direct) {
@@ -298,7 +298,6 @@ class LegalDeal extends Component {
 
 function mapStateToProps(store) {
   return {
-    direct: store.legalDeal.direct,
     priceBuy: store.legalDeal.priceBuy,
     priceSell: store.legalDeal.priceSell,
     quantity: store.legalDeal.quantity,

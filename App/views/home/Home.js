@@ -200,6 +200,12 @@ class Home extends Component {
             announcement={announcement}
             banners={banners}
             imgHashApi={imgHashApi}
+            bannerBlock={(element) => {
+              navigation.navigate('Banner', { element })
+            }}
+            announcementBlock={(element) => {
+              navigation.navigate('Announcement', { element })
+            }}
           />
 
           <View
