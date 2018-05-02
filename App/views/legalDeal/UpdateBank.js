@@ -54,10 +54,19 @@ class UpdateBank extends Component {
     this.showGetVerificateCodeResponse = false
   }
 
+  componentDidMount() {
+    const { dispatch, user } = this.props
+    dispatch(actions.updateBankUpdate({
+      bankName: user.bankName,
+      subbankName: user.subbankName,
+      bankNo: user.bankNo,
+    }))
+  }
+
   componentWillUnmount() {
     const { dispatch, mobile, password, passwordAgain } = this.props
     dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
-    // dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
+    dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
   }
 
   onChange(event, tag) {
@@ -84,33 +93,35 @@ class UpdateBank extends Component {
 
   confirmPress() {
     const { bankName, subbankName, bankNo } = this.props
-    if (!bankName.length) {
-      Toast.message('请输入开户银行')
+    if (!bankName.length || !common.regBankName.test(bankName)
+      || !common.regSpace.test(bankName)) {
+      Toast.message('请输入开户银行, 至少四位中文')
       return
     }
-    if (!subbankName.length) {
-      Toast.message('请输入开户支行名称')
+    if (!subbankName.length || !common.regBankName.test(subbankName)
+      || !common.regSpace.test(bankName)) {
+      Toast.message('请输入开户支行名称, 至少四位中文')
       return
     }
-    if (!bankNo.length) {
-      Toast.message('请输入银行卡号')
-      return
-    }
-    if (bankNo.length < 16) {
-      Toast.message('请输入正确的银行卡号')
+    if (!bankNo.length || !common.regBankNo.test(bankNo) || !common.regSpace.test(bankNo)) {
+      Toast.message('请输入银行卡号, 16-19位数字')
       return
     }
     this.showOverlay()
   }
 
   updateBank() {
-    const { dispatch, bankName, subbankName, bankNo, code } = this.props
+    const { dispatch, bankName, subbankName, bankNo, code, user } = this.props
+    const newUser = JSON.parse(JSON.stringify(user))
+    newUser.bankName = bankName
+    newUser.subbankName = subbankName
+    newUser.bankNo = bankNo
     dispatch(actions.updateBank({
       bankName,
       subbankName,
       bankNo,
       code,
-    }))
+    }, newUser))
   }
 
   showOverlay() {
@@ -208,7 +219,7 @@ class UpdateBank extends Component {
   }
 
   render() {
-    const { bankName, subbankName, bankNo } = this.props
+    const { bankName, subbankName, bankNo, navigation } = this.props
     this.handleUpdateBankRequest()
     this.handleGetVerificateCodeRequest()
     this.handleCheckVerificateCodeRequest()
@@ -225,15 +236,17 @@ class UpdateBank extends Component {
             marginTop: common.margin10,
           }}
           title={'开户银行'}
-          placeholder={'请输入开户银行'}
           value={bankName}
-          onChange={e => this.onChange(e, 'bankName')}
+          placeholder={'请输入开户银行'}
+          onEndEditing={e => this.onChange(e, 'bankName')}
+          maxLength={common.textInputMaxLenBankName}
         />
         <TextInputUpdateBank
           title={'开户支行'}
-          placeholder={'请输入正确的开户支行名称'}
           value={subbankName}
-          onChange={e => this.onChange(e, 'subbankName')}
+          placeholder={'请输入正确的开户支行名称'}
+          onEndEditing={e => this.onChange(e, 'subbankName')}
+          maxLength={common.textInputMaxLenBankName}
         />
         <TextInputUpdateBank
           title={'银行卡号'}
@@ -289,7 +302,7 @@ class UpdateBank extends Component {
               fontSize: common.font14,
               alignSelf: 'center',
             }}
-          >确认</Text>
+          >{(navigation.state.params.fromMe && navigation.state.params.fromMe === 'fromMe') ? '重新添加' : '确认'}</Text>
         </TouchableOpacity>
       </ScrollView>
     )

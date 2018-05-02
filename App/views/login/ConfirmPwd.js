@@ -41,7 +41,8 @@ class ConfirmPwd extends Component {
 
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain } = this.props
-    if (!password.length || !common.regPassword.test(password)) {
+    if (!password.length || !common.regPassword.test(password)
+      || !common.regSpace.test(password)) {
       Toast.show({
         style: {
           paddingLeft: common.margin20,

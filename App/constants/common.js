@@ -13,6 +13,7 @@ const common = {
   user: 'user',
   selectedTokenDefault: '选择币种',
   listenerNoti: 'listenerNoti',
+  confirmPayNoti: 'confirmPayNoti',
   delegateListenerNoti: 'delegateListenerNoti',
   authenticationListenerNoti: 'authenticationListenerNoti',
   buy: 'buy',
@@ -142,10 +143,13 @@ const common = {
   regSpace: /^[^ ]+$/, // 空格正则
   regPasswordMsg: '密码为6-20位数字和字符, 至少一个大写字母', // 密码提示
   regIdCard: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
+  regBankName: /^[\u4e00-\u9fa5]{4}/,
+  regBankNo: /[0-9]{16,19}$/,
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
   textInputMaxLenBankNo: 19,
+  textInputMaxLenBankName: 15,
   textInputMaxLenLegalDeal: 7,
 
   maxQuantityLegalDeal: 1000000,
@@ -156,9 +160,10 @@ const common = {
   dfFullDate(dateStr) {
     const createdAtDate = new Date(dateStr)
     const getYear = createdAtDate.getFullYear()
-    const getMonth = createdAtDate.getMonth() < 10 ?
-      `0${createdAtDate.getMonth()}` :
-      createdAtDate.getMonth()
+    const getMonthTemp = createdAtDate.getMonth() + 1
+    const getMonth = getMonthTemp < 10 ?
+      `0${getMonthTemp}` :
+      getMonthTemp
     const getDate = createdAtDate.getDate() < 10 ?
       `0${createdAtDate.getDate()}` :
       createdAtDate.getDate()

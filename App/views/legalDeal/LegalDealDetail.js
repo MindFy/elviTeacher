@@ -5,8 +5,14 @@ import {
   View,
   Image,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native'
+import {
+  Toast,
+  Overlay,
+} from 'teaset'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
+import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import {
   common,
 } from '../../constants/common'
@@ -43,53 +49,98 @@ class LegalDealDetail extends Component {
         ),
     }
   }
+
   constructor() {
     super()
-    this.showFindLegalDealResponse = false
-    this.state = {
-      refreshState: RefreshState.Idle,
-    }
+    this.showGetVerificateCodeResponse = false
   }
 
   componentDidMount() {
+    this.onHeaderRefresh()
+    this.listener = DeviceEventEmitter.addListener(common.confirmPayNoti, () => {
+      Overlay.hide(this.overlayViewKey)
+    })
+  }
+
+  componentWillUnmount() {
+    const { dispatch, mobile, password, passwordAgain } = this.props
+    dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
+    this.listener.remove()
+  }
+
+  onHeaderRefresh() {
     const { dispatch, user } = this.props
     if (user) {
-      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0),
+        RefreshState.HeaderRefreshing))
     }
   }
 
-  onFooterRefresh() {
-    this.setState({ refreshState: RefreshState.FooterRefreshing })
-    // 模拟网络请求
-    setTimeout(() => {
-      // 模拟网络加载失败的情况
-      if (Math.random() < 0.2) {
-        this.setState({ refreshState: RefreshState.Failure })
-        return
-      }
-      // 获取测试数据
-      const dataList = this.getTestList(false)
-      this.setState({
-        dataList,
-        refreshState: dataList.length > 50 ? RefreshState.NoMoreData : RefreshState.Idle,
-      })
-    }, 2000)
+  onChange(event, tag) {
+    const { text } = event.nativeEvent
+    const { dispatch, mobile, password, passwordAgain } = this.props
+    switch (tag) {
+      case 'code':
+        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
+        break
+      default:
+        break
+    }
   }
 
-  handleFindLegalDealRequest() {
-    const { findLegalDealVisible, findLegalDealResponse, legalDeal } = this.props
-    if (!findLegalDealVisible && !this.showFindLegalDealResponse) return
+  showOverlay(id, rid) {
+    const { dispatch, user, code, legalDeal } = this.props
+    const overlayView = (
+      <Overlay.View
+        style={{
+          justifyContent: 'center',
+        }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <TKViewCheckAuthorize
+          mobile={user.mobile}
+          code={code}
+          onChange={e => this.onChange(e, 'code')}
+          codePress={() => {
+            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+          }}
+          confirmPress={() => {
+            if (!this.props.code.length) {
+              Toast.message('请输入验证码')
+              return
+            }
+            legalDeal[rid].status = common.legalDeal.status.complete
+            dispatch(actions.confirmPay({ id, code: this.props.code }, legalDeal.concat()))
+            // dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
+          }}
+          cancelPress={() => Overlay.hide(this.overlayViewKey)}
+        />
+      </Overlay.View>
+    )
+    this.overlayViewKey = Overlay.show(overlayView)
+  }
 
-    if (findLegalDealVisible) {
-      this.showFindLegalDealResponse = true
+  handleGetVerificateCodeRequest() {
+    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
+    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
+
+    if (getVerificateCodeVisible) {
+      this.showGetVerificateCodeResponse = true
     } else {
-      this.showFindLegalDealResponse = false
-      if (findLegalDealResponse === true) {
-        this.setState({
-          refreshState: legalDeal.length < 1 ? RefreshState.EmptyData : RefreshState.Idle,
-        })
+      this.showGetVerificateCodeResponse = false
+      if (getVerificateCodeResponse.success) {
+        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
+      } else if (getVerificateCodeResponse.error.code === 4000101) {
+        Toast.fail('手机号码或服务类型错误')
+      } else if (getVerificateCodeResponse.error.code === 4000102) {
+        Toast.fail('一分钟内不能重复发送验证码')
+      } else if (getVerificateCodeResponse.error.code === 4000104) {
+        Toast.fail('手机号码已注册')
+      } else if (getVerificateCodeResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
       } else {
-        this.setState({ refreshState: RefreshState.Failure })
+        Toast.fail('获取验证码失败，请重试')
       }
     }
   }
@@ -327,8 +378,7 @@ class LegalDealDetail extends Component {
                   }}
                   disabled={confirmPayDisabled}
                   onPress={() => {
-                    legalDeal[rid].status = common.legalDeal.status.complete
-                    dispatch(actions.confirmPay({ id: rd.id }, legalDeal.concat()))
+                    this.showOverlay(rd.id, rid)
                   }}
                 >
                   <Text
@@ -346,8 +396,8 @@ class LegalDealDetail extends Component {
   }
 
   render() {
-    const { dispatch, user, legalDeal } = this.props
-    this.handleFindLegalDealRequest()
+    const { dispatch, user, legalDeal, refreshState, skip } = this.props
+    this.handleGetVerificateCodeRequest()
 
     return (
       <RefreshListView
@@ -356,22 +406,18 @@ class LegalDealDetail extends Component {
         }}
         data={legalDeal}
         renderItem={({ item, index }) => this.renderRow(item, index)}
-        refreshState={this.state.refreshState}
-        onHeaderRefresh={() => {
-          this.setState({ refreshState: RefreshState.HeaderRefreshing })
-          if (user) {
-            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+        refreshState={refreshState}
+        onHeaderRefresh={() => this.onHeaderRefresh()}
+        onFooterRefresh={() => {
+          if (user && refreshState !== RefreshState.NoMoreData) {
+            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 10 * skip),
+              RefreshState.FooterRefreshing))
           }
         }}
-        onFooterRefresh={() => {
-
+        footerTextStyle={{
+          color: common.textColor,
+          fontSize: common.font14,
         }}
-
-        // 可选
-        footerRefreshingText={'玩命加载中 >.<'}
-        footerFailureText={'我擦嘞，居然失败了 =.=!'}
-        footerNoMoreDataText={'-我是有底线的-'}
-        footerEmptyDataText={'-好像什么东西都没有-'}
       />
     )
   }
@@ -379,11 +425,19 @@ class LegalDealDetail extends Component {
 
 function mapStateToProps(store) {
   return {
+    skip: store.legalDeal.skip,
     legalDeal: store.legalDeal.legalDeal,
+    refreshState: store.legalDeal.refreshState,
     findLegalDealVisible: store.legalDeal.findLegalDealVisible,
-    findLegalDealResponse: store.legalDeal.findLegalDealResponse,
 
     user: store.user.user,
+
+    mobile: store.user.mobileRegister,
+    code: store.user.codeRegister,
+    password: store.user.passwordRegister,
+    passwordAgain: store.user.passwordAgainRegister,
+    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
+    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
   }
 }
 

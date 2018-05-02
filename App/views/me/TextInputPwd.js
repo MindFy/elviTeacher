@@ -27,8 +27,8 @@ const styles = StyleSheet.create({
 export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
-    const { placeholder, onChange, maxLength, keyboardType, type,
-      secureTextEntry, newPassword, newPasswordAgain } = this.props
+    const { placeholder, onChange, maxLength, keyboardType, type, value,
+      secureTextEntry, newPassword, newPasswordAgain, onEndEditing } = this.props
     return (
       <View
         style={{
@@ -44,7 +44,9 @@ export default class TextInputPwd extends Component {
             style={styles.inputStyle}
             placeholder={placeholder}
             placeholderTextColor={common.placeholderColor}
+            value={value}
             onChange={onChange}
+            onEndEditing={onEndEditing}
             maxLength={maxLength}
             keyboardType={keyboardType}
             secureTextEntry={secureTextEntry}

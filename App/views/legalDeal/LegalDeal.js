@@ -67,6 +67,11 @@ class LegalDeal extends Component {
     this.showLegalDealCreateResponse = false
   }
 
+  componentWillUnmount() {
+    const { dispatch, direct } = this.props
+    dispatch(actions.legalDealUpdate({ direct, quantity: 0 }))
+  }
+
   selectionBarPress(direct) {
     const { dispatch, quantity } = this.props
     dispatch(actions.legalDealUpdate({

@@ -162,7 +162,14 @@ class Me extends Component {
           <MeCell
             onPress={() => { }}
             leftImageSource={require('../../assets/手机认证.png')}
-            title="手机认证"
+            title="安全中心"
+          />
+          <MeCell
+            onPress={() => {
+              navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
+            }}
+            leftImageSource={require('../../assets/银行卡.png')}
+            title="银行卡管理"
           />
           <MeCell
             onPress={() => { }}

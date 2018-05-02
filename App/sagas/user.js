@@ -129,7 +129,10 @@ export function* updateBank() {
   while (true) {
     const request = yield take(constants.UPDATE_BANK_REQUEST)
     const response = yield call(api.updateBank, request.data)
-    if (response.success) yield put({ type: constants.UPDATE_BANK_SUCCEED, response })
-    else yield put({ type: constants.UPDATE_BANK_FAILED, response })
+    if (response.success) {
+      yield put({ type: constants.UPDATE_BANK_SUCCEED, response, user: request.user })
+    } else {
+      yield put({ type: constants.UPDATE_BANK_FAILED, response })
+    }
   }
 }

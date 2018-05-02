@@ -12,7 +12,8 @@ export default class TextInputUpdateBank extends Component {
   componentDidMount() { }
 
   render() {
-    const { viewStyle, title, placeholder, onChange, keyboardType, maxLength, value } = this.props
+    const { viewStyle, title, placeholder, onChange, keyboardType, maxLength, value,
+      onEndEditing } = this.props
     return (
       <View
         style={[{
@@ -35,12 +36,13 @@ export default class TextInputUpdateBank extends Component {
           style={{
             fontSize: common.font12,
             color: 'white',
-            width: '55%',
+            width: '60%',
           }}
           placeholder={placeholder}
           placeholderTextColor={common.placeholderColor}
           value={value}
           onChange={onChange}
+          onEndEditing={onEndEditing}
           keyboardType={keyboardType}
           maxLength={maxLength}
         />

@@ -1,3 +1,4 @@
+import { RefreshState } from 'react-native-refresh-list-view'
 import * as constants from '../constants/index'
 import {
   common,
@@ -9,6 +10,8 @@ const initialState = {
   priceBuy: 1,
   priceSell: 0.99,
   quantity: 0,
+  skip: 0,
+  refreshState: RefreshState.Idle,
 
   confirmPayVisible: false,
   confirmPayResponse: undefined,
@@ -76,21 +79,26 @@ export default function legalDeal(state = initialState, action) {
       nextState = {
         ...state,
         findLegalDealVisible: true,
+        refreshState: action.refreshState,
       }
       break
     case constants.FIND_LEGAL_DEAL_SUCCEED:
       nextState = {
         ...state,
-        legalDeal: action.legalDeal,
+        legalDeal: state.refreshState === RefreshState.HeaderRefreshing
+          ? action.legalDeal : state.legalDeal.concat(action.legalDeal),
+        skip: state.refreshState === RefreshState.HeaderRefreshing ? 0 : (state.skip + 1),
         findLegalDealVisible: false,
-        findLegalDealResponse: true,
+        refreshState: ((state.refreshState === RefreshState.FooterRefreshing)
+          && !action.legalDeal.length)
+          ? RefreshState.NoMoreData : RefreshState.Idle,
       }
       break
     case constants.FIND_LEGAL_DEAL_FAILED:
       nextState = {
         ...state,
         findLegalDealVisible: false,
-        findLegalDealResponse: false,
+        refreshState: RefreshState.Failure,
       }
       break
     case constants.HAVED_PAY_REQUEST:

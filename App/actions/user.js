@@ -129,9 +129,10 @@ export function updateBankUpdate(data) {
   }
 }
 
-export function updateBank(data) {
+export function updateBank(data, user) {
   return {
     type: constants.UPDATE_BANK_REQUEST,
     data,
+    user,
   }
 }
