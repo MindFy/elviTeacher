@@ -83,12 +83,14 @@ export default function legalDeal(state = initialState, action) {
         ...state,
         legalDeal: action.legalDeal,
         findLegalDealVisible: false,
+        findLegalDealResponse: true,
       }
       break
     case constants.FIND_LEGAL_DEAL_FAILED:
       nextState = {
         ...state,
         findLegalDealVisible: false,
+        findLegalDealResponse: false,
       }
       break
     case constants.HAVED_PAY_REQUEST:

@@ -8,6 +8,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from 'react-native'
+import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import {
   common,
 } from '../../constants/common'
@@ -46,10 +47,10 @@ class LegalDealDetail extends Component {
   }
   constructor() {
     super()
-
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
+    this.showFindLegalDealResponse = false
+    this.state = {
+      refreshState: RefreshState.Idle,
+    }
   }
 
   componentDidMount() {
@@ -59,7 +60,45 @@ class LegalDealDetail extends Component {
     }
   }
 
+  onFooterRefresh() {
+    this.setState({ refreshState: RefreshState.FooterRefreshing })
+    // 模拟网络请求
+    setTimeout(() => {
+      // 模拟网络加载失败的情况
+      if (Math.random() < 0.2) {
+        this.setState({ refreshState: RefreshState.Failure })
+        return
+      }
+      // 获取测试数据
+      const dataList = this.getTestList(false)
+      this.setState({
+        dataList,
+        refreshState: dataList.length > 50 ? RefreshState.NoMoreData : RefreshState.Idle,
+      })
+    }, 2000)
+  }
+
+  handleFindLegalDealRequest() {
+    const { findLegalDealVisible, findLegalDealResponse, legalDeal } = this.props
+    if (!findLegalDealVisible && !this.showFindLegalDealResponse) return
+
+    if (findLegalDealVisible) {
+      this.showFindLegalDealResponse = true
+    } else {
+      this.showFindLegalDealResponse = false
+      if (findLegalDealResponse === true) {
+        this.setState({
+          refreshState: legalDeal.length < 1 ? RefreshState.EmptyData : RefreshState.Idle,
+        })
+      } else {
+        this.setState({ refreshState: RefreshState.Failure })
+      }
+    }
+  }
+
   renderRow(rd, rid) {
+    console.log('rd->', rd, rid)
+    
     const { navigation, dispatch, legalDeal } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
@@ -312,30 +351,31 @@ class LegalDealDetail extends Component {
 
   render() {
     const { dispatch, user, legalDeal, findLegalDealVisible } = this.props
+    this.handleFindLegalDealRequest()
 
     return (
-      <ListView
+      <RefreshListView
         style={{
           backgroundColor: common.blackColor,
         }}
-        dataSource={this.dataSource(legalDeal)}
-        renderRow={(rd, sid, rid) => this.renderRow(rd, rid)}
-        enableEmptySections
-        removeClippedSubviews={false}
-        refreshControl={
-          <RefreshControl
-            onRefresh={() => {
-              if (user) {
-                dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
-              }
-            }}
-            refreshing={findLegalDealVisible}
-            colors={[common.textColor]}
-            progressBackgroundColor={common.navBgColor}
-            progressViewOffset={0}
-            tintColor={common.textColor}
-          />
-        }
+        data={legalDeal}
+        renderItem={({ item, index }) => this.renderRow(item, index)}
+        refreshState={this.state.refreshState}
+        onHeaderRefresh={() => {
+          this.setState({ refreshState: RefreshState.HeaderRefreshing })
+          if (user) {
+            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+          }
+        }}
+        onFooterRefresh={() => {
+
+        }}
+
+        // 可选
+        footerRefreshingText={'玩命加载中 >.<'}
+        footerFailureText={'我擦嘞，居然失败了 =.=!'}
+        footerNoMoreDataText={'-我是有底线的-'}
+        footerEmptyDataText={'-好像什么东西都没有-'}
       />
     )
   }
@@ -345,6 +385,7 @@ function mapStateToProps(store) {
   return {
     legalDeal: store.legalDeal.legalDeal,
     findLegalDealVisible: store.legalDeal.findLegalDealVisible,
+    findLegalDealResponse: store.legalDeal.findLegalDealResponse,
 
     user: store.user.user,
   }
