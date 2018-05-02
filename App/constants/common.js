@@ -2,6 +2,7 @@ import {
   Dimensions,
   AsyncStorage,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
@@ -193,6 +194,26 @@ const common = {
       createdAtDate.getSeconds()
     const dfStr = `${getHours}:${getMinutes}:${getSeconds}`
     return dfStr
+  },
+  bigNumber: {
+    plus(a, b) { // "+"
+      return Number(BigNumber(a).plus(b).valueOf())
+    },
+    dividedBy(a, b) { // "/"
+      return Number(BigNumber(a).dividedBy(b).valueOf())
+    },
+    multipliedBy(a, b) { // "*"
+      return Number(BigNumber(a).multipliedBy(b).valueOf())
+    },
+    minus(a, b) { // "-"
+      return Number(BigNumber(a).minus(b).valueOf())
+    },
+    gt(a, b) { // ">"
+      return BigNumber(a).gt(b)
+    },
+    lt(a, b) { // "<"
+      return BigNumber(a).lt(b)
+    },
   },
 }
 

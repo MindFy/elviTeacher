@@ -171,7 +171,7 @@ class LegalDealDetail extends Component {
     }
     switch (rd.status) {
       case common.legalDeal.status.waitpay:
-        status = '待付款'
+        status = rd.direct === common.buy ? '待付款' : '待收款'
         cancelBtnDisabled = false
         havedPayDisabled = false
         break
@@ -295,7 +295,7 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >{`总价:¥${Number(price * rd.quantity).toFixed(2)}`}</Text>
+            >{`总价:¥${common.bigNumber.multipliedBy(price, rd.quantity)}`}</Text>
           </View>
           <View
             style={{
