@@ -4,8 +4,6 @@ import {
   Text,
   View,
   Image,
-  ListView,
-  RefreshControl,
   TouchableOpacity,
 } from 'react-native'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
@@ -97,8 +95,6 @@ class LegalDealDetail extends Component {
   }
 
   renderRow(rd, rid) {
-    console.log('rd->', rd, rid)
-    
     const { navigation, dispatch, legalDeal } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
@@ -350,7 +346,7 @@ class LegalDealDetail extends Component {
   }
 
   render() {
-    const { dispatch, user, legalDeal, findLegalDealVisible } = this.props
+    const { dispatch, user, legalDeal } = this.props
     this.handleFindLegalDealRequest()
 
     return (
