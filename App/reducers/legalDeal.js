@@ -66,6 +66,7 @@ export default function legalDeal(state = initialState, action) {
         ...state,
         legalDealCreateVisible: false,
         legalDealCreateResponse: action.response,
+        quantity: 0,
       }
       break
     case constants.LEGAL_DEAL_CREATE_FAILED:
