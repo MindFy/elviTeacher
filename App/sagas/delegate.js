@@ -82,7 +82,7 @@ export function* getShelves() {
         response.result.buy.slice(0, 5) :
         response.result.buy
       shelvesSell = response.result.sell.length > 5 ?
-        response.result.sell.slice(0, 5) :
+        response.result.sell.slice(response.result.sell.length - 5, response.result.sell.length) :
         response.result.sell
       yield put({
         type: constants.GET_SHELVES_SUCCEED,

@@ -38,7 +38,7 @@ export default class ShelvesListView extends Component {
           color: textColor,
           fontSize: common.font12,
         }}
-        >{rd.price}</Text>
+        >{Number(rd.price).toFixed(2)}</Text>
         <Text style={{
           color: 'white',
           fontSize: common.font12,
@@ -50,7 +50,7 @@ export default class ShelvesListView extends Component {
 
   renderShelvesHeader() {
     const { type, goodsName, currencyName } = this.props
-    if (type === common.buy) {
+    if (type === common.sell) {
       return (
         <View style={{
           marginTop: 2 * common.margin10,
@@ -84,6 +84,7 @@ export default class ShelvesListView extends Component {
         renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
         renderHeader={() => this.renderShelvesHeader()}
         enableEmptySections
+        scrollEnabled={false}
         removeClippedSubviews={false}
       />
     )

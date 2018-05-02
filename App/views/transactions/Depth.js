@@ -45,7 +45,7 @@ export default class Depth extends Component {
       title: {
         show: false,
       },
-      color: [common.bidColor, common.askColor],
+      color: [common.askColor, common.bidColor],
       backgroundColor: 'transparent',
       legend: {
         show: true,
@@ -240,40 +240,7 @@ export default class Depth extends Component {
         clipOverflow: true,
         lineStyle: {
           normal: {
-            color: common.bidColor,
-            width: 1,
-          },
-        },
-        areaStyle: {
-          normal: {
-            color: {
-              type: 'linear',
-              x: 0,
-              y: 0,
-              x2: 0,
-              y2: 1,
-              colorStops: [{
-                offset: 0, color: 'rgba(0,205,0,0.9)',
-              }, {
-                offset: 0.5, color: 'rgba(0,205,0,0.6)',
-              }, {
-                offset: 1, color: 'rgba(0,205,0,0.3)',
-              }],
-            },
-            origin: 'auto',
-          },
-        },
-        smooth: true,
-        data: amountsBuy,
-        animation: false,
-      }, {
-        name: '卖出',
-        type: 'line',
-        smooth: true,
-
-        lineStyle: {
-          normal: {
-            color: common.askColor,
+            color: common.redColor,
             width: 1,
           },
         },
@@ -291,6 +258,39 @@ export default class Depth extends Component {
                 offset: 0.5, color: 'rgba(205,0,0,0.6)',
               }, {
                 offset: 1, color: 'rgba(205,0,0,0.3)',
+              }],
+            },
+            origin: 'auto',
+          },
+        },
+        smooth: true,
+        data: amountsBuy,
+        animation: false,
+      }, {
+        name: '卖出',
+        type: 'line',
+        smooth: true,
+
+        lineStyle: {
+          normal: {
+            color: common.greenColor,
+            width: 1,
+          },
+        },
+        areaStyle: {
+          normal: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0, color: 'rgba(0,205,0,0.9)',
+              }, {
+                offset: 0.5, color: 'rgba(0,205,0,0.6)',
+              }, {
+                offset: 1, color: 'rgba(0,205,0,0.3)',
               }],
             },
           },
