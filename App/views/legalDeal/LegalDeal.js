@@ -298,6 +298,7 @@ class LegalDeal extends Component {
 
 function mapStateToProps(store) {
   return {
+    direct: store.legalDeal.direct,
     priceBuy: store.legalDeal.priceBuy,
     priceSell: store.legalDeal.priceSell,
     quantity: store.legalDeal.quantity,
