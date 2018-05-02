@@ -126,6 +126,7 @@ const common = {
 
   font30: 30 / w * sw,
   font20: 20 / w * sw,
+  font17: 17 / w * sw,
   font16: 16 / w * sw,
   font14: 14 / w * sw,
   font12: 12 / w * sw,
@@ -145,6 +146,10 @@ const common = {
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
   textInputMaxLenBankNo: 19,
+  textInputMaxLenLegalDeal: 7,
+
+  maxQuantityLegalDeal: 1000000,
+  minQuantityLegalDeal: 100,
 
   messageBarDur: 2000,
 

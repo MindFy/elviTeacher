@@ -49,23 +49,29 @@ export default class Payment extends Component {
     let titleName = ''
     let titleBankName = ''
     let titleBankNo = ''
-    const name = ''
+    let name = ''
     let bankName = ''
     let bankNo = ''
+    let remark = ''
+    let price = 0
     if (rd.direct === common.buy) {
-      // name = rd.trader.name
+      name = rd.traderPayinfo.name
       bankName = rd.traderPayinfo.bankName
       bankNo = rd.traderPayinfo.bankNo
+      remark = rd.traderPayinfo.remark
       titleName = '收款方户名'
       titleBankName = '收款方开户行'
       titleBankNo = '收款方账号'
+      price = rd.dealPrice
     } else if (rd.direct === common.sell) {
-      // name = rd.creater.name
+      name = rd.createrPayinfo.name
       bankName = rd.createrPayinfo.bankName
       bankNo = rd.createrPayinfo.bankNo
+      remark = rd.createrPayinfo.remark
       titleName = '汇款方户名'
       titleBankName = '汇款方开户行'
       titleBankNo = '汇款方账号'
+      price = 0.99
     }
     return (
       <ScrollView
@@ -89,7 +95,7 @@ export default class Payment extends Component {
             color: common.textColor,
             alignSelf: 'center',
           }}
-        >{`¥${rd.dealPrice * rd.quantity}`}</Text>
+        >{`¥${price * rd.quantity}`}</Text>
 
         <View
           style={{
@@ -177,7 +183,7 @@ export default class Payment extends Component {
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >1234567（请务必填写）</Text>
+          >{`${remark}（请务必填写）`}</Text>
         </View>
 
         <Text

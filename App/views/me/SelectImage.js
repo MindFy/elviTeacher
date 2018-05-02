@@ -10,18 +10,6 @@ import {
 import ImagePicker from 'rn-image-picker-d3j'
 import { common } from '../../constants/common'
 
-const options = {
-  title: '',
-  
-  takePhotoButtonTitle: '',
-  chooseFromLibraryButtonTitle: '',
-  customButtons: [],
-  storageOptions: {
-    skipBackup: true,
-    path: 'images',
-  },
-}
-
 export default class SelectImage extends Component {
   componentDidMount() { }
 

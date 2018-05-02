@@ -21,10 +21,12 @@ const styles = StyleSheet.create({
     width: '100%',
     bottom: 0,
     backgroundColor: common.borderColor05,
-    justifyContent: 'center',
   },
   noticeTitle: {
+    marginTop: common.margin10,
     marginLeft: common.margin10,
+    marginRight: common.margin10,
+    height: common.h32,
     color: common.placeholderColor,
     fontSize: common.font12,
   },
@@ -35,45 +37,65 @@ export default class HomeSwiper extends Component {
 
   render() {
     const images = []
-    const { announcement, imgHashApi } = this.props
+    const titles = []
+    const { banners, announcement, imgHashApi } = this.props
+    for (let i = 0; i < banners.length; i++) {
+      const element = banners[i]
+      images.push(
+        <Image
+          key={element.id}
+          style={{
+            width: common.sw,
+            height: common.h234,
+          }}
+          resizeMode="stretch"
+          resizeMethod="scale"
+          source={{ uri: `${imgHashApi}${element.imghash}` }}
+        />,
+      )
+    }
     for (let i = 0; i < announcement.length; i++) {
       const element = announcement[i]
-      images.push(
-        <View
+      titles.push(
+        <Text
           key={element.id}
-        >
-          <Image
-            style={{
-              width: common.sw,
-              height: common.h234,
-            }}
-            resizeMode="stretch"
-            resizeMethod="scale"
-            source={{ uri: `${imgHashApi}${element.imghash}` }}
-          />
-          <View
-            style={styles.noticeView}
-          >
-            <Text
-              style={styles.noticeTitle}
-            >{`公告: ${element.title}`}</Text>
-          </View>
-        </View>,
+          style={styles.noticeTitle}
+        >{`公告: ${element.title}`}</Text>,
       )
     }
 
     return (
-      images.length ?
-        <Swiper
-          style={styles.swiper}
-          showsButtons={false}
-          dotStyle={styles.dot}
-          activeDotStyle={styles.dot}
-          dotColor={common.borderColor}
-          activeDotColor={common.placeholderColor}
-        >
-          {images}
-        </Swiper> : <View style={styles.swiper} />
+      <View style={styles.swiper}>
+        {
+          images.length ?
+            <Swiper
+              style={styles.swiper}
+              showsButtons={false}
+              dotStyle={styles.dot}
+              activeDotStyle={styles.dot}
+              dotColor={common.borderColor}
+              activeDotColor={common.placeholderColor}
+            >
+              {images}
+            </Swiper> : null
+        }
+        {
+          titles.length ?
+            <View
+              style={styles.noticeView}
+            >
+              <Swiper
+                showsButtons={false}
+                autoplay
+                scrollEnabled={false}
+                dotColor={'transparent'}
+                activeDotColor={'transparent'}
+              >
+                {titles}
+              </Swiper>
+            </View> : null
+        }
+      </View>
     )
   }
 }

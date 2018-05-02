@@ -76,14 +76,23 @@ class LegalDeal extends Component {
   }
 
   createPress() {
-    const { dispatch, direct, price, quantity } = this.props
+    const { dispatch, direct, quantity } = this.props
     if (quantity === 0) {
       Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
       return
     }
+    if (quantity < common.minQuantityLegalDeal) {
+      Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最少为${
+        common.minQuantityLegalDeal}`)
+      return
+    }
+    if (quantity > common.maxQuantityLegalDeal) {
+      Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最大为${
+        common.maxQuantityLegalDeal}`)
+      return
+    }
     dispatch(actions.legalDealCreate({
       direct,
-      price,
       quantity,
     }))
   }
@@ -93,7 +102,7 @@ class LegalDeal extends Component {
     const { dispatch, direct } = this.props
     dispatch(actions.legalDealUpdate({
       direct,
-      quantity: Number(text),
+      quantity: isNaN(Number(text)) ? 0 : Number(text),
     }))
   }
 
@@ -107,20 +116,30 @@ class LegalDeal extends Component {
       this.showLegalDealCreateResponse = false
       if (legalDealCreateResponse.success) {
         Toast.success(legalDealCreateResponse.result.message)
+      } else if (legalDealCreateResponse.error.code === 4001414) {
+        Toast.fail('余额不足')
+      } else if (legalDealCreateResponse.error.code === 4001415) {
+        Toast.fail('银行卡信息未绑定')
+        navigation.navigate('UpdateBank')
+      } else if (legalDealCreateResponse.error.code === 4001416) {
+        Toast.fail('系统未提供可交易的商家')
+      } else if (legalDealCreateResponse.error.code === 4001417) {
+        Toast.fail('商家未提供银行卡信息')
+      } else if (legalDealCreateResponse.error.code === 4001418) {
+        Toast.fail('未实名认证')
+      } else if (legalDealCreateResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else if (legalDealCreateResponse.error.code === 4031601) {
+        Toast.fail('请登录后进行操作')
       } else {
-        if (legalDealCreateResponse.error.code === 4001415) {
-          navigation.navigate('UpdateBank')
-        } else if (legalDealCreateResponse.error.code === 4031601) {
-          Toast.fail('请登录后进行操作')
-          return
-        }
-        Toast.fail(legalDealCreateResponse.error.message)
+        Toast.fail('挂单失败，请重试')
       }
     }
   }
 
   render() {
-    const { direct, price, quantity, legalDealCreateVisible } = this.props
+    const { direct, priceBuy, priceSell, quantity, legalDealCreateVisible } = this.props
+    const price = direct === common.buy ? priceBuy : priceSell
     this.handleLegalDealCreateRequest()
 
     return (
@@ -191,7 +210,7 @@ class LegalDeal extends Component {
               }}
               placeholder={`${direct === common.buy ? '买入' : '卖出'}数量`}
               placeholderTextColor={common.placeholderColor}
-              keyboardType={'number-pad'}
+              maxLength={common.textInputMaxLenLegalDeal}
               value={quantity === 0 ? '' : `${quantity}`}
               onChange={e => this.quantityOnChange(e)}
             />
@@ -275,7 +294,8 @@ class LegalDeal extends Component {
 function mapStateToProps(store) {
   return {
     direct: store.legalDeal.direct,
-    price: store.legalDeal.price,
+    priceBuy: store.legalDeal.priceBuy,
+    priceSell: store.legalDeal.priceSell,
     quantity: store.legalDeal.quantity,
 
     legalDealCreateVisible: store.legalDeal.legalDealCreateVisible,

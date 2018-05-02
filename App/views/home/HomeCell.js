@@ -14,13 +14,13 @@ export default class HomeCell extends Component {
     let priceColor = null
     let rangeColor = null
     if (rd.rose > 0) {
-      priceColor = common.greenColor
-      rangeColor = common.redColor
-      dirImageSource = require('../../assets/箭头copy.png')
-    } else if (rd.rose <= 0) {
       priceColor = common.redColor
-      rangeColor = common.greenColor
+      rangeColor = common.redColor
       dirImageSource = require('../../assets/箭头.png')
+    } else if (rd.rose <= 0) {
+      priceColor = common.greenColor
+      rangeColor = common.greenColor
+      dirImageSource = require('../../assets/箭头copy.png')
     }
     return (
       <View

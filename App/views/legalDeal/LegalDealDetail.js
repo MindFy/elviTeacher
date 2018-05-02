@@ -4,9 +4,9 @@ import {
   Text,
   View,
   Image,
-  ListView,
   TouchableOpacity,
 } from 'react-native'
+import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import {
   common,
 } from '../../constants/common'
@@ -45,10 +45,10 @@ class LegalDealDetail extends Component {
   }
   constructor() {
     super()
-
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
+    this.showFindLegalDealResponse = false
+    this.state = {
+      refreshState: RefreshState.Idle,
+    }
   }
 
   componentDidMount() {
@@ -58,35 +58,76 @@ class LegalDealDetail extends Component {
     }
   }
 
-  renderRow(rd, sid, rid) {
+  onFooterRefresh() {
+    this.setState({ refreshState: RefreshState.FooterRefreshing })
+    // 模拟网络请求
+    setTimeout(() => {
+      // 模拟网络加载失败的情况
+      if (Math.random() < 0.2) {
+        this.setState({ refreshState: RefreshState.Failure })
+        return
+      }
+      // 获取测试数据
+      const dataList = this.getTestList(false)
+      this.setState({
+        dataList,
+        refreshState: dataList.length > 50 ? RefreshState.NoMoreData : RefreshState.Idle,
+      })
+    }, 2000)
+  }
+
+  handleFindLegalDealRequest() {
+    const { findLegalDealVisible, findLegalDealResponse, legalDeal } = this.props
+    if (!findLegalDealVisible && !this.showFindLegalDealResponse) return
+
+    if (findLegalDealVisible) {
+      this.showFindLegalDealResponse = true
+    } else {
+      this.showFindLegalDealResponse = false
+      if (findLegalDealResponse === true) {
+        this.setState({
+          refreshState: legalDeal.length < 1 ? RefreshState.EmptyData : RefreshState.Idle,
+        })
+      } else {
+        this.setState({ refreshState: RefreshState.Failure })
+      }
+    }
+  }
+
+  renderRow(rd, rid) {
     const { navigation, dispatch, legalDeal } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
     let status = ''
     let direct = ''
-    let firBtnTitle = ''
+    let paymentBtnTitle = ''
     let secBtnTitle = ''
     let cancelBtnDisabled = true
-    let confirmBtnDisabled = true
+    let confirmPayDisabled = true
+    let havedPayDisabled = true
+    let price = 0
     if (rd.direct === common.buy) {
+      price = rd.dealPrice
       textColor = common.redColor
       direct = '买入'
-      firBtnTitle = '付款信息'
+      paymentBtnTitle = '付款信息'
       secBtnTitle = '确认付款'
     } else if (rd.direct === common.sell) {
+      price = 0.99
       textColor = common.greenColor
       direct = '卖出'
-      firBtnTitle = '收款信息'
+      paymentBtnTitle = '收款信息'
       secBtnTitle = '我已收款'
     }
     switch (rd.status) {
       case common.legalDeal.status.waitpay:
         status = '待付款'
         cancelBtnDisabled = false
+        havedPayDisabled = false
         break
       case common.legalDeal.status.waitconfirm:
         status = '待确认'
-        confirmBtnDisabled = false
+        confirmPayDisabled = false
         break
       case common.legalDeal.status.complete:
         status = '已完成'
@@ -204,7 +245,7 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >{`总价:¥${Number(rd.dealPrice * rd.quantity).toFixed(2)}`}</Text>
+            >{`总价:¥${Number(price * rd.quantity).toFixed(2)}`}</Text>
           </View>
           <View
             style={{
@@ -231,7 +272,7 @@ class LegalDealDetail extends Component {
                   color: common.btnTextColor,
                   fontSize: common.font10,
                 }}
-              >{firBtnTitle}</Text>
+              >{paymentBtnTitle}</Text>
             </TouchableOpacity>
             {
               rd.direct === common.buy ?
@@ -255,22 +296,49 @@ class LegalDealDetail extends Component {
                   >撤单</Text>
                 </TouchableOpacity> : null
             }
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              style={{
-                marginTop: common.margin8,
-                alignSelf: 'center',
-                marginBottom: common.margin10,
-              }}
-              disabled={confirmBtnDisabled}
-            >
-              <Text
-                style={{
-                  color: confirmBtnDisabled ? common.placeholderColor : common.btnTextColor,
-                  fontSize: common.font10,
-                }}
-              >{secBtnTitle}</Text>
-            </TouchableOpacity>
+            {
+              rd.direct === common.buy
+                ? <TouchableOpacity
+                  activeOpacity={common.activeOpacity}
+                  style={{
+                    marginTop: common.margin8,
+                    alignSelf: 'center',
+                    marginBottom: common.margin10,
+                  }}
+                  disabled={havedPayDisabled}
+                  onPress={() => {
+                    legalDeal[rid].status = common.legalDeal.status.waitconfirm
+                    dispatch(actions.havedPay({ id: rd.id }, legalDeal.concat()))
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: havedPayDisabled ? common.placeholderColor : common.btnTextColor,
+                      fontSize: common.font10,
+                    }}
+                  >{secBtnTitle}</Text>
+                </TouchableOpacity>
+                : <TouchableOpacity
+                  activeOpacity={common.activeOpacity}
+                  style={{
+                    marginTop: common.margin8,
+                    alignSelf: 'center',
+                    marginBottom: common.margin10,
+                  }}
+                  disabled={confirmPayDisabled}
+                  onPress={() => {
+                    legalDeal[rid].status = common.legalDeal.status.complete
+                    dispatch(actions.confirmPay({ id: rd.id }, legalDeal.concat()))
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: confirmPayDisabled ? common.placeholderColor : common.btnTextColor,
+                      fontSize: common.font10,
+                    }}
+                  >{secBtnTitle}</Text>
+                </TouchableOpacity>
+            }
           </View>
         </View>
       </View>
@@ -278,16 +346,32 @@ class LegalDealDetail extends Component {
   }
 
   render() {
-    const { legalDeal } = this.props
+    const { dispatch, user, legalDeal } = this.props
+    this.handleFindLegalDealRequest()
+
     return (
-      <ListView
+      <RefreshListView
         style={{
           backgroundColor: common.blackColor,
         }}
-        dataSource={this.dataSource(legalDeal)}
-        renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
-        enableEmptySections
-        removeClippedSubviews={false}
+        data={legalDeal}
+        renderItem={({ item, index }) => this.renderRow(item, index)}
+        refreshState={this.state.refreshState}
+        onHeaderRefresh={() => {
+          this.setState({ refreshState: RefreshState.HeaderRefreshing })
+          if (user) {
+            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id)))
+          }
+        }}
+        onFooterRefresh={() => {
+
+        }}
+
+        // 可选
+        footerRefreshingText={'玩命加载中 >.<'}
+        footerFailureText={'我擦嘞，居然失败了 =.=!'}
+        footerNoMoreDataText={'-我是有底线的-'}
+        footerEmptyDataText={'-好像什么东西都没有-'}
       />
     )
   }
@@ -296,6 +380,8 @@ class LegalDealDetail extends Component {
 function mapStateToProps(store) {
   return {
     legalDeal: store.legalDeal.legalDeal,
+    findLegalDealVisible: store.legalDeal.findLegalDealVisible,
+    findLegalDealResponse: store.legalDeal.findLegalDealResponse,
 
     user: store.user.user,
   }

@@ -31,6 +31,7 @@ import Login from './views/login/Login'
 import Register from './views/login/Register'
 import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
+import Agreement from './views/login/Agreement'
 
 const TabBar = TabNavigator(
   {
@@ -166,6 +167,9 @@ const LoginStack = DismissableStackNavigator({
     navigationOptions: {
       header: null,
     },
+  },
+  Agreement: {
+    screen: Agreement,
   },
 })
 const loginStackDefaultGetStateForAction = LoginStack.router.getStateForAction

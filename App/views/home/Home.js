@@ -4,9 +4,10 @@ import {
   View,
   Text,
   Image,
-  StatusBar,
   ListView,
+  StatusBar,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
@@ -107,7 +108,8 @@ class Home extends Component {
   }
 
   render() {
-    const { announcement, imgHashApi, navigation, user, homeRose } = this.props
+    const { announcement, imgHashApi, banners, getRoseVisible, findBannersVisible,
+      announcementVisible, navigation, user, homeRose, dispatch, homeRoseSelected } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -176,9 +178,27 @@ class Home extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => {
+                dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+                dispatch(actions.findBanners(schemas.findBanners()))
+                dispatch(actions.getRose(homeRoseSelected))
+              }}
+              refreshing={
+                !!((getRoseVisible || findBannersVisible || announcementVisible))
+              }
+              colors={[common.textColor]}
+              progressBackgroundColor={common.navBgColor}
+              progressViewOffset={0}
+              tintColor={common.textColor}
+            />
+          }
+        >
           <HomeSwiper
             announcement={announcement}
+            banners={banners}
             imgHashApi={imgHashApi}
           />
 
@@ -233,12 +253,15 @@ class Home extends Component {
 function mapStateToProps(store) {
   return {
     announcement: store.announcement.announcement,
+    announcementVisible: store.announcement.announcementVisible,
 
     banners: store.banners.banners,
     imgHashApi: store.banners.imgHashApi,
+    findBannersVisible: store.banners.findBannersVisible,
 
     homeRose: store.dealstat.homeRose,
     homeRoseSelected: store.dealstat.homeRoseSelected,
+    getRoseVisible: store.dealstat.getRoseVisible,
 
     user: store.user.user,
   }

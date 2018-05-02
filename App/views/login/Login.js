@@ -31,7 +31,7 @@ class Login extends Component {
     const { dispatch, mobile, password } = this.props
 
     if (tag === 'mobile') {
-      dispatch(actions.loginUpdate({ mobile: text, password }))
+      dispatch(actions.loginUpdate({ mobile: text, password: text.length ? password : '' }))
     } else if (tag === 'password') {
       dispatch(actions.loginUpdate({ mobile, password: text }))
     }

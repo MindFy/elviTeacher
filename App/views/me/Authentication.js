@@ -54,6 +54,7 @@ class Authentication extends Component {
   constructor() {
     super()
     this.showIdCardAuthResponse = false
+    this.imgHash = false
   }
 
   componentDidMount() {
@@ -128,6 +129,7 @@ class Authentication extends Component {
       return
     }
     dispatch(actions.imgHash())
+    this.imgHash = true
     PutObject.mulitPutObject({
       url: imgHashApi,
       path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
@@ -138,17 +140,29 @@ class Authentication extends Component {
       }],
       method: 'POST',
     }, (r) => {
+      this.imgHash = false
       if (r.result && r.res) {
         const h1 = r.res[0] !== '' ? JSON.parse(r.res[0]).hash : ''
         const h2 = r.res[1] !== '' ? JSON.parse(r.res[1]).hash : ''
         const h3 = r.res[2] !== '' ? JSON.parse(r.res[2]).hash : ''
-        dispatch(actions.idCardAuth({
-          name,
-          idNo,
-          idCardImages: [h1, h2, h3],
-        }))
+        if (!h1.length || !h2.length || !h3.length) {
+          Toast.fail('图片上传失败')
+          dispatch(actions.imgHashFailed())
+        } else if ((h1 === h2)
+          || (h1 === h3)
+          || (h2 === h3)) {
+          Toast.fail('请勿上传相同照片')
+          dispatch(actions.imgHashFailed())
+        } else {
+          dispatch(actions.idCardAuth({
+            name,
+            idNo,
+            idCardImages: [h1, h2, h3],
+          }))
+        }
       } else {
         Toast.fail('图片上传失败')
+        dispatch(actions.imgHashFailed())
       }
     })
   }
@@ -183,6 +197,9 @@ class Authentication extends Component {
   handleIdCardAuthRequest() {
     const { idCardAuthVisible, idCardAuthResponse } = this.props
     if (!idCardAuthVisible && !this.showIdCardAuthResponse) return
+    if (this.imgHash) {
+      return
+    }
 
     if (idCardAuthVisible) {
       this.showIdCardAuthResponse = true
@@ -194,6 +211,8 @@ class Authentication extends Component {
         Toast.fail('身份认证失败，请确认信息是否正确')
       } else if (idCardAuthResponse.error.code === 4000151) {
         Toast.fail('您已进行过认证操作')
+      } else if (idCardAuthResponse.error.code === 4000155) {
+        Toast.fail('身份证号已存在')
       } else {
         Toast.fail('身份认证失败')
       }

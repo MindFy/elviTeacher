@@ -52,6 +52,8 @@ export default function* getRose() {
         DeviceEventEmitter.emit(common.listenerNoti, (constants.GET_ROSE_SUCCEED, homeRoseSelected))
       }
       yield put({ type: constants.GET_ROSE_SUCCEED, data: { rose, homeRose, homeRoseSelected } })
+    } else {
+      yield put({ type: constants.GET_ROSE_FAILED })
     }
   }
 }

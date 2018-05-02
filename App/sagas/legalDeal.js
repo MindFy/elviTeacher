@@ -6,6 +6,9 @@ import {
 } from 'teaset'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
+import {
+  common,
+} from '../constants/common'
 
 /* 取消法币交易单(只有waitpay状态的才可以取消) */
 export function* legalDealCancel() {
@@ -18,8 +21,14 @@ export function* legalDealCancel() {
         type: constants.LEGAL_DEAL_CANCEL_SUCCEED,
         legalDeal: request.legalDeal,
       })
+    } else if (response.error.message === common.badNet) {
+      Toast.fail('网络连接失败，请稍后重试')
+    } else if (response.error.code === 4001420) {
+      Toast.fail('法币交易单号为空')
+    } else if (response.error.code === 4001421) {
+      Toast.fail('法币交易单不存在')
     } else {
-      Toast.fail(response.error.message)
+      Toast.fail('撤单失败，请重试')
     }
   }
 }
@@ -29,8 +38,21 @@ export function* confirmPay() {
   while (true) {
     const request = yield take(constants.CONFIRM_PAY_REQUEST)
     const response = yield call(api.confirmPay, request.data)
-    if (response.success) yield put({ type: constants.CONFIRM_PAY_SUCCEED, response })
-    else yield put({ type: constants.CONFIRM_PAY_FAILED, response })
+    if (response.success) {
+      Toast.success(response.result)
+      yield put({ type: constants.CONFIRM_PAY_SUCCEED, legalDeal: request.legalDeal })
+    } else {
+      yield put({ type: constants.CONFIRM_PAY_FAILED, response })
+      if (response.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else if (response.error.code === 4001420) {
+        Toast.fail('法币交易单号为空')
+      } else if (response.error.code === 4001421) {
+        Toast.fail('法币交易单不存在')
+      } else {
+        Toast.fail('操作失败，请重试')
+      }
+    }
   }
 }
 
@@ -51,6 +73,7 @@ export function* findLegalDeal() {
     const response = yield call(api.graphql, request.schema)
     const legalDeal = response.result.data.find_legalDeal
     if (response.success) yield put({ type: constants.FIND_LEGAL_DEAL_SUCCEED, legalDeal })
+    else yield put({ type: constants.FIND_LEGAL_DEAL_FAILED, response })
   }
 }
 
@@ -58,8 +81,21 @@ export function* findLegalDeal() {
 export function* havedPay() {
   while (true) {
     const request = yield take(constants.HAVED_PAY_REQUEST)
-    const response = yield call(api.graphql, request.data)
-    if (response.success) yield put({ type: constants.HAVED_PAY_SUCCEED, response })
-    else yield put({ type: constants.HAVED_PAY_FAILED, response })
+    const response = yield call(api.havedPay, request.data)
+    if (response.success) {
+      Toast.success(response.result)
+      yield put({ type: constants.HAVED_PAY_SUCCEED, legalDeal: request.legalDeal })
+    } else {
+      yield put({ type: constants.HAVED_PAY_FAILED, response })
+      if (response.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else if (response.error.code === 4001420) {
+        Toast.fail('法币交易单号为空')
+      } else if (response.error.code === 4001421) {
+        Toast.fail('法币交易单不存在')
+      } else {
+        Toast.fail('操作失败，请重试')
+      }
+    }
   }
 }
