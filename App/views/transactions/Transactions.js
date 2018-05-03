@@ -523,7 +523,11 @@ class Transactions extends Component {
                     const p = rd.price
                     const temp = common.bigNumber.multipliedBy(p, quantity)
                     const a = common.toFix6(temp)
-                    dispatch(actions.textInputDelegateUpdate({ price: p, quantity, amount: Number(a) }))
+                    dispatch(actions.textInputDelegateUpdate({
+                      price: p,
+                      quantity,
+                      amount: Number(a),
+                    }))
                   }}
                 />
               </View>
@@ -539,7 +543,11 @@ class Transactions extends Component {
                     const p = rd.price
                     const temp = common.bigNumber.multipliedBy(p, quantity)
                     const a = common.toFix6(temp)
-                    dispatch(actions.textInputDelegateUpdate({ price: p, quantity, amount: Number(a) }))
+                    dispatch(actions.textInputDelegateUpdate({
+                      price: p,
+                      quantity,
+                      amount: Number(a),
+                    }))
                   }}
                 />
               </View>
