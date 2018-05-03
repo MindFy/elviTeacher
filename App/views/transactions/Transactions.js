@@ -65,6 +65,13 @@ class Transactions extends Component {
     }).cloneWithRows(data)
   }
 
+  componentDidMount() {
+    const { homeRoseSelected } = this.props
+    if (homeRoseSelected) {
+      this.getUIData(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
+    }
+  }
+
   onChange(event, tag) {
     const { text } = event.nativeEvent
     const { dispatch, price, quantity, amount } = this.props
@@ -473,22 +480,28 @@ class Transactions extends Component {
                 flexDirection: 'column',
               }}
             >
-              <ShelvesListView
+              <View
                 style={{
-                  height: common.margin8 * 5 + common.font12 * 5 + common.margin10 * 3,
+                  height: common.margin8 * 5 + common.h14_5 * 5 + common.margin10 * 3,
                 }}
-                type={common.buy}
-                goodsName={goodsName}
-                currencyName={currencyName}
-                dataSource={this.shelvesBuyDS(shelvesBuy)}
-              />
-              <ShelvesListView
+              >
+                <ShelvesListView
+                  goodsName={goodsName}
+                  currencyName={currencyName}
+                  type={common.sell}
+                  dataSource={this.shelvesSellDS(shelvesSell)}
+                />
+              </View>
+              <View
                 style={{
-                  height: common.margin8 * 5 + common.font12 * 5,
+                  height: common.margin8 * 5 + common.h14_5 * 5,
                 }}
-                type={common.sell}
-                dataSource={this.shelvesSellDS(shelvesSell)}
-              />
+              >
+                <ShelvesListView
+                  type={common.buy}
+                  dataSource={this.shelvesBuyDS(shelvesBuy)}
+                />
+              </View>
             </View>
           </View>
 

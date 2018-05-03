@@ -2,6 +2,7 @@ import {
   Dimensions,
   AsyncStorage,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
@@ -107,6 +108,7 @@ const common = {
 
   h5: 5 / w * sw,
   h13: 13 / w * sw, // 首页详情页面中向上箭头高度
+  h14_5: 14.5 / w * sw, // 交易五档文字高度
   h20: 20 / w * sw,
   h30: 30 / w * sw,
   h32: 32 / w * sw,
@@ -192,6 +194,26 @@ const common = {
       createdAtDate.getSeconds()
     const dfStr = `${getHours}:${getMinutes}:${getSeconds}`
     return dfStr
+  },
+  bigNumber: {
+    plus(a, b) { // "+"
+      return Number(BigNumber(a).plus(b).valueOf())
+    },
+    dividedBy(a, b) { // "/"
+      return Number(BigNumber(a).dividedBy(b).valueOf())
+    },
+    multipliedBy(a, b) { // "*"
+      return Number(BigNumber(a).multipliedBy(b).valueOf())
+    },
+    minus(a, b) { // "-"
+      return Number(BigNumber(a).minus(b).valueOf())
+    },
+    gt(a, b) { // ">"
+      return BigNumber(a).gt(b)
+    },
+    lt(a, b) { // "<"
+      return BigNumber(a).lt(b)
+    },
   },
 }
 

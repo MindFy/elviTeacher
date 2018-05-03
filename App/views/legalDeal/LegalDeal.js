@@ -86,12 +86,12 @@ class LegalDeal extends Component {
       Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
       return
     }
-    if (quantity < common.minQuantityLegalDeal) {
+    if (common.bigNumber.lt(quantity, common.minQuantityLegalDeal)) {
       Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最少为${
         common.minQuantityLegalDeal}`)
       return
     }
-    if (quantity > common.maxQuantityLegalDeal) {
+    if (common.bigNumber.gt(quantity, common.maxQuantityLegalDeal)) {
       Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最大为${
         common.maxQuantityLegalDeal}`)
       return
@@ -105,9 +105,11 @@ class LegalDeal extends Component {
   quantityOnChange(event) {
     const { text } = event.nativeEvent
     const { dispatch, direct } = this.props
+    const temp = text.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+
     dispatch(actions.legalDealUpdate({
       direct,
-      quantity: isNaN(Number(text)) ? 0 : Number(text),
+      quantity: isNaN(Number(temp)) ? 0 : Number(temp),
     }))
   }
 
@@ -182,7 +184,7 @@ class LegalDeal extends Component {
                 fontSize: common.font14,
                 alignSelf: 'center',
               }}
-            >{Number(price).toFixed(2)}</Text>
+            >{price}</Text>
             <Text
               style={{
                 marginRight: common.margin10,
@@ -215,9 +217,10 @@ class LegalDeal extends Component {
               }}
               placeholder={`${direct === common.buy ? '买入' : '卖出'}数量`}
               placeholderTextColor={common.placeholderColor}
-              maxLength={common.textInputMaxLenLegalDeal}
+              // maxLength={common.textInputMaxLenLegalDeal}
               value={quantity === 0 ? '' : `${quantity}`}
               onChange={e => this.quantityOnChange(e)}
+              onEndEditing={e => this.quantityOnChange(e)}
             />
             <Text
               style={{
@@ -238,7 +241,7 @@ class LegalDeal extends Component {
             }}
           >{`${
               direct === common.buy ? '买入' : '卖出'
-            }总计:${Number(price * quantity).toFixed(2)}元`}</Text>
+            }总计:${common.bigNumber.multipliedBy(price, quantity)}元`}</Text>
 
           <TouchableOpacity
             style={{
@@ -298,6 +301,7 @@ class LegalDeal extends Component {
 
 function mapStateToProps(store) {
   return {
+    direct: store.legalDeal.direct,
     priceBuy: store.legalDeal.priceBuy,
     priceSell: store.legalDeal.priceSell,
     quantity: store.legalDeal.quantity,

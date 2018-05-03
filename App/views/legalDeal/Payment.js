@@ -95,7 +95,7 @@ export default class Payment extends Component {
             color: common.textColor,
             alignSelf: 'center',
           }}
-        >{`¥${price * rd.quantity}`}</Text>
+        >{`¥${common.bigNumber.multipliedBy(price, rd.quantity)}`}</Text>
 
         <View
           style={{
