@@ -3,10 +3,6 @@ import * as constants from '../constants/index'
 const initialState = {
   deal: [],
   latestDeals: [],
-
-  price: '',
-  quantity: '',
-  amount: '',
   buyOrSell: true,
 
   findListSelfVisible: false,
@@ -67,14 +63,6 @@ export default function deal(state = initialState, action) {
       nextState = {
         ...state,
         buyOrSell: action.buyOrSell,
-      }
-      break
-    case constants.TEXTINPUT_DELEGATE_UPDATE:
-      nextState = {
-        ...state,
-        price: action.price,
-        quantity: action.quantity,
-        amount: action.amount,
       }
       break
     default:

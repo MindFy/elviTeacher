@@ -27,12 +27,3 @@ export function homeRoseSelectedUpdate(data) {
     data,
   }
 }
-
-export function textInputDelegateUpdate(price, quantity, amount) {
-  return {
-    type: constants.TEXTINPUT_DELEGATE_UPDATE,
-    price,
-    quantity,
-    amount,
-  }
-}

@@ -76,6 +76,7 @@ class Home extends Component {
                     token: { id: 3, name: 'CNYT' },
                   },
                 ],
+                amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
               }))
             }
           })

@@ -99,6 +99,7 @@ class Me extends Component {
                   token: { id: 3, name: 'CNYT' },
                 },
               ],
+              amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
             }))
             // 返回登录页
             this.navigateLogin()

@@ -3,6 +3,7 @@ import {
   Text,
   View,
   ListView,
+  TouchableOpacity,
 } from 'react-native'
 import {
   common,
@@ -12,7 +13,7 @@ export default class ShelvesListView extends Component {
   componentDidMount() { }
 
   renderShelvesRow(rd, sid, rid) {
-    const { type } = this.props
+    const { type, rowPress } = this.props
     let textColor = null
     let marginTop = null
     if (type === common.buy) {
@@ -25,26 +26,31 @@ export default class ShelvesListView extends Component {
     } else {
       marginTop = common.margin8
     }
+    const price = common.toFix8(rd.price)
+    const sumQuantity = common.toFix4(rd.sum_quantity)
     return (
-      <View style={{
-        marginTop,
-        marginLeft: common.margin10 / 2,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
+      <TouchableOpacity
+        style={{
+          marginTop,
+          marginLeft: common.margin10 / 2,
+          marginRight: common.margin10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+        activeOpacity={common.activeOpacity}
+        onPress={() => rowPress(rd)}
       >
         <Text style={{
           color: textColor,
           fontSize: common.font12,
         }}
-        >{Number(rd.price).toFixed(2)}</Text>
+        >{Number(price)}</Text>
         <Text style={{
           color: 'white',
           fontSize: common.font12,
         }}
-        >{rd.sum_quantity}</Text>
-      </View>
+        >{Number(sumQuantity)}</Text>
+      </TouchableOpacity>
     )
   }
 
