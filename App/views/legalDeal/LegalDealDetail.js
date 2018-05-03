@@ -102,7 +102,8 @@ class LegalDealDetail extends Component {
           mobile={user.mobile}
           code={code}
           onChange={e => this.onChange(e, 'code')}
-          codePress={() => {
+          codePress={(count) => {
+            this.count = count
             dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
           confirmPress={() => {
@@ -110,8 +111,9 @@ class LegalDealDetail extends Component {
               Toast.message('请输入验证码')
               return
             }
-            legalDeal[rid].status = common.legalDeal.status.complete
-            dispatch(actions.confirmPay({ id, code: this.props.code }, legalDeal.concat()))
+            const temp = legalDeal.concat()
+            temp[rid].status = common.legalDeal.status.complete
+            dispatch(actions.confirmPay({ id, code: this.props.code }, temp))
           }}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
         />
@@ -129,6 +131,7 @@ class LegalDealDetail extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
+        this.count()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
