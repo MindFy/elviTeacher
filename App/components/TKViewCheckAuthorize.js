@@ -83,12 +83,10 @@ export default class TKViewCheckAuthorize extends Component {
               maxLength={6}
               value={code}
               onChange={e => onChange(e)}
-              keyboardType={'number-pad'}
             />
             <TKButtonGetVerificateCode
               onPress={(count) => {
-                count()
-                codePress()
+                codePress(count)
               }}
             />
           </View>

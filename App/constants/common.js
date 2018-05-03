@@ -147,6 +147,10 @@ const common = {
   regIdCard: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
   regBankName: /^[\u4e00-\u9fa5]{4}/,
   regBankNo: /[0-9]{16,19}$/,
+  toFix2(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3') },
+  toFix4(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d).*$/, '$1$2.$3') },
+  toFix6(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d).*$/, '$1$2.$3') },
+  toFix8(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/, '$1$2.$3') },
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
@@ -156,6 +160,8 @@ const common = {
 
   maxQuantityLegalDeal: 1000000,
   minQuantityLegalDeal: 100,
+  minQuantityTK: 10,
+  minQuantityBTC: 0.000001,
 
   messageBarDur: 2000,
 

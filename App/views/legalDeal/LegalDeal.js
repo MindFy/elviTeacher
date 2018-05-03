@@ -105,7 +105,7 @@ class LegalDeal extends Component {
   quantityOnChange(event) {
     const { text } = event.nativeEvent
     const { dispatch, direct } = this.props
-    const temp = text.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+    const temp = common.toFix2(text)
 
     dispatch(actions.legalDealUpdate({
       direct,

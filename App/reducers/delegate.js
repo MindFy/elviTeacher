@@ -4,6 +4,9 @@ import {
 } from '../constants/common'
 
 const initialState = {
+  price: 0,
+  quantity: 0,
+  amount: 0,
   shelvesBuy: [],
   shelvesSell: [],
   depthMap: {
@@ -156,6 +159,15 @@ export default function delegate(state = initialState, action) {
       nextState = {
         ...state,
         currentOrHistory: action.data.currentOrHistory,
+      }
+      break
+
+    case constants.TEXTINPUT_DELEGATE_UPDATE:
+      nextState = {
+        ...state,
+        price: action.data.price,
+        quantity: action.data.quantity,
+        amount: action.data.amount,
       }
       break
     default:

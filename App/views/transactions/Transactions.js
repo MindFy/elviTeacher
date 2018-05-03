@@ -20,7 +20,8 @@ import ShelvesListView from './ShelvesListView'
 import actions from '../../actions/index'
 
 class Transactions extends Component {
-  static navigationOptions() {
+  static navigationOptions(props) {
+    const { navigation } = props
     return {
       headerTitle: '交易',
       headerStyle: {
@@ -36,7 +37,7 @@ class Transactions extends Component {
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => {
-
+              navigation.navigate('Detail')
             }}
           >
             <Image
@@ -74,22 +75,20 @@ class Transactions extends Component {
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, price, quantity, amount } = this.props
-
-    const p = !price.length ? 0 : parseInt(price, 0)
-    let n
-    let a
+    const { dispatch, price, quantity } = this.props
 
     if (tag === 'price') {
-      dispatch(actions.textInputDelegateUpdate(text, quantity, amount))
+      const temp = common.toFix2(text)
+      const p = isNaN(Number(temp)) ? 0 : Number(temp)
+      const aTemp = common.bigNumber.multipliedBy(p, quantity)
+      const amount = common.toFix6(aTemp)
+      dispatch(actions.textInputDelegateUpdate({ price: p, quantity, amount: Number(amount) }))
     } else if (tag === 'quantity') {
-      n = !text.length ? 0 : parseInt(text, 0)
-      a = p * n === 0 ? amount : p * n
-      dispatch(actions.textInputDelegateUpdate(price, text, `${a}`))
-    } else if (tag === 'amount') {
-      a = !text.length ? 0 : parseInt(text, 0)
-      n = a / p === 0 ? quantity : Number(a / p).toFixed(0)
-      dispatch(actions.textInputDelegateUpdate(price, `${n}`, text))
+      const temp = common.toFix4(text)
+      const q = isNaN(Number(temp)) ? 0 : Number(temp)
+      const aTemp = common.bigNumber.multipliedBy(price, q)
+      const amount = common.toFix6(aTemp)
+      dispatch(actions.textInputDelegateUpdate({ price, quantity: q, amount: Number(amount) }))
     }
   }
 
@@ -119,7 +118,7 @@ class Transactions extends Component {
     const { dispatch, buyOrSell } = this.props
     if (buyOrSell !== b) {
       dispatch(actions.buyOrSellUpdate(b))
-      dispatch(actions.textInputDelegateUpdate('', '', ''))
+      dispatch(actions.textInputDelegateUpdate({ price: 0, quantity: 0, amount: 0 }))
     }
   }
 
@@ -129,21 +128,32 @@ class Transactions extends Component {
       navigation.navigate('LoginStack')
       return
     }
-    if (!price.length) {
-      Toast.message('请输入价格')
+    if (price === 0) {
+      Toast.message(`请输入${buyOrSell ? '买入' : '卖出'}价格`)
       return
     }
-    if (!quantity.length) {
-      Toast.message('请输入数量')
+    if (quantity === 0) {
+      Toast.message(`请输入${buyOrSell ? '买入' : '卖出'}数量`)
       return
     }
+
     if (homeRoseSelected) {
+      if (homeRoseSelected.goods.name === 'TK'
+        && common.bigNumber.lt(quantity, common.minQuantityTK)) {
+        Toast.message(`TK${buyOrSell ? '买入' : '卖出'}数量至少为${common.minQuantityTK}`)
+        return
+      }
+      if (homeRoseSelected.goods.name === 'BTC'
+        && common.bigNumber.lt(quantity, common.minQuantityBTC)) {
+        Toast.message(`BTC${buyOrSell ? '买入' : '卖出'}数量至少为${common.minQuantityBTC}`)
+        return
+      }
       dispatch(actions.create({
         goods_id: homeRoseSelected.goods.id,
         currency_id: homeRoseSelected.currency.id,
         direct: buyOrSell ? 'buy' : 'sell',
-        price: Number(price),
-        quantity: Number(quantity),
+        price,
+        quantity,
       }))
     }
   }
@@ -243,12 +253,25 @@ class Transactions extends Component {
   }
 
   render() {
-    const { buyOrSell, navigation, delegateCreateVisible, depthMap, user,
+    const { dispatch, buyOrSell, navigation, delegateCreateVisible, depthMap, user,
       homeRoseSelected, price, quantity, amount, shelvesBuy, shelvesSell, latestDeals,
-      latestDealsVisible, getShelvesVisible, getDepthMapVisible,
+      latestDealsVisible, getShelvesVisible, getDepthMapVisible, amountVisible,
     } = this.props
-    const goodsName = homeRoseSelected ? homeRoseSelected.goods.name : ''
-    const currencyName = homeRoseSelected ? homeRoseSelected.currency.name : ''
+    let goodsName = ''
+    let currencyName = ''
+    let amountVisibleCurrency = 0
+    if (homeRoseSelected) {
+      goodsName = homeRoseSelected.goods.name
+      currencyName = homeRoseSelected.currency.name
+      const currencyId = homeRoseSelected.currency.id
+      if (currencyId === 1) {
+        amountVisibleCurrency = amountVisible.TK
+      } else if (currencyId === 2) {
+        amountVisibleCurrency = amountVisible.BTC
+      } else if (currencyId === 3) {
+        amountVisibleCurrency = amountVisible.CNYT
+      }
+    }
 
     return (
       <View style={{
@@ -398,7 +421,7 @@ class Transactions extends Component {
                   marginTop: common.margin10,
                 }}
                 placeholder={`价格（${currencyName}）`}
-                value={price}
+                value={price === 0 ? '' : `${price}`}
                 onChange={e => this.onChange(e, 'price')}
               />
 
@@ -411,21 +434,27 @@ class Transactions extends Component {
 
               <TextInputTransactions
                 placeholder={`数量（${goodsName}）`}
-                value={quantity}
+                value={quantity === 0 ? '' : `${quantity}`}
                 onChange={e => this.onChange(e, 'quantity')}
               />
 
-              <TransactionsSlider styleee={{
-                marginTop: common.margin10 / 2,
-                marginLeft: common.margin10,
-                marginRight: common.margin10 / 2,
-              }}
+              <TransactionsSlider
+                viewStyle={{
+                  marginTop: common.margin10 / 2,
+                  marginLeft: common.margin10,
+                  marginRight: common.margin10 / 2,
+                }}
+                sliderValue={quantity}
+                minimumValue={0}
+                maximumValue={amountVisibleCurrency}
+                onValueChange={() => {
+                  // dispatch(actions.textInputDelegateUpdate({ price, quantity: value, amount }))
+                }}
               />
 
               <TextInputTransactions
                 placeholder={`成交金额（${currencyName}）`}
-                value={amount}
-                onChange={e => this.onChange(e, 'amount')}
+                value={amount === 0 ? '' : `${amount}`}
                 editable={false}
               />
 
@@ -447,7 +476,7 @@ class Transactions extends Component {
                   color: common.textColor,
                   fontSize: common.font10,
                 }}
-                >0 BTC</Text>
+                >{`${amountVisibleCurrency} ${currencyName}`}</Text>
               </View>
 
               <TouchableOpacity
@@ -490,6 +519,16 @@ class Transactions extends Component {
                   currencyName={currencyName}
                   type={common.sell}
                   dataSource={this.shelvesSellDS(shelvesSell)}
+                  rowPress={(rd) => {
+                    const p = rd.price
+                    const temp = common.bigNumber.multipliedBy(p, quantity)
+                    const a = common.toFix6(temp)
+                    dispatch(actions.textInputDelegateUpdate({
+                      price: p,
+                      quantity,
+                      amount: Number(a),
+                    }))
+                  }}
                 />
               </View>
               <View
@@ -500,6 +539,16 @@ class Transactions extends Component {
                 <ShelvesListView
                   type={common.buy}
                   dataSource={this.shelvesBuyDS(shelvesBuy)}
+                  rowPress={(rd) => {
+                    const p = rd.price
+                    const temp = common.bigNumber.multipliedBy(p, quantity)
+                    const a = common.toFix6(temp)
+                    dispatch(actions.textInputDelegateUpdate({
+                      price: p,
+                      quantity,
+                      amount: Number(a),
+                    }))
+                  }}
                 />
               </View>
             </View>
@@ -529,18 +578,20 @@ class Transactions extends Component {
 
 function mapStateToProps(store) {
   return {
-    price: store.deal.price,
-    quantity: store.deal.quantity,
-    amount: store.deal.amount,
     buyOrSell: store.deal.buyOrSell,
     latestDeals: store.deal.latestDeals,
     latestDealsVisible: store.deal.latestDealsVisible,
 
     user: store.user.user,
 
+    amountVisible: store.asset.amountVisible,
+
     homeRose: store.dealstat.homeRose,
     homeRoseSelected: store.dealstat.homeRoseSelected,
 
+    price: store.delegate.price,
+    quantity: store.delegate.quantity,
+    amount: store.delegate.amount,
     shelvesBuy: store.delegate.shelvesBuy,
     shelvesSell: store.delegate.shelvesSell,
     depthMap: store.delegate.depthMap,

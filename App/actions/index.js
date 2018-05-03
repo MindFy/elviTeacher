@@ -16,7 +16,6 @@ import {
   latestDeals,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
-  textInputDelegateUpdate,
 } from './deal'
 import {
   getRose,
@@ -31,6 +30,7 @@ import {
   findDelegateSelfCurrent,
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
+  textInputDelegateUpdate,
 } from './delegate'
 import {
   legalDealCancel,
@@ -93,7 +93,6 @@ const actions = {
   latestDeals,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
-  textInputDelegateUpdate,
 
   getRose,
   marketListUpdate,
@@ -106,6 +105,7 @@ const actions = {
   findDelegateSelfCurrent,
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
+  textInputDelegateUpdate,
 
   legalDealCancel,
   confirmPay,

@@ -11,10 +11,9 @@ export default class Depth extends Component {
     const amountsBuy = [] // 存放买入
     const amountsSell = [] // 存放卖出
 
-    const amountBuy = 0
     for (let i = 0; i < depthMap.buy.length; i++) {
       prices.push(depthMap.buy[i].price)
-      amountsBuy.unshift(depthMap.buy[i].totalamount)
+      amountsBuy.push(depthMap.buy[i].totalamount)
       amountsSell.unshift('-')
     }
 
@@ -22,12 +21,9 @@ export default class Depth extends Component {
     amountsBuy.push(0)
     amountsSell.push(0)
 
-    let amountSell = 0
     for (let i = 0; i < depthMap.sell.length; i++) {
-      amountSell += depthMap.sell[i].sum_quantity
-
       prices.push(depthMap.sell[i].price)
-      amountsSell.push(amountSell)
+      amountsSell.push(depthMap.sell[i].totalamount)
       amountsBuy.push('-')
     }
 

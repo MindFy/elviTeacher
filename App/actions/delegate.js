@@ -54,3 +54,10 @@ export function currentOrHistoryUpdate(data) {
     data,
   }
 }
+
+export function textInputDelegateUpdate(data) {
+  return {
+    type: constants.TEXTINPUT_DELEGATE_UPDATE,
+    data,
+  }
+}

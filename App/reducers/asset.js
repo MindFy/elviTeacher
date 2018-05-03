@@ -24,6 +24,7 @@ const initialState = {
       token: { id: 3, name: 'CNYT' },
     },
   ],
+  amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
 
   createAddress: '',
 
@@ -84,8 +85,8 @@ export default function asset(state = initialState, action) {
     case constants.FIND_ASSET_LIST_SUCCEED:
       nextState = {
         ...state,
-        asset: action.response.result.data.find_asset.length ?
-          action.response.result.data.find_asset : state.asset,
+        asset: action.find_asset.length ? action.find_asset : state.asset,
+        amountVisible: action.amountVisible,
       }
       break
 
@@ -93,6 +94,7 @@ export default function asset(state = initialState, action) {
       nextState = {
         ...state,
         asset: action.data.asset,
+        amountVisible: action.data.amountVisible,
       }
       break
     default:
