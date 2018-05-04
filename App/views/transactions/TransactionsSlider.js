@@ -11,6 +11,8 @@ export default class TransactionsSlider extends Component {
 
   render() {
     const { viewStyle, sliderValue, onValueChange, minimumValue, maximumValue } = this.props
+    const percent = maximumValue === 0 ? 0
+      : Number(common.bigNumber.dividedBy(sliderValue, maximumValue) * 100).toFixed(0)
     return (
       <View
         style={viewStyle}
@@ -20,12 +22,12 @@ export default class TransactionsSlider extends Component {
             height: 15,
           }}
           value={sliderValue}
-          maximumValue={maximumValue}
           minimumValue={minimumValue}
+          maximumValue={maximumValue}
           maximumTrackTintColor={common.borderColor}
           minimumTrackTintColor={'white'}
           thumbImage={require('../../assets/椭圆形.png')}
-          onValueChange={value => onValueChange(value)}
+          onSlidingComplete={value => onValueChange(value)}
         />
         <Text
           style={{
@@ -33,7 +35,7 @@ export default class TransactionsSlider extends Component {
             fontSize: common.font10,
             textAlign: 'right',
           }}
-        >{`${Number(common.bigNumber.dividedBy(sliderValue, maximumValue) * 100).toFixed(0)}%`}</Text>
+        >{`${percent}%`}</Text>
       </View>
     )
   }

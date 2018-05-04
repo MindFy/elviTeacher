@@ -39,6 +39,19 @@ const common = {
     },
   },
 
+  ws: {
+    handicap: 'handicap',
+    market: 'market',
+    deals: 'deals',
+    delegates: 'delegates',
+  },
+
+  token: {
+    TK: 'TK',
+    BTC: 'BTC',
+    CNYT: 'CNYT',
+  },
+
   legalDeal: {
     token: 'CNYT',
     status: {

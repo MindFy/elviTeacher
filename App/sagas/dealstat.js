@@ -37,7 +37,7 @@ export default function* getRose() {
           element.rose = goods.rose
           if (homeRoseSelected) {
             if ((homeRoseSelected.goods.id === element.goods.id)
-              && (homeRoseSelected.goods.id === element.goods.id)) {
+              && (homeRoseSelected.currency.id === element.currency.id)) {
               homeRoseSelectedTemp = element
             }
           } else if (i === 0 && j === 0) {
