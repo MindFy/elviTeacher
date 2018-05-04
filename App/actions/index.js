@@ -14,6 +14,7 @@ import findBanners from './banners'
 import {
   findListSelf,
   latestDeals,
+  wsDealsUpdate,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
 } from './deal'
@@ -27,7 +28,9 @@ import {
   create,
   getDepthMap,
   getShelves,
+  wsGetShelvesUpdate,
   findDelegateSelfCurrent,
+  wsDelegatesCurrentUpdate,
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
@@ -91,6 +94,7 @@ const actions = {
 
   findListSelf,
   latestDeals,
+  wsDealsUpdate,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
 
@@ -102,7 +106,9 @@ const actions = {
   create,
   getDepthMap,
   getShelves,
+  wsGetShelvesUpdate,
   findDelegateSelfCurrent,
+  wsDelegatesCurrentUpdate,
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,

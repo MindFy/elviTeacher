@@ -35,12 +35,27 @@ export function getShelves(data) {
   }
 }
 
+export function wsGetShelvesUpdate(data) {
+  return {
+    type: constants.WS_GET_SHELVES_UPDATE,
+    data,
+  }
+}
+
 export function findDelegateSelfCurrent(schema) {
   return {
     type: constants.FIND_DELEGATE_SELF_CURRENT_REQUEST,
     schema,
   }
 }
+
+export function wsDelegatesCurrentUpdate(data) {
+  return {
+    type: constants.WS_DELEGATES_CURRENT_UPDATE,
+    data,
+  }
+}
+
 export function findDelegateSelfHistory(schema) {
   return {
     type: constants.FIND_DELEGATE_SELF_HISTORY_REQUEST,

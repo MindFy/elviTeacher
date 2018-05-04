@@ -50,6 +50,7 @@ const common = {
     TK: 'TK',
     BTC: 'BTC',
     CNYT: 'CNYT',
+    CNY: 'CNY',
   },
 
   legalDeal: {

@@ -14,6 +14,13 @@ export function latestDeals(data) {
   }
 }
 
+export function wsDealsUpdate(data) {
+  return {
+    type: constants.WS_DEALS_UPDATE,
+    data,
+  }
+}
+
 export function buyOrSellUpdate(buyOrSell) {
   return {
     type: constants.BUY_OR_SELL_UPDATE,

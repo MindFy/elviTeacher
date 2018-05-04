@@ -106,6 +106,30 @@ export default class Delegate extends Component {
     const { currentOrHistory, cancelBlock } = this.props
     if (currentOrHistory === common.current) {
       const createdAt = common.dfFullDate(rd.createdAt)
+      let goodsName = rd.goods ? rd.goods.name : ''
+      if (rd.goods_id) {
+        if (rd.goods_id === 1) {
+          goodsName = common.token.TK
+        } else if (rd.goods_id === 2) {
+          goodsName = common.token.BTC
+        } else if (rd.goods_id === 3) {
+          goodsName = common.token.CNYT
+        } else if (rd.goods_id === 4) {
+          goodsName = common.token.CNY
+        }
+      }
+      let currencyName = rd.currency ? rd.currency.name : ''
+      if (rd.currency_id) {
+        if (rd.currency_id === 1) {
+          currencyName = common.token.TK
+        } else if (rd.currency_id === 2) {
+          currencyName = common.token.BTC
+        } else if (rd.currency_id === 3) {
+          currencyName = common.token.CNYT
+        } else if (rd.currency_id === 4) {
+          currencyName = common.token.CNY
+        }
+      }
 
       return (
         <View
@@ -140,7 +164,7 @@ export default class Delegate extends Component {
                   fontSize: common.font12,
                   alignSelf: 'center',
                 }}
-              >{`${rd.goods.name}/${rd.currency.name}`}</Text>
+              >{`${goodsName}/${currencyName}`}</Text>
               <Text
                 style={{
                   marginLeft: common.margin10,

@@ -21,6 +21,7 @@ import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+// import * as ws from '../../websocket/ws'
 
 class Home extends Component {
   constructor() {
@@ -86,6 +87,20 @@ class Home extends Component {
           dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           break
+
+        case common.ws.handicap:
+          dispatch(actions.wsGetShelvesUpdate(resp))
+          break
+        case common.ws.market:
+          dispatch(actions.getRose(homeRoseSelected))
+          break
+        case common.ws.deals:
+          dispatch(actions.wsDealsUpdate(resp))
+          break
+        case common.ws.delegates:
+          dispatch(actions.wsDelegatesCurrentUpdate(resp))
+          break
+
         default:
           break
       }

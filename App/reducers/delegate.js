@@ -148,6 +148,12 @@ export default function delegate(state = initialState, action) {
         delegateSelfCurrent: action.response.result.data.find_delegate,
       }
       break
+    case constants.WS_DELEGATES_CURRENT_UPDATE:
+      nextState = {
+        ...state,
+        delegateSelfCurrent: action.data.concat(state.delegateSelfCurrent),
+      }
+      break
     case constants.FIND_DELEGATE_SELF_HISTORY_SUCCEED:
       nextState = {
         ...state,
@@ -168,6 +174,14 @@ export default function delegate(state = initialState, action) {
         price: action.data.price,
         quantity: action.data.quantity,
         amount: action.data.amount,
+      }
+      break
+
+    case constants.WS_GET_SHELVES_UPDATE:
+      nextState = {
+        ...state,
+        shelvesBuy: action.data.shelvesBuy,
+        shelvesSell: action.data.shelvesSell,
       }
       break
     default:
