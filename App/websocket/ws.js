@@ -11,6 +11,7 @@ import * as api from '../services/api'
 const ws = new ReconnectingWebSocket(api.ws)
 
 ws.onopen = (goodsId, currencyId) => {
+  // console.log('ws open-------------->', goodsId, currencyId)
   ws.send(JSON.stringify({
     act: 'on',
     ch: `channel_${goodsId}_${currencyId}`,
@@ -25,6 +26,7 @@ ws.addEventListener('close', () => {
 ws.addEventListener('message', (event) => {
   const { data } = event
   const dataParse = JSON.parse(data)
+  // console.log('ws message----------->', dataParse)
   if (dataParse.data.handicap) {
     const type = common.ws.handicap
     const handicap = dataParse.data.handicap

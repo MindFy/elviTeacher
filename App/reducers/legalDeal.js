@@ -88,7 +88,7 @@ export default function legalDeal(state = initialState, action) {
         ...state,
         legalDeal: state.refreshState === RefreshState.HeaderRefreshing
           ? action.legalDeal : state.legalDeal.concat(action.legalDeal),
-        skip: state.refreshState === RefreshState.HeaderRefreshing ? 0 : (state.skip + 1),
+        skip: state.refreshState === RefreshState.FooterRefreshing ? 0 : (state.skip + 1),
         findLegalDealVisible: false,
         refreshState: ((state.refreshState === RefreshState.FooterRefreshing)
           && !action.legalDeal.length)

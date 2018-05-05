@@ -76,6 +76,8 @@ import {
 import {
   selectionBarUpdate,
   kLineOrDepthUpdate,
+  averagePriceOrPriceUpdate,
+  dealledOrQuantityUpdate,
 } from './ui'
 
 const actions = {
@@ -150,5 +152,7 @@ const actions = {
 
   selectionBarUpdate,
   kLineOrDepthUpdate,
+  averagePriceOrPriceUpdate,
+  dealledOrQuantityUpdate,
 }
 export default actions

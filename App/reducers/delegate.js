@@ -1,3 +1,4 @@
+import { RefreshState } from 'react-native-refresh-list-view'
 import * as constants from '../constants/index'
 import {
   common,
@@ -14,9 +15,13 @@ const initialState = {
     sell: [],
     lastprice: 100,
   },
+  skipCurrent: 0,
+  refreshStateCurrent: RefreshState.Idle,
   delegateSelfCurrent: [],
+  skipHistory: 0,
+  refreshStateHistory: RefreshState.Idle,
   delegateSelfHistory: [],
-  currentOrHistory: common.current,
+  currentOrHistory: common.delegate.current,
 
   allCancelVisible: false,
   allCancelResponse: undefined,
@@ -49,7 +54,6 @@ export default function delegate(state = initialState, action) {
         ...state,
         allCancelVisible: false,
         allCancelResponse: action.response,
-        delegateSelfCurrent: [],
       }
       break
     case constants.ALL_CANCEL_FAILED:
@@ -142,10 +146,27 @@ export default function delegate(state = initialState, action) {
         getShelvesResponse: action.response,
       }
       break
+    case constants.FIND_DELEGATE_SELF_CURRENT_REQUEST:
+      nextState = {
+        ...state,
+        refreshStateCurrent: action.refreshStateCurrent,
+      }
+      break
     case constants.FIND_DELEGATE_SELF_CURRENT_SUCCEED:
       nextState = {
         ...state,
-        delegateSelfCurrent: action.response.result.data.find_delegate,
+        delegateSelfCurrent: state.refreshStateCurrent === RefreshState.HeaderRefreshing
+          ? action.findDelegate : state.delegateSelfCurrent.concat(action.findDelegate),
+        skipCurrent: state.refreshStateCurrent === RefreshState.FooterRefreshing
+          ? 0 : (state.skipCurrent + 1),
+        refreshStateCurrent: ((state.refreshStateCurrent === RefreshState.FooterRefreshing)
+          && !action.findDelegate.length) ? RefreshState.NoMoreData : RefreshState.Idle,
+      }
+      break
+    case constants.FIND_DELEGATE_SELF_CURRENT_FAILED:
+      nextState = {
+        ...state,
+        refreshStateCurrent: RefreshState.Failure,
       }
       break
     case constants.WS_DELEGATES_CURRENT_UPDATE:
@@ -154,10 +175,27 @@ export default function delegate(state = initialState, action) {
         delegateSelfCurrent: action.data.concat(state.delegateSelfCurrent),
       }
       break
+    case constants.FIND_DELEGATE_SELF_HISTORY_REQUEST:
+      nextState = {
+        ...state,
+        refreshStateHistory: action.refreshStateHistory,
+      }
+      break
     case constants.FIND_DELEGATE_SELF_HISTORY_SUCCEED:
       nextState = {
         ...state,
-        delegateSelfHistory: action.response.result.data.find_delegate,
+        delegateSelfHistory: state.refreshStateHistory === RefreshState.HeaderRefreshing
+          ? action.findDelegate : state.delegateSelfHistory.concat(action.findDelegate),
+        skipHistory: state.refreshStateHistory === RefreshState.HeaderRefreshing
+          ? 0 : (state.skipHistory + 1),
+        refreshStateHistory: ((state.refreshStateHistory === RefreshState.FooterRefreshing)
+          && !action.findDelegate.length) ? RefreshState.NoMoreData : RefreshState.Idle,
+      }
+      break
+    case constants.FIND_DELEGATE_SELF_HISTORY_FAILED:
+      nextState = {
+        ...state,
+        refreshStateHistory: RefreshState.Failure,
       }
       break
 

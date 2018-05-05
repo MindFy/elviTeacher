@@ -4,14 +4,14 @@ import {
   View,
   Image,
   StatusBar,
-  ListView,
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
 import Spinner from 'react-native-spinkit'
+import { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
-import TKSelectionBar from '../../components/TKSelectionBar'
 import DelegateListView from './DelegateListView'
+import TKSelectionBar from '../../components/TKSelectionBar'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -62,29 +62,31 @@ class Delegate extends Component {
     }
   }
 
-  constructor() {
-    super()
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-  }
-
   componentDidMount() {
     const { dispatch, user } = this.props
     if (user) {
-      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(user.id)))
-      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id)))
+      dispatch(actions.findDelegateSelfCurrent(
+        schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
+        RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfHistory(
+        schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
+        RefreshState.HeaderRefreshing))
     }
     this.listener = DeviceEventEmitter.addListener(common.delegateListenerNoti, () => {
-      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id)))
+      dispatch(actions.findDelegateSelfCurrent(
+        schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
+        RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfHistory(
+        schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
+        RefreshState.HeaderRefreshing))
     })
   }
 
   componentWillUnmount() {
     const { dispatch, currentOrHistory } = this.props
-    if (currentOrHistory !== common.current) {
+    if (currentOrHistory !== common.delegate.current) {
       dispatch(actions.currentOrHistoryUpdate({
-        currentOrHistory: common.current,
+        currentOrHistory: common.delegate.current,
       }))
     }
     this.listener.remove()
@@ -100,8 +102,9 @@ class Delegate extends Component {
   }
 
   render() {
-    const { dispatch, currentOrHistory, delegateSelfCurrent,
-      delegateSelfHistory, allCancelVisible } = this.props
+    const { dispatch, currentOrHistory, delegateSelfCurrent, delegateSelfHistory, allCancelVisible,
+      skipCurrent, skipHistory, refreshStateCurrent, refreshStateHistory, user, homeRoseSelected,
+    } = this.props
 
     return (
       <View style={{
@@ -116,24 +119,66 @@ class Delegate extends Component {
         <TKSelectionBar
           leftTitle={'当前委托'}
           rightTitle={'历史委托'}
-          leftBlock={() => this.topBarPress(common.current)}
-          rightBlock={() => this.topBarPress(common.history)}
+          leftBlock={() => this.topBarPress(common.delegate.current)}
+          rightBlock={() => this.topBarPress(common.delegate.history)}
         />
 
-        <DelegateListView
-          currentOrHistory={currentOrHistory}
-          dataSource={this.dataSource(currentOrHistory === common.current ?
-            delegateSelfCurrent : delegateSelfHistory)}
-          cancelAllBlock={() => {
-            dispatch(actions.allCancel())
-          }}
-          cancelBlock={(rd, rid) => {
-            const temp = delegateSelfCurrent.concat()
-            temp.splice(rid, 1)
-            dispatch(actions.cancel({ id: rd.id }, temp))
-          }}
-        />
-
+        {
+          currentOrHistory === common.delegate.current
+            ? <DelegateListView
+              currentOrHistory={common.delegate.current}
+              data={delegateSelfCurrent}
+              refreshState={refreshStateCurrent}
+              cancelAllBlock={() => {
+                dispatch(actions.allCancel({
+                  goods_id: homeRoseSelected.goods.id,
+                  currency_id: homeRoseSelected.currency.id,
+                }))
+              }}
+              cancelBlock={(rd, rid) => {
+                const temp = delegateSelfCurrent.concat()
+                temp[rid].status = common.delegate.status.cancel
+                dispatch(actions.cancel({ id: rd.id }, temp))
+              }}
+              onHeaderRefresh={() => {
+                if (refreshStateCurrent !== RefreshState.NoMoreData
+                  || refreshStateCurrent !== RefreshState.FooterRefreshing) {
+                  dispatch(actions.findDelegateSelfCurrent(
+                    schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
+                    RefreshState.HeaderRefreshing))
+                }
+              }}
+              onFooterRefresh={() => {
+                if (refreshStateCurrent !== RefreshState.NoMoreData
+                  || refreshStateCurrent !== RefreshState.HeaderRefreshing) {
+                  dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(user.id,
+                    common.delegate.limtCurrent * skipCurrent, common.delegate.limtCurrent),
+                    RefreshState.FooterRefreshing))
+                }
+              }}
+            />
+            : <DelegateListView
+              currentOrHistory={common.delegate.history}
+              data={delegateSelfHistory}
+              refreshState={refreshStateHistory}
+              onHeaderRefresh={() => {
+                if (refreshStateHistory !== RefreshState.NoMoreData
+                  || refreshStateHistory !== RefreshState.FooterRefreshing) {
+                  dispatch(actions.findDelegateSelfHistory(
+                    schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
+                    RefreshState.HeaderRefreshing))
+                }
+              }}
+              onFooterRefresh={() => {
+                if (refreshStateHistory !== RefreshState.NoMoreData
+                  || refreshStateHistory !== RefreshState.HeaderRefreshing) {
+                  dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id,
+                    common.delegate.limtHistory * skipHistory, common.delegate.limtHistory),
+                    RefreshState.FooterRefreshing))
+                }
+              }}
+            />
+        }
 
         <Spinner
           style={{
@@ -153,8 +198,13 @@ class Delegate extends Component {
 
 function mapStateToProps(store) {
   return {
+    skipCurrent: store.delegate.skipCurrent,
+    refreshStateCurrent: store.delegate.refreshStateCurrent,
     delegateSelfCurrent: store.delegate.delegateSelfCurrent,
+    skipHistory: store.delegate.skipHistory,
+    refreshStateHistory: store.delegate.refreshStateHistory,
     delegateSelfHistory: store.delegate.delegateSelfHistory,
+
     currentOrHistory: store.delegate.currentOrHistory,
 
     allCancelVisible: store.delegate.allCancelVisible,
@@ -162,6 +212,8 @@ function mapStateToProps(store) {
 
     cancelVisible: store.delegate.cancelVisible,
     cancelResponse: store.delegate.cancelResponse,
+
+    homeRoseSelected: store.dealstat.homeRoseSelected,
 
     user: store.user.user,
   }

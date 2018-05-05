@@ -409,9 +409,16 @@ class LegalDealDetail extends Component {
         data={legalDeal}
         renderItem={({ item, index }) => this.renderRow(item, index)}
         refreshState={refreshState}
-        onHeaderRefresh={() => this.onHeaderRefresh()}
+        onHeaderRefresh={() => {
+          if (refreshState !== RefreshState.NoMoreData
+            || refreshState !== RefreshState.FooterRefreshing) {
+            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0),
+              RefreshState.HeaderRefreshing))
+          }
+        }}
         onFooterRefresh={() => {
-          if (user && refreshState !== RefreshState.NoMoreData) {
+          if (user && refreshState !== RefreshState.NoMoreData
+            || refreshState !== RefreshState.HeaderRefreshing) {
             dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 10 * skip),
               RefreshState.FooterRefreshing))
           }

@@ -1,8 +1,9 @@
 import * as constants from '../constants/index'
 
-export function allCancel() {
+export function allCancel(data) {
   return {
     type: constants.ALL_CANCEL_REQUEST,
+    data,
   }
 }
 
@@ -42,10 +43,11 @@ export function wsGetShelvesUpdate(data) {
   }
 }
 
-export function findDelegateSelfCurrent(schema) {
+export function findDelegateSelfCurrent(schema, refreshStateCurrent) {
   return {
     type: constants.FIND_DELEGATE_SELF_CURRENT_REQUEST,
     schema,
+    refreshStateCurrent,
   }
 }
 
@@ -56,10 +58,11 @@ export function wsDelegatesCurrentUpdate(data) {
   }
 }
 
-export function findDelegateSelfHistory(schema) {
+export function findDelegateSelfHistory(schema, refreshStateHistory) {
   return {
     type: constants.FIND_DELEGATE_SELF_HISTORY_REQUEST,
     schema,
+    refreshStateHistory,
   }
 }
 

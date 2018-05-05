@@ -6,6 +6,8 @@ import {
 const initialState = {
   selectionBarSelected: common.selectionBar.left,
   kLineOrDepth: common.ui.kLine,
+  averagePriceOrPrice: common.ui.averagePrice,
+  dealledOrQuantity: common.ui.dealled,
 }
 
 export default function ui(state = initialState, action) {
@@ -22,6 +24,18 @@ export default function ui(state = initialState, action) {
       nextState = {
         ...state,
         kLineOrDepth: action.data,
+      }
+      break
+    case constants.AVERAGE_PRICE_PRICE_UPDATE:
+      nextState = {
+        ...state,
+        averagePriceOrPrice: action.data,
+      }
+      break
+    case constants.DEALLED_QUANTITY_UPDATE:
+      nextState = {
+        ...state,
+        dealledOrQuantity: action.data,
       }
       break
     default:

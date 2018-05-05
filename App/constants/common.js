@@ -21,8 +21,6 @@ const common = {
   sell: 'sell',
   recharge: 'recharge',
   withdraw: 'withdraw',
-  current: 'current',
-  history: 'history',
   btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
 
   never: 'never',
@@ -31,6 +29,10 @@ const common = {
   refuse: 'refuse',
 
   delegate: {
+    limtCurrent: 10,
+    limtHistory: 10,
+    current: 'current',
+    history: 'history',
     status: {
       dealing: 'dealing',
       waiting: 'waiting',
@@ -71,6 +73,10 @@ const common = {
   ui: {
     kLine: 'kLine',
     depth: 'depth',
+    averagePrice: 'averagePrice',
+    price: 'price',
+    dealled: 'dealled',
+    quantity: 'quantity',
   },
 
   redColor: 'rgb(213,69,80)',
