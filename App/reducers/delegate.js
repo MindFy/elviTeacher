@@ -157,9 +157,9 @@ export default function delegate(state = initialState, action) {
         ...state,
         delegateSelfCurrent: state.refreshStateCurrent === RefreshState.HeaderRefreshing
           ? action.findDelegate : state.delegateSelfCurrent.concat(action.findDelegate),
-        skipCurrent: state.refreshStateCurrent === RefreshState.FooterRefreshing
-          ? 0 : (state.skipCurrent + 1),
-        refreshStateCurrent: ((state.refreshStateCurrent === RefreshState.FooterRefreshing)
+        skipCurrent: (state.refreshStateCurrent === RefreshState.FooterRefreshing
+          && !action.findDelegate.length) ? 0 : (state.skipCurrent + 1),
+        refreshStateCurrent: (state.refreshStateCurrent === RefreshState.FooterRefreshing
           && !action.findDelegate.length) ? RefreshState.NoMoreData : RefreshState.Idle,
       }
       break
@@ -186,9 +186,9 @@ export default function delegate(state = initialState, action) {
         ...state,
         delegateSelfHistory: state.refreshStateHistory === RefreshState.HeaderRefreshing
           ? action.findDelegate : state.delegateSelfHistory.concat(action.findDelegate),
-        skipHistory: state.refreshStateHistory === RefreshState.HeaderRefreshing
-          ? 0 : (state.skipHistory + 1),
-        refreshStateHistory: ((state.refreshStateHistory === RefreshState.FooterRefreshing)
+        skipHistory: (state.refreshStateHistory === RefreshState.FooterRefreshing
+          && !action.findDelegate.length) ? 0 : (state.skipHistory + 1),
+        refreshStateHistory: (state.refreshStateHistory === RefreshState.FooterRefreshing
           && !action.findDelegate.length) ? RefreshState.NoMoreData : RefreshState.Idle,
       }
       break

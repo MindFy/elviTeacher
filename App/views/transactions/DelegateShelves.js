@@ -33,62 +33,51 @@ class DelegateShelves extends Component {
     const { dispatch, price, quantity, homeRoseSelected } = this.props
 
     if (tag === 'price') {
-      let temp
-      let p = isNaN(Number(text)) ? 0 : Number(text)
-      let aTemp
-      let amount = common.bigNumber.multipliedBy(p, quantity)
-      if (homeRoseSelected
-        && homeRoseSelected.goods.name === common.token.BTC
-        && homeRoseSelected.currency.name === common.token.CNYT) {
-        temp = common.toFix2(text)
-        p = isNaN(Number(temp)) ? 0 : Number(temp)
-        aTemp = common.bigNumber.multipliedBy(p, quantity)
-        amount = common.toFix6(aTemp)
-      } else if (homeRoseSelected
-        && homeRoseSelected.goods.name === common.token.TK
-        && homeRoseSelected.currency.name === common.token.CNYT) {
-        temp = common.toFix4(text)
-        p = isNaN(Number(temp)) ? 0 : Number(temp)
-        aTemp = common.bigNumber.multipliedBy(p, quantity)
-        amount = common.toFix4(aTemp)
-      } else if (homeRoseSelected
-        && homeRoseSelected.goods.name === common.token.TK
-        && homeRoseSelected.currency.name === common.token.BTC) {
-        temp = common.toFix6(text)
-        p = isNaN(Number(temp)) ? 0 : Number(temp)
-        aTemp = common.bigNumber.multipliedBy(p, quantity)
-        amount = common.toFix8(aTemp)
-      }
-      dispatch(actions.textInputDelegateUpdate({ price: p, quantity, amount: Number(amount) }))
+      const { p, q, a } = this.getAmount(text, quantity, homeRoseSelected)
+      dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
     } else if (tag === 'quantity') {
-      let temp
-      let q = isNaN(Number(text)) ? 0 : Number(text)
-      let aTemp
-      let amount = common.bigNumber.multipliedBy(price, q)
-      if (homeRoseSelected
-        && homeRoseSelected.goods.name === common.token.BTC
-        && homeRoseSelected.currency.name === common.token.CNYT) {
-        temp = common.toFix4(text)
-        q = isNaN(Number(temp)) ? 0 : Number(temp)
-        aTemp = common.bigNumber.multipliedBy(price, q)
-        amount = common.toFix6(aTemp)
-      } else if (homeRoseSelected
-        && homeRoseSelected.goods.name === common.token.TK
-        && homeRoseSelected.currency.name === common.token.CNYT) {
-        temp = common.toFix4(text)
-        q = isNaN(Number(temp)) ? 0 : Number(temp)
-        aTemp = common.bigNumber.multipliedBy(price, q)
-        amount = common.toFix4(aTemp)
-      } else if (homeRoseSelected
-        && homeRoseSelected.goods.name === common.token.TK
-        && homeRoseSelected.currency.name === common.token.BTC) {
-        temp = common.toFix4(text)
-        q = isNaN(Number(temp)) ? 0 : Number(temp)
-        aTemp = common.bigNumber.multipliedBy(price, q)
-        amount = common.toFix8(aTemp)
-      }
-      dispatch(actions.textInputDelegateUpdate({ price, quantity: q, amount: Number(amount) }))
+      const { p, q, a } = this.getAmount(price, text, homeRoseSelected)
+      dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
     }
+  }
+
+  // 币币对小数规则
+  getAmount(price, quantity, homeRoseSelected) {
+    let p
+    let q
+    let a
+    if (homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
+                      && homeRoseSelected.currency.name === common.token.CNYT) {
+      // p:2 q:4 a:6
+      p = common.toFix2(price)
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      q = common.toFix4(quantity)
+      q = isNaN(Number(q)) ? 0 : Number(q)
+      a = common.bigNumber.multipliedBy(p, q)
+      a = Number(common.toFix6(a))
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+                             && homeRoseSelected.currency.name === common.token.CNYT) {
+      // p:4 q:0 a:4
+      p = `${price}`
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      p = common.toFix4(p)
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      q = `${quantity}`
+      q = isNaN(Number(q)) ? 0 : Number(Number(q).toFixed(0))
+      a = common.bigNumber.multipliedBy(p, q)
+      a = Number(common.toFix4(a))
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+                             && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:6 q:4 a:8
+      p = common.toFix6(price)
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      q = common.toFix4(quantity)
+      q = isNaN(Number(q)) ? 0 : Number(q)
+      a = common.bigNumber.multipliedBy(p, q)
+      a = Number(common.toFix8(a))
+    }
+
+    return { p, q, a }
   }
 
   getUIData(goodsId, currencyId) {
@@ -121,11 +110,11 @@ class DelegateShelves extends Component {
       return
     }
     if (price === 0) {
-      Toast.message(`请输入${buyOrSell ? '买入' : '卖出'}价格`)
+      Toast.message(`请输入正确的${buyOrSell ? '买入' : '卖出'}价格`)
       return
     }
     if (quantity === 0) {
-      Toast.message(`请输入${buyOrSell ? '买入' : '卖出'}数量`)
+      Toast.message(`请输入正确的${buyOrSell ? '买入' : '卖出'}数量`)
       return
     }
 
@@ -242,7 +231,8 @@ class DelegateShelves extends Component {
             minimumValue={0.000000000}
             maximumValue={amountVisibleCurrency}
             onValueChange={(value) => {
-              dispatch(actions.textInputDelegateUpdate({ price, quantity: value, amount }))
+              const { p, q, a } = this.getAmount(price, value, homeRoseSelected)
+              dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
             }}
           />
 
@@ -314,14 +304,8 @@ class DelegateShelves extends Component {
               type={common.sell}
               dataSource={this.shelvesSellDS(shelvesSell)}
               rowPress={(rd) => {
-                const p = rd.price
-                const temp = common.bigNumber.multipliedBy(p, quantity)
-                const a = common.toFix6(temp)
-                dispatch(actions.textInputDelegateUpdate({
-                  price: p,
-                  quantity,
-                  amount: Number(a),
-                }))
+                const { p, q, a } = this.getAmount(rd.price, quantity, homeRoseSelected)
+                dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
               }}
             />
           </View>
@@ -334,14 +318,8 @@ class DelegateShelves extends Component {
               type={common.buy}
               dataSource={this.shelvesBuyDS(shelvesBuy)}
               rowPress={(rd) => {
-                const p = rd.price
-                const temp = common.bigNumber.multipliedBy(p, quantity)
-                const a = common.toFix6(temp)
-                dispatch(actions.textInputDelegateUpdate({
-                  price: p,
-                  quantity,
-                  amount: Number(a),
-                }))
+                const { p, q, a } = this.getAmount(rd.price, quantity, homeRoseSelected)
+                dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
               }}
             />
           </View>
