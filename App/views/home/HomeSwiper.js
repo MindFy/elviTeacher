@@ -82,6 +82,7 @@ export default class HomeSwiper extends Component {
             <Swiper
               style={styles.swiper}
               showsButtons={false}
+              autoplay
               dotStyle={styles.dot}
               activeDotStyle={styles.dot}
               dotColor={common.borderColor}
