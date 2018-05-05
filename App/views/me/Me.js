@@ -76,30 +76,8 @@ class Me extends Component {
             // 清除页面数据
             dispatch(actions.findUserUpdate(undefined))
             dispatch(actions.findAssetListUpdate({
-              asset: [
-                {
-                  amount: 0,
-                  freezed: 0,
-                  id: 1,
-                  rechargeaddr: '',
-                  token: { id: 1, name: 'TK' },
-                },
-                {
-                  amount: 0,
-                  freezed: 0,
-                  id: 2,
-                  rechargeaddr: '',
-                  token: { id: 2, name: 'BTC' },
-                },
-                {
-                  amount: 0,
-                  freezed: 0,
-                  id: 3,
-                  rechargeaddr: '',
-                  token: { id: 3, name: 'CNYT' },
-                },
-              ],
-              amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
+              asset: [],
+              amountVisible: undefined,
             }))
             // 返回登录页
             this.navigateLogin()

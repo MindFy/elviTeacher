@@ -55,7 +55,7 @@ ws.addEventListener('message', (event) => {
   }
   if (dataParse.data.delegates) {
     const type = common.ws.delegates
-    const result = dataParse.data.delegates
+    const result = dataParse.data
     DeviceEventEmitter.emit(common.listenerNoti, type, result)
   }
 })

@@ -30,59 +30,104 @@ class DelegateShelves extends Component {
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, price, quantity, homeRoseSelected } = this.props
+    const { dispatch, price, quantity } = this.props
 
     if (tag === 'price') {
-      const { p, q, a } = this.getAmount(text, quantity, homeRoseSelected)
+      const { p, q, a } = this.getAmount(text, quantity)
       dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
     } else if (tag === 'quantity') {
-      const { p, q, a } = this.getAmount(price, text, homeRoseSelected)
+      const { p, q, a } = this.getAmount(price, text)
       dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
     }
   }
 
   // 币币对小数规则
-  getAmount(price, quantity, homeRoseSelected) {
-    let p
-    let q
-    let a
-    if (homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
-                      && homeRoseSelected.currency.name === common.token.CNYT) {
+  getAmount(price, quantity, amount) {
+    const { homeRoseSelected } = this.props
+    let p = isNaN(Number(price)) ? 0 : Number(price)
+    let q = isNaN(Number(quantity)) ? 0 : Number(quantity)
+    let a = isNaN(Number(amount)) ? 0 : Number(amount)
+
+    if (
+      ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.TK))
+    ) {
       // p:2 q:4 a:6
       p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
       p = common.toFix2(p)
       p = isNaN(Number(p)) ? 0 : Number(p)
-      q = `${quantity}`
-      q = isNaN(Number(q)) ? 0 : Number(q)
-      q = common.toFix4(q)
-      q = isNaN(Number(q)) ? 0 : Number(q)
-      a = common.bigNumber.multipliedBy(p, q)
-      a = Number(common.toFix6(a))
+      if (amount) {
+        a = Number(common.toFix6(amount))
+        q = common.bigNumber.dividedBy(a, p)
+        q = Number(common.toFix4(q))
+      } else {
+        q = `${quantity}`
+        q = isNaN(Number(q)) ? 0 : Number(q)
+        q = common.toFix4(q)
+        q = isNaN(Number(q)) ? 0 : Number(q)
+        a = common.bigNumber.multipliedBy(p, q)
+        a = Number(common.toFix6(a))
+      }
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
-                             && homeRoseSelected.currency.name === common.token.CNYT) {
+      && homeRoseSelected.currency.name === common.token.CNYT) {
       // p:4 q:0 a:4
       p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
       p = common.toFix4(p)
       p = isNaN(Number(p)) ? 0 : Number(p)
-      q = `${quantity}`
-      q = isNaN(Number(q)) ? 0 : Number(Number(q).toFixed(0))
-      a = common.bigNumber.multipliedBy(p, q)
-      a = Number(common.toFix4(a))
+      if (amount) {
+        a = Number(common.toFix4(amount))
+        q = common.bigNumber.dividedBy(a, p)
+        q = Number(Number(q).toFixed(0))
+      } else {
+        q = `${quantity}`
+        q = isNaN(Number(q)) ? 0 : Number(Number(q).toFixed(0))
+        a = common.bigNumber.multipliedBy(p, q)
+        a = Number(common.toFix4(a))
+      }
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
-                             && homeRoseSelected.currency.name === common.token.BTC) {
+      && homeRoseSelected.currency.name === common.token.BTC) {
       // p:6 q:4 a:8
       p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
       p = common.toFix6(p)
       p = isNaN(Number(p)) ? 0 : Number(p)
-      q = `${quantity}`
-      q = isNaN(Number(q)) ? 0 : Number(q)
-      q = common.toFix4(q)
-      q = isNaN(Number(q)) ? 0 : Number(q)
-      a = common.bigNumber.multipliedBy(p, q)
-      a = Number(common.toFix8(a))
+      if (amount) {
+        a = Number(common.toFix8(amount))
+        q = common.bigNumber.dividedBy(a, p)
+        q = Number(common.toFix4(q))
+      } else {
+        q = `${quantity}`
+        q = isNaN(Number(q)) ? 0 : Number(q)
+        q = common.toFix4(q)
+        q = isNaN(Number(q)) ? 0 : Number(q)
+        a = common.bigNumber.multipliedBy(p, q)
+        a = Number(common.toFix8(a))
+      }
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:6 q:4 a:6
+      p = `${price}`
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      p = common.toFix6(p)
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      if (amount) {
+        a = Number(common.toFix8(amount))
+        q = common.bigNumber.dividedBy(a, p)
+        q = Number(common.toFix4(q))
+      } else {
+        q = `${quantity}`
+        q = isNaN(Number(q)) ? 0 : Number(q)
+        q = common.toFix4(q)
+        q = isNaN(Number(q)) ? 0 : Number(q)
+        a = common.bigNumber.multipliedBy(p, q)
+        a = Number(common.toFix8(a))
+      }
     }
 
     return { p, q, a }
@@ -153,18 +198,45 @@ class DelegateShelves extends Component {
     } = this.props
     let goodsName = ''
     let currencyName = ''
-    let amountVisibleCurrency = 0
+    let amountVisibleTitle = ''
+    let maximumValueSlider = 0
+    let currentVisible = 0
+    let percentSlider = 0
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
-      const currencyId = homeRoseSelected.currency.id
-      if (currencyId === 1) {
-        amountVisibleCurrency = amountVisible.TK
-      } else if (currencyId === 2) {
-        amountVisibleCurrency = amountVisible.BTC
-      } else if (currencyId === 3) {
-        amountVisibleCurrency = amountVisible.CNYT
+      if (amountVisible) {
+        if (buyOrSell) {
+          currentVisible = amountVisible[currencyName] ? amountVisible[currencyName] : 0
+          maximumValueSlider = price === 0 ? 0 : 1
+          amountVisibleTitle = `${currentVisible} ${currencyName}`
+        } else {
+          currentVisible = amountVisible[goodsName] ? amountVisible[goodsName] : 0
+          maximumValueSlider = currentVisible === 0 ? 0 : 1
+          amountVisibleTitle = `${currentVisible} ${goodsName}`
+        }
       }
+    }
+    if (currentVisible === 0) {
+      percentSlider = 0
+    } else if (buyOrSell) {
+      let temp = amount / currentVisible
+      if (common.bigNumber.lt(temp, 0.01) && common.bigNumber.gt(temp, 0)) {
+        temp = 0.01
+      }
+      if (common.bigNumber.lt(temp, 1) && common.bigNumber.gt(temp, 0.99)) {
+        temp = 0.99
+      }
+      percentSlider = temp
+    } else {
+      let temp = quantity / currentVisible
+      if (common.bigNumber.lt(temp, 0.01) && common.bigNumber.gt(temp, 0)) {
+        temp = 0.01
+      }
+      if (common.bigNumber.lt(temp, 1) && common.bigNumber.gt(temp, 0.99)) {
+        temp = 0.99
+      }
+      percentSlider = temp
     }
 
     return (
@@ -235,12 +307,18 @@ class DelegateShelves extends Component {
               marginLeft: common.margin10,
               marginRight: common.margin10 / 2,
             }}
-            sliderValue={quantity}
-            minimumValue={0.000000000}
-            maximumValue={amountVisibleCurrency}
-            onValueChange={(value) => {
-              const { p, q, a } = this.getAmount(price, value, homeRoseSelected)
-              dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
+            minimumValue={0}
+            maximumValue={maximumValueSlider}
+            percentSlider={percentSlider}
+            onValueChange={(percent) => {
+              const temp = currentVisible * percent
+              if (buyOrSell) {
+                const { p, q, a } = this.getAmount(price, quantity, temp)
+                dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
+              } else {
+                const { p, q, a } = this.getAmount(price, temp)
+                dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
+              }
             }}
           />
 
@@ -268,7 +346,7 @@ class DelegateShelves extends Component {
               color: common.textColor,
               fontSize: common.font10,
             }}
-            >{`${amountVisibleCurrency} ${currencyName}`}</Text>
+            >{amountVisibleTitle}</Text>
           </View>
 
           <TouchableOpacity
@@ -312,7 +390,7 @@ class DelegateShelves extends Component {
               type={common.sell}
               dataSource={this.shelvesSellDS(shelvesSell)}
               rowPress={(rd) => {
-                const { p, q, a } = this.getAmount(rd.price, quantity, homeRoseSelected)
+                const { p, q, a } = this.getAmount(rd.price, quantity)
                 dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
               }}
             />
@@ -326,7 +404,7 @@ class DelegateShelves extends Component {
               type={common.buy}
               dataSource={this.shelvesBuyDS(shelvesBuy)}
               rowPress={(rd) => {
-                const { p, q, a } = this.getAmount(rd.price, quantity, homeRoseSelected)
+                const { p, q, a } = this.getAmount(rd.price, quantity)
                 dispatch(actions.textInputDelegateUpdate({ price: p, quantity: q, amount: a }))
               }}
             />

@@ -53,6 +53,7 @@ const common = {
     BTC: 'BTC',
     CNYT: 'CNYT',
     CNY: 'CNY',
+    ETH: 'ETH',
   },
 
   legalDeal: {
@@ -129,6 +130,7 @@ const common = {
   h5: 5 / w * sw,
   h13: 13 / w * sw, // 首页详情页面中向上箭头高度
   h14_5: 14.5 / w * sw, // 交易五档文字高度
+  h15: 15 / w * sw,
   h20: 20 / w * sw,
   h30: 30 / w * sw,
   h32: 32 / w * sw,

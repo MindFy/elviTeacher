@@ -7,10 +7,13 @@ import {
   ListView,
   StatusBar,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
 import BalanceCell from './BalanceCell'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Balance extends Component {
   static navigationOptions(props) {
@@ -64,7 +67,7 @@ class Balance extends Component {
   }
 
   render() {
-    const { asset, user, navigation } = this.props
+    const { asset, user, navigation, dispatch, findAssetListVisible } = this.props
     return (
       <View
         style={{
@@ -75,7 +78,22 @@ class Balance extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => {
+                if (user) {
+                  dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+                }
+              }}
+              refreshing={findAssetListVisible}
+              colors={[common.textColor]}
+              progressBackgroundColor={common.navBgColor}
+              progressViewOffset={0}
+              tintColor={common.textColor}
+            />
+          }
+        >
           <View
             style={{
               marginTop: common.margin20,
@@ -174,15 +192,24 @@ class Balance extends Component {
             </View>
           </View>
 
-          <ListView
-            style={{
-              marginTop: common.margin10,
-            }}
-            dataSource={this.dataSource(asset)}
-            renderRow={rd => this.renderRow(rd)}
-            enableEmptySections
-            removeClippedSubviews={false}
-          />
+          {
+            user
+              ? <ListView
+                style={{
+                  marginTop: common.margin10,
+                }}
+                dataSource={this.dataSource(asset)}
+                renderRow={rd => this.renderRow(rd)}
+                enableEmptySections
+                removeClippedSubviews={false}
+              />
+              : <BalanceCell
+                leftImageSource={require('../../assets/111.png')}
+                title={common.token.BTC}
+                detail={0}
+              />
+
+          }
 
         </ScrollView>
       </View>
@@ -193,7 +220,9 @@ class Balance extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
+
     asset: store.asset.asset,
+    findAssetListVisible: store.asset.findAssetListVisible,
   }
 }
 

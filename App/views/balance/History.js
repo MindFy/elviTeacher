@@ -164,7 +164,6 @@ class History extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
-    asset: store.asset.asset,
     paymentRecharge: store.payment.paymentRecharge,
     paymentWithdraw: store.payment.paymentWithdraw,
     rechargeOrWithdraw: store.payment.rechargeOrWithdraw,

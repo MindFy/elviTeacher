@@ -3,9 +3,6 @@ import {
 } from 'redux-saga/effects'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
-import {
-  common,
-} from '../constants/common'
 
 /* 创建充值地址,触发时创建，减少浪费 */
 export function* createAddress() {
@@ -32,18 +29,12 @@ export function* findAssetList() {
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
       const findAsset = response.result.data.find_asset
-      const amountVisible = { TK: 0, BTC: 0, CNYT: 0 }
+      const amountVisible = findAsset.length ? {} : undefined
       for (let i = 0; i < findAsset.length; i++) {
         const element = findAsset[i]
-        if (element.token.id === 1) {
-          amountVisible.TK = common.bigNumber.minus(element.amount, element.freezed)
-        } else if (element.token.id === 2) {
-          amountVisible.BTC = common.bigNumber.minus(element.amount, element.freezed)
-        } else if (element.token.id === 3) {
-          amountVisible.CNYT = common.bigNumber.minus(element.amount, element.freezed)
-        }
+        amountVisible[element.token.name] = element.amount
       }
-      yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, find_asset: findAsset, amountVisible })
+      yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, findAsset, amountVisible })
     } else {
       yield put({ type: constants.FIND_ASSET_LIST_FAILED, response })
     }

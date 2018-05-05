@@ -1,30 +1,8 @@
 import * as constants from '../constants/index'
 
 const initialState = {
-  asset: [
-    {
-      amount: 0,
-      freezed: 0,
-      id: 1,
-      rechargeaddr: '',
-      token: { id: 1, name: 'TK' },
-    },
-    {
-      amount: 0,
-      freezed: 0,
-      id: 2,
-      rechargeaddr: '',
-      token: { id: 2, name: 'BTC' },
-    },
-    {
-      amount: 0,
-      freezed: 0,
-      id: 3,
-      rechargeaddr: '',
-      token: { id: 3, name: 'CNYT' },
-    },
-  ],
-  amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
+  asset: [],
+  amountVisible: undefined,
 
   createAddress: '',
 
@@ -82,11 +60,24 @@ export default function asset(state = initialState, action) {
         getAssetsResponse: action.response,
       }
       break
+    case constants.FIND_ASSET_LIST_REQUEST:
+      nextState = {
+        ...state,
+        findAssetListVisible: true,
+      }
+      break
     case constants.FIND_ASSET_LIST_SUCCEED:
       nextState = {
         ...state,
-        asset: action.find_asset.length ? action.find_asset : state.asset,
+        asset: action.findAsset,
         amountVisible: action.amountVisible,
+        findAssetListVisible: false,
+      }
+      break
+    case constants.FIND_ASSET_LIST_FAILED:
+      nextState = {
+        ...state,
+        findAssetListVisible: false,
       }
       break
 

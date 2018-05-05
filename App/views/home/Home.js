@@ -21,7 +21,6 @@ import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
-// import * as ws from '../../websocket/ws'
 
 class Home extends Component {
   constructor() {
@@ -54,30 +53,8 @@ class Home extends Component {
             if (!error) {
               dispatch(actions.findUserUpdate(undefined))
               dispatch(actions.findAssetListUpdate({
-                asset: [
-                  {
-                    amount: 0,
-                    freezed: 0,
-                    id: 1,
-                    rechargeaddr: '',
-                    token: { id: 1, name: 'TK' },
-                  },
-                  {
-                    amount: 0,
-                    freezed: 0,
-                    id: 2,
-                    rechargeaddr: '',
-                    token: { id: 2, name: 'BTC' },
-                  },
-                  {
-                    amount: 0,
-                    freezed: 0,
-                    id: 3,
-                    rechargeaddr: '',
-                    token: { id: 3, name: 'CNYT' },
-                  },
-                ],
-                amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
+                asset: [],
+                amountVisible: undefined,
               }))
             }
           })
@@ -89,6 +66,9 @@ class Home extends Component {
           break
 
         case common.ws.handicap:
+          if (this.props.user) {
+            dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
+          }
           dispatch(actions.wsGetShelvesUpdate(resp))
           break
         case common.ws.market:
@@ -98,7 +78,9 @@ class Home extends Component {
           dispatch(actions.wsDealsUpdate(resp))
           break
         case common.ws.delegates:
-          dispatch(actions.wsDelegatesCurrentUpdate(resp))
+          if (resp.userid) {
+            dispatch(actions.wsDelegatesCurrentUpdate(resp.delegates))
+          }
           break
 
         default:

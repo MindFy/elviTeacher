@@ -34,6 +34,7 @@ import {
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
+  skipUpdate,
 } from './delegate'
 import {
   legalDealCancel,
@@ -114,6 +115,7 @@ const actions = {
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
+  skipUpdate,
 
   legalDealCancel,
   confirmPay,

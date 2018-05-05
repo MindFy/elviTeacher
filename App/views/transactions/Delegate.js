@@ -88,6 +88,12 @@ class Delegate extends Component {
       dispatch(actions.currentOrHistoryUpdate({
         currentOrHistory: common.delegate.current,
       }))
+      dispatch(actions.skipUpdate({
+        skipCurrent: 0,
+        skipHistory: 0,
+        refreshStateCurrent: RefreshState.Idle,
+        refreshStateHistory: RefreshState.Idle,
+      }))
     }
     this.listener.remove()
   }

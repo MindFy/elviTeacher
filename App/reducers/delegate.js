@@ -214,6 +214,15 @@ export default function delegate(state = initialState, action) {
         amount: action.data.amount,
       }
       break
+    case constants.SKIP_UPDATE:
+      nextState = {
+        ...state,
+        skipCurrent: action.data.skipCurrent,
+        skipHistory: action.data.skipHistory,
+        refreshStateCurrent: action.data.refreshStateCurrent,
+        refreshStateHistory: action.data.skipCurrent,
+      }
+      break
 
     case constants.WS_GET_SHELVES_UPDATE:
       nextState = {
