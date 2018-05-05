@@ -27,6 +27,8 @@ ws.addEventListener('message', (event) => {
   const { data } = event
   const dataParse = JSON.parse(data)
   // console.log('ws message----------->', dataParse)
+  if (!dataParse.data) return
+
   if (dataParse.data.handicap) {
     const type = common.ws.handicap
     const handicap = dataParse.data.handicap

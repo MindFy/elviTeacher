@@ -49,9 +49,13 @@ class DelegateShelves extends Component {
     if (homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
                       && homeRoseSelected.currency.name === common.token.CNYT) {
       // p:2 q:4 a:6
-      p = common.toFix2(price)
+      p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
-      q = common.toFix4(quantity)
+      p = common.toFix2(p)
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      q = `${quantity}`
+      q = isNaN(Number(q)) ? 0 : Number(q)
+      q = common.toFix4(q)
       q = isNaN(Number(q)) ? 0 : Number(q)
       a = common.bigNumber.multipliedBy(p, q)
       a = Number(common.toFix6(a))
@@ -69,9 +73,13 @@ class DelegateShelves extends Component {
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
                              && homeRoseSelected.currency.name === common.token.BTC) {
       // p:6 q:4 a:8
-      p = common.toFix6(price)
+      p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
-      q = common.toFix4(quantity)
+      p = common.toFix6(p)
+      p = isNaN(Number(p)) ? 0 : Number(p)
+      q = `${quantity}`
+      q = isNaN(Number(q)) ? 0 : Number(q)
+      q = common.toFix4(q)
       q = isNaN(Number(q)) ? 0 : Number(q)
       a = common.bigNumber.multipliedBy(p, q)
       a = Number(common.toFix8(a))
