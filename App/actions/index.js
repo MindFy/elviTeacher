@@ -81,6 +81,7 @@ import {
   kLineOrDepthUpdate,
   averagePriceOrPriceUpdate,
   dealledOrQuantityUpdate,
+  cashAccountUpdate,
 } from './ui'
 
 const actions = {
@@ -160,5 +161,6 @@ const actions = {
   kLineOrDepthUpdate,
   averagePriceOrPriceUpdate,
   dealledOrQuantityUpdate,
+  cashAccountUpdate,
 }
 export default actions

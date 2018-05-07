@@ -27,3 +27,10 @@ export function dealledOrQuantityUpdate(data) {
     data,
   }
 }
+
+export function cashAccountUpdate(data) {
+  return {
+    type: constants.CASH_ACCOUNT_UPDATE,
+    data,
+  }
+}

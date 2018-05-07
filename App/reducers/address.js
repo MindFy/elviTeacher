@@ -50,6 +50,7 @@ export default function address(state = initialState, action) {
         ...state,
         findAddressVisible: false,
         findAddressResponse: action.response,
+        address: action.response.result.data.find_address,
       }
       break
     case constants.FIND_ADDRESS_FAILED:

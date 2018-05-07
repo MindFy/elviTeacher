@@ -8,6 +8,8 @@ const initialState = {
   kLineOrDepth: common.ui.kLine,
   averagePriceOrPrice: common.ui.averagePrice,
   dealledOrQuantity: common.ui.dealled,
+  cashAccount: 0,
+  currentAddress: '',
 }
 
 export default function ui(state = initialState, action) {
@@ -36,6 +38,13 @@ export default function ui(state = initialState, action) {
       nextState = {
         ...state,
         dealledOrQuantity: action.data,
+      }
+      break
+    case constants.CASH_ACCOUNT_UPDATE:
+      nextState = {
+        ...state,
+        cashAccount: action.data.cashAccount,
+        currentAddress: action.data.currentAddress,
       }
       break
     default:

@@ -9,7 +9,11 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from 'react-native'
+import {
+  ActionSheet,
+} from 'teaset'
 import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
@@ -45,15 +49,17 @@ class Cash extends Component {
         ),
     }
   }
-  constructor(props) {
-    super(props)
-    const { dispatch } = props
+  constructor() {
+    super()
 
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+  }
 
-    dispatch(actions.findAddress(schemas.findAddress()))
+  componentDidMount() {
+    const { dispatch, user } = this.props
+    dispatch(actions.findAddress(schemas.findAddress(user.id)))
   }
 
   componentWillUnmount() {
@@ -64,13 +70,47 @@ class Cash extends Component {
     }))
   }
 
+  onChange(event, tag) {
+    const { text } = event.nativeEvent
+    const { dispatch, cashAccount, currentAddress } = this.props
+
+    if (tag === 'cashAccount') {
+      const temp = isNaN(Number(text)) ? 0 : Number(text)
+      dispatch(actions.cashAccountUpdate({ cashAccount: temp, currentAddress }))
+    } else if (tag === 'currentAddress') {
+      dispatch(actions.cashAccountUpdate({ cashAccount, currentAddress: text }))
+    }
+  }
+
+  selectAddress(element) {
+    const { dispatch, cashAccount } = this.props
+    dispatch(actions.cashAccountUpdate({
+      cashAccount,
+      currentAddress: element.withdrawaddr,
+    }))
+  }
+
+  showActionSheets() {
+    const { address } = this.props
+    const items = []
+    for (let i = 0; i < address.length; i++) {
+      const element = address[i]
+      items.push({
+        title: element.withdrawaddr,
+        onPress: () => this.selectAddress(element),
+      })
+    }
+    items.push({
+      title: '+添加新地址',
+      onPress: () => this.addAddressPress(),
+    })
+    const cancelItem = { title: '取消' }
+    ActionSheet.show(items, cancelItem)
+  }
+
   addAddressPress() {
     const { selectedToken } = this.props
     this.props.navigation.navigate('AddAddress', { selectedToken })
-  }
-
-  leftImagePress() {
-    this.props.navigation.goBack()
   }
 
   renderRow(rd) {
@@ -100,8 +140,15 @@ class Cash extends Component {
   }
 
   renderBottomView() {
-    const { selectedToken, address } = this.props
+    const { selectedToken, dispatch, cashAccount, currentAddress } = this.props
     if (selectedToken !== common.selectedTokenDefault) {
+      let charge = 0
+      if (selectedToken.token.name === common.token.BTC) {
+        charge = common.payment.charge.BTC
+      } else if (selectedToken.token.name === common.token.ETH) {
+        charge = common.payment.charge.ETH
+      }
+      const actualAccount = common.bigNumber.multipliedBy(cashAccount, 1 - charge)
       return (
         <View>
           <Text style={{
@@ -118,66 +165,13 @@ class Cash extends Component {
             color: 'white',
           }}
           >{selectedToken.amount}</Text>
-          <TextInput
-            style={{
-              marginTop: common.margin35,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h35,
-              borderWidth: 1,
-              borderRadius: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.navBgColor,
-              justifyContent: 'center',
-              textAlign: 'center',
-              fontSize: common.font12,
-              color: 'white',
-            }}
-            placeholder="提现金额"
-            placeholderTextColor={common.placeholderColor}
-            keyboardType={'number-pad'}
-          />
-
-          <View
-            style={{
-              marginTop: common.margin5,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                color: common.textColor,
-                fontSize: common.font12,
-                alignSelf: 'center',
-              }}
-            >{`手续费：88${selectedToken.token.name}`}</Text>
-            <Text
-              style={{
-                marginRight: common.margin10,
-                marginLeft: common.margin10,
-                color: common.textColor,
-                fontSize: common.font12,
-                alignSelf: 'center',
-              }}
-            >{`实际到账：88${selectedToken.token.name}`}</Text>
-          </View>
-
-          <ListView
-            dataSource={this.dataSource(address)}
-            renderRow={rd => this.renderRow(rd)}
-            enableEmptySections
-            removeClippedSubviews={false}
-          />
           {
-            selectedToken.id === 2 ?
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity}
-                onPress={() => this.addAddressPress()}
-              >
-                <View
+            (selectedToken.token.name === common.token.BTC
+              || selectedToken.token.name === common.token.ETH)
+              ? <View>
+                <TextInput
                   style={{
+                    marginTop: common.margin35,
                     marginLeft: common.margin10,
                     marginRight: common.margin10,
                     height: common.h35,
@@ -186,19 +180,135 @@ class Cash extends Component {
                     borderColor: common.borderColor,
                     backgroundColor: common.navBgColor,
                     justifyContent: 'center',
+                    textAlign: 'center',
+                    fontSize: common.font12,
+                    color: 'white',
+                  }}
+                  placeholder="提现金额"
+                  placeholderTextColor={common.placeholderColor}
+                  value={cashAccount === 0 ? '' : `${cashAccount}`}
+                  onChange={e => this.onChange(e, 'cashAccount')}
+                />
+
+                <View
+                  style={{
+                    marginTop: common.margin5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Text
+                    style={{
+                      marginLeft: common.margin10,
+                      color: common.textColor,
+                      fontSize: common.font12,
+                      alignSelf: 'center',
+                    }}
+                  >{`手续费：${charge}${selectedToken.token.name}`}</Text>
+                  <Text
+                    style={{
+                      marginRight: common.margin10,
+                      marginLeft: common.margin10,
+                      color: common.textColor,
+                      fontSize: common.font12,
+                      alignSelf: 'center',
+                    }}
+                  >{`实际到账：${actualAccount}${selectedToken.token.name}`}</Text>
+                </View>
+
+                <View
+                  style={{
+                    marginTop: common.margin30,
+                    marginLeft: common.margin10,
+                    marginRight: common.margin10,
+                    borderColor: common.borderColor,
+                    borderWidth: 1,
+                    borderRadius: 1,
+                    backgroundColor: common.navBgColor,
+                    height: common.h35,
+                    justifyContent: 'center',
+                  }}
+                >
+                  <TextInput
+                    style={{
+                      fontSize: common.font12,
+                      textAlign: 'center',
+                      color: 'white',
+                    }}
+                    placeholder={'地址'}
+                    placeholderTextColor={common.placeholderColor}
+                    value={currentAddress}
+                    onChange={e => this.onChange(e, 'currentAddress')}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      position: 'absolute',
+                      right: common.margin10,
+                      alignSelf: 'center',
+                    }}
+                    activeOpacity={common.activeOpacity}
+                    onPress={() => this.showActionSheets()}
+                  >
+                    <Image
+                      style={{
+                        width: common.w20,
+                        height: common.w20,
+                      }}
+                      source={require('../../assets/二维码.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity
+                  style={{
+                    marginTop: common.margin40,
+                    marginLeft: common.margin10,
+                    marginRight: common.margin10,
+                    height: common.h40,
+                    backgroundColor: common.navBgColor,
+                    justifyContent: 'center',
+                  }}
+                  activeOpacity={common.activeOpacity}
+                  onPress={() => {
+                    dispatch(actions.withdraw({
+                      token_id: selectedToken.token.id,
+                      amount: cashAccount,
+                      toaddr: currentAddress,
+                    }))
                   }}
                 >
                   <Text
                     style={{
                       color: common.btnTextColor,
-                      fontSize: common.font12,
+                      fontSize: common.font14,
                       alignSelf: 'center',
                     }}
-                  >添加新地址</Text>
-                </View>
-              </TouchableOpacity> : null
+                  >提现</Text>
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    marginTop: common.margin10,
+                    marginLeft: common.margin10,
+                    marginRight: common.margin10,
+                    color: common.textColor,
+                    fontSize: common.font12,
+                    lineHeight: common.h15,
+                  }}
+                >温馨提示:</Text>
+                <Text
+                  style={{
+                    marginTop: common.margin10,
+                    marginLeft: common.margin10,
+                    marginRight: common.margin10,
+                    color: common.textColor,
+                    fontSize: common.font10,
+                    lineHeight: common.h15,
+                  }}
+                >{`1. 最小提币数量为：${charge} ${selectedToken.token.name}
+2. 最大提币数量为：未身份认证：单日限1 ${selectedToken.token.name}或等额其他币种， 已身份认证：单日限50 ${selectedToken.token.name}或等额其他币种
+3. 为保障资金安全，请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
+              </View> : null
           }
-
         </View>
       )
     }
@@ -207,11 +317,12 @@ class Cash extends Component {
   render() {
     const { dispatch, selectedToken, asset, tokenListSelected } = this.props
     return (
-      <View
+      <KeyboardAvoidingView
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
         }}
+        behavior="padding"
       >
         <StatusBar barStyle={'light-content'} />
         <ScrollView>
@@ -225,18 +336,23 @@ class Cash extends Component {
 
           {this.renderBottomView()}
         </ScrollView>
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
 
 function mapStateToProps(store) {
   return {
+    user: store.user.user,
+
     asset: store.asset.asset,
 
     address: store.address.address,
     selectedToken: store.address.selectedToken,
     tokenListSelected: store.address.tokenListSelected,
+
+    cashAccount: store.ui.cashAccount,
+    currentAddress: store.ui.currentAddress,
   }
 }
 

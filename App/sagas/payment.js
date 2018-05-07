@@ -72,7 +72,25 @@ export function* withdraw() {
   while (true) {
     const request = yield take(constants.WITH_DRAW_REQUEST)
     const response = yield call(api.withdraw, request.data)
-    if (response.success) yield put({ type: constants.WITH_DRAW_SUCCEED, response })
-    else yield put({ type: constants.WITH_DRAW_FAILED, response })
+    if (response.success) {
+      yield put({ type: constants.WITH_DRAW_SUCCEED, response })
+    } else {
+      yield put({ type: constants.WITH_DRAW_FAILED, response })
+      if (response.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else if (response.error.code === 4000601) {
+        Toast.fail('提币失败')
+      } else if (response.error.code === 4000602) {
+        Toast.fail('提币数量太小')
+      } else if (response.error.code === 4000603) {
+        Toast.fail('仅支持BTC、ETH提币')
+      } else if (response.error.code === 4000604) {
+        Toast.fail('今日提币已达限额')
+      } else if (response.error.code === 4000606) {
+        Toast.fail('提币失败, 地址错误')
+      } else {
+        Toast.fail('提币失败')
+      }
+    }
   }
 }

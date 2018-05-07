@@ -27,6 +27,10 @@ const common = {
   refuse: 'refuse',
 
   payment: {
+    charge: {
+      BTC: 0.001,
+      ETH: 0.01,
+    },
     limitRecharge: 10,
     limitWithdraw: 10,
     recharge: 'recharge',
