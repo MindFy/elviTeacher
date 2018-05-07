@@ -193,6 +193,7 @@ class Home extends Component {
               tintColor={common.textColor}
             />
           }
+          showsVerticalScrollIndicator={false}
         >
           <HomeSwiper
             announcement={announcement}

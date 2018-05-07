@@ -65,13 +65,17 @@ class LegalDealDetail extends Component {
   componentWillUnmount() {
     const { dispatch, mobile, password, passwordAgain } = this.props
     dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
+    dispatch(actions.skipLegalDealUpdate({
+      skip: 0,
+      refreshState: RefreshState.Idle,
+    }))
     this.listener.remove()
   }
 
   onHeaderRefresh() {
     const { dispatch, user } = this.props
     if (user) {
-      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0),
+      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0, common.legalDeal.limit),
         RefreshState.HeaderRefreshing))
     }
   }
@@ -412,15 +416,17 @@ class LegalDealDetail extends Component {
         onHeaderRefresh={() => {
           if (refreshState !== RefreshState.NoMoreData
             || refreshState !== RefreshState.FooterRefreshing) {
-            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0),
-              RefreshState.HeaderRefreshing))
+            dispatch(actions.findLegalDeal(
+              schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
+              , RefreshState.HeaderRefreshing))
           }
         }}
         onFooterRefresh={() => {
           if (user && refreshState !== RefreshState.NoMoreData
             || refreshState !== RefreshState.HeaderRefreshing) {
-            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 10 * skip),
-              RefreshState.FooterRefreshing))
+            dispatch(actions.findLegalDeal(
+              schemas.findLegalDeal(user.id, common.legalDeal.limit * skip, common.legalDeal.limit)
+              , RefreshState.FooterRefreshing))
           }
         }}
         footerTextStyle={{
@@ -437,7 +443,6 @@ function mapStateToProps(store) {
     skip: store.legalDeal.skip,
     legalDeal: store.legalDeal.legalDeal,
     refreshState: store.legalDeal.refreshState,
-    findLegalDealVisible: store.legalDeal.findLegalDealVisible,
 
     user: store.user.user,
 

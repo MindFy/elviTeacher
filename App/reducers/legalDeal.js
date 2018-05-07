@@ -129,6 +129,13 @@ export default function legalDeal(state = initialState, action) {
         quantity: action.data.quantity,
       }
       break
+    case constants.SKIP_LEGAL_DEAL_UPDATE:
+      nextState = {
+        ...state,
+        skip: action.data.skip,
+        refreshState: action.data.refreshState,
+      }
+      break
     default:
       break
   }

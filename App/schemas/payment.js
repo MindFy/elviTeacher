@@ -1,8 +1,8 @@
-export default function findPaymentList(userId, type) {
+export default function findPaymentList(userId, type, skip, limit) {
   return `{
     find_payment(
-        skip: 0,
-        limit: 10,
+        skip: ${skip},
+        limit: ${limit},
         where: {
           user_id: ${userId},
           type: ${type}

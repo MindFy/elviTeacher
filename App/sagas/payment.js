@@ -19,7 +19,8 @@ export function* findPaymentListRecharge() {
     const request = yield take(constants.FIND_PAYMENT_LIST_RECHARGE_REQUEST)
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
-      yield put({ type: constants.FIND_PAYMENT_LIST_RECHARGE_SUCCEED, response })
+      const paymentRecharge = response.result.data.find_payment
+      yield put({ type: constants.FIND_PAYMENT_LIST_RECHARGE_SUCCEED, paymentRecharge })
     } else {
       yield put({ type: constants.FIND_PAYMENT_LIST_RECHARGE_FAILED, response })
     }
@@ -30,7 +31,8 @@ export function* findPaymentListWithdraw() {
     const request = yield take(constants.FIND_PAYMENT_LIST_WITH_DRAW_REQUEST)
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
-      yield put({ type: constants.FIND_PAYMENT_LIST_WITH_DRAW_SUCCEED, response })
+      const paymentWithdraw = response.result.data.find_payment
+      yield put({ type: constants.FIND_PAYMENT_LIST_WITH_DRAW_SUCCEED, paymentWithdraw })
     } else {
       yield put({ type: constants.FIND_PAYMENT_LIST_WITH_DRAW_FAILED, response })
     }

@@ -80,9 +80,9 @@ export function textInputDelegateUpdate(data) {
   }
 }
 
-export function skipUpdate(data) {
+export function skipDelegateUpdate(data) {
   return {
-    type: constants.SKIP_UPDATE,
+    type: constants.SKIP_DELEGATE_UPDATE,
     data,
   }
 }

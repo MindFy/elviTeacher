@@ -45,3 +45,10 @@ export function legalDealUpdate(data) {
     data,
   }
 }
+
+export function skipLegalDealUpdate(data) {
+  return {
+    type: constants.SKIP_LEGAL_DEAL_UPDATE,
+    data,
+  }
+}

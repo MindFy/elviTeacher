@@ -214,7 +214,7 @@ export default function delegate(state = initialState, action) {
         amount: action.data.amount,
       }
       break
-    case constants.SKIP_UPDATE:
+    case constants.SKIP_DELEGATE_UPDATE:
       nextState = {
         ...state,
         skipCurrent: action.data.skipCurrent,

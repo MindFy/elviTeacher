@@ -34,7 +34,7 @@ import {
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
-  skipUpdate,
+  skipDelegateUpdate,
 } from './delegate'
 import {
   legalDealCancel,
@@ -43,6 +43,7 @@ import {
   findLegalDeal,
   havedPay,
   legalDealUpdate,
+  skipLegalDealUpdate,
 } from './legalDeal'
 import {
   cancelWithdraw,
@@ -51,6 +52,7 @@ import {
   recharge,
   withdraw,
   rechargeOrWithdrawUpdate,
+  skipPaymentUpdate,
 } from './payment'
 import {
   checkVerificateCode,
@@ -115,7 +117,7 @@ const actions = {
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
-  skipUpdate,
+  skipDelegateUpdate,
 
   legalDealCancel,
   confirmPay,
@@ -123,6 +125,7 @@ const actions = {
   findLegalDeal,
   havedPay,
   legalDealUpdate,
+  skipLegalDealUpdate,
 
   cancelWithdraw,
   findPaymentListRecharge,
@@ -130,6 +133,7 @@ const actions = {
   recharge,
   withdraw,
   rechargeOrWithdrawUpdate,
+  skipPaymentUpdate,
 
   checkVerificateCode,
   getVerificateCode,

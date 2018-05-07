@@ -200,6 +200,7 @@ class Transactions extends Component {
             />
           }
           removeClippedSubviews={false}
+          showsVerticalScrollIndicator={false}
         >
           <DelegateShelves
             navigation={navigation}

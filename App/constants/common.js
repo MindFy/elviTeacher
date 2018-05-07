@@ -19,14 +19,20 @@ const common = {
   authenticationListenerNoti: 'authenticationListenerNoti',
   buy: 'buy',
   sell: 'sell',
-  recharge: 'recharge',
-  withdraw: 'withdraw',
   btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
 
   never: 'never',
   waiting: 'waiting',
   pass: 'pass',
   refuse: 'refuse',
+
+  payment: {
+    limitRecharge: 10,
+    limitWithdraw: 10,
+    recharge: 'recharge',
+    withdraw: 'withdraw',
+    legalDeal: 'legalDeal',
+  },
 
   delegate: {
     limtCurrent: 10,
@@ -57,6 +63,7 @@ const common = {
   },
 
   legalDeal: {
+    limit: 10,
     token: 'CNYT',
     status: {
       waitpay: 'waitpay',
@@ -69,6 +76,7 @@ const common = {
   selectionBar: {
     left: 'left',
     right: 'right',
+    third: 'third',
   },
 
   ui: {
