@@ -25,22 +25,25 @@ export default class HistoryList extends Component {
             style={{
               color: common.textColor,
               fontSize: common.font12,
-              width: '40%',
+              width: '38%',
             }}
           >时间</Text>
           <Text
             style={{
-              flex: 1,
               color: common.textColor,
               fontSize: common.font12,
+              width: '20%',
+              textAlign: 'center',
+              alignSelf: 'center',
             }}
           >币种</Text>
           <Text
             style={{
-              flex: 1,
               color: common.textColor,
               fontSize: common.font12,
+              width: '20%',
               textAlign: 'center',
+              alignSelf: 'center',
             }}
           >类型</Text>
           <Text
@@ -49,6 +52,7 @@ export default class HistoryList extends Component {
               color: common.textColor,
               fontSize: common.font12,
               textAlign: 'right',
+              alignSelf: 'center',
             }}
           >数量</Text>
         </View>
@@ -60,39 +64,51 @@ export default class HistoryList extends Component {
         marginLeft: common.margin15,
         marginRight: common.margin15,
         flexDirection: 'row',
-        justifyContent: 'space-between',
       }}
       >
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
+            width: '38%',
           }}
         >时间</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
+            width: '15%',
+            textAlign: 'center',
+            alignSelf: 'center',
           }}
         >币种</Text>
         <Text
           style={{
+            flex: 1,
             color: common.textColor,
             fontSize: common.font12,
+            textAlign: 'center',
+            alignSelf: 'center',
           }}
-        >{rechargeOrWithdraw === common.payment.legalDeal ? '类型' : '数量'}</Text>
+        >数量</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
+            width: '15%',
+            textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
+            alignSelf: 'center',
           }}
-        >{rechargeOrWithdraw === common.payment.legalDeal ? '数量' : '状态'}</Text>
+        >状态</Text>
         {
           rechargeOrWithdraw === common.payment.withdraw ?
             <Text
               style={{
                 color: common.textColor,
                 fontSize: common.font12,
+                width: '10%',
+                textAlign: 'right',
+                alignSelf: 'center',
               }}
             >操作</Text> : null
         }
@@ -101,7 +117,7 @@ export default class HistoryList extends Component {
   }
 
   renderItem(rd) {
-    const { rechargeOrWithdraw } = this.props
+    const { rechargeOrWithdraw, cancelWithdraw } = this.props
     if (rechargeOrWithdraw === common.payment.legalDeal) {
       const createdAt = common.dfFullDate(rd.createdAt)
       let direct = ''
@@ -125,24 +141,24 @@ export default class HistoryList extends Component {
             style={{
               color: common.textColor,
               fontSize: common.font12,
-              width: '40%',
+              width: '38%',
               alignSelf: 'center',
             }}
           >{createdAt}</Text>
           <Text
             style={{
-              flex: 1,
               color: common.textColor,
               fontSize: common.font12,
+              width: '20%',
+              textAlign: 'center',
               alignSelf: 'center',
-              // textAlign: 'center',
             }}
           >{common.legalDeal.token}</Text>
           <Text
             style={{
-              flex: 1,
               color: directColor,
               fontSize: common.font12,
+              width: '20%',
               alignSelf: 'center',
               textAlign: 'center',
             }}
@@ -161,49 +177,64 @@ export default class HistoryList extends Component {
     }
     const btnTitleColor = rd.status === '待审核' ? common.btnTextColor : common.placeholderColor
     const btnDisabled = rd.status !== '待审核'
+    const createdAt = common.dfFullDate(rd.createdAt)
     return (
       <View style={{
         marginTop: common.margin10,
         marginLeft: common.margin15,
         marginRight: common.margin15,
         flexDirection: 'row',
-        justifyContent: 'space-between',
       }}
       >
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
+            width: '38%',
           }}
-        >{rd.createdAt}</Text>
+        >{createdAt}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
+            width: '15%',
+            textAlign: 'center',
+            alignSelf: 'center',
           }}
         >{rd.token.name}</Text>
         <Text
           style={{
+            flex: 1,
             color: common.textColor,
             fontSize: common.font12,
+            textAlign: 'center',
+            alignSelf: 'center',
           }}
         >{rd.amount}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
+            width: '15%',
+            textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
+            alignSelf: 'center',
           }}
         >{rd.status}</Text>
         {
           rechargeOrWithdraw === common.payment.withdraw ?
             <TouchableOpacity
-              onPress={() => { }}
+              style={{
+                width: '10%',
+                alignSelf: 'center',
+              }}
+              onPress={() => cancelWithdraw(rd.id)}
               disabled={btnDisabled}
             >
               <Text
                 style={{
                   color: btnTitleColor,
                   fontSize: common.font12,
+                  textAlign: 'right',
                 }}
               >撤单</Text>
             </TouchableOpacity> : null

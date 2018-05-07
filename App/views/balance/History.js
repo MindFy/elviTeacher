@@ -50,10 +50,10 @@ class History extends Component {
 
     if (user) {
       dispatch(actions.findPaymentListRecharge(
-        schemas.findPaymentList(user.id, common.payment.recharge, 0, common.payment.limitRecharge)
+        schemas.findPaymentListRecharge(user.id, 0, common.payment.limitRecharge)
         , RefreshState.HeaderRefreshing))
       dispatch(actions.findPaymentListWithdraw(
-        schemas.findPaymentList(user.id, common.payment.withdraw, 0, common.payment.limitWithdraw)
+        schemas.findPaymentListWithdraw(user.id, 0, common.payment.limitWithdraw)
         , RefreshState.HeaderRefreshing))
       dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
         , RefreshState.HeaderRefreshing))
@@ -130,8 +130,8 @@ class History extends Component {
                   || refreshStateRecharge !== RefreshState.FooterRefreshing) {
                   if (user) {
                     dispatch(actions.findPaymentListRecharge(
-                      schemas.findPaymentList(
-                        user.id, common.payment.recharge, 0, common.payment.limitRecharge,
+                      schemas.findPaymentListRecharge(
+                        user.id, 0, common.payment.limitRecharge,
                       ), RefreshState.HeaderRefreshing))
                   }
                 }
@@ -141,9 +141,8 @@ class History extends Component {
                   || refreshStateRecharge !== RefreshState.HeaderRefreshing) {
                   if (user) {
                     dispatch(actions.findPaymentListRecharge(
-                      schemas.findPaymentList(
+                      schemas.findPaymentListRecharge(
                         user.id,
-                        common.payment.recharge,
                         skipRecharge * common.payment.limitRecharge,
                         common.payment.limitRecharge,
                       ), RefreshState.FooterRefreshing))
@@ -163,8 +162,8 @@ class History extends Component {
                   || refreshStateWithdraw !== RefreshState.FooterRefreshing) {
                   if (user) {
                     dispatch(actions.findPaymentListWithdraw(
-                      schemas.findPaymentList(
-                        user.id, common.payment.withdraw, 0, common.payment.limitWithdraw,
+                      schemas.findPaymentListWithdraw(
+                        user.id, 0, common.payment.limitWithdraw,
                       ), RefreshState.HeaderRefreshing))
                   }
                 }
@@ -174,14 +173,16 @@ class History extends Component {
                   || refreshStateWithdraw !== RefreshState.HeaderRefreshing) {
                   if (user) {
                     dispatch(actions.findPaymentListWithdraw(
-                      schemas.findPaymentList(
+                      schemas.findPaymentListWithdraw(
                         user.id,
-                        common.payment.withdraw,
                         skipWithdraw * common.payment.limitWithdraw,
                         common.payment.limitWithdraw,
                       ), RefreshState.FooterRefreshing))
                   }
                 }
+              }}
+              cancelWithdraw={(id) => {
+                dispatch(actions.cancelWithdraw({ id }))
               }}
             /> : null
         }
