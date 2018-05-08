@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -8,8 +9,9 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
+// import actions from '../../actions/index'
 
-export default class DelegateDrawer extends Component {
+class DelegateDrawer extends Component {
   componentDidMount() { }
 
   render() {
@@ -261,3 +263,13 @@ export default class DelegateDrawer extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    drawerOpen: store.ui.drawerOpen,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(DelegateDrawer)

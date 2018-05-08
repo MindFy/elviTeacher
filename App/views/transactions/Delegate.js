@@ -92,7 +92,12 @@ class Delegate extends Component {
     this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, (type) => {
       if (type === 'drawer') {
         const view = (
-          <DelegateDrawer />
+          <DelegateDrawer
+            close={() => {
+              this.drawer.close()
+              dispatch(actions.delegateDrawerUpdate({ drawerOpen: false }))
+            }}
+          />
         )
         this.drawer = Drawer.open(view, 'right')
         return
@@ -182,9 +187,10 @@ class Delegate extends Component {
               onFooterRefresh={() => {
                 if (refreshStateCurrent !== RefreshState.NoMoreData
                   || refreshStateCurrent !== RefreshState.HeaderRefreshing) {
-                  dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(user.id,
-                    common.delegate.limtCurrent * skipCurrent, common.delegate.limtCurrent),
-                  RefreshState.FooterRefreshing))
+                  dispatch(actions.findDelegateSelfCurrent(
+                    schemas.findDelegateSelfCurrent(user.id,
+                      common.delegate.limtCurrent * skipCurrent, common.delegate.limtCurrent)
+                    , RefreshState.FooterRefreshing))
                 }
               }}
             />
@@ -203,15 +209,16 @@ class Delegate extends Component {
               onFooterRefresh={() => {
                 if (refreshStateHistory !== RefreshState.NoMoreData
                   || refreshStateHistory !== RefreshState.HeaderRefreshing) {
-                  dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id,
-                    common.delegate.limtHistory * skipHistory, common.delegate.limtHistory),
-                  RefreshState.FooterRefreshing))
+                  dispatch(actions.findDelegateSelfHistory(
+                    schemas.findDelegateSelfHistory(user.id,
+                      common.delegate.limtHistory * skipHistory, common.delegate.limtHistory)
+                    , RefreshState.FooterRefreshing))
                 }
               }}
             />
         }
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             position: 'absolute',
             height: 40,
@@ -231,7 +238,7 @@ class Delegate extends Component {
           }}
         >
           <Text>666</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Spinner
           style={{
