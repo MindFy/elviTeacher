@@ -141,7 +141,7 @@ class DelegateShelves extends Component {
   }
 
   menuPress() {
-    const { dispatch, homeRose } = this.props
+    const { dispatch, homeRose, user } = this.props
     const items = []
     homeRose.forEach((element) => {
       items.push({
@@ -149,7 +149,7 @@ class DelegateShelves extends Component {
         onPress: () => {
           dispatch(actions.homeRoseSelectedUpdate(element))
           this.getUIData(element.goods.id, element.currency.id)
-          ws.onopen(element.goods.id, element.currency.id)
+          ws.onopen(element.goods.id, element.currency.id, user)
         },
       })
     })

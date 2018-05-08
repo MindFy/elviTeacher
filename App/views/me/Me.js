@@ -15,6 +15,7 @@ import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import ws from '../../websocket/ws'
 
 class Me extends Component {
   static navigationOptions() {
@@ -79,6 +80,10 @@ class Me extends Component {
               asset: [],
               amountVisible: undefined,
             }))
+            if (this.props.homeRoseSelected) {
+              ws.onopen(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id, undefined)
+            }
             // 返回登录页
             this.navigateLogin()
           }
@@ -194,6 +199,8 @@ function mapStateToProps(store) {
 
     logoutVisible: store.user.logoutVisible,
     logoutResponse: store.user.logoutResponse,
+
+    homeRoseSelected: store.dealstat.homeRoseSelected,
   }
 }
 

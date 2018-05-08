@@ -22,7 +22,7 @@ export default class HomeCell extends Component {
       rangeColor = common.greenColor
       dirImageSource = require('../../assets/箭头copy.png')
     }
-    
+
     return (
       <View
         style={{

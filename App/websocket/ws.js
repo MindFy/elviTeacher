@@ -10,10 +10,12 @@ import * as api from '../services/api'
 
 const ws = new ReconnectingWebSocket(api.ws)
 
-ws.onopen = (goodsId, currencyId) => {
-  // console.log('ws open-------------->', goodsId, currencyId)
+ws.onopen = (goodsId, currencyId, user) => {
+  const userid = user ? user.id : undefined
+  // console.log('ws open-------------->', goodsId, currencyId, userid)
   ws.send(JSON.stringify({
     act: 'on',
+    userid,
     ch: `channel_${goodsId}_${currencyId}`,
     timestamp: Date.now(),
   }))

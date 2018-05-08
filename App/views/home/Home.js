@@ -47,6 +47,10 @@ class Home extends Component {
             dispatch(actions.findUserUpdate(temp))
             dispatch(actions.findUser(schemas.findUser(temp.id)))
             dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
+            if (this.props.homeRoseSelected) {
+              ws.onopen(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id, temp)
+            }
           })
           break
         case constants.SYNC_FAILED:
@@ -64,6 +68,7 @@ class Home extends Component {
           dispatch(actions.getShelves({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          ws.onopen(resp.goods.id, resp.currency.id, this.props.user)
           break
 
         case common.ws.handicap:
@@ -102,7 +107,7 @@ class Home extends Component {
   }
 
   renderRow(rd) {
-    const { navigation, dispatch } = this.props
+    const { navigation, dispatch, user } = this.props
     return (
       <TouchableOpacity
         style={{
@@ -114,7 +119,7 @@ class Home extends Component {
         onPress={() => {
           dispatch(actions.homeRoseSelectedUpdate(rd))
           this.getUIData(rd.goods.id, rd.currency.id)
-          ws.onopen(rd.goods.id, rd.currency.id)
+          ws.onopen(rd.goods.id, rd.currency.id, user)
           navigation.navigate('Detail')
         }}
       >

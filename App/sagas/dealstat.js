@@ -9,7 +9,6 @@ import * as api from '../services/api'
 import {
   common,
 } from '../constants/common'
-import ws from '../websocket/ws'
 
 /* 获取交易中心的涨幅，包含：左上角以及顶上数据 */
 export default function* getRose() {
@@ -48,10 +47,9 @@ export default function* getRose() {
         }
       }
       homeRoseSelected = homeRoseSelectedTemp
-      ws.onopen(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
 
       if (rose.length) {
-        DeviceEventEmitter.emit(common.listenerNoti, (constants.GET_ROSE_SUCCEED, homeRoseSelected))
+        DeviceEventEmitter.emit(common.listenerNoti, constants.GET_ROSE_SUCCEED, homeRoseSelected)
       }
       yield put({ type: constants.GET_ROSE_SUCCEED, data: { rose, homeRose, homeRoseSelected } })
     } else {

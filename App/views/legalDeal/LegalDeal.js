@@ -245,7 +245,7 @@ class LegalDeal extends Component {
               fontSize: common.font14,
             }}
           >{`${
-            direct === common.buy ? '买入' : '卖出'
+              direct === common.buy ? '买入' : '卖出'
             }总计:${common.bigNumber.multipliedBy(price, quantity)}元`}</Text>
 
           <TouchableOpacity
