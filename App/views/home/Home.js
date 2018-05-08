@@ -21,6 +21,7 @@ import HomeCell from './HomeCell'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import ws from '../../websocket/ws'
 
 class Home extends Component {
   constructor() {
@@ -93,12 +94,29 @@ class Home extends Component {
     this.listener.remove()
   }
 
+  getUIData(goodsId, currencyId) {
+    const { dispatch } = this.props
+    dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
+  }
+
   renderRow(rd) {
-    const { navigation } = this.props
+    const { navigation, dispatch } = this.props
     return (
       <TouchableOpacity
+        style={{
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          marginBottom: common.margin10,
+        }}
         activeOpacity={common.activeOpacity}
-        onPress={() => navigation.navigate('Detail')}
+        onPress={() => {
+          dispatch(actions.homeRoseSelectedUpdate(rd))
+          this.getUIData(rd.goods.id, rd.currency.id)
+          ws.onopen(rd.goods.id, rd.currency.id)
+          navigation.navigate('Detail')
+        }}
       >
         <HomeCell rd={rd} />
       </TouchableOpacity>
@@ -217,6 +235,7 @@ class Home extends Component {
           <View
             style={{
               marginTop: common.margin10,
+              marginBottom: common.margin10,
               flexDirection: 'row',
             }}
           >

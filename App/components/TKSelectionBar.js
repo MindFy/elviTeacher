@@ -36,8 +36,6 @@ class TKSelectionBar extends Component {
       <View
         style={{
           marginTop: common.margin10,
-          marginLeft: common.margin15,
-          marginRight: common.margin15,
           height: common.h36,
           flexDirection: 'row',
           justifyContent: 'center',

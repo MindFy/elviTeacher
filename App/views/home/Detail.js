@@ -161,7 +161,7 @@ class Detail extends Component {
   }
 
   renderRow(rd, type) {
-    if (type !== common.buy) {
+    if (type === common.buy) {
       return (
         <View
           style={{
@@ -185,7 +185,7 @@ class Detail extends Component {
           >{rd.price}</Text>
         </View>
       )
-    } else if (type !== common.sell) {
+    } else if (type === common.sell) {
       return (
         <View
           style={{
@@ -231,18 +231,24 @@ class Detail extends Component {
           style={{
             fontSize: common.font12,
             color: common.textColor,
+            width: '20%',
+            textAlign: 'left',
           }}
         >{createdAt}</Text>
         <Text
           style={{
             fontSize: common.font12,
             color: textColor,
+            width: '60%',
+            textAlign: 'center',
           }}
         >{rd.dealPrice}</Text>
         <Text
           style={{
             fontSize: common.font12,
             color: common.textColor,
+            width: '20%',
+            textAlign: 'right',
           }}
         >{rd.quantity}</Text>
       </View>

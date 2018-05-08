@@ -31,21 +31,35 @@ class Transactions extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => {
-              navigation.navigate('Detail')
-            }}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w20,
-                height: common.h20,
+          (navigation.state.params && navigation.state.params.type)
+            ? <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              onPress={() => props.navigation.goBack()}
+            >
+              <Image
+                style={{
+                  marginLeft: common.margin10,
+                  width: common.w10,
+                  height: common.h20,
+                }}
+                source={require('../../assets/下拉copy.png')}
+              />
+            </TouchableOpacity>
+            : <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              onPress={() => {
+                navigation.navigate('Detail')
               }}
-              source={require('../../assets/市场分析.png')}
-            />
-          </TouchableOpacity>
+            >
+              <Image
+                style={{
+                  marginLeft: common.margin10,
+                  width: common.w20,
+                  height: common.h20,
+                }}
+                source={require('../../assets/市场分析.png')}
+              />
+            </TouchableOpacity>
         ),
     }
   }

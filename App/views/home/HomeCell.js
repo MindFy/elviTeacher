@@ -22,11 +22,10 @@ export default class HomeCell extends Component {
       rangeColor = common.greenColor
       dirImageSource = require('../../assets/箭头copy.png')
     }
+    
     return (
       <View
         style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin10,
           borderRadius: common.radius6,
           backgroundColor: common.borderColor,
           height: common.h70,
