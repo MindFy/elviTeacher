@@ -30,6 +30,11 @@ class Delegate extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -159,7 +164,7 @@ class Delegate extends Component {
                   || refreshStateCurrent !== RefreshState.HeaderRefreshing) {
                   dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(user.id,
                     common.delegate.limtCurrent * skipCurrent, common.delegate.limtCurrent),
-                  RefreshState.FooterRefreshing))
+                    RefreshState.FooterRefreshing))
                 }
               }}
             />
@@ -180,7 +185,7 @@ class Delegate extends Component {
                   || refreshStateHistory !== RefreshState.HeaderRefreshing) {
                   dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id,
                     common.delegate.limtHistory * skipHistory, common.delegate.limtHistory),
-                  RefreshState.FooterRefreshing))
+                    RefreshState.FooterRefreshing))
                 }
               }}
             />

@@ -31,6 +31,11 @@ class LegalDeal extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -240,7 +245,7 @@ class LegalDeal extends Component {
               fontSize: common.font14,
             }}
           >{`${
-              direct === common.buy ? '买入' : '卖出'
+            direct === common.buy ? '买入' : '卖出'
             }总计:${common.bigNumber.multipliedBy(price, quantity)}元`}</Text>
 
           <TouchableOpacity
