@@ -43,22 +43,22 @@ ws.addEventListener('message', (event) => {
       handicap.sell.slice(handicap.sell.length - 5, handicap.sell.length) :
       handicap.sell
     const result = { shelvesBuy, shelvesSell }
-    DeviceEventEmitter.emit(common.listenerNoti, type, result)
+    DeviceEventEmitter.emit(common.noti.home, type, result)
   }
   if (dataParse.data.market) {
     const type = common.ws.market
     const result = dataParse.data.market
-    DeviceEventEmitter.emit(common.listenerNoti, type, result)
+    DeviceEventEmitter.emit(common.noti.home, type, result)
   }
   if (dataParse.data.deals) {
     const type = common.ws.deals
     const result = dataParse.data.deals
-    DeviceEventEmitter.emit(common.listenerNoti, type, result)
+    DeviceEventEmitter.emit(common.noti.home, type, result)
   }
   if (dataParse.data.delegates) {
     const type = common.ws.delegates
     const result = dataParse.data
-    DeviceEventEmitter.emit(common.listenerNoti, type, result)
+    DeviceEventEmitter.emit(common.noti.home, type, result)
   }
 })
 

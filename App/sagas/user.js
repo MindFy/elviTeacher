@@ -5,6 +5,9 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import {
+  Toast,
+} from 'teaset'
+import {
   common,
   storeSave,
 } from '../constants/common'
@@ -29,6 +32,15 @@ export function* getVerificateCode() {
     else yield put({ type: constants.GET_VERIFICATE_CODE_FAILED, response })
   }
 }
+/* 获取验证码 */
+export function* getVerificateSmtpCode() {
+  while (true) {
+    const request = yield take(constants.GET_VERIFICATE_SMTP_CODE_REQUEST)
+    const response = yield call(api.getVerificateSmtpCode, request.data)
+    if (response.success) yield put({ type: constants.GET_VERIFICATE_SMTP_CODE_SUCCEED, response })
+    else yield put({ type: constants.GET_VERIFICATE_SMTP_CODE_FAILED, response })
+  }
+}
 /* 获取单个用户的信息 */
 export function* findUser() {
   while (true) {
@@ -36,7 +48,7 @@ export function* findUser() {
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
       const user = response.result.data.user
-      storeSave(common.user, user)
+      storeSave(common.user.string, user)
       yield put({ type: constants.FIND_USER_SUCCEED, user })
     }
   }
@@ -48,7 +60,7 @@ export function* idCardAuth() {
     const response = yield call(api.idCardAuth, request.data)
     if (response.success) {
       yield put({ type: constants.ID_CARD_AUTH_SUCCEED, response })
-      DeviceEventEmitter.emit(common.authenticationListenerNoti)
+      DeviceEventEmitter.emit(common.noti.idCardAuth)
     } else {
       yield put({ type: constants.ID_CARD_AUTH_FAILED, response })
     }
@@ -109,9 +121,9 @@ export function* sync() {
     yield take(constants.SYNC_REQUEST)
     const response = yield call(api.sync)
     if (response.success && response.result.mobile.length) {
-      DeviceEventEmitter.emit(common.listenerNoti, constants.SYNC_SUCCEED)
+      DeviceEventEmitter.emit(common.noti.home, constants.SYNC_SUCCEED)
     } else if (response.success && !response.result.mobile.length) {
-      DeviceEventEmitter.emit(common.listenerNoti, constants.SYNC_FAILED)
+      DeviceEventEmitter.emit(common.noti.home, constants.SYNC_FAILED)
     }
   }
 }
@@ -133,6 +145,37 @@ export function* updateBank() {
       yield put({ type: constants.UPDATE_BANK_SUCCEED, response, user: request.user })
     } else {
       yield put({ type: constants.UPDATE_BANK_FAILED, response })
+    }
+  }
+}
+/* 用户绑定邮箱 */
+export function* updateEmail() {
+  while (true) {
+    const request = yield take(constants.UPDATE_EMAIL_REQUEST)
+    const response = yield call(api.updateEmail, request.data)
+    if (response.success) {
+      Toast.success(response.result)
+      DeviceEventEmitter.emit(common.noti.updateEmail)
+      yield put({ type: constants.UPDATE_EMAIL_SUCCEED, response })
+    } else {
+      yield put({ type: constants.UPDATE_EMAIL_FAILED, response })
+      if (response.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else if (response.error.code === 4000101) {
+        Toast.fail('验证码不能为空')
+      } else if (response.error.code === 4000102) {
+        Toast.fail('验证码错误')
+      } else if (response.error.code === 4000103) {
+        Toast.fail('验证码已过期，请重新获取')
+      } else if (response.error.code === 4000160) {
+        Toast.fail('邮箱格式不正确')
+      } else if (response.error.code === 4000161) {
+        Toast.fail('邮箱已被注册')
+      } else if (response.error.code === 4000162) {
+        Toast.fail('账户不存在')
+      } else {
+        Toast.fail('邮箱绑定失败')
+      }
     }
   }
 }

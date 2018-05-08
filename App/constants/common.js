@@ -11,20 +11,19 @@ const w = 375
 const common = {
   badNet: 'Network request failed',
 
-  user: 'user',
   selectedTokenDefault: '选择币种',
-  listenerNoti: 'listenerNoti',
-  confirmPayNoti: 'confirmPayNoti',
-  delegateListenerNoti: 'delegateListenerNoti',
-  authenticationListenerNoti: 'authenticationListenerNoti',
+
+  noti: {
+    home: 'home',
+    updateEmail: 'updateEmail',
+    idCardAuth: 'idCardAuth',
+    delegateAllCancel: 'delegateAllCancel',
+    legalDealConfirmPay: 'legalDealConfirmPay',
+  },
+
   buy: 'buy',
   sell: 'sell',
   btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
-
-  never: 'never',
-  waiting: 'waiting',
-  pass: 'pass',
-  refuse: 'refuse',
 
   payment: {
     charge: {
@@ -90,6 +89,18 @@ const common = {
     price: 'price',
     dealled: 'dealled',
     quantity: 'quantity',
+  },
+
+  user: {
+    string: 'user',
+    status: {
+      never: 'never',
+      waiting: 'waiting',
+      pass: 'pass',
+      refuse: 'refuse',
+      bind: 'bind',
+      unbind: 'unbind',
+    },
   },
 
   redColor: 'rgb(213,69,80)',
@@ -181,6 +192,7 @@ const common = {
   regIdCard: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
   regBankName: /^[\u4e00-\u9fa5]{4}/,
   regBankNo: /[0-9]{16,19}$/,
+  regEmail: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
   toFix2(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3') },
   toFix4(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d).*$/, '$1$2.$3') },
   toFix6(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d).*$/, '$1$2.$3') },

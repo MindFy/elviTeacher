@@ -70,7 +70,7 @@ class Login extends Component {
       if (loginResponse.success) {
         Toast.success('登录成功')
         const user = loginResponse.result
-        storeSave(common.user, user, (error) => {
+        storeSave(common.user.string, user, (error) => {
           if (!error) {
             dispatch(actions.findUser(schemas.findUser(user.id)))
             dispatch(actions.findAssetList(schemas.findAssetList(user.id)))

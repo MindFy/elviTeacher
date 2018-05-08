@@ -77,8 +77,8 @@ class Authentication extends Component {
       authenticationAgain,
     }))
     dispatch(actions.findUser(schemas.findUser(user.id)))
-    this.listener = DeviceEventEmitter.addListener(common.authenticationListenerNoti, () => {
-      user.idCardAuthStatus = common.waiting
+    this.listener = DeviceEventEmitter.addListener(common.noti.idCardAuth, () => {
+      user.idCardAuthStatus = common.user.status.waiting
       dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
       dispatch(actions.findUser(schemas.findUser(user.id)))
     })
@@ -281,9 +281,9 @@ class Authentication extends Component {
     if (authenticationAgain) return this.renderScrollView()
 
     switch (user.idCardAuthStatus) {
-      case common.never: case common.waiting:
+      case common.user.status.never: case common.user.status.waiting:
         return this.renderScrollView()
-      case common.pass:
+      case common.user.status.pass:
         return (
           <ScrollView>
             <Image
@@ -306,7 +306,7 @@ class Authentication extends Component {
             >恭喜！身份认证成功！</Text>
           </ScrollView>
         )
-      case common.refuse:
+      case common.user.status.refuse:
         return (
           <ScrollView>
             <Image
@@ -376,7 +376,7 @@ class Authentication extends Component {
         <StatusBar barStyle={'light-content'} />
         {this.renderContentView()}
         {
-          user.idCardAuthStatus && user.idCardAuthStatus === common.waiting ?
+          user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting ?
             <View
               style={{
                 position: 'absolute',

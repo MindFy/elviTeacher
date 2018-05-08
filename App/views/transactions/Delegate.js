@@ -77,7 +77,7 @@ class Delegate extends Component {
         schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
         RefreshState.HeaderRefreshing))
     }
-    this.listener = DeviceEventEmitter.addListener(common.delegateListenerNoti, () => {
+    this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, () => {
       dispatch(actions.findDelegateSelfCurrent(
         schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
         RefreshState.HeaderRefreshing))

@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import { common } from '../../constants/common'
+import TKButtonGetVerificateCode from '../../components/TKButtonGetVerificateCode'
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
 export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
-    const { placeholder, onChange, maxLength, keyboardType, type, value,
+    const { placeholder, onChange, maxLength, keyboardType, type, value, codeEmail, onPress,
       secureTextEntry, newPassword, newPasswordAgain, onEndEditing } = this.props
     return (
       <View
@@ -51,6 +52,17 @@ export default class TextInputPwd extends Component {
             keyboardType={keyboardType}
             secureTextEntry={secureTextEntry}
           />
+          {
+            codeEmail
+              ? <TKButtonGetVerificateCode
+                viewStyle={{
+                  position: 'absolute',
+                  marginRight: 0,
+                  right: 10,
+                }}
+                onPress={onPress}
+              /> : null
+          }
         </View>
         {
           type === 'newPassword' ?

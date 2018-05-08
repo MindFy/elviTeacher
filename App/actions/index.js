@@ -57,6 +57,7 @@ import {
 import {
   checkVerificateCode,
   getVerificateCode,
+  getVerificateSmtpCode,
   findUser,
   findUserUpdate,
   idCardAuth,
@@ -75,6 +76,8 @@ import {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+  updateEmail,
+  updateEmailUpdate,
 } from './user'
 import {
   selectionBarUpdate,
@@ -138,6 +141,7 @@ const actions = {
 
   checkVerificateCode,
   getVerificateCode,
+  getVerificateSmtpCode,
   findUser,
   findUserUpdate,
   idCardAuth,
@@ -156,6 +160,8 @@ const actions = {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+  updateEmail,
+  updateEmailUpdate,
 
   selectionBarUpdate,
   kLineOrDepthUpdate,

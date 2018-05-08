@@ -39,10 +39,10 @@ class Home extends Component {
     dispatch(actions.findBanners(schemas.findBanners()))
     dispatch(actions.getRose(homeRoseSelected))
 
-    this.listener = DeviceEventEmitter.addListener(common.listenerNoti, (type, resp) => {
+    this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
       switch (type) {
         case constants.SYNC_SUCCEED:
-          storeRead(common.user, (result) => {
+          storeRead(common.user.string, (result) => {
             const temp = JSON.parse(result)
             dispatch(actions.findUserUpdate(temp))
             dispatch(actions.findUser(schemas.findUser(temp.id)))
@@ -54,7 +54,7 @@ class Home extends Component {
           })
           break
         case constants.SYNC_FAILED:
-          storeDelete(common.user, (error) => {
+          storeDelete(common.user.string, (error) => {
             if (!error) {
               dispatch(actions.findUserUpdate(undefined))
               dispatch(actions.findAssetListUpdate({

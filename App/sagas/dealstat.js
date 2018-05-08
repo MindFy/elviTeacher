@@ -49,7 +49,7 @@ export default function* getRose() {
       homeRoseSelected = homeRoseSelectedTemp
 
       if (rose.length) {
-        DeviceEventEmitter.emit(common.listenerNoti, constants.GET_ROSE_SUCCEED, homeRoseSelected)
+        DeviceEventEmitter.emit(common.noti.home, constants.GET_ROSE_SUCCEED, homeRoseSelected)
       }
       yield put({ type: constants.GET_ROSE_SUCCEED, data: { rose, homeRose, homeRoseSelected } })
     } else {

@@ -20,7 +20,7 @@ export function* allCancel() {
     const response = yield call(api.allCancel, request.data)
     if (response.success) {
       Toast.success(response.result)
-      DeviceEventEmitter.emit(common.delegateListenerNoti)
+      DeviceEventEmitter.emit(common.noti.delegateAllCancel)
       yield put({ type: constants.ALL_CANCEL_SUCCEED, response })
     } else {
       yield put({ type: constants.ALL_CANCEL_FAILED, response })

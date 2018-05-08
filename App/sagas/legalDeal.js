@@ -43,7 +43,7 @@ export function* confirmPay() {
     const response = yield call(api.confirmPay, request.data)
     if (response.success) {
       Toast.success(response.result)
-      DeviceEventEmitter.emit(common.confirmPayNoti)
+      DeviceEventEmitter.emit(common.noti.legalDealConfirmPay)
       yield put({ type: constants.CONFIRM_PAY_SUCCEED, legalDeal: request.legalDeal })
     } else {
       yield put({ type: constants.CONFIRM_PAY_FAILED, response })

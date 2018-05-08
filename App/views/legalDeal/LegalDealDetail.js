@@ -62,7 +62,7 @@ class LegalDealDetail extends Component {
 
   componentDidMount() {
     this.onHeaderRefresh()
-    this.listener = DeviceEventEmitter.addListener(common.confirmPayNoti, () => {
+    this.listener = DeviceEventEmitter.addListener(common.noti.legalDealConfirmPay, () => {
       Overlay.hide(this.overlayViewKey)
     })
   }

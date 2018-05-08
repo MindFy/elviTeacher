@@ -14,6 +14,7 @@ export default function* rootSaga() {
   yield [
     fork(user.checkVerificateCode),
     fork(user.getVerificateCode),
+    fork(user.getVerificateSmtpCode),
     fork(user.findUser),
     fork(user.idCardAuth),
     fork(user.isExist),
@@ -22,8 +23,9 @@ export default function* rootSaga() {
     fork(user.register),
     fork(user.resetPassword),
     fork(user.sync),
-    fork(user.updatePassword),
     fork(user.updateBank),
+    fork(user.updateEmail),
+    fork(user.updatePassword),
 
     fork(payment.cancelWithdraw),
     fork(payment.findPaymentListRecharge),
