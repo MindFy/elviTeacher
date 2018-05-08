@@ -85,6 +85,7 @@ import {
   averagePriceOrPriceUpdate,
   dealledOrQuantityUpdate,
   cashAccountUpdate,
+  delegateDrawerUpdate,
 } from './ui'
 
 const actions = {
@@ -168,5 +169,6 @@ const actions = {
   averagePriceOrPriceUpdate,
   dealledOrQuantityUpdate,
   cashAccountUpdate,
+  delegateDrawerUpdate,
 }
 export default actions

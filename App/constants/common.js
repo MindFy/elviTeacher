@@ -117,6 +117,8 @@ const common = {
   loginBtnTitleColor: '#191B2B', // 登录/注册/下一步标题颜色
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
+  rgb242: 'rgb(242,242,242)',
+  rgb223: 'rgb(223,223,223)',
 
   bgColor: 'rgb(24,27,42)', // 视图背景色
 
@@ -126,9 +128,11 @@ const common = {
   margin5: 5 / w * sw,
   margin8: 8 / w * sw,
   margin10: 10 / w * sw,
+  margin12: 12 / w * sw,
   margin15: 15 / w * sw,
   margin20: 20 / w * sw,
   margin22: 22 / w * sw,
+  margin25: 25 / w * sw,
   margin28: 28 / w * sw,
   margin30: 30 / w * sw,
   margin35: 35 / w * sw,

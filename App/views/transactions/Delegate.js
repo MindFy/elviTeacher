@@ -1,17 +1,22 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
+  Text,
   View,
   Image,
   StatusBar,
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
+import {
+  Drawer,
+} from 'teaset'
 import Spinner from 'react-native-spinkit'
 import { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import DelegateListView from './DelegateListView'
 import TKSelectionBar from '../../components/TKSelectionBar'
+import DelegateDrawer from './DelegateDrawer'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -51,8 +56,15 @@ class Delegate extends Component {
       headerRight:
         (
           <TouchableOpacity
+            style={{
+              width: common.w40,
+              height: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
-            onPress={() => { }}
+            onPress={() => {
+              DeviceEventEmitter.emit(common.noti.delegateAllCancel, 'drawer')
+            }}
           >
             <Image
               style={{
@@ -77,7 +89,14 @@ class Delegate extends Component {
         schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
         RefreshState.HeaderRefreshing))
     }
-    this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, () => {
+    this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, (type) => {
+      if (type === 'drawer') {
+        const view = (
+          <DelegateDrawer />
+        )
+        this.drawer = Drawer.open(view, 'right')
+        return
+      }
       dispatch(actions.findDelegateSelfCurrent(
         schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
         RefreshState.HeaderRefreshing))
@@ -100,6 +119,7 @@ class Delegate extends Component {
       refreshStateCurrent: RefreshState.Idle,
       refreshStateHistory: RefreshState.Idle,
     }))
+    dispatch(actions.delegateDrawerUpdate({ drawerOpen: false }))
     this.listener.remove()
   }
 
@@ -115,7 +135,7 @@ class Delegate extends Component {
   render() {
     const { dispatch, currentOrHistory, delegateSelfCurrent, delegateSelfHistory, allCancelVisible,
       skipCurrent, skipHistory, refreshStateCurrent, refreshStateHistory, user, homeRoseSelected,
-    } = this.props
+      drawerOpen } = this.props
 
     return (
       <View style={{
@@ -124,7 +144,7 @@ class Delegate extends Component {
       }}
       >
         <StatusBar
-          barStyle={'light-content'}
+          barStyle={drawerOpen ? 'dark-content' : 'light-content'}
         />
 
         <TKSelectionBar
@@ -191,6 +211,28 @@ class Delegate extends Component {
             />
         }
 
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            height: 40,
+            width: 40,
+          }}
+          onPress={() => {
+            const view = (
+              <DelegateDrawer
+                close={() => {
+                  this.drawer.close()
+                  dispatch(actions.delegateDrawerUpdate({ drawerOpen: false }))
+                }}
+              />
+            )
+            this.drawer = Drawer.open(view, 'right')
+            dispatch(actions.delegateDrawerUpdate({ drawerOpen: true }))
+          }}
+        >
+          <Text>666</Text>
+        </TouchableOpacity>
+
         <Spinner
           style={{
             position: 'absolute',
@@ -227,6 +269,8 @@ function mapStateToProps(store) {
     homeRoseSelected: store.dealstat.homeRoseSelected,
 
     user: store.user.user,
+
+    drawerOpen: store.ui.drawerOpen,
   }
 }
 

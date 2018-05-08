@@ -10,6 +10,7 @@ const initialState = {
   dealledOrQuantity: common.ui.dealled,
   cashAccount: 0,
   currentAddress: '',
+  drawerOpen: false,
 }
 
 export default function ui(state = initialState, action) {
@@ -45,6 +46,12 @@ export default function ui(state = initialState, action) {
         ...state,
         cashAccount: action.data.cashAccount,
         currentAddress: action.data.currentAddress,
+      }
+      break
+    case constants.DELEGATE_DRAWER_UPDATE:
+      nextState = {
+        ...state,
+        drawerOpen: action.data.drawerOpen,
       }
       break
     default:

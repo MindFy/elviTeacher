@@ -34,3 +34,10 @@ export function cashAccountUpdate(data) {
     data,
   }
 }
+
+export function delegateDrawerUpdate(data) {
+  return {
+    type: constants.DELEGATE_DRAWER_UPDATE,
+    data,
+  }
+}
