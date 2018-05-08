@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+// import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -11,7 +11,7 @@ import {
 import { common } from '../../constants/common'
 // import actions from '../../actions/index'
 
-class DelegateDrawer extends Component {
+export default class DelegateDrawer extends Component {
   componentDidMount() { }
 
   render() {
@@ -263,13 +263,3 @@ class DelegateDrawer extends Component {
     )
   }
 }
-
-function mapStateToProps(store) {
-  return {
-    drawerOpen: store.ui.drawerOpen,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(DelegateDrawer)
