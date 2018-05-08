@@ -92,10 +92,10 @@ class DelegateShelves extends Component {
       }
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
       && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:6 q:4 a:8
+      // p:8 q:4 a:8
       p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
-      p = common.toFix6(p)
+      p = common.toFix8(p)
       p = isNaN(Number(p)) ? 0 : Number(p)
       if (amount) {
         a = Number(common.toFix8(amount))
@@ -117,7 +117,7 @@ class DelegateShelves extends Component {
       p = common.toFix6(p)
       p = isNaN(Number(p)) ? 0 : Number(p)
       if (amount) {
-        a = Number(common.toFix8(amount))
+        a = Number(common.toFix6(amount))
         q = common.bigNumber.dividedBy(a, p)
         q = Number(common.toFix4(q))
       } else {
@@ -126,7 +126,7 @@ class DelegateShelves extends Component {
         q = common.toFix4(q)
         q = isNaN(Number(q)) ? 0 : Number(q)
         a = common.bigNumber.multipliedBy(p, q)
-        a = Number(common.toFix8(a))
+        a = Number(common.toFix6(a))
       }
     }
 

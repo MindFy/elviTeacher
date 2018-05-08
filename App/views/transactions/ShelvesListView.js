@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -9,8 +10,45 @@ import {
   common,
 } from '../../constants/common'
 
-export default class ShelvesListView extends Component {
+class ShelvesListView extends Component {
   componentDidMount() { }
+
+  // 币币对小数规则
+  precision(price, quantity) {
+    const { homeRoseSelected } = this.props
+    let p = price
+    let q = quantity
+
+    if (
+      ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.TK))
+    ) {
+      // p:2 q:4 a:6
+      p = Number(p).toFixed(2)
+      q = Number(q).toFixed(4)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+      && homeRoseSelected.currency.name === common.token.CNYT) {
+      // p:4 q:0 a:4
+      p = Number(p).toFixed(4)
+      q = Number(q).toFixed(0)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:8 q:4 a:8
+      p = Number(p).toFixed(8)
+      q = Number(q).toFixed(4)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:6 q:4 a:6
+      p = Number(p).toFixed(6)
+      q = Number(q).toFixed(4)
+    }
+
+    return { p, q }
+  }
 
   renderShelvesRow(rd, sid, rid) {
     const { type, rowPress } = this.props
@@ -26,8 +64,7 @@ export default class ShelvesListView extends Component {
     } else {
       marginTop = common.margin8
     }
-    const price = common.toFix8(rd.price)
-    const sumQuantity = common.toFix4(rd.sum_quantity)
+    const { p, q } = this.precision(rd.price, rd.sum_quantity)
     return (
       <TouchableOpacity
         style={{
@@ -44,12 +81,12 @@ export default class ShelvesListView extends Component {
           color: textColor,
           fontSize: common.font12,
         }}
-        >{Number(price)}</Text>
+        >{p}</Text>
         <Text style={{
           color: 'white',
           fontSize: common.font12,
         }}
-        >{Number(sumQuantity)}</Text>
+        >{q}</Text>
       </TouchableOpacity>
     )
   }
@@ -96,3 +133,13 @@ export default class ShelvesListView extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    homeRoseSelected: store.dealstat.homeRoseSelected,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(ShelvesListView)

@@ -73,6 +73,43 @@ class Detail extends Component {
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
   }
 
+  // 币币对小数规则
+  precision(price, quantity) {
+    const { homeRoseSelected } = this.props
+    let p = price
+    let q = quantity
+
+    if (
+      ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.TK))
+    ) {
+      // p:2 q:4 a:6
+      p = Number(p).toFixed(2)
+      q = Number(q).toFixed(4)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+      && homeRoseSelected.currency.name === common.token.CNYT) {
+      // p:4 q:0 a:4
+      p = Number(p).toFixed(4)
+      q = Number(q).toFixed(0)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:8 q:4 a:8
+      p = Number(p).toFixed(8)
+      q = Number(q).toFixed(4)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:6 q:4 a:6
+      p = Number(p).toFixed(6)
+      q = Number(q).toFixed(4)
+    }
+
+    return { p, q }
+  }
+
   menuPress() {
     const { dispatch, homeRose } = this.props
     const items = []
@@ -167,6 +204,7 @@ class Detail extends Component {
 
   renderRow(rd, type) {
     if (type === common.buy) {
+      const { p, q } = this.precision(rd.price, rd.sum_quantity)
       return (
         <View
           style={{
@@ -181,16 +219,17 @@ class Detail extends Component {
               fontSize: common.font12,
               color: common.textColor,
             }}
-          >{rd.sum_quantity}</Text>
+          >{q}</Text>
           <Text
             style={{
               fontSize: common.font12,
               color: common.redColor,
             }}
-          >{rd.price}</Text>
+          >{p}</Text>
         </View>
       )
     } else if (type === common.sell) {
+      const { p, q } = this.precision(rd.price, rd.sum_quantity)
       return (
         <View
           style={{
@@ -205,13 +244,13 @@ class Detail extends Component {
               fontSize: common.font12,
               color: common.greenColor,
             }}
-          >{rd.price}</Text>
+          >{p}</Text>
           <Text
             style={{
               fontSize: common.font12,
               color: common.textColor,
             }}
-          >{rd.sum_quantity}</Text>
+          >{q}</Text>
         </View>
       )
     }
@@ -222,6 +261,7 @@ class Detail extends Component {
       textColor = common.greenColor
     }
     const createdAt = common.dfTime(rd.createdAt)
+    const { p, q } = this.precision(rd.dealPrice, rd.quantity)
     return (
       <View
         style={{
@@ -247,7 +287,7 @@ class Detail extends Component {
             width: '60%',
             textAlign: 'center',
           }}
-        >{rd.dealPrice}</Text>
+        >{p}</Text>
         <Text
           style={{
             fontSize: common.font12,
@@ -255,7 +295,7 @@ class Detail extends Component {
             width: '20%',
             textAlign: 'right',
           }}
-        >{rd.quantity}</Text>
+        >{q}</Text>
       </View>
     )
   }

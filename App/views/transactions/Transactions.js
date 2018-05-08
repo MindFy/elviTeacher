@@ -90,6 +90,43 @@ class Transactions extends Component {
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
   }
 
+  // 币币对小数规则
+  precision(price, quantity) {
+    const { homeRoseSelected } = this.props
+    let p = price
+    let q = quantity
+
+    if (
+      ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.CNYT))
+      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+        && homeRoseSelected.currency.name === common.token.TK))
+    ) {
+      // p:2 q:4 a:6
+      p = Number(p).toFixed(2)
+      q = Number(q).toFixed(4)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+      && homeRoseSelected.currency.name === common.token.CNYT) {
+      // p:4 q:0 a:4
+      p = Number(p).toFixed(4)
+      q = Number(q).toFixed(0)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:8 q:4 a:8
+      p = Number(p).toFixed(8)
+      q = Number(q).toFixed(4)
+    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:6 q:4 a:6
+      p = Number(p).toFixed(6)
+      q = Number(q).toFixed(4)
+    }
+
+    return { p, q }
+  }
+
   renderLatestDealsRow(rd) {
     let textColor = null
     if (rd.endDirect === 'buy') {
@@ -98,7 +135,7 @@ class Transactions extends Component {
       textColor = common.greenColor
     }
     const createdAt = common.dfTime(rd.createdAt)
-
+    const { p, q } = this.precision(rd.dealPrice, rd.quantity)
     return (
       <View
         style={{
@@ -122,14 +159,14 @@ class Transactions extends Component {
           fontSize: common.font12,
           textAlign: 'center',
         }}
-        >{rd.dealPrice}</Text>
+        >{p}</Text>
         <Text style={{
           flex: 1,
           color: 'white',
           fontSize: common.font12,
           textAlign: 'right',
         }}
-        >{rd.quantity}</Text>
+        >{q}</Text>
       </View>
     )
   }
