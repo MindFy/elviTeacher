@@ -101,6 +101,8 @@ const common = {
       bind: 'bind',
       unbind: 'unbind',
     },
+    level0: 'level0',
+    level1: 'level1',
   },
 
   redColor: 'rgb(213,69,80)',
@@ -172,7 +174,7 @@ const common = {
   h80: 80 / w * sw,
   h97: 97 / w * sw,
   h100: 100 / w * sw, // 二维码宽高
-  h120: 120 / w * sw,
+  h120: 120 / w * sw, // 超级返利已推荐好友
   h154: 154 / w * sw, // 短信验证码视图高度
   h234: 234 / w * sw, // 首页公告图片高度
 

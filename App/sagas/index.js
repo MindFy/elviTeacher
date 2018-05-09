@@ -1,7 +1,9 @@
 import { fork } from 'redux-saga/effects'
 import * as user from './user'
+import rebatesCount from './rebates'
 import * as payment from './payment'
 import * as legalDeal from './legalDeal'
+import invitationTotalCount from './invitation'
 import * as delegate from './delegate'
 import getRose from './dealstat'
 import * as deal from './deal'
@@ -27,6 +29,8 @@ export default function* rootSaga() {
     fork(user.updateEmail),
     fork(user.updatePassword),
 
+    fork(rebatesCount),
+
     fork(payment.cancelWithdraw),
     fork(payment.findPaymentListRecharge),
     fork(payment.findPaymentListWithdraw),
@@ -38,6 +42,8 @@ export default function* rootSaga() {
     fork(legalDeal.legalDealCreate),
     fork(legalDeal.findLegalDeal),
     fork(legalDeal.havedPay),
+
+    fork(invitationTotalCount),
 
     fork(delegate.allCancel),
     fork(delegate.cancel),

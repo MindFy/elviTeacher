@@ -36,6 +36,7 @@ import {
   textInputDelegateUpdate,
   skipDelegateUpdate,
 } from './delegate'
+import invitationTotalCount from './invitation'
 import {
   legalDealCancel,
   confirmPay,
@@ -54,6 +55,7 @@ import {
   rechargeOrWithdrawUpdate,
   skipPaymentUpdate,
 } from './payment'
+import rebatesCount from './rebates'
 import {
   checkVerificateCode,
   getVerificateCode,
@@ -124,6 +126,8 @@ const actions = {
   textInputDelegateUpdate,
   skipDelegateUpdate,
 
+  invitationTotalCount,
+
   legalDealCancel,
   confirmPay,
   legalDealCreate,
@@ -139,6 +143,8 @@ const actions = {
   withdraw,
   rechargeOrWithdrawUpdate,
   skipPaymentUpdate,
+
+  rebatesCount,
 
   checkVerificateCode,
   getVerificateCode,

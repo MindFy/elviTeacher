@@ -14,6 +14,10 @@ export default function findUser(id) {
         bankNo,
         bankName,
         subbankName,
+        googleSecret,
+        prefixNo,
+        levelName,
+        recommendId,
         createdAt
     }
 }`
