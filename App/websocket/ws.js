@@ -21,9 +21,13 @@ ws.onopen = (goodsId, currencyId, user) => {
   }))
 }
 
-ws.addEventListener('close', () => {
-  // console.log('WebSocket close!')
-})
+ws.onclose = (goodsId, currencyId) => {
+  // console.log('ws close-------------<', goodsId, currencyId)
+  ws.send(JSON.stringify({
+    act: 'off',
+    ch: `channel_${goodsId}_${currencyId}`,
+  }))
+}
 
 ws.addEventListener('message', (event) => {
   const { data } = event

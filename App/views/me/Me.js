@@ -81,6 +81,8 @@ class Me extends Component {
               amountVisible: undefined,
             }))
             if (this.props.homeRoseSelected) {
+              ws.onclose(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id)
               ws.onopen(this.props.homeRoseSelected.goods.id,
                 this.props.homeRoseSelected.currency.id, undefined)
             }

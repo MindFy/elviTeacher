@@ -75,6 +75,7 @@ class Login extends Component {
             dispatch(actions.findUser(schemas.findUser(user.id)))
             dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
             if (homeRoseSelected) {
+              ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
               ws.onopen(homeRoseSelected.goods.id, homeRoseSelected.currency.id, user)
             }
             screenProps.dismiss()

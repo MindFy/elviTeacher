@@ -33,11 +33,11 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, homeRoseSelected } = this.props
+    const { dispatch, homeRoseSelected, user } = this.props
     dispatch(actions.sync())
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
-    dispatch(actions.getRose(homeRoseSelected))
+    dispatch(actions.getRose({ homeRoseSelected, user }))
 
     this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
       switch (type) {
@@ -48,6 +48,8 @@ class Home extends Component {
             dispatch(actions.findUser(schemas.findUser(temp.id)))
             dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
             if (this.props.homeRoseSelected) {
+              ws.onclose(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id)
               ws.onopen(this.props.homeRoseSelected.goods.id,
                 this.props.homeRoseSelected.currency.id, temp)
             }
@@ -68,7 +70,6 @@ class Home extends Component {
           dispatch(actions.getShelves({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          ws.onopen(resp.goods.id, resp.currency.id, this.props.user)
           break
 
         case common.ws.handicap:
@@ -78,7 +79,7 @@ class Home extends Component {
           dispatch(actions.wsGetShelvesUpdate(resp))
           break
         case common.ws.market:
-          dispatch(actions.getRose(homeRoseSelected))
+          dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
           break
         case common.ws.deals:
           dispatch(actions.wsDealsUpdate(resp))
@@ -117,9 +118,11 @@ class Home extends Component {
         }}
         activeOpacity={common.activeOpacity}
         onPress={() => {
+          const { homeRoseSelected } = this.props
+          ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
           dispatch(actions.homeRoseSelectedUpdate(rd))
-          this.getUIData(rd.goods.id, rd.currency.id)
           ws.onopen(rd.goods.id, rd.currency.id, user)
+          this.getUIData(rd.goods.id, rd.currency.id)
           navigation.navigate('Detail')
         }}
       >
@@ -205,7 +208,7 @@ class Home extends Component {
               onRefresh={() => {
                 dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
                 dispatch(actions.findBanners(schemas.findBanners()))
-                dispatch(actions.getRose(homeRoseSelected))
+                dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
               }}
               refreshing={
                 !!((getRoseVisible || findBannersVisible || announcementVisible))

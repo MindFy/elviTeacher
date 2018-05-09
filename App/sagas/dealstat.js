@@ -9,6 +9,7 @@ import * as api from '../services/api'
 import {
   common,
 } from '../constants/common'
+import ws from '../websocket/ws'
 
 /* 获取交易中心的涨幅，包含：左上角以及顶上数据 */
 export default function* getRose() {
@@ -18,7 +19,8 @@ export default function* getRose() {
     if (response.success) {
       const homeRose = []
       const rose = response.result
-      let homeRoseSelected = request.data
+      let homeRoseSelected = request.data.homeRoseSelected
+      const user = request.data.user
       let homeRoseSelectedTemp
       for (let i = 0; i < rose.length; i++) {
         const currency = rose[i]
@@ -42,6 +44,7 @@ export default function* getRose() {
             }
           } else if (i === 0 && j === 0) {
             homeRoseSelectedTemp = element
+            ws.onopen(homeRoseSelectedTemp.goods.id, homeRoseSelectedTemp.currency.id, user)
           }
           homeRose.push(element)
         }

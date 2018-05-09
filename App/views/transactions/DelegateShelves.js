@@ -141,15 +141,17 @@ class DelegateShelves extends Component {
   }
 
   menuPress() {
-    const { dispatch, homeRose, user } = this.props
+    const { dispatch, homeRose } = this.props
     const items = []
     homeRose.forEach((element) => {
       items.push({
         title: `${element.goods.name}/${element.currency.name}`,
         onPress: () => {
+          const { homeRoseSelected } = this.props
+          ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
           dispatch(actions.homeRoseSelectedUpdate(element))
+          ws.onopen(element.goods.id, element.currency.id, this.props.user)
           this.getUIData(element.goods.id, element.currency.id)
-          ws.onopen(element.goods.id, element.currency.id, user)
         },
       })
     })
