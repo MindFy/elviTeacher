@@ -1,5 +1,6 @@
 import {
   add,
+  addUpdate,
   findAddress,
   selectTokenUpdate,
 } from './address'
@@ -88,10 +89,12 @@ import {
   dealledOrQuantityUpdate,
   cashAccountUpdate,
   delegateDrawerUpdate,
+  codeAuthUpdate,
 } from './ui'
 
 const actions = {
   add,
+  addUpdate,
   findAddress,
   selectTokenUpdate,
 
@@ -176,5 +179,6 @@ const actions = {
   dealledOrQuantityUpdate,
   cashAccountUpdate,
   delegateDrawerUpdate,
+  codeAuthUpdate,
 }
 export default actions

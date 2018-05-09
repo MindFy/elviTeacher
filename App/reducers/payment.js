@@ -126,14 +126,12 @@ export default function payment(state = initialState, action) {
       nextState = {
         ...state,
         withDrawVisible: false,
-        withDrawResponse: action.response,
       }
       break
     case constants.WITH_DRAW_FAILED:
       nextState = {
         ...state,
         withDrawVisible: false,
-        withDrawResponse: action.response,
       }
       break
 

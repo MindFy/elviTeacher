@@ -11,6 +11,8 @@ const initialState = {
   cashAccount: 0,
   currentAddress: '',
   drawerOpen: false,
+
+  codeAuth: '',
 }
 
 export default function ui(state = initialState, action) {
@@ -52,6 +54,12 @@ export default function ui(state = initialState, action) {
       nextState = {
         ...state,
         drawerOpen: action.data.drawerOpen,
+      }
+      break
+    case constants.CODE_AUTH_UPDATE:
+      nextState = {
+        ...state,
+        codeAuth: action.data.codeAuth,
       }
       break
     default:

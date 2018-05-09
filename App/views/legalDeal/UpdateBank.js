@@ -146,7 +146,8 @@ class UpdateBank extends Component {
           codePress={() => {
             dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
-          confirmPress={() => {
+          confirmPress={(count) => {
+            this.count = count
             dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
           }}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
@@ -187,6 +188,7 @@ class UpdateBank extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
+        this.count()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')

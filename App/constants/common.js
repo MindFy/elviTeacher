@@ -19,6 +19,7 @@ const common = {
     idCardAuth: 'idCardAuth',
     delegateAllCancel: 'delegateAllCancel',
     legalDealConfirmPay: 'legalDealConfirmPay',
+    addAddress: 'addAddress',
   },
 
   buy: 'buy',

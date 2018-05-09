@@ -12,12 +12,15 @@ import {
   KeyboardAvoidingView,
 } from 'react-native'
 import {
+  Toast,
+  Overlay,
   ActionSheet,
 } from 'teaset'
 import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 
 class Cash extends Component {
   static navigationOptions(props) {
@@ -84,7 +87,45 @@ class Cash extends Component {
       dispatch(actions.cashAccountUpdate({ cashAccount: temp, currentAddress }))
     } else if (tag === 'currentAddress') {
       dispatch(actions.cashAccountUpdate({ cashAccount, currentAddress: text }))
+    } else if (tag === 'codeAuth') {
+      dispatch(actions.codeAuthUpdate({ codeAuth: text }))
     }
+  }
+
+  showOverlay() {
+    const { dispatch, user, codeAuth } = this.props
+    const overlayView = (
+      <Overlay.View
+        style={{
+          justifyContent: 'center',
+        }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <TKViewCheckAuthorize
+          mobile={user.mobile}
+          code={codeAuth}
+          onChange={e => this.onChange(e, 'codeAuth')}
+          codePress={(count) => {
+            this.count = count
+            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+          }}
+          confirmPress={() => this.withdrawPress()}
+          cancelPress={() => Overlay.hide(this.overlayViewKey)}
+        />
+      </Overlay.View>
+    )
+    this.overlayViewKey = Overlay.show(overlayView)
+  }
+
+  withdrawPress() {
+    const { dispatch, selectedToken, cashAccount, currentAddress, codeAuth } = this.props
+    dispatch(actions.withdraw({
+      token_id: selectedToken.token.id,
+      amount: cashAccount,
+      toaddr: currentAddress,
+      code: codeAuth,
+    }))
   }
 
   selectAddress(element) {
@@ -118,6 +159,31 @@ class Cash extends Component {
     this.props.navigation.navigate('AddAddress', { selectedToken })
   }
 
+  handleGetVerificateCodeRequest() {
+    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
+    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
+
+    if (getVerificateCodeVisible) {
+      this.showGetVerificateCodeResponse = true
+    } else {
+      this.showGetVerificateCodeResponse = false
+      if (getVerificateCodeResponse.success) {
+        this.count()
+        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
+      } else if (getVerificateCodeResponse.error.code === 4000101) {
+        Toast.fail('手机号码或服务类型错误')
+      } else if (getVerificateCodeResponse.error.code === 4000102) {
+        Toast.fail('一分钟内不能重复发送验证码')
+      } else if (getVerificateCodeResponse.error.code === 4000104) {
+        Toast.fail('手机号码已注册')
+      } else if (getVerificateCodeResponse.error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else {
+        Toast.fail('获取验证码失败，请重试')
+      }
+    }
+  }
+
   renderRow(rd) {
     return (
       <View
@@ -145,7 +211,7 @@ class Cash extends Component {
   }
 
   renderBottomView() {
-    const { selectedToken, dispatch, cashAccount, currentAddress } = this.props
+    const { selectedToken, cashAccount, currentAddress } = this.props
     if (selectedToken !== common.selectedTokenDefault) {
       let charge = 0
       if (selectedToken.token.name === common.token.BTC) {
@@ -274,13 +340,7 @@ class Cash extends Component {
                     justifyContent: 'center',
                   }}
                   activeOpacity={common.activeOpacity}
-                  onPress={() => {
-                    dispatch(actions.withdraw({
-                      token_id: selectedToken.token.id,
-                      amount: cashAccount,
-                      toaddr: currentAddress,
-                    }))
-                  }}
+                  onPress={() => this.showOverlay()}
                 >
                   <Text
                     style={{
@@ -321,6 +381,7 @@ class Cash extends Component {
   }
   render() {
     const { dispatch, selectedToken, asset, tokenListSelected } = this.props
+    this.handleGetVerificateCodeRequest()
     return (
       <KeyboardAvoidingView
         style={{
@@ -349,6 +410,8 @@ class Cash extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
+    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
+    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
 
     asset: store.asset.asset,
 
@@ -356,6 +419,7 @@ function mapStateToProps(store) {
     selectedToken: store.address.selectedToken,
     tokenListSelected: store.address.tokenListSelected,
 
+    codeAuth: store.ui.codeAuth,
     cashAccount: store.ui.cashAccount,
     currentAddress: store.ui.currentAddress,
   }

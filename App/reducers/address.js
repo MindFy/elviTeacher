@@ -5,6 +5,8 @@ import {
 
 const initialState = {
   address: [],
+  remark: '',
+  withdrawaddr: '',
   selectedToken: common.selectedTokenDefault,
   tokenListSelected: false,
 
@@ -19,6 +21,13 @@ export default function address(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
+    case constants.ADD_UPDATE_REQUEST:
+      nextState = {
+        ...state,
+        remark: action.data.remark,
+        withdrawaddr: action.data.withdrawaddr,
+      }
+      break
     case constants.ADD_REQUEST:
       nextState = {
         ...state,

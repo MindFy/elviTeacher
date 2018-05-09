@@ -41,3 +41,10 @@ export function delegateDrawerUpdate(data) {
     data,
   }
 }
+
+export function codeAuthUpdate(data) {
+  return {
+    type: constants.CODE_AUTH_UPDATE,
+    data,
+  }
+}
