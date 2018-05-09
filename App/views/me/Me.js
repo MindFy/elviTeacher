@@ -157,7 +157,10 @@ class Me extends Component {
             title="银行卡管理"
           />
           <MeCell
-            onPress={() => { }}
+            onPress={() => {
+              if (user) navigation.navigate('Rebates')
+              else navigation.navigate('LoginStack')
+            }}
             leftImageSource={require('../../assets/手机认证copy3.png')}
             title="超级返利"
           />

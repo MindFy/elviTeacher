@@ -22,6 +22,7 @@ import AddAddress from './views/balance/AddAddress'
 import Me from './views/me/Me'
 import Authentication from './views/me/Authentication'
 import SecurityCenter from './views/me/SecurityCenter'
+import Rebates from './views/me/Rebates'
 import UpdateEmail from './views/me/UpdateEmail'
 import Settings from './views/me/Settings'
 import UpdatePassword from './views/me/UpdatePassword'
@@ -152,6 +153,12 @@ const TabBarStack = StackNavigator({
   Announcement,
   SecurityCenter,
   UpdateEmail,
+  Rebates: {
+    screen: Rebates,
+    navigationOptions: {
+      header: null,
+    },
+  },
 })
 
 const LoginStack = DismissableStackNavigator({
@@ -214,7 +221,7 @@ const RootStack = StackNavigator({
     },
   },
 }, {
-  mode: 'modal',
-})
+    mode: 'modal',
+  })
 
 export default RootStack
