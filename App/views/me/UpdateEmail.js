@@ -176,24 +176,32 @@ class UpdateEmail extends Component {
             placeholder={'请输入邮箱地址'}
             value={email}
             onChange={e => this.onChange(e, 'email')}
+            editable={user.emailStatus !== common.user.status.bind}
           />
-          <TextInputPwd
-            placeholder={'请输入邮箱验证码'}
-            value={codeEmail}
-            codeEmail={'code'}
-            onChange={e => this.onChange(e, 'code')}
-            onPress={count => this.sendCodeEmail(count)}
-            maxLength={8}
-          />
+          {
+            user.emailStatus === common.user.status.bind ? null
+              : <TextInputPwd
+                placeholder={'请输入邮箱验证码'}
+                value={codeEmail}
+                codeEmail={'code'}
+                onChange={e => this.onChange(e, 'code')}
+                onPress={count => this.sendCodeEmail(count)}
+                maxLength={8}
+              />
+          }
 
           <BtnLogout
             viewStyle={{
+              marginTop: user.emailStatus === common.user.status.bind
+                ? common.margin10 : common.margin40,
+              backgroundColor: user.emailStatus === common.user.status.bind
+                ? 'transparent' : common.navBgColor,
               marginLeft: common.margin10,
               marginRight: common.margin10,
             }}
             onPress={() => this.confirmPress()}
-            disabled={updateEmailVisible}
-            title={user.emailStatus === common.user.status.bind ? '重新绑定' : '确定'}
+            disabled={user.emailStatus === common.user.status.bind ? true : updateEmailVisible}
+            title={user.emailStatus === common.user.status.bind ? '邮箱已绑定' : '确定'}
           />
         </ScrollView>
 

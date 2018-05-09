@@ -221,7 +221,7 @@ const RootStack = StackNavigator({
     },
   },
 }, {
-    mode: 'modal',
-  })
+  mode: 'modal',
+})
 
 export default RootStack
