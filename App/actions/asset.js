@@ -14,6 +14,13 @@ export function getAssets(data) {
   }
 }
 
+export function getValuation(data) {
+  return {
+    type: constants.GET_VALUATION_REQUEST,
+    data,
+  }
+}
+
 export function findAssetList(schema) {
   return {
     type: constants.FIND_ASSET_LIST_REQUEST,

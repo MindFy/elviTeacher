@@ -143,11 +143,11 @@ class UpdateBank extends Component {
           mobile={user.mobile}
           code={code}
           onChange={e => this.onChange(e, 'code')}
-          codePress={() => {
+          codePress={(count) => {
+            this.count = count
             dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
-          confirmPress={(count) => {
-            this.count = count
+          confirmPress={() => {
             dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
           }}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}

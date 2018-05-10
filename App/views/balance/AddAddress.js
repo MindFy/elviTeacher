@@ -123,7 +123,7 @@ class AddAddress extends Component {
           code={codeAuth}
           onChange={e => this.onChange(e, 'codeAuth')}
           codePress={(count) => {
-            this.count = count
+            this.authCount = count
             dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
           confirmPress={() => this.addPress()}
@@ -143,7 +143,7 @@ class AddAddress extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        this.count()
+        this.authCount()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')

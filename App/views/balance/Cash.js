@@ -9,6 +9,7 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  DeviceEventEmitter,
   KeyboardAvoidingView,
 } from 'react-native'
 import {
@@ -59,6 +60,8 @@ class Cash extends Component {
   }
   constructor() {
     super()
+    this.showGetVerificateCodeResponse = false
+    this.showCheckVerificateCodeResponse = false
 
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
@@ -68,6 +71,11 @@ class Cash extends Component {
   componentDidMount() {
     const { dispatch, user } = this.props
     dispatch(actions.findAddress(schemas.findAddress(user.id)))
+    this.listener = DeviceEventEmitter.addListener(common.noti.withdraw, () => {
+      dispatch(actions.cashAccountUpdate({ cashAccount: 0, currentAddress: '' }))
+      dispatch(actions.findAssetList(user.id))
+      Overlay.hide(this.overlayViewKey)
+    })
   }
 
   componentWillUnmount() {
@@ -110,7 +118,7 @@ class Cash extends Component {
             this.count = count
             dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
-          confirmPress={() => this.withdrawPress()}
+          confirmPress={() => this.confirmPress()}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
         />
       </Overlay.View>
@@ -118,14 +126,37 @@ class Cash extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  withdrawPress() {
-    const { dispatch, selectedToken, cashAccount, currentAddress, codeAuth } = this.props
+  confirmPress() {
+    const { dispatch, selectedToken, cashAccount, currentAddress } = this.props
+    if (!this.props.codeAuth.length) {
+      Toast.message('请输入验证码')
+      return
+    }
+    const code = isNaN(Number(this.props.codeAuth)) ? 0 : Number(this.props.codeAuth)
     dispatch(actions.withdraw({
       token_id: selectedToken.token.id,
-      amount: cashAccount,
+      amount: cashAccount.toString(),
       toaddr: currentAddress,
-      code: codeAuth,
+      code,
     }))
+  }
+
+  withdrawPress() {
+    const { cashAccount, currentAddress } = this.props
+    if (cashAccount === 0) {
+      Toast.message('请输入提现金额')
+      return
+    }
+    if (!currentAddress.length) {
+      Toast.message('请输入提现地址')
+      return
+    }
+    if (common.bigNumber.lt(cashAccount, common.payment.charge.BTC)
+      || common.bigNumber.lt(cashAccount, common.payment.charge.ETH)) {
+      Toast.message('提现金额过小, 请重新输入')
+      return
+    }
+    this.showOverlay()
   }
 
   selectAddress(element) {
@@ -168,7 +199,7 @@ class Cash extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        this.count()
+        if (this.count) this.count()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
@@ -340,7 +371,7 @@ class Cash extends Component {
                     justifyContent: 'center',
                   }}
                   activeOpacity={common.activeOpacity}
-                  onPress={() => this.showOverlay()}
+                  onPress={() => this.withdrawPress()}
                 >
                   <Text
                     style={{
@@ -382,6 +413,7 @@ class Cash extends Component {
   render() {
     const { dispatch, selectedToken, asset, tokenListSelected } = this.props
     this.handleGetVerificateCodeRequest()
+
     return (
       <KeyboardAvoidingView
         style={{

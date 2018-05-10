@@ -10,19 +10,21 @@ function makePostAPI(endpoint) {
     },
     body: JSON.stringify(params || {}),
     credentials: 'same-origin',
-  }).then(response => response.json().then(json => ({ json, response })))
-    .then(({ json, response }) => {
-      if (!response.ok) {
-        return Promise.reject(json)
-      }
-      return json
-    }).then(result => ({
-      success: true,
-      result,
-    }), error => ({
-      success: false,
-      error,
-    }))
+  }).then((response) => {
+    console.log('---->', response)
+    return response.json().then(json => ({ json, response }))
+  }).then(({ json, response }) => {
+    if (!response.ok) {
+      return Promise.reject(json)
+    }
+    return json
+  }).then(result => ({
+    success: true,
+    result,
+  }), error => ({
+    success: false,
+    error,
+  }))
 }
 
 function graphqlAPI(endpoint) {
@@ -95,6 +97,7 @@ export const imgHashApi = `${API_ROOT}/1.0/fileProc/`
 // Asset
 export const createAddress = makePostAPI('/1.0/app/asset/createAddress')
 export const getAssets = makePostAPI('/1.0/app/asset/getAssets')
+export const getValuation = makePostAPI('/1.0/app/asset/getValuation')
 // Address
 export const add = makePostAPI('/1.0/app/address/add')
 

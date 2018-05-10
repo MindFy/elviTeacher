@@ -8,6 +8,7 @@ import findAnnouncement from './announcement'
 import {
   createAddress,
   getAssets,
+  getValuation,
   findAssetList,
   findAssetListUpdate,
 } from './asset'
@@ -102,6 +103,7 @@ const actions = {
 
   createAddress,
   getAssets,
+  getValuation,
   findAssetList,
   findAssetListUpdate,
 

@@ -20,6 +20,7 @@ const common = {
     delegateAllCancel: 'delegateAllCancel',
     legalDealConfirmPay: 'legalDealConfirmPay',
     addAddress: 'addAddress',
+    withdraw: 'withdraw',
   },
 
   buy: 'buy',
@@ -28,7 +29,7 @@ const common = {
 
   payment: {
     charge: {
-      BTC: 0.001,
+      BTC: 0.01,
       ETH: 0.01,
     },
     limitRecharge: 10,

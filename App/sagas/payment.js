@@ -1,4 +1,7 @@
 import {
+  DeviceEventEmitter,
+} from 'react-native'
+import {
   take, call, put,
 } from 'redux-saga/effects'
 import {
@@ -73,6 +76,8 @@ export function* withdraw() {
     const request = yield take(constants.WITH_DRAW_REQUEST)
     const response = yield call(api.withdraw, request.data)
     if (response.success) {
+      Toast.success('提现成功')
+      DeviceEventEmitter.emit(common.noti.withdraw)
       yield put({ type: constants.WITH_DRAW_SUCCEED, response })
     } else {
       yield put({ type: constants.WITH_DRAW_FAILED, response })
@@ -88,6 +93,10 @@ export function* withdraw() {
         Toast.fail('今日提币已达限额')
       } else if (response.error.code === 4000606) {
         Toast.fail('提币失败, 地址错误')
+      } else if (response.error.code === 4000156) {
+        Toast.fail('验证码不正确, 授权验证失败')
+      } else if (response.error.code === 4000607) {
+        Toast.fail('提现数量过小, 请重新输入')
       } else {
         Toast.fail('提币失败')
       }

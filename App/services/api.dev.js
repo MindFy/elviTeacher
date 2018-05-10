@@ -2,7 +2,7 @@ export const API_ROOT = 'http://127.0.0.1:8080'
 export const ws = 'ws://127.0.0.1:8080/1.0/push'
 
 function makePostAPI(endpoint) {
-  return params => fetch(`${API_ROOT}${endpoint}`, {
+  return params => fetch(API_ROOT + endpoint, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -23,6 +23,21 @@ function makePostAPI(endpoint) {
       success: false,
       error,
     }))
+}
+
+function makePostAPITest(endpoint) {
+  return params => fetch(API_ROOT + endpoint, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then(resp => resp.json())
+    .then((result) => {
+      if (result.id) return { success: true, result }
+      return { success: false, error: result }
+    })
 }
 
 function graphqlAPI(endpoint) {
@@ -70,7 +85,7 @@ export const rebatesCount = makePostAPI('/1.0/app/rebates/rebatesCount')
 // Payment
 export const cancelWithdraw = makePostAPI('/1.0/payment/cancelWithdraw')
 export const recharge = makePostAPI('/1.0/payment/recharge')
-export const withdraw = makePostAPI('/1.0/payment/withdraw')
+export const withdraw = makePostAPITest('/1.0/app/payment/withdraw')
 export const qrApi = `${API_ROOT}/qr/`
 // LegalDeal
 export const legalDealCancel = makePostAPI('/1.0/app/legalDeal/cancel')
@@ -95,6 +110,7 @@ export const imgHashApi = `${API_ROOT}/1.0/fileProc/`
 // Asset
 export const createAddress = makePostAPI('/1.0/app/asset/createAddress')
 export const getAssets = makePostAPI('/1.0/app/asset/getAssets')
+export const getValuation = makePostAPI('/1.0/app/asset/getValuation')
 // Address
 export const add = makePostAPI('/1.0/app/address/add')
 
