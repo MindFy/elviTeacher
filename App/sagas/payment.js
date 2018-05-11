@@ -20,7 +20,10 @@ export function* cancelWithdraw() {
     const response = yield call(api.cancelWithdraw, request.data)
     if (response.success) {
       Toast.success(response.result)
-      yield put({ type: constants.CANCEL_WITH_DRAW_SUCCEED, response })
+      yield put({
+        type: constants.CANCEL_WITH_DRAW_SUCCEED,
+        paymentWithdraw: request.paymentWithdraw,
+      })
     } else {
       yield put({ type: constants.CANCEL_WITH_DRAW_FAILED, response })
       if (response.error.message === common.badNet) {

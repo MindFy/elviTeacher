@@ -1,9 +1,10 @@
 import * as constants from '../constants/index'
 
-export function cancelWithdraw(data) {
+export function cancelWithdraw(data, paymentWithdraw) {
   return {
     type: constants.CANCEL_WITH_DRAW_REQUEST,
     data,
+    paymentWithdraw,
   }
 }
 

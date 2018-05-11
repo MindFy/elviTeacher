@@ -35,10 +35,33 @@ function makePostAPITest(endpoint) {
     body: JSON.stringify(params),
   }).then(resp => resp.json())
     .then((result) => {
-      console.log('---------------->', result)
       if (result.id) return { success: true, result }
       return { success: false, error: result }
     })
+}
+
+function makePostAPITestCancelWithdraw() {
+  return params => fetch('http://47.52.34.160:8080/1.0/app/payment/cancelWithdraw', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+    credentials: 'same-origin',
+  }).then(response => response.json().then(json => ({ json, response })))
+    .then(({ json, response }) => {
+      if (!response.ok) {
+        return Promise.reject(json)
+      }
+      return json
+    }).then(result => ({
+      success: true,
+      result,
+    }), error => ({
+      success: false,
+      error,
+    }))
 }
 
 function graphqlAPI(endpoint) {
@@ -84,7 +107,7 @@ export const rebatesLink = `${API_ROOT}/signup?invitation=`
 export const rebatesLinkQr = `${API_ROOT}/img-qr/${rebatesLink}`
 export const rebatesCount = makePostAPI('/1.0/app/rebates/rebatesCount')
 // Payment
-export const cancelWithdraw = makePostAPITest('/1.0/payment/cancelWithdraw')
+export const cancelWithdraw = makePostAPITestCancelWithdraw('/1.0/payment/cancelWithdraw')
 export const recharge = makePostAPI('/1.0/payment/recharge')
 export const withdraw = makePostAPITest('/1.0/app/payment/withdraw')
 export const qrApi = `${API_ROOT}/qr/`

@@ -40,7 +40,7 @@ export default function payment(state = initialState, action) {
       nextState = {
         ...state,
         cancelWithDrawVisible: false,
-        cancelWithDrawResponse: action.response,
+        paymentWithdraw: action.paymentWithdraw,
       }
       break
     case constants.CANCEL_WITH_DRAW_FAILED:

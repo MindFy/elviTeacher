@@ -49,7 +49,6 @@ export default function* getRose() {
           homeRose.push(element)
         }
       }
-      console.log('+++++++++++++++++++--->', homeRoseSelected, homeRoseSelectedTemp)
       homeRoseSelected = homeRoseSelectedTemp
 
       if (rose.length) {

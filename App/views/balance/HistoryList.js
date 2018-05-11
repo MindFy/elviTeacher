@@ -120,7 +120,7 @@ export default class HistoryList extends Component {
     )
   }
 
-  renderItem(rd) {
+  renderItem(rd, rid) {
     const { rechargeOrWithdraw, cancelWithdraw } = this.props
     if (rechargeOrWithdraw === common.payment.legalDeal) {
       const createdAt = common.dfFullDate(rd.createdAt)
@@ -233,7 +233,7 @@ export default class HistoryList extends Component {
                 width: '10%',
                 alignSelf: 'center',
               }}
-              onPress={() => cancelWithdraw(rd.id)}
+              onPress={() => cancelWithdraw(rd, rid)}
               disabled={btnDisabled}
             >
               <Text

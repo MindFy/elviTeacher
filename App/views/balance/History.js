@@ -186,8 +186,10 @@ class History extends Component {
                   }
                 }
               }}
-              cancelWithdraw={(id) => {
-                dispatch(actions.cancelWithdraw({ id }))
+              cancelWithdraw={(rd, rid) => {
+                const temp = paymentWithdraw.concat()
+                temp[rid].status = '已取消'
+                dispatch(actions.cancelWithdraw({ id: rd.id }, temp))
               }}
             /> : null
         }

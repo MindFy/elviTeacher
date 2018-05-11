@@ -76,7 +76,10 @@ class Home extends Component {
           dispatch(actions.wsGetShelvesUpdate(resp))
           break
         case common.ws.market:
-          dispatch(actions.getRose({ homeRoseSelected: this.props.homeRoseSelected, user: this.props.user }))
+          dispatch(actions.getRose({
+            homeRoseSelected: this.props.homeRoseSelected,
+            user: this.props.user,
+          }))
           dispatch(actions.getValuation())
           break
         case common.ws.deals:
