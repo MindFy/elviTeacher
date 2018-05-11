@@ -204,7 +204,6 @@ class DelegateListView extends Component {
             marginTop: common.margin10,
             marginLeft: common.margin10,
             marginRight: common.margin10,
-            height: common.h60,
             backgroundColor: common.navBgColor,
             borderColor: common.borderColor,
             borderWidth: 1,
@@ -216,43 +215,44 @@ class DelegateListView extends Component {
               borderBottomColor: common.borderColor,
               borderBottomWidth: 1,
               flexDirection: 'row',
-              justifyContent: 'space-between',
             }}
           >
-            <View
+            <Text
               style={{
-                flexDirection: 'row',
+                marginLeft: common.margin5,
+                marginTop: common.margin5,
+                marginBottom: common.margin5,
+                color: common.textColor,
+                fontSize: common.font12,
+                width: '20%',
+                alignSelf: 'center',
+                textAlign: 'left',
               }}
-            >
-              <Text
-                style={{
-                  marginLeft: common.margin5,
-                  color: common.textColor,
-                  fontSize: common.font12,
-                  alignSelf: 'center',
-                }}
-              >{`${goodsName}/${currencyName}`}</Text>
-              <Text
-                style={{
-                  marginLeft: common.margin10,
-                  color: rd.direct === 'sell' ? common.greenColor : common.redColor,
-                  fontSize: common.font12,
-                  alignSelf: 'center',
-                }}
-              >{rd.direct === 'buy' ? '买入' : '卖出'}</Text>
-              <Text
-                style={{
-                  marginLeft: common.margin10,
-                  color: common.textColor,
-                  fontSize: common.font12,
-                  alignSelf: 'center',
-                }}
-              >{createdAt}</Text>
-            </View>
+            >{`${goodsName}/${currencyName}`}</Text>
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: rd.direct === 'sell' ? common.greenColor : common.redColor,
+                fontSize: common.font12,
+                width: '10%',
+                alignSelf: 'center',
+                textAlign: 'left',
+              }}
+            >{rd.direct === 'buy' ? '买入' : '卖出'}</Text>
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+                width: '45%',
+                alignSelf: 'center',
+                textAlign: 'left',
+              }}
+            >{createdAt}</Text>
             <TouchableOpacity
               style={{
-                marginRight: common.margin5,
-                paddingRight: 5,
+                position: 'absolute',
+                right: common.margin5,
                 alignSelf: 'center',
               }}
               activeOpacity={common.activeOpacity}
@@ -263,6 +263,7 @@ class DelegateListView extends Component {
                 style={{
                   color: cancelDisabled ? common.placeholderColor : common.btnTextColor,
                   fontSize: common.font12,
+                  textAlign: 'right',
                 }}
               >{cancelBtnTitle}</Text>
             </TouchableOpacity>
@@ -271,31 +272,39 @@ class DelegateListView extends Component {
             style={{
               flex: 1,
               flexDirection: 'row',
-              justifyContent: 'space-between',
             }}
           >
             <Text
               style={{
+                flex: 1,
+                marginTop: common.margin5,
                 marginLeft: common.margin5,
+                marginBottom: common.margin5,
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
+                textAlign: 'left',
               }}
             >{`价格:${rd.price}`}</Text>
             <Text
               style={{
+                flex: 1,
                 marginLeft: common.margin5,
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
+                textAlign: 'left',
               }}
             >{`数量:${rd.quantity}`}</Text>
             <Text
               style={{
+                flex: 1,
                 marginLeft: common.margin5,
+                marginRight: common.margin5,
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
+                textAlign: 'left',
               }}
             >{`已成交:${rd.dealled}`}</Text>
           </View>
@@ -321,6 +330,8 @@ class DelegateListView extends Component {
             flex: 1,
             fontSize: common.font10,
             color: common.textColor,
+            alignSelf: 'center',
+            textAlign: 'left',
           }}
         >{`${rd.goods.name}/${rd.currency.name}`}</Text>
         <Text
@@ -328,6 +339,7 @@ class DelegateListView extends Component {
             flex: 1,
             fontSize: common.font10,
             color: common.textColor,
+            alignSelf: 'center',
             textAlign: 'center',
           }}
         >{
@@ -340,6 +352,7 @@ class DelegateListView extends Component {
             flex: 1,
             fontSize: common.font10,
             color: common.textColor,
+            alignSelf: 'center',
             textAlign: 'right',
           }}
         >{dealledOrQuantity === common.ui.dealled ? rd.dealled : rd.quantity}</Text>

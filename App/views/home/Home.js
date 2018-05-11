@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  ListView,
   StatusBar,
   ScrollView,
   RefreshControl,
@@ -17,7 +16,7 @@ import {
   storeDelete,
 } from '../../constants/common'
 import * as constants from '../../constants/index'
-import HomeCell from './HomeCell'
+import HomeRoseList from './HomeRoseList'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
@@ -26,9 +25,6 @@ import ws from '../../websocket/ws'
 class Home extends Component {
   constructor() {
     super()
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
     this.showFindBannersResponse = false
   }
 
@@ -107,28 +103,13 @@ class Home extends Component {
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
   }
 
-  renderRow(rd) {
-    const { navigation, dispatch, user } = this.props
-    return (
-      <TouchableOpacity
-        style={{
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          marginBottom: common.margin10,
-        }}
-        activeOpacity={common.activeOpacity}
-        onPress={() => {
-          const { homeRoseSelected } = this.props
-          ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
-          dispatch(actions.homeRoseSelectedUpdate(rd))
-          ws.onopen(rd.goods.id, rd.currency.id, user)
-          this.getUIData(rd.goods.id, rd.currency.id)
-          navigation.navigate('Detail')
-        }}
-      >
-        <HomeCell rd={rd} />
-      </TouchableOpacity>
-    )
+  homeRoseListCellPress(rd) {
+    const { navigation, dispatch, user, homeRoseSelected } = this.props
+    ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
+    dispatch(actions.homeRoseSelectedUpdate(rd))
+    ws.onopen(rd.goods.id, rd.currency.id, user)
+    this.getUIData(rd.goods.id, rd.currency.id)
+    navigation.navigate('Detail')
   }
 
   render() {
@@ -240,41 +221,9 @@ class Home extends Component {
             }}
           >{btns}</View>
 
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginBottom: common.margin10,
-              flexDirection: 'row',
-            }}
-          >
-            <Text
-              style={{
-                flex: 1,
-              }}
-            />
-            <Text
-              style={{
-                flex: 1,
-                color: common.placeholderColor,
-                fontSize: common.font12,
-                textAlign: 'center',
-              }}
-            >市场/最新价</Text>
-            <Text
-              style={{
-                flex: 1,
-                color: common.placeholderColor,
-                fontSize: common.font12,
-                textAlign: 'center',
-              }}
-            >涨跌幅</Text>
-          </View>
-
-          <ListView
-            dataSource={this.dataSource(homeRose)}
-            renderRow={rd => this.renderRow(rd)}
-            enableEmptySections
-            removeClippedSubviews={false}
+          <HomeRoseList
+            data={homeRose}
+            onPress={rd => this.homeRoseListCellPress(rd)}
           />
         </ScrollView>
       </View>

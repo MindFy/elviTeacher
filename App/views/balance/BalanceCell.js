@@ -15,16 +15,15 @@ export default class BalanceCell extends Component {
           marginTop: common.margin10,
           marginLeft: common.margin10,
           marginRight: common.margin10,
-          height: common.h40,
           backgroundColor: common.borderColor,
           borderRadius: common.radius6,
           flexDirection: 'row',
-          justifyContent: 'space-between',
         }}
       >
         <View
           style={{
             flexDirection: 'row',
+            width: '30%',
           }}
         >
           <Image
@@ -48,10 +47,14 @@ export default class BalanceCell extends Component {
 
         <Text
           style={{
-            marginRight: common.margin15,
+            marginTop: common.margin15,
+            marginBottom: common.margin15,
+            paddingRight: common.margin15,
             fontSize: common.font14,
             color: common.textColor,
+            width: '70%',
             alignSelf: 'center',
+            textAlign: 'right',
           }}
         >{this.props.detail}</Text>
       </View>

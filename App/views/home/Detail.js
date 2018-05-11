@@ -312,7 +312,8 @@ class Detail extends Component {
     let quantity = 0
     let rose = 0
     let cpriceColor = common.redColor
-    let dirImageSource = require('../../assets/箭头.png')
+    let dirImageSource
+    let symbol = ''
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
@@ -325,9 +326,13 @@ class Detail extends Component {
       if (rose > 0) {
         cpriceColor = common.redColor
         dirImageSource = require('../../assets/箭头.png')
-      } else if (rose <= 0) {
+        symbol = '+'
+      } else if (rose < 0) {
         cpriceColor = common.greenColor
         dirImageSource = require('../../assets/箭头copy.png')
+        symbol = '-'
+      } else if (rose === 0) {
+        cpriceColor = common.textColor
       }
     }
 
@@ -376,15 +381,14 @@ class Detail extends Component {
 
           <View
             style={{
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
               flexDirection: 'row',
             }}
           >
             <View
               style={{
-                marginTop: common.margin10,
                 flex: 1,
+                marginTop: common.margin10,
+                marginLeft: common.margin10,
               }}
             >
               <View
@@ -396,31 +400,35 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font20,
                     color: cpriceColor,
+                    textAlign: 'left',
                   }}
                 >{`${cprice}`}</Text>
-                <Image
-                  style={{
-                    marginLeft: common.margin5,
-                    height: common.h13,
-                    width: common.w10,
-                    alignSelf: 'center',
-                    paddingBottom: 0,
-                  }}
-                  source={dirImageSource}
-                />
+                {
+                  dirImageSource
+                    ? <Image
+                      style={{
+                        marginLeft: common.margin5,
+                        height: common.h13,
+                        width: common.w10,
+                        alignSelf: 'flex-end',
+                      }}
+                      source={dirImageSource}
+                    /> : null
+                }
                 <Text
                   style={{
                     marginLeft: common.margin5,
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'flex-end',
+                    textAlign: 'left',
                   }}
                 >¥ 0.18</Text>
               </View>
 
               <View
                 style={{
-                  marginTop: common.margin5,
+                  marginTop: common.margin10,
                   flexDirection: 'row',
                 }}
               >
@@ -428,13 +436,16 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font14,
                     color: cpriceColor,
+                    textAlign: 'left',
                   }}
-                >{`${rose > 0 ? '+' : '-'}${lastprice}`}</Text>
+                >{`${symbol}${lastprice}`}</Text>
                 <Text
                   style={{
                     marginLeft: common.margin10,
                     fontSize: common.font14,
                     color: cpriceColor,
+                    alignSelf: 'center',
+                    textAlign: 'left',
                   }}
                 >{`${rose}%`}</Text>
               </View>
@@ -443,10 +454,13 @@ class Detail extends Component {
             <View
               style={{
                 flex: 1,
+                marginLeft: common.margin5,
+                marginRight: common.margin10,
               }}
             >
               <View
                 style={{
+                  flex: 1,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                 }}
@@ -455,6 +469,7 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
+                    textAlign: 'right',
                   }}
                 >24小时成交量</Text>
                 <Text
@@ -462,12 +477,14 @@ class Detail extends Component {
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
+                    textAlign: 'right',
                   }}
                 >{`${quantity} ${currencyName}`}</Text>
               </View>
 
               <View
                 style={{
+                  flex: 1,
                   marginTop: common.margin8,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -477,6 +494,7 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
+                    textAlign: 'right',
                   }}
                 >24小时最低量</Text>
                 <Text
@@ -484,12 +502,14 @@ class Detail extends Component {
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
+                    textAlign: 'right',
                   }}
                 >{`${lprice}`}</Text>
               </View>
 
               <View
                 style={{
+                  flex: 1,
                   marginTop: common.margin8,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -499,6 +519,7 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
+                    textAlign: 'right',
                   }}
                 >24小时最高量</Text>
                 <Text
@@ -506,6 +527,7 @@ class Detail extends Component {
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
+                    textAlign: 'right',
                   }}
                 >{`${hprice}`}</Text>
               </View>

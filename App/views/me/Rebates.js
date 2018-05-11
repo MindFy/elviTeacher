@@ -180,7 +180,6 @@ class Rebates extends Component {
               marginTop: common.margin15,
               marginLeft: common.margin10,
               width: '85%',
-              height: common.h40,
               borderColor: common.borderColor,
               backgroundColor: common.navBgColor,
               borderWidth: 1,
@@ -190,7 +189,9 @@ class Rebates extends Component {
           >
             <Text
               style={{
+                marginTop: common.margin10,
                 marginLeft: common.margin10,
+                marginBottom: common.margin10,
                 color: common.textColor,
                 fontSize: common.font14,
                 alignSelf: 'center',

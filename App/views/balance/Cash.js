@@ -262,11 +262,14 @@ class Cash extends Component {
           >可用</Text>
           <Text style={{
             marginTop: common.margin10,
+            marginLeft: common.margin10,
+            marginRight: common.margin10,
             fontSize: common.font30,
             alignSelf: 'center',
+            textAlign: 'center',
             color: 'white',
           }}
-          >{selectedToken.amount}</Text>
+          >{selectedToken.amount + selectedToken.token.name}</Text>
           {
             (selectedToken.token.name === common.token.BTC
               || selectedToken.token.name === common.token.ETH)

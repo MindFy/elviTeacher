@@ -158,7 +158,8 @@ class DelegateShelves extends Component {
   }
 
   buyOrSellPress() {
-    const { dispatch, navigation, user, buyOrSell, price, quantity, amount, homeRoseSelected } = this.props
+    const { dispatch, navigation, user, buyOrSell, price, quantity, amount, homeRoseSelected,
+    } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
       return
@@ -330,24 +331,30 @@ class DelegateShelves extends Component {
             editable={false}
           />
 
-          <View style={{
-            marginLeft: common.margin10,
-            marginRight: common.margin10 / 2,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
+          <View
+            style={{
+              marginTop: 1,
+              marginLeft: common.margin10,
+              marginRight: common.margin10 / 2,
+              flexDirection: 'row',
+            }}
           >
-            <Text style={{
-              alignSelf: 'center',
-              color: common.textColor,
-              fontSize: common.font10,
-            }}
+            <Text
+              style={{
+                color: common.textColor,
+                fontSize: common.font10,
+                width: '15%',
+                alignSelf: 'center',
+              }}
             >可用</Text>
-            <Text style={{
-              alignSelf: 'center',
-              color: common.textColor,
-              fontSize: common.font10,
-            }}
+            <Text
+              style={{
+                color: common.textColor,
+                fontSize: common.font10,
+                width: '85%',
+                textAlign: 'right',
+                alignSelf: 'center',
+              }}
             >{amountVisibleTitle}</Text>
           </View>
 

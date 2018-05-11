@@ -26,6 +26,8 @@ export default class HistoryList extends Component {
               color: common.textColor,
               fontSize: common.font12,
               width: '38%',
+              alignSelf: 'center',
+              textAlign: 'left',
             }}
           >时间</Text>
           <Text
@@ -71,6 +73,8 @@ export default class HistoryList extends Component {
             color: common.textColor,
             fontSize: common.font12,
             width: '38%',
+            alignSelf: 'center',
+            textAlign: 'left',
           }}
         >时间</Text>
         <Text
@@ -191,6 +195,8 @@ export default class HistoryList extends Component {
             color: common.textColor,
             fontSize: common.font12,
             width: '38%',
+            alignSelf: 'center',
+            textAlign: 'left',
           }}
         >{createdAt}</Text>
         <Text
