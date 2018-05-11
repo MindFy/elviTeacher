@@ -114,9 +114,9 @@ class Transactions extends Component {
       q = Number(q).toFixed(0)
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
       && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:8 q:4 a:8
+      // p:8 q:0 a:8
       p = Number(p).toFixed(8)
-      q = Number(q).toFixed(4)
+      q = Number(q).toFixed(0)
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
       && homeRoseSelected.currency.name === common.token.BTC) {
       // p:6 q:4 a:6

@@ -72,6 +72,8 @@ export function* create() {
         Toast.fail('货币或商品不存在')
       } else if (response.error.code === 4000312) {
         Toast.fail('挂单失败，订单已经创建')
+      } else if (response.error.code === 4000510) {
+        Toast.fail('参数为空')
       } else if (response.error.code === 4000513) {
         Toast.fail('挂单失败，余额不足')
       } else {

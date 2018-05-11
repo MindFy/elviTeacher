@@ -92,7 +92,7 @@ class DelegateShelves extends Component {
       }
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
       && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:8 q:4 a:8
+      // p:8 q:0 a:8
       p = `${price}`
       p = isNaN(Number(p)) ? 0 : Number(p)
       p = common.toFix8(p)
@@ -100,12 +100,11 @@ class DelegateShelves extends Component {
       if (amount) {
         a = Number(common.toFix8(amount))
         q = common.bigNumber.dividedBy(a, p)
-        q = Number(common.toFix4(q))
+        q = Number(q).toFixed(0)
       } else {
         q = `${quantity}`
         q = isNaN(Number(q)) ? 0 : Number(q)
-        q = common.toFix4(q)
-        q = isNaN(Number(q)) ? 0 : Number(q)
+        q = Number(q).toFixed(0)
         a = common.bigNumber.multipliedBy(p, q)
         a = Number(common.toFix8(a))
       }
@@ -159,7 +158,7 @@ class DelegateShelves extends Component {
   }
 
   buyOrSellPress() {
-    const { dispatch, navigation, user, buyOrSell, price, quantity, homeRoseSelected } = this.props
+    const { dispatch, navigation, user, buyOrSell, price, quantity, amount, homeRoseSelected } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
       return
@@ -190,6 +189,7 @@ class DelegateShelves extends Component {
         direct: buyOrSell ? 'buy' : 'sell',
         price,
         quantity,
+        total_money: amount,
       }))
     }
   }
