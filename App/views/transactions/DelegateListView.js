@@ -163,12 +163,10 @@ class DelegateListView extends Component {
       const createdAt = common.dfFullDate(rd.createdAt)
       let cancelBtnTitle = ''
       let cancelDisabled = true
-      if (rd.status === common.delegate.status.dealing) {
+      if ((rd.status === common.delegate.status.dealing)
+        || (rd.status === common.delegate.status.waiting)) {
         cancelBtnTitle = '撤单'
         cancelDisabled = false
-      } else if (rd.status === common.delegate.status.waiting) {
-        cancelBtnTitle = '等待'
-        cancelDisabled = true
       } else if (rd.status === common.delegate.status.cancel) {
         cancelBtnTitle = '已取消'
         cancelDisabled = true
