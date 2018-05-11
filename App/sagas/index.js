@@ -62,6 +62,7 @@ export default function* rootSaga() {
 
     fork(asset.createAddress),
     fork(asset.getAssets),
+    fork(asset.getValuation),
     fork(asset.findAssetList),
 
     fork(findAnnouncement),

@@ -34,6 +34,7 @@ class Home extends Component {
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
     dispatch(actions.getRose({ homeRoseSelected, user }))
+    dispatch(actions.getValuation())
 
     this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
       switch (type) {
@@ -75,7 +76,8 @@ class Home extends Component {
           dispatch(actions.wsGetShelvesUpdate(resp))
           break
         case common.ws.market:
-          dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
+          dispatch(actions.getRose({ homeRoseSelected: this.props.homeRoseSelected, user: this.props.user }))
+          dispatch(actions.getValuation())
           break
         case common.ws.deals:
           dispatch(actions.wsDealsUpdate(resp))

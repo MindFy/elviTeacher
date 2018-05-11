@@ -100,11 +100,11 @@ class DelegateShelves extends Component {
       if (amount) {
         a = Number(common.toFix8(amount))
         q = common.bigNumber.dividedBy(a, p)
-        q = Number(q).toFixed(0)
+        q = Number(Number(q).toFixed(0))
       } else {
         q = `${quantity}`
         q = isNaN(Number(q)) ? 0 : Number(q)
-        q = Number(q).toFixed(0)
+        q = Number(Number(q).toFixed(0))
         a = common.bigNumber.multipliedBy(p, q)
         a = Number(common.toFix8(a))
       }
@@ -149,6 +149,7 @@ class DelegateShelves extends Component {
           const { homeRoseSelected } = this.props
           ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
           dispatch(actions.homeRoseSelectedUpdate(element))
+          dispatch(actions.textInputDelegateUpdate({ price: 0, quantity: 0, amount: 0 }))
           ws.onopen(element.goods.id, element.currency.id, this.props.user)
           this.getUIData(element.goods.id, element.currency.id)
         },
@@ -197,7 +198,7 @@ class DelegateShelves extends Component {
 
   render() {
     const { dispatch, buyOrSell, delegateCreateVisible, homeRoseSelected,
-      price, quantity, amount, shelvesBuy, shelvesSell, amountVisible,
+      price, quantity, amount, shelvesBuy, shelvesSell, amountVisible, valuation,
     } = this.props
     let goodsName = ''
     let currencyName = ''
@@ -205,6 +206,7 @@ class DelegateShelves extends Component {
     let maximumValueSlider = 0
     let currentVisible = 0
     let percentSlider = 0
+    let rmb = ''
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
@@ -218,6 +220,9 @@ class DelegateShelves extends Component {
           maximumValueSlider = currentVisible === 0 ? 0 : 1
           amountVisibleTitle = `${currentVisible} ${goodsName}`
         }
+      }
+      if (valuation && valuation.rates) {
+        rmb = valuation.rates[currencyName][goodsName]
       }
     }
     if (currentVisible === 0) {
@@ -291,12 +296,13 @@ class DelegateShelves extends Component {
             onChange={e => this.onChange(e, 'price')}
           />
 
-          <Text style={{
-            marginLeft: common.margin10,
-            color: common.textColor,
-            fontSize: common.font10,
-          }}
-          >= ¥4.43</Text>
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              color: common.textColor,
+              fontSize: common.font10,
+            }}
+          >{`= ¥${rmb}`}</Text>
 
           <TextInputTransactions
             placeholder={`数量（${goodsName}）`}
@@ -430,6 +436,7 @@ function mapStateToProps(store) {
 
     user: store.user.user,
 
+    valuation: store.asset.valuation,
     amountVisible: store.asset.amountVisible,
 
     homeRose: store.dealstat.homeRose,

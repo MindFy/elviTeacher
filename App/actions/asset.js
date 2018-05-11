@@ -14,10 +14,9 @@ export function getAssets(data) {
   }
 }
 
-export function getValuation(data) {
+export function getValuation() {
   return {
     type: constants.GET_VALUATION_REQUEST,
-    data,
   }
 }
 

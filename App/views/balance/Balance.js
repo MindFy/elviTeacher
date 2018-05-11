@@ -67,7 +67,21 @@ class Balance extends Component {
   }
 
   render() {
-    const { asset, user, navigation, dispatch, findAssetListVisible } = this.props
+    const { asset, user, navigation, dispatch, findAssetListVisible, valuation } = this.props
+    let amountBTC = 0
+    let rmbBTC = 0
+    if (valuation && valuation.rates) {
+      rmbBTC = valuation.rates[common.token.BTC][common.token.CNYT]
+      for (let i = 0; i < asset.length; i++) {
+        const element = asset[i]
+        const amount = Number(element.amount)
+        const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
+        const temp = common.bigNumber.multipliedBy(amount, scaleBTC)
+        amountBTC += temp
+      }
+      amountBTC = Number(amountBTC).toFixed(8)
+    }
+
     return (
       <View
         style={{
@@ -94,27 +108,26 @@ class Balance extends Component {
             />
           }
         >
-          <View
+          <Text
             style={{
               marginTop: common.margin20,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
-            <Text style={{
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font30,
               alignSelf: 'center',
+              textAlign: 'center',
             }}
-            >{0}</Text>
-            <Text style={{
-              marginLeft: common.margin5,
+          >{amountBTC}</Text>
+          <Text
+            style={{
+              marginTop: common.margin5,
               fontSize: common.font10,
               color: common.placeholderColor,
               alignSelf: 'center',
+              textAlign: 'center',
             }}
-            >(¥0.98)</Text>
-          </View>
+          >{`(¥${rmbBTC})`}</Text>
           <Text
             style={{
               marginTop: common.margin10,
@@ -222,6 +235,7 @@ function mapStateToProps(store) {
     user: store.user.user,
 
     asset: store.asset.asset,
+    valuation: store.asset.valuation,
     findAssetListVisible: store.asset.findAssetListVisible,
   }
 }

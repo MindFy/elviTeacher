@@ -35,6 +35,7 @@ function makePostAPITest(endpoint) {
     body: JSON.stringify(params),
   }).then(resp => resp.json())
     .then((result) => {
+      console.log('---------------->', result)
       if (result.id) return { success: true, result }
       return { success: false, error: result }
     })
@@ -83,7 +84,7 @@ export const rebatesLink = `${API_ROOT}/signup?invitation=`
 export const rebatesLinkQr = `${API_ROOT}/img-qr/${rebatesLink}`
 export const rebatesCount = makePostAPI('/1.0/app/rebates/rebatesCount')
 // Payment
-export const cancelWithdraw = makePostAPI('/1.0/payment/cancelWithdraw')
+export const cancelWithdraw = makePostAPITest('/1.0/payment/cancelWithdraw')
 export const recharge = makePostAPI('/1.0/payment/recharge')
 export const withdraw = makePostAPITest('/1.0/app/payment/withdraw')
 export const qrApi = `${API_ROOT}/qr/`

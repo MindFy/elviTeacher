@@ -3,7 +3,7 @@ import * as constants from '../constants/index'
 const initialState = {
   asset: [],
   amountVisible: undefined,
-
+  valuation: undefined,
   createAddress: '',
 
   createAddressVisible: false,
@@ -58,6 +58,22 @@ export default function asset(state = initialState, action) {
         ...state,
         getAssetsVisible: false,
         getAssetsResponse: action.response,
+      }
+      break
+    case constants.GET_VALUATION_REQUEST:
+      nextState = {
+        ...state,
+      }
+      break
+    case constants.GET_VALUATION_SUCCEED:
+      nextState = {
+        ...state,
+        valuation: action.response.result,
+      }
+      break
+    case constants.GET_VALUATION_FAILED:
+      nextState = {
+        ...state,
       }
       break
     case constants.FIND_ASSET_LIST_REQUEST:

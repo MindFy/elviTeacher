@@ -22,6 +22,15 @@ export function* getAssets() {
     else yield put({ type: constants.GET_ASSETS_FAILED, response })
   }
 }
+/* 获取几种货币根据比特币换算的人民币价格和已提取数量 */
+export function* getValuation() {
+  while (true) {
+    yield take(constants.GET_VALUATION_REQUEST)
+    const response = yield call(api.getValuation)
+    if (response.success) yield put({ type: constants.GET_VALUATION_SUCCEED, response })
+    else yield put({ type: constants.GET_VALUATION_FAILED, response })
+  }
+}
 /* 获取资产列表的余额 */
 export function* findAssetList() {
   while (true) {
