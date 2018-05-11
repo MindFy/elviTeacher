@@ -226,7 +226,7 @@ class UpdateBank extends Component {
   }
 
   render() {
-    const { bankName, subbankName, bankNo, navigation } = this.props
+    const { bankName, subbankName, bankNo, navigation, user } = this.props
     this.handleUpdateBankRequest()
     this.handleGetVerificateCodeRequest()
     this.handleCheckVerificateCodeRequest()
@@ -309,7 +309,7 @@ class UpdateBank extends Component {
               fontSize: common.font14,
               alignSelf: 'center',
             }}
-          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe' && bankName.length) ? '重新添加' : '确认'}</Text>
+          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe' && user.bankName.length) ? '重新添加' : '确认'}</Text>
         </TouchableOpacity>
       </ScrollView>
     )
