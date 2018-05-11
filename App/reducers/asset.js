@@ -5,6 +5,7 @@ const initialState = {
   amountVisible: undefined,
   valuation: undefined,
   createAddress: '',
+  selectedIndex: undefined,
 
   createAddressVisible: false,
   createAddressResponse: undefined,

@@ -73,6 +73,7 @@ class Recharge extends Component {
     dispatch(actions.selectTokenUpdate({
       selectedToken: common.selectedTokenDefault,
       tokenListSelected: false,
+      selectedIndex: undefined,
     }))
   }
 

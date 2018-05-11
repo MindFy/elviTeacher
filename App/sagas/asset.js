@@ -44,6 +44,7 @@ export function* findAssetList() {
         amountVisible[element.token.name] = element.amount
       }
       yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, findAsset, amountVisible })
+      yield put({ type: constants.FIND_ASSET_SELECT_TOKEN_UPDATE, findAsset })
     } else {
       yield put({ type: constants.FIND_ASSET_LIST_FAILED, response })
     }

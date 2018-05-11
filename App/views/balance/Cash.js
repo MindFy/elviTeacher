@@ -73,7 +73,7 @@ class Cash extends Component {
     dispatch(actions.findAddress(schemas.findAddress(user.id)))
     this.listener = DeviceEventEmitter.addListener(common.noti.withdraw, () => {
       dispatch(actions.cashAccountUpdate({ cashAccount: 0, currentAddress: '' }))
-      dispatch(actions.findAssetList(user.id))
+      dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
       Overlay.hide(this.overlayViewKey)
     })
   }
@@ -83,7 +83,10 @@ class Cash extends Component {
     dispatch(actions.selectTokenUpdate({
       selectedToken: common.selectedTokenDefault,
       tokenListSelected: false,
+      selectedIndex: undefined,
     }))
+    dispatch(actions.cashAccountUpdate({ cashAccount: 0, currentAddress: '' }))
+    this.listener.remove()
   }
 
   onChange(event, tag) {
@@ -414,7 +417,7 @@ class Cash extends Component {
     return null
   }
   render() {
-    const { dispatch, selectedToken, asset, tokenListSelected } = this.props
+    const { dispatch, tokenListSelected } = this.props
     this.handleGetVerificateCodeRequest()
 
     return (
@@ -428,8 +431,6 @@ class Cash extends Component {
         <StatusBar barStyle={'light-content'} />
         <ScrollView>
           <SelectToken
-            asset={asset}
-            selectedToken={selectedToken}
             tokenListSelected={tokenListSelected}
             dispatch={dispatch}
             selectedTokenBlock={() => { }}

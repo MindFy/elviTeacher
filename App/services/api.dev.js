@@ -2,7 +2,7 @@ export const API_ROOT = 'http://127.0.0.1:8080'
 export const ws = 'ws://127.0.0.1:8080/1.0/push'
 
 function makePostAPI(endpoint) {
-  return params => fetch(API_ROOT + endpoint, {
+  return params => fetch(`${API_ROOT}${endpoint}`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

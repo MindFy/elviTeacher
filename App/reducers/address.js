@@ -7,6 +7,7 @@ const initialState = {
   address: [],
   remark: '',
   withdrawaddr: '',
+  selectedIndex: undefined,
   selectedToken: common.selectedTokenDefault,
   tokenListSelected: false,
 
@@ -75,6 +76,14 @@ export default function address(state = initialState, action) {
         ...state,
         selectedToken: action.data.selectedToken,
         tokenListSelected: action.data.tokenListSelected,
+        selectedIndex: action.data.selectedIndex,
+      }
+      break
+    case constants.FIND_ASSET_SELECT_TOKEN_UPDATE:
+      nextState = {
+        ...state,
+        selectedToken: state.selectedIndex
+          ? action.findAsset[state.selectedIndex] : state.selectedToken,
       }
       break
     default:
