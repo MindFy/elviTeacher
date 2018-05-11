@@ -25,8 +25,8 @@ function makePostAPI(endpoint) {
     }))
 }
 
-function makePostAPITest(endpoint) {
-  return params => fetch(API_ROOT + endpoint, {
+function makePostAPITest() {
+  return params => fetch('http://47.52.34.160:8080/1.0/app/payment/withdraw', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
