@@ -8,7 +8,8 @@ export default class TextInputTranscations extends Component {
   componentDidMount() { }
 
   render() {
-    const { textInputStyle, placeholder, value, onChange, keyboardType, editable } = this.props
+    const { textInputStyle, placeholder, value, onChange, keyboardType, editable, maxLength,
+    } = this.props
     return (
       <TextInput
         style={[{
@@ -28,8 +29,9 @@ export default class TextInputTranscations extends Component {
         placeholderTextColor={common.placeholderColor}
         autoCorrect={false}
         value={value}
-        onChange={onChange}
+        onChangeText={onChange}
         editable={editable}
+        maxLength={maxLength}
       />
     )
   }

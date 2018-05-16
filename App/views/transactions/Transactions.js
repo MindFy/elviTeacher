@@ -53,7 +53,7 @@ class Transactions extends Component {
             : <TouchableOpacity
               activeOpacity={common.activeOpacity}
               onPress={() => {
-                navigation.navigate('Detail')
+                navigation.navigate('Test')
               }}
             >
               <Image
