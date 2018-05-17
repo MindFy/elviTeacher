@@ -55,50 +55,45 @@ class DelegateShelves extends Component {
 
     if (!`${price}`.length) {
       dispatch(actions.textInputDelegateUpdate({ price: 0, quantity, amount: 0 }))
-      return undefined // 1.1.清空时置0
+      return undefined // 1.清空时置0
     }
     if (!`${quantity}`.length) {
       dispatch(actions.textInputDelegateUpdate({ price, quantity: 0, amount: 0 }))
-      return undefined // 2.1.清空时置0
+      return undefined // 2.清空时置0
     }
-    p = new BigNumber(price)
-    if (p.isNaN()) return undefined // 1.2.限制只能输入数字、小数点
+    p = new BigNumber(price).multipliedBy(1).dp(precisionPrice, 1)
+    if (p.isNaN()) return undefined // 3.限制只能输入数字、小数点
     if (`${price}`.endsWith('.')) {
       a = new BigNumber(p).multipliedBy(quantity).dp(precisionAmount, 1).toNumber()
       dispatch(actions.textInputDelegateUpdate({ price, quantity, amount: a }))
-      return undefined // 1.3.保留小数点
+      return undefined // 4.保留小数点
     }
     const pArr = `${price}`.split('.')
-    if (pArr[0].length > common.maxLenDelegate) return undefined // 1.4.整数长度限制
-    if (pArr.length > 1 && pArr[1].length > precisionPrice) {
-      return undefined // 1.5.小数长度限制
-    }
-    p = p.toNumber()
+    if (pArr[0].length > common.maxLenDelegate) return undefined // 5.整数长度限制
+    if (pArr.length > 1 && pArr[1].length > precisionPrice) return undefined // 6.小数长度限制
 
     if (amount || amount === 0) {
       q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
-      if (q.isNaN()) return undefined // 2.2.1.分子不能为0，非数字
-      q = q.toNumber()
-      a = new BigNumber(q).multipliedBy(p).dp(precisionAmount, 1).toNumber()
+      if (q.isNaN()) return undefined // 7.分子不能为0，非数字
     } else {
       q = new BigNumber(quantity)
-      if (q.isNaN()) return undefined // 2.2.2.限制只能输入数字、小数点
+      if (q.isNaN()) return undefined // 8.限制只能输入数字、小数点
       const qArr = `${quantity}`.split('.')
+      if (qArr[0].length > common.maxLenDelegate) return undefined // 9.整数长度限制
       if (precisionQuantity === 0) {
-        if (qArr[0].length > common.maxLenDelegate) return undefined // 2.2.3.1.2.整数长度限制
-        if (qArr.length > 1) return undefined // 2.2.3.1.2.限制只能输入整数
+        if (qArr.length > 1) return undefined // 10.限制只能输入整数
       } else {
         if (`${quantity}`.endsWith('.')) {
-          a = new BigNumber(q).multipliedBy(p).dp(precisionAmount, 1).toNumber()
           dispatch(actions.textInputDelegateUpdate({ price, quantity, amount: a }))
-          return undefined // 2.2.3.2.1.保留小数点
+          return undefined // 11.保留小数点
         }
-        if (qArr[0].length > common.maxLenDelegate) return undefined // 2.2.3.2.2.整数长度限制
-        if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 2.2.3.2.3.小数长度限制
+        if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 12.小数长度限制
       }
-      q = q.toNumber()
-      a = new BigNumber(q).multipliedBy(p).dp(precisionAmount, 1).toNumber()
     }
+
+    p = p.toNumber()
+    q = q.toNumber()
+    a = new BigNumber(q).multipliedBy(p).dp(precisionAmount, 1).toNumber()
 
     return { p, q, a }
   }
@@ -107,16 +102,10 @@ class DelegateShelves extends Component {
     const { homeRoseSelected, dispatch } = this.props
     let temp
 
-    if (
-      ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
-        && homeRoseSelected.currency.name === common.token.CNYT))
-      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-        && homeRoseSelected.currency.name === common.token.CNYT))
-      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-        && homeRoseSelected.currency.name === common.token.TK))
-    ) {
-      // p:2 q:4 a:6
-      const t = this.precision(price, quantity, amount, 2, 4, 6)
+    if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+      && homeRoseSelected.currency.name === common.token.BTC) {
+      // p:6 q:4 a:6
+      const t = this.precision(price, quantity, amount, 6, 4, 6)
       if (t) temp = t
       else return
     } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
@@ -131,11 +120,17 @@ class DelegateShelves extends Component {
       const t = this.precision(price, quantity, amount, 8, 0, 8)
       if (t) temp = t
       else return
-      // } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-      //   && homeRoseSelected.currency.name === common.token.BTC) {
+    // } else if (
+    //   ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
+    //     && homeRoseSelected.currency.name === common.token.CNYT))
+    //   || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+    //     && homeRoseSelected.currency.name === common.token.CNYT))
+    //   || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
+    //     && homeRoseSelected.currency.name === common.token.TK))
+    // ) {
     } else {
-      // p:6 q:4 a:6
-      const t = this.precision(price, quantity, amount, 6, 4, 6)
+      // p:2 q:4 a:6
+      const t = this.precision(price, quantity, amount, 2, 4, 6)
       if (t) temp = t
       else return
     }
