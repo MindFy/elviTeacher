@@ -17,6 +17,7 @@ import {
   Overlay,
   ActionSheet,
 } from 'teaset'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
@@ -72,7 +73,7 @@ class Cash extends Component {
     const { dispatch, user } = this.props
     dispatch(actions.findAddress(schemas.findAddress(user.id)))
     this.listener = DeviceEventEmitter.addListener(common.noti.withdraw, () => {
-      dispatch(actions.cashAccountUpdate({ cashAccount: 0, currentAddress: '' }))
+      dispatch(actions.cashAccountUpdate({ cashAccount: '', currentAddress: '' }))
       dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
       Overlay.hide(this.overlayViewKey)
     })
@@ -85,26 +86,36 @@ class Cash extends Component {
       tokenListSelected: false,
       selectedIndex: undefined,
     }))
-    dispatch(actions.cashAccountUpdate({ cashAccount: 0, currentAddress: '' }))
+    dispatch(actions.cashAccountUpdate({ cashAccount: '', currentAddress: '' }))
     this.listener.remove()
   }
 
   onChange(event, tag) {
-    const { text } = event.nativeEvent
-    const { dispatch, cashAccount, currentAddress } = this.props
+    const { dispatch, cashAccount, currentAddress, selectedToken } = this.props
+    const maxAmount = new BigNumber(selectedToken.amount).toString()
 
     if (tag === 'cashAccount') {
-      const temp = isNaN(Number(text)) ? 0 : Number(text)
-      dispatch(actions.cashAccountUpdate({ cashAccount: temp, currentAddress }))
+      const a = new BigNumber(event)
+      if (a.isNaN() && event.length) return // 1.限制只能输入数字、小数点
+      if (!a.isNaN() && a.gt(maxAmount)) {
+        dispatch(actions.cashAccountUpdate({ cashAccount: maxAmount, currentAddress }))
+        return // 2.限制最大输入可用量
+      }
+      const aArr = event.split('.')
+      if (aArr[0].length > common.maxLenDelegate) return // 3.整数长度限制
+      if (aArr.length > 1 && aArr[1].length > 8) return // 4.小数长度限制
+
+      dispatch(actions.cashAccountUpdate({ cashAccount: event, currentAddress }))
     } else if (tag === 'currentAddress') {
-      dispatch(actions.cashAccountUpdate({ cashAccount, currentAddress: text }))
+      dispatch(actions.cashAccountUpdate({ cashAccount, currentAddress: event }))
     } else if (tag === 'codeAuth') {
+      const { text } = event.nativeEvent
       dispatch(actions.codeAuthUpdate({ codeAuth: text }))
     }
   }
 
   showOverlay() {
-    const { dispatch, user, codeAuth } = this.props
+    const { dispatch, user } = this.props
     const overlayView = (
       <Overlay.View
         style={{
@@ -115,7 +126,6 @@ class Cash extends Component {
       >
         <TKViewCheckAuthorize
           mobile={user.mobile}
-          code={codeAuth}
           onChange={e => this.onChange(e, 'codeAuth')}
           codePress={(count) => {
             this.count = count
@@ -135,10 +145,11 @@ class Cash extends Component {
       Toast.message('请输入验证码')
       return
     }
-    const code = isNaN(Number(this.props.codeAuth)) ? 0 : Number(this.props.codeAuth)
+    let code = new BigNumber(this.props.codeAuth)
+    code = code.isNaN() ? 0 : code.toNumber()
     dispatch(actions.withdraw({
       token_id: selectedToken.token.id,
-      amount: cashAccount.toString(),
+      amount: cashAccount,
       toaddr: currentAddress,
       code,
     }))
@@ -146,7 +157,8 @@ class Cash extends Component {
 
   withdrawPress() {
     const { cashAccount, currentAddress } = this.props
-    if (cashAccount === 0) {
+    const ca = new BigNumber(cashAccount)
+    if (!cashAccount.length && ca.eq(0)) {
       Toast.message('请输入提现金额')
       return
     }
@@ -154,8 +166,8 @@ class Cash extends Component {
       Toast.message('请输入提现地址')
       return
     }
-    if (common.bigNumber.lt(cashAccount, common.payment.charge.BTC)
-      || common.bigNumber.lt(cashAccount, common.payment.charge.ETH)) {
+    if (cashAccount.lt(common.payment.charge.BTC)
+      || cashAccount.lt(common.payment.charge.ETH)) {
       Toast.message('提现金额过小, 请重新输入')
       return
     }
@@ -253,7 +265,10 @@ class Cash extends Component {
       } else if (selectedToken.token.name === common.token.ETH) {
         charge = common.payment.charge.ETH
       }
-      const actualAccount = common.bigNumber.multipliedBy(cashAccount, 1 - charge)
+      const cashAccountNum = new BigNumber(cashAccount)
+      let actualAccount = cashAccountNum.multipliedBy(1 - charge)
+      actualAccount = actualAccount.isNaN() ? 0 : actualAccount.dp(8, 1)
+      const amount = new BigNumber(selectedToken.amount).toFixed(8, 1)
       return (
         <View>
           <Text style={{
@@ -272,7 +287,7 @@ class Cash extends Component {
             textAlign: 'center',
             color: 'white',
           }}
-          >{selectedToken.amount + selectedToken.token.name}</Text>
+          >{amount}</Text>
           {
             (selectedToken.token.name === common.token.BTC
               || selectedToken.token.name === common.token.ETH)
@@ -294,8 +309,8 @@ class Cash extends Component {
                   }}
                   placeholder="提现金额"
                   placeholderTextColor={common.placeholderColor}
-                  value={cashAccount === 0 ? '' : `${cashAccount}`}
-                  onChange={e => this.onChange(e, 'cashAccount')}
+                  value={cashAccount}
+                  onChangeText={e => this.onChange(e, 'cashAccount')}
                 />
 
                 <View
@@ -346,7 +361,7 @@ class Cash extends Component {
                     placeholder={'地址'}
                     placeholderTextColor={common.placeholderColor}
                     value={currentAddress}
-                    onChange={e => this.onChange(e, 'currentAddress')}
+                    onChangeText={e => this.onChange(e, 'currentAddress')}
                   />
                   <TouchableOpacity
                     style={{

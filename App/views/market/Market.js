@@ -94,6 +94,7 @@ class Market extends Component {
         </View>
         <MarketList
           data={rose.length === 0 ? [] : rose[selectedIndex].sub}
+          currencyName={rose.length === 0 ? '' : rose[selectedIndex].name}
         />
       </View>
     )

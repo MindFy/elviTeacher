@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import RefreshListView from 'react-native-refresh-list-view'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 
@@ -150,7 +151,7 @@ class DelegateListView extends Component {
                 fontSize: common.font12,
                 textAlign: 'right',
               }}
-            >数量</Text>
+            >金额</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -195,6 +196,14 @@ class DelegateListView extends Component {
           currencyName = common.token.CNY
         }
       }
+      let price
+      let quantity
+      let dealled
+      common.precision(goodsName, currencyName, (p, q) => {
+        price = new BigNumber(rd.price).toFixed(p, 1)
+        quantity = new BigNumber(rd.quantity).toFixed(q, 1)
+        dealled = new BigNumber(rd.dealled).toFixed(q, 1)
+      })
 
       return (
         <View
@@ -283,7 +292,7 @@ class DelegateListView extends Component {
                 alignSelf: 'center',
                 textAlign: 'left',
               }}
-            >{`价格:${rd.price}`}</Text>
+            >{`价格: ${price}`}</Text>
             <Text
               style={{
                 flex: 1,
@@ -291,9 +300,9 @@ class DelegateListView extends Component {
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
-                textAlign: 'left',
+                textAlign: 'center',
               }}
-            >{`数量:${rd.quantity}`}</Text>
+            >{`数量: ${quantity}`}</Text>
             <Text
               style={{
                 flex: 1,
@@ -302,17 +311,24 @@ class DelegateListView extends Component {
                 color: common.textColor,
                 fontSize: common.font10,
                 alignSelf: 'center',
-                textAlign: 'left',
+                textAlign: 'right',
               }}
-            >{`已成交:${rd.dealled}`}</Text>
+            >{`已成交: ${dealled}`}</Text>
           </View>
         </View >
       )
     }
 
-    let averagePrice = common.bigNumber.dividedBy(rd.dealamount, rd.dealled)
-    averagePrice = isNaN(averagePrice) ? 0 : averagePrice
-    averagePrice = common.toFix8(averagePrice)
+    let averagePrice = new BigNumber(rd.dealamount).dividedBy(rd.dealled)
+    let price
+    let dealled
+    let dealamount
+    common.precision(rd.goods.name, rd.currency.name, (p, q, a) => {
+      averagePrice = averagePrice.toFixed(p, 1)
+      price = new BigNumber(rd.price).toFixed(p, 1)
+      dealled = new BigNumber(rd.dealled).toFixed(q, 1)
+      dealamount = new BigNumber(rd.dealamount).toFixed(a, 1)
+    })
     return (
       <View
         style={{
@@ -341,9 +357,7 @@ class DelegateListView extends Component {
             textAlign: 'center',
           }}
         >{
-            averagePriceOrPrice === common.ui.averagePrice
-              ? averagePrice
-              : rd.price
+            averagePriceOrPrice === common.ui.averagePrice ? averagePrice : price
           }</Text>
         <Text
           style={{
@@ -353,7 +367,7 @@ class DelegateListView extends Component {
             alignSelf: 'center',
             textAlign: 'right',
           }}
-        >{dealledOrQuantity === common.ui.dealled ? rd.dealled : rd.quantity}</Text>
+        >{dealledOrQuantity === common.ui.dealled ? dealled : dealamount}</Text>
       </View>
     )
   }

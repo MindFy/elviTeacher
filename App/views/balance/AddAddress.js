@@ -120,7 +120,6 @@ class AddAddress extends Component {
       >
         <TKViewCheckAuthorize
           mobile={user.mobile}
-          code={codeAuth}
           onChange={e => this.onChange(e, 'codeAuth')}
           codePress={(count) => {
             this.authCount = count

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import RefreshListView from 'react-native-refresh-list-view'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 
 export default class HistoryList extends Component {
@@ -126,6 +127,7 @@ export default class HistoryList extends Component {
       const createdAt = common.dfFullDate(rd.createdAt)
       let direct = ''
       let directColor = 'white'
+      const quantity = new BigNumber(rd.quantity).toFixed(2)
       if (rd.direct === common.buy) {
         directColor = common.redColor
         direct = '买入'
@@ -175,13 +177,14 @@ export default class HistoryList extends Component {
               alignSelf: 'center',
               textAlign: 'right',
             }}
-          >{rd.quantity}</Text>
+          >{quantity}</Text>
         </View>
       )
     }
     const btnTitleColor = rd.status === '待审核' ? common.btnTextColor : common.placeholderColor
     const btnDisabled = rd.status !== '待审核'
     const createdAt = common.dfFullDate(rd.createdAt)
+    const amount = new BigNumber(rd.amount).toFixed(8, 1)
     return (
       <View style={{
         marginTop: common.margin10,
@@ -216,7 +219,7 @@ export default class HistoryList extends Component {
             textAlign: 'center',
             alignSelf: 'center',
           }}
-        >{rd.amount}</Text>
+        >{amount}</Text>
         <Text
           style={{
             color: common.textColor,

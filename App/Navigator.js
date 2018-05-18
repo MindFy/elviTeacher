@@ -37,7 +37,6 @@ import Register from './views/login/Register'
 import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
-import Test from './views/transactions/test'
 
 const TabBar = TabNavigator(
   {
@@ -160,7 +159,6 @@ const TabBarStack = StackNavigator({
       header: null,
     },
   },
-  Test,
 })
 
 const LoginStack = DismissableStackNavigator({

@@ -6,6 +6,7 @@ import {
   ListView,
   TouchableOpacity,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 
 export default class HomeRoseList extends Component {
@@ -29,12 +30,12 @@ export default class HomeRoseList extends Component {
       >
         <Text
           style={{
-            width: '25%',
+            width: '30%',
           }}
         />
         <View
           style={{
-            width: '50%',
+            width: '40%',
             flexDirection: 'row',
           }}
         >
@@ -63,7 +64,7 @@ export default class HomeRoseList extends Component {
         </View>
         <Text
           style={{
-            width: '25%',
+            width: '30%',
             color: common.placeholderColor,
             fontSize: common.font12,
             textAlign: 'center',
@@ -78,18 +79,24 @@ export default class HomeRoseList extends Component {
     let dirImageSource
     let priceColor = null
     let rangeColor = null
-    if (rd.rose > 0) {
+    let rose = new BigNumber(rd.rose).multipliedBy(100)
+    let cprice
+    if (rose.gt(0)) {
       priceColor = common.redColor
       rangeColor = common.redColor
       dirImageSource = require('../../assets/箭头.png')
-    } else if (rd.rose < 0) {
+    } else if (rose.lt(0)) {
       priceColor = common.greenColor
       rangeColor = common.greenColor
       dirImageSource = require('../../assets/箭头copy.png')
-    } else if (rd.rose === 0) {
+    } else {
       priceColor = common.textColor
       rangeColor = common.textColor
     }
+    rose = rose.toFixed(2, 1)
+    common.precision(rd.goods.name, rd.currency.name, (p) => {
+      cprice = new BigNumber(rd.cprice).toFixed(p, 1)
+    })
 
     return (
       <TouchableOpacity
@@ -106,7 +113,7 @@ export default class HomeRoseList extends Component {
       >
         <View
           style={{
-            width: '25%',
+            width: '30%',
             justifyContent: 'center',
           }}
         >
@@ -122,7 +129,7 @@ export default class HomeRoseList extends Component {
 
         <View
           style={{
-            width: '50%',
+            width: '40%',
             justifyContent: 'center',
           }}
         >
@@ -186,19 +193,19 @@ export default class HomeRoseList extends Component {
                 alignSelf: 'center',
                 textAlign: 'center',
               }}
-            >{rd.cprice}</Text>
+            >{cprice}</Text>
           </View>
         </View>
 
         <Text
           style={{
-            width: '25%',
+            width: '30%',
             fontSize: common.font16,
             color: rangeColor,
             alignSelf: 'center',
             textAlign: 'center',
           }}
-        >{`${rd.rose}%`}</Text>
+        >{`${rose}%`}</Text>
       </TouchableOpacity>
     )
   }

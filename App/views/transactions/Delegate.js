@@ -79,14 +79,22 @@ class Delegate extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, user, homeRoseSelected } = this.props
     if (user) {
-      dispatch(actions.findDelegateSelfCurrent(
-        schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
-        RefreshState.HeaderRefreshing))
-      dispatch(actions.findDelegateSelfHistory(
-        schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
-        RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+        user.id,
+        0,
+        common.delegate.limtCurrent,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+        user.id,
+        0,
+        common.delegate.limtHistory,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
     }
     this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, (type) => {
       if (type === 'drawer') {
@@ -101,12 +109,20 @@ class Delegate extends Component {
         this.drawer = Drawer.open(view, 'right')
         return
       }
-      dispatch(actions.findDelegateSelfCurrent(
-        schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
-        RefreshState.HeaderRefreshing))
-      dispatch(actions.findDelegateSelfHistory(
-        schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
-        RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+        user.id,
+        0,
+        common.delegate.limtCurrent,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+        user.id,
+        0,
+        common.delegate.limtHistory,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
     })
   }
 
@@ -178,18 +194,25 @@ class Delegate extends Component {
               onHeaderRefresh={() => {
                 if (refreshStateCurrent !== RefreshState.NoMoreData
                   || refreshStateCurrent !== RefreshState.FooterRefreshing) {
-                  dispatch(actions.findDelegateSelfCurrent(
-                    schemas.findDelegateSelfCurrent(user.id, 0, common.delegate.limtCurrent),
-                    RefreshState.HeaderRefreshing))
+                  dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+                    user.id,
+                    0,
+                    common.delegate.limtCurrent,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.HeaderRefreshing))
                 }
               }}
               onFooterRefresh={() => {
                 if (refreshStateCurrent !== RefreshState.NoMoreData
                   || refreshStateCurrent !== RefreshState.HeaderRefreshing) {
-                  dispatch(actions.findDelegateSelfCurrent(
-                    schemas.findDelegateSelfCurrent(user.id,
-                      common.delegate.limtCurrent * skipCurrent, common.delegate.limtCurrent)
-                    , RefreshState.FooterRefreshing))
+                  dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+                    user.id,
+                    common.delegate.limtCurrent * skipCurrent,
+                    common.delegate.limtCurrent,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.FooterRefreshing))
                 }
               }}
             />
@@ -200,18 +223,25 @@ class Delegate extends Component {
               onHeaderRefresh={() => {
                 if (refreshStateHistory !== RefreshState.NoMoreData
                   || refreshStateHistory !== RefreshState.FooterRefreshing) {
-                  dispatch(actions.findDelegateSelfHistory(
-                    schemas.findDelegateSelfHistory(user.id, 0, common.delegate.limtHistory),
-                    RefreshState.HeaderRefreshing))
+                  dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+                    user.id,
+                    0,
+                    common.delegate.limtHistory,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.HeaderRefreshing))
                 }
               }}
               onFooterRefresh={() => {
                 if (refreshStateHistory !== RefreshState.NoMoreData
                   || refreshStateHistory !== RefreshState.HeaderRefreshing) {
-                  dispatch(actions.findDelegateSelfHistory(
-                    schemas.findDelegateSelfHistory(user.id,
-                      common.delegate.limtHistory * skipHistory, common.delegate.limtHistory)
-                    , RefreshState.FooterRefreshing))
+                  dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+                    user.id,
+                    common.delegate.limtHistory * skipHistory,
+                    common.delegate.limtHistory,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.FooterRefreshing))
                 }
               }}
             />
@@ -258,10 +288,10 @@ class Delegate extends Component {
 function mapStateToProps(store) {
   return {
     skipCurrent: store.delegate.skipCurrent,
-    refreshStateCurrent: store.delegate.refreshStateCurrent,
-    delegateSelfCurrent: store.delegate.delegateSelfCurrent,
     skipHistory: store.delegate.skipHistory,
+    refreshStateCurrent: store.delegate.refreshStateCurrent,
     refreshStateHistory: store.delegate.refreshStateHistory,
+    delegateSelfCurrent: store.delegate.delegateSelfCurrent,
     delegateSelfHistory: store.delegate.delegateSelfHistory,
 
     currentOrHistory: store.delegate.currentOrHistory,

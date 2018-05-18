@@ -194,7 +194,6 @@ class Depth extends Component {
           lineStyle: {
             color: 'transparent',
             width: 0,
-            type: 'dashed',
           },
         },
         showContent: true,
@@ -205,15 +204,15 @@ class Depth extends Component {
         snapshot: true,
         confine: true,
         transitionDuration: 0.3,
-        formatter: (params) => {
+        formatter: params => {
           if (params[0].data !== '-') {
-            const name = params[0].name
-            const data = Number(params[0].data).toFixed(2)
+            const name = Number(params[0].name).toString()
+            const data = params[0].data
             const str = '价格: ' + name + '<br />数量: ' + data
             return str
           }
-          const name = params[1].name
-          const data = Number(params[1].data).toFixed(2)
+          const name = Number(params[1].name).toString()
+          const data = params[1].data
           const str = '价格: ' + name + '<br />数量: ' + data
           return str
         },

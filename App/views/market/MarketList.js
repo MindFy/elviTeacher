@@ -4,6 +4,7 @@ import {
   Text,
   ListView,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 
 export default class MarketList extends Component {
@@ -65,15 +66,24 @@ export default class MarketList extends Component {
     )
   }
 
-  renderRow(rd) {
+  renderRow(rd, currencyName) {
     let typeColor = common.textColor
-    if (rd.rose > 0) {
+    let rose = new BigNumber(rd.rose).multipliedBy(100)
+    let quantity
+    let cprice
+    if (rose.gt(0)) {
       typeColor = common.redColor
-    } else if (rd.rose < 0) {
+    } else if (rose.lt(0)) {
       typeColor = common.greenColor
-    } else if (rd.rose === 0) {
+    } else {
       typeColor = common.textColor
     }
+    rose = rose.toFixed(2, 1)
+    common.precision(rd.name, currencyName, (p, q) => {
+      cprice = new BigNumber(rd.cprice).toFixed(p, 1)
+      quantity = new BigNumber(rd.quantity).toFixed(q, 1)
+    })
+
     return (
       <View>
         <View
@@ -102,18 +112,7 @@ export default class MarketList extends Component {
               textAlign: 'center',
               alignSelf: 'center',
             }}
-          >{rd.quantity}</Text>
-          <Text
-            style={{
-              flex: 1,
-              paddingTop: common.margin5,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.textColor,
-              textAlign: 'center',
-              alignSelf: 'center',
-            }}
-          >{rd.cprice}</Text>
+          >{quantity}</Text>
           <Text
             style={{
               flex: 1,
@@ -124,7 +123,18 @@ export default class MarketList extends Component {
               textAlign: 'center',
               alignSelf: 'center',
             }}
-          >{`${rd.rose}%`}</Text>
+          >{cprice}</Text>
+          <Text
+            style={{
+              flex: 1,
+              paddingTop: common.margin5,
+              paddingBottom: common.margin5,
+              fontSize: common.font14,
+              color: typeColor,
+              textAlign: 'center',
+              alignSelf: 'center',
+            }}
+          >{`${rose}%`}</Text>
         </View>
 
         <View
@@ -140,11 +150,11 @@ export default class MarketList extends Component {
   }
 
   render() {
-    const { data } = this.props
+    const { data, currencyName } = this.props
     return (
       <ListView
         dataSource={this.listDS(data)}
-        renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
+        renderRow={rd => this.renderRow(rd, currencyName)}
         renderHeader={() => this.renderHeader()}
         enableEmptySections
         removeClippedSubviews={false}

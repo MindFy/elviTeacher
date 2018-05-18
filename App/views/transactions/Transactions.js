@@ -10,6 +10,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import Depth from './Depth'
 import DelegateShelves from './DelegateShelves'
@@ -53,7 +54,7 @@ class Transactions extends Component {
             : <TouchableOpacity
               activeOpacity={common.activeOpacity}
               onPress={() => {
-                navigation.navigate('Test')
+                navigation.navigate('Detail')
               }}
             >
               <Image
@@ -90,52 +91,21 @@ class Transactions extends Component {
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
   }
 
-  // 币币对小数规则
-  precision(price, quantity) {
-    const { homeRoseSelected } = this.props
-    let p = price
-    let q = quantity
-
-    if (
-      ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
-        && homeRoseSelected.currency.name === common.token.CNYT))
-      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-        && homeRoseSelected.currency.name === common.token.CNYT))
-      || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-        && homeRoseSelected.currency.name === common.token.TK))
-    ) {
-      // p:2 q:4 a:6
-      p = Number(p).toFixed(2)
-      q = Number(q).toFixed(4)
-    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
-      && homeRoseSelected.currency.name === common.token.CNYT) {
-      // p:4 q:0 a:4
-      p = Number(p).toFixed(4)
-      q = Number(q).toFixed(0)
-    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
-      && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:8 q:0 a:8
-      p = Number(p).toFixed(8)
-      q = Number(q).toFixed(0)
-    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-      && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:6 q:4 a:6
-      p = Number(p).toFixed(6)
-      q = Number(q).toFixed(4)
-    }
-
-    return { p, q }
-  }
-
   renderLatestDealsRow(rd) {
+    const { homeRoseSelected } = this.props
     let textColor = null
+    let dealPrice
+    let quantity
     if (rd.endDirect === 'buy') {
       textColor = common.redColor
     } else if (rd.endDirect === 'sell') {
       textColor = common.greenColor
     }
     const createdAt = common.dfTime(rd.createdAt)
-    const { p, q } = this.precision(rd.dealPrice, rd.quantity)
+    common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
+      dealPrice = new BigNumber(rd.dealPrice).toFixed(p, 1)
+      quantity = new BigNumber(rd.quantity).toFixed(q, 1)
+    })
     return (
       <View
         style={{
@@ -159,14 +129,14 @@ class Transactions extends Component {
           fontSize: common.font12,
           textAlign: 'center',
         }}
-        >{p}</Text>
+        >{dealPrice}</Text>
         <Text style={{
           flex: 1,
           color: 'white',
           fontSize: common.font12,
           textAlign: 'right',
         }}
-        >{q}</Text>
+        >{quantity}</Text>
       </View>
     )
   }
@@ -271,6 +241,7 @@ class Transactions extends Component {
           <ListView
             style={{
               marginTop: common.margin10,
+              marginBottom: common.margin10,
             }}
             dataSource={this.latestDealsDS(latestDeals)}
             renderRow={(rd, sid, rid) => this.renderLatestDealsRow(rd, sid, rid)}

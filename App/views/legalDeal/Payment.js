@@ -9,6 +9,7 @@ import {
 import {
   common,
 } from '../../constants/common'
+import BigNumber from 'bignumber.js';
 
 export default class Payment extends Component {
   static navigationOptions(props) {
@@ -58,7 +59,7 @@ export default class Payment extends Component {
     let bankName = ''
     let bankNo = ''
     let remark = ''
-    let price = 0
+    const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity)
     if (rd.direct === common.buy) {
       name = rd.traderPayinfo.name
       bankName = rd.traderPayinfo.bankName
@@ -67,7 +68,6 @@ export default class Payment extends Component {
       titleName = '收款方户名'
       titleBankName = '收款方开户行'
       titleBankNo = '收款方账号'
-      price = rd.dealPrice
     } else if (rd.direct === common.sell) {
       name = rd.createrPayinfo.name
       bankName = rd.createrPayinfo.bankName
@@ -76,7 +76,6 @@ export default class Payment extends Component {
       titleName = '汇款方户名'
       titleBankName = '汇款方开户行'
       titleBankNo = '汇款方账号'
-      price = 0.99
     }
     return (
       <ScrollView
@@ -100,7 +99,7 @@ export default class Payment extends Component {
             color: common.textColor,
             alignSelf: 'center',
           }}
-        >{`¥${common.bigNumber.multipliedBy(price, rd.quantity)}`}</Text>
+        >{`¥${amount}`}</Text>
 
         <View
           style={{

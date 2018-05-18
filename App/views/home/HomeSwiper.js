@@ -53,8 +53,8 @@ export default class HomeSwiper extends Component {
               width: common.sw,
               height: common.h234,
             }}
-            resizeMode="stretch"
-            resizeMethod="scale"
+            resizeMode="cover" // "cover" | "contain" | "stretch" | "cover" | "center";
+            resizeMethod="resize" // "auto" | "resize" | "scale"
             source={{ uri: `${imgHashApi}${element.imghash}` }}
           />
         </TouchableOpacity>,

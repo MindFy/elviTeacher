@@ -256,25 +256,33 @@ const common = {
     const dfStr = `${getHours}:${getMinutes}:${getSeconds}`
     return dfStr
   },
-  bigNumber: {
-    plus(a, b) { // "+"
-      return Number(BigNumber(a).plus(b).valueOf())
-    },
-    dividedBy(a, b) { // "/"
-      return Number(BigNumber(a).dividedBy(b).valueOf())
-    },
-    multipliedBy(a, b) { // "*"
-      return Number(BigNumber(a).multipliedBy(b).valueOf())
-    },
-    minus(a, b) { // "-"
-      return Number(BigNumber(a).minus(b).valueOf())
-    },
-    gt(a, b) { // ">"
-      return BigNumber(a).gt(b)
-    },
-    lt(a, b) { // "<"
-      return BigNumber(a).lt(b)
-    },
+
+  // 币币交易小数精度规则
+  precision(goodsName, currencyName, block) {
+    if (goodsName === common.token.ETH
+      && currencyName === common.token.BTC) {
+      // p:6 q:4 a:6
+      block(6, 4, 6)
+    } else if (goodsName === common.token.TK
+      && currencyName === common.token.CNYT) {
+      // p:4 q:0 a:4
+      block(4, 0, 4)
+    } else if (goodsName === common.token.TK
+      && currencyName === common.token.BTC) {
+      // p:8 q:0 a:8
+      block(8, 0, 8)
+      // } else if (
+      //   ((goodsName === common.token.BTC
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.ETH
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.ETH
+      //     && currencyName === common.token.TK))
+      // ) {
+    } else {
+      // p:2 q:4 a:6
+      block(2, 4, 6)
+    }
   },
 }
 

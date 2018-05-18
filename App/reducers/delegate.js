@@ -5,9 +5,9 @@ import {
 } from '../constants/common'
 
 const initialState = {
-  price: 0,
-  quantity: 0,
-  amount: 0,
+  price: '',
+  quantity: '',
+  amount: '',
   shelvesBuy: [],
   shelvesSell: [],
   depthMap: {
@@ -220,7 +220,7 @@ export default function delegate(state = initialState, action) {
         skipCurrent: action.data.skipCurrent,
         skipHistory: action.data.skipHistory,
         refreshStateCurrent: action.data.refreshStateCurrent,
-        refreshStateHistory: action.data.skipCurrent,
+        refreshStateHistory: action.data.refreshStateHistory,
       }
       break
 

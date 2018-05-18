@@ -33,9 +33,9 @@ class DelegateShelves extends Component {
     const { price, quantity } = this.props
 
     if (tag === 'price') {
-      this.textInputUpdate(text, quantity)
+      this.textInputUpdate(text, quantity, undefined, 'price')
     } else if (tag === 'quantity') {
-      this.textInputUpdate(price, text)
+      this.textInputUpdate(price, text, undefined, 'quantity')
     }
   }
 
@@ -46,96 +46,70 @@ class DelegateShelves extends Component {
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
   }
 
-  // 币币对小数规则
-  precision(price, quantity, amount, precisionPrice, precisionQuantity, precisionAmount) {
-    const { dispatch } = this.props
-    let p
-    let q
+  // 输入框限制
+  textInputLimit(price, quantity, amount, precisionPrice, precisionQuantity, precisionAmount, tag) {
+    if ((tag === 'price' && !price.length) || (tag === 'quantity' && !quantity.length)) {
+      return { p: price, q: quantity, a: '' } // 1.输入框清空
+    }
+
+    let p = new BigNumber(price)
+    let q = new BigNumber(quantity)
     let a
 
-    if (!`${price}`.length) {
-      dispatch(actions.textInputDelegateUpdate({ price: 0, quantity, amount: 0 }))
-      return undefined // 1.清空时置0
+    if (tag === 'price' && p.isNaN()) return undefined // 2.限制只能输入数字、小数点
+    if (tag === 'quantity' && q.isNaN()) return undefined // 3.限制只能输入数字、小数点
+    const pArr = price.split('.')
+    const qArr = quantity.split('.')
+    if (pArr[0].length > common.maxLenDelegate) return undefined // 4.整数长度限制
+    if (pArr.length > 1 && pArr[1].length > precisionPrice) return undefined // 5.小数长度限制
+    if (price.endsWith('.')) {
+      a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
+      a = a.isNaN() ? '' : a.toString()
+      return { p: price, q: quantity, a }
     }
-    if (!`${quantity}`.length) {
-      dispatch(actions.textInputDelegateUpdate({ price, quantity: 0, amount: 0 }))
-      return undefined // 2.清空时置0
+    if (qArr[0].length > common.maxLenDelegate) return undefined // 6.整数长度限制
+    if (precisionQuantity === 0) {
+      if (qArr.length > 1) return undefined // 7.限制只能输入整数
+    } else {
+      if (quantity.endsWith('.')) {
+        a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
+        a = a.isNaN() ? '' : a.toString()
+        return { p: price, q: quantity, a }
+      }
+      if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 8.小数长度限制
     }
-    p = new BigNumber(price).multipliedBy(1).dp(precisionPrice, 1)
-    if (p.isNaN()) return undefined // 3.限制只能输入数字、小数点
-    if (`${price}`.endsWith('.')) {
-      a = new BigNumber(p).multipliedBy(quantity).dp(precisionAmount, 1).toNumber()
-      dispatch(actions.textInputDelegateUpdate({ price, quantity, amount: a }))
-      return undefined // 4.保留小数点
-    }
-    const pArr = `${price}`.split('.')
-    if (pArr[0].length > common.maxLenDelegate) return undefined // 5.整数长度限制
-    if (pArr.length > 1 && pArr[1].length > precisionPrice) return undefined // 6.小数长度限制
 
     if (amount || amount === 0) {
       q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
-      if (q.isNaN()) return undefined // 7.分子不能为0，非数字
-    } else {
-      q = new BigNumber(quantity)
-      if (q.isNaN()) return undefined // 8.限制只能输入数字、小数点
-      const qArr = `${quantity}`.split('.')
-      if (qArr[0].length > common.maxLenDelegate) return undefined // 9.整数长度限制
-      if (precisionQuantity === 0) {
-        if (qArr.length > 1) return undefined // 10.限制只能输入整数
-      } else {
-        if (`${quantity}`.endsWith('.')) {
-          dispatch(actions.textInputDelegateUpdate({ price, quantity, amount: a }))
-          return undefined // 11.保留小数点
-        }
-        if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 12.小数长度限制
-      }
+      if (q.isNaN()) return undefined // 9.分子不能为0，非数字
     }
 
-    p = p.toNumber()
-    q = q.toNumber()
-    a = new BigNumber(q).multipliedBy(p).dp(precisionAmount, 1).toNumber()
-
+    a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
+    p = p.isNaN() ? '' : `${p.toNumber()}`
+    q = q.isNaN() ? '' : `${q.toNumber()}`
+    a = a.isNaN() ? '' : `${a.toNumber()}`
     return { p, q, a }
   }
 
-  textInputUpdate(price, quantity, amount) {
+  textInputUpdate(price, quantity, amount, tag) {
     const { homeRoseSelected, dispatch } = this.props
-    let temp
-
-    if (homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-      && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:6 q:4 a:6
-      const t = this.precision(price, quantity, amount, 6, 4, 6)
-      if (t) temp = t
-      else return
-    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
-      && homeRoseSelected.currency.name === common.token.CNYT) {
-      // p:4 q:0 a:4
-      const t = this.precision(price, quantity, amount, 4, 0, 4)
-      if (t) temp = t
-      else return
-    } else if (homeRoseSelected && homeRoseSelected.goods.name === common.token.TK
-      && homeRoseSelected.currency.name === common.token.BTC) {
-      // p:8 q:0 a:8
-      const t = this.precision(price, quantity, amount, 8, 0, 8)
-      if (t) temp = t
-      else return
-    // } else if (
-    //   ((homeRoseSelected && homeRoseSelected.goods.name === common.token.BTC
-    //     && homeRoseSelected.currency.name === common.token.CNYT))
-    //   || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-    //     && homeRoseSelected.currency.name === common.token.CNYT))
-    //   || ((homeRoseSelected && homeRoseSelected.goods.name === common.token.ETH
-    //     && homeRoseSelected.currency.name === common.token.TK))
-    // ) {
+    if (homeRoseSelected) {
+      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q, a) => {
+        const temp = this.textInputLimit(price, quantity, amount, p, q, a, tag)
+        if (temp) {
+          dispatch(actions.textInputDelegateUpdate({
+            price: temp.p, quantity: temp.q, amount: temp.a,
+          }))
+        }
+      })
     } else {
-      // p:2 q:4 a:6
-      const t = this.precision(price, quantity, amount, 2, 4, 6)
-      if (t) temp = t
-      else return
+      const temp = this.textInputLimit(price, quantity, amount, 2, 4, 6, tag)
+      if (temp) {
+        dispatch(actions.textInputDelegateUpdate({
+          price: temp.p, quantity: temp.q, amount: temp.a,
+        }))
+      }
     }
-
-    dispatch(actions.textInputDelegateUpdate({ price: temp.p, quantity: temp.q, amount: temp.a }))
   }
 
   menuPress() {
@@ -148,7 +122,7 @@ class DelegateShelves extends Component {
           const { homeRoseSelected } = this.props
           ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
           dispatch(actions.homeRoseSelectedUpdate(element))
-          dispatch(actions.textInputDelegateUpdate({ price: 0, quantity: 0, amount: 0 }))
+          dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
           ws.onopen(element.goods.id, element.currency.id, this.props.user)
           this.getUIData(element.goods.id, element.currency.id)
         },
@@ -164,23 +138,26 @@ class DelegateShelves extends Component {
       navigation.navigate('LoginStack')
       return
     }
-    if (price === 0) {
+    const p = new BigNumber(price)
+    const q = new BigNumber(quantity)
+    const a = new BigNumber(amount)
+    if (!price.length || p === 0) {
       Toast.message(`请输入正确的${buyOrSell ? '买入' : '卖出'}价格`)
       return
     }
-    if (quantity === 0) {
+    if (!quantity.length || q === 0) {
       Toast.message(`请输入正确的${buyOrSell ? '买入' : '卖出'}数量`)
       return
     }
 
     if (homeRoseSelected) {
       if (homeRoseSelected.goods.name === common.token.TK
-        && common.bigNumber.lt(quantity, common.minQuantityTK)) {
+        && BigNumber(quantity).lt(common.minQuantityTK)) {
         Toast.message(`TK${buyOrSell ? '买入' : '卖出'}数量至少为${common.minQuantityTK}`)
         return
       }
       if (homeRoseSelected.goods.name === common.token.BTC
-        && common.bigNumber.lt(quantity, common.minQuantityBTC)) {
+        && BigNumber(quantity).lt(common.minQuantityBTC)) {
         Toast.message(`BTC${buyOrSell ? '买入' : '卖出'}数量至少为${common.minQuantityBTC}`)
         return
       }
@@ -188,9 +165,9 @@ class DelegateShelves extends Component {
         goods_id: homeRoseSelected.goods.id,
         currency_id: homeRoseSelected.currency.id,
         direct: buyOrSell ? 'buy' : 'sell',
-        price,
-        quantity,
-        total_money: amount,
+        price: p,
+        quantity: q,
+        total_money: a,
       }))
     }
   }
@@ -205,42 +182,43 @@ class DelegateShelves extends Component {
     let maximumValueSlider = 0
     let currentVisible = 0
     let percentSlider = 0
-    let rmb = ''
+    let rmb = '0.00'
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
       if (amountVisible) {
         if (buyOrSell) {
           currentVisible = amountVisible[currencyName] ? amountVisible[currencyName] : 0
-          maximumValueSlider = price === 0 || quantity === 0 ? 0 : 1
-          amountVisibleTitle = `${currentVisible} ${currencyName}`
+          maximumValueSlider = !price.length || Number(price) === 0 ? 0 : 1
+          amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${currencyName}`
         } else {
           currentVisible = amountVisible[goodsName] ? amountVisible[goodsName] : 0
           maximumValueSlider = currentVisible === 0 ? 0 : 1
-          amountVisibleTitle = `${currentVisible} ${goodsName}`
+          amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${goodsName}`
         }
       }
       if (valuation && valuation.rates) {
         rmb = valuation.rates[currencyName][goodsName]
+        rmb = new BigNumber(rmb).toFixed(2)
       }
     }
     if (currentVisible === 0) {
       percentSlider = 0
     } else if (buyOrSell) {
       let temp = amount / currentVisible
-      if (common.bigNumber.lt(temp, 0.01) && common.bigNumber.gt(temp, 0)) {
+      if (BigNumber(temp).lt(0.01) && BigNumber(temp).gt(0)) {
         temp = 0.01
       }
-      if (common.bigNumber.lt(temp, 1) && common.bigNumber.gt(temp, 0.99)) {
+      if (BigNumber(temp).lt(1) && BigNumber(temp).gt(0.99)) {
         temp = 0.99
       }
       percentSlider = temp
     } else {
       let temp = quantity / currentVisible
-      if (common.bigNumber.lt(temp, 0.01) && common.bigNumber.gt(temp, 0)) {
+      if (BigNumber(temp).lt(0.01) && BigNumber(temp).gt(0)) {
         temp = 0.01
       }
-      if (common.bigNumber.lt(temp, 1) && common.bigNumber.gt(temp, 0.99)) {
+      if (BigNumber(temp).lt(1) && BigNumber(temp).gt(0.99)) {
         temp = 0.99
       }
       percentSlider = temp
@@ -291,7 +269,7 @@ class DelegateShelves extends Component {
               marginTop: common.margin10,
             }}
             placeholder={`价格（${currencyName}）`}
-            value={price === 0 ? '' : `${price}`}
+            value={price}
             onChange={e => this.onChange(e, 'price')}
           />
 
@@ -305,7 +283,7 @@ class DelegateShelves extends Component {
 
           <TextInputTransactions
             placeholder={`数量（${goodsName}）`}
-            value={quantity === 0 ? '' : `${quantity}`}
+            value={quantity}
             onChange={e => this.onChange(e, 'quantity')}
           />
 
@@ -323,14 +301,14 @@ class DelegateShelves extends Component {
               if (buyOrSell) {
                 this.textInputUpdate(price, quantity, temp)
               } else {
-                this.textInputUpdate(price, temp)
+                this.textInputUpdate(price, `${temp}`)
               }
             }}
           />
 
           <TextInputTransactions
             placeholder={`成交金额（${currencyName}）`}
-            value={amount === 0 ? '' : `${amount}`}
+            value={amount}
             editable={false}
           />
 
@@ -402,7 +380,7 @@ class DelegateShelves extends Component {
               type={common.sell}
               dataSource={this.shelvesSellDS(shelvesSell)}
               rowPress={(rd) => {
-                this.textInputUpdate(rd.price, quantity)
+                this.textInputUpdate(`${rd.price}`, quantity)
               }}
             />
           </View>
@@ -415,7 +393,7 @@ class DelegateShelves extends Component {
               type={common.buy}
               dataSource={this.shelvesBuyDS(shelvesBuy)}
               rowPress={(rd) => {
-                this.textInputUpdate(rd.price, quantity)
+                this.textInputUpdate(`${rd.price}`, quantity)
               }}
             />
           </View>

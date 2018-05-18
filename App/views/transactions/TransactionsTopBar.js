@@ -15,7 +15,7 @@ class TransactionsTopBar extends Component {
     const { dispatch, buyOrSell } = this.props
     if (buyOrSell !== b) {
       dispatch(actions.buyOrSellUpdate(b))
-      dispatch(actions.textInputDelegateUpdate({ price: 0, quantity: 0, amount: 0 }))
+      dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
     }
   }
 

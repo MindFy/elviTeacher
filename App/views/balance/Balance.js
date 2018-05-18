@@ -10,6 +10,7 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import BalanceCell from './BalanceCell'
 import actions from '../../actions/index'
@@ -57,29 +58,31 @@ class Balance extends Component {
   }
 
   renderRow(rd) {
+    const amount = new BigNumber(rd.amount).toFixed(8, 1)
     return (
       <BalanceCell
         leftImageSource={require('../../assets/111.png')}
         title={rd.token.name}
-        detail={rd.amount}
+        detail={amount}
       />
     )
   }
 
   render() {
     const { asset, user, navigation, dispatch, findAssetListVisible, valuation } = this.props
-    let amountBTC = 0
-    let rmbBTC = 0
+    let amountBTC = new BigNumber(0)
+    let amountRMB = new BigNumber(0)
     if (valuation && valuation.rates) {
-      rmbBTC = valuation.rates[common.token.BTC][common.token.CNYT]
       for (let i = 0; i < asset.length; i++) {
         const element = asset[i]
-        const amount = Number(element.amount)
+        const amount = new BigNumber(element.amount)
         const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
-        const temp = common.bigNumber.multipliedBy(amount, scaleBTC)
-        amountBTC += temp
+        const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
+        amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
+        amountRMB = amount.multipliedBy(scaleCNYT).plus(amountRMB)
       }
-      amountBTC = Number(amountBTC).toFixed(8)
+      amountBTC = amountBTC.toFixed(8, 1)
+      amountRMB = amountRMB.toFixed(2, 1)
     }
 
     return (
@@ -98,6 +101,7 @@ class Balance extends Component {
               onRefresh={() => {
                 if (user) {
                   dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+                  dispatch(actions.getValuation())
                 }
               }}
               refreshing={findAssetListVisible}
@@ -122,12 +126,12 @@ class Balance extends Component {
           <Text
             style={{
               marginTop: common.margin5,
-              fontSize: common.font10,
+              fontSize: common.font12,
               color: common.placeholderColor,
               alignSelf: 'center',
               textAlign: 'center',
             }}
-          >{`(¥${rmbBTC})`}</Text>
+          >{`(¥${amountRMB})`}</Text>
           <Text
             style={{
               marginTop: common.margin10,

@@ -8,7 +8,7 @@ const initialState = {
   kLineOrDepth: common.ui.kLine,
   averagePriceOrPrice: common.ui.averagePrice,
   dealledOrQuantity: common.ui.dealled,
-  cashAccount: 0,
+  cashAccount: '',
   currentAddress: '',
   drawerOpen: false,
 
