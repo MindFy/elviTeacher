@@ -29,7 +29,7 @@ export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
     const { placeholder, onChange, maxLength, keyboardType, type, value, codeEmail, onPress,
-      secureTextEntry, newPassword, newPasswordAgain, onEndEditing, editable } = this.props
+      secureTextEntry, newPassword, newPasswordAgain, editable } = this.props
     return (
       <View
         style={{
@@ -47,7 +47,6 @@ export default class TextInputPwd extends Component {
             placeholderTextColor={common.placeholderColor}
             value={value}
             onChange={onChange}
-            onEndEditing={onEndEditing}
             maxLength={maxLength}
             keyboardType={keyboardType}
             secureTextEntry={secureTextEntry}
