@@ -2,16 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
-  Text,
   Image,
   StatusBar,
   ScrollView,
-  ListView,
   TouchableOpacity,
 } from 'react-native'
+import { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
-import HistoryCell from './HistoryCell'
+import HistoryList from './HistoryList'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -30,6 +29,11 @@ class History extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -46,81 +50,45 @@ class History extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
-    const { dispatch, user } = props
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
+  componentDidMount() {
+    const { dispatch, user } = this.props
 
     if (user) {
-      dispatch(actions.findPaymentListRecharge(schemas.findPaymentList(user.id, common.recharge)))
-      dispatch(actions.findPaymentListWithdraw(schemas.findPaymentList(user.id, common.withdraw)))
+      dispatch(actions.findPaymentListRecharge(
+        schemas.findPaymentListRecharge(user.id, 0, common.payment.limitRecharge)
+        , RefreshState.HeaderRefreshing))
+      dispatch(actions.findPaymentListWithdraw(
+        schemas.findPaymentListWithdraw(user.id, 0, common.payment.limitWithdraw)
+        , RefreshState.HeaderRefreshing))
+      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
+        , RefreshState.HeaderRefreshing))
     }
   }
 
-  componentDidMount() { }
-
-  renderRow(rd) {
-    const { rechargeOrWithdraw } = this.props
-    return (
-      <HistoryCell
-        rd={rd}
-        rechargeOrWithdraw={rechargeOrWithdraw}
-      />
-    )
-  }
-
-  renderHeader() {
-    const { rechargeOrWithdraw } = this.props
-    return (
-      <View style={{
-        marginTop: common.margin10,
-        marginLeft: common.margin10,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-      >
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }}
-        >时间</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }}
-        >币种</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }}
-        >数量</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-          }}
-        >状态</Text>
-        {
-          rechargeOrWithdraw === common.withdraw ?
-            <Text
-              style={{
-                color: common.textColor,
-                fontSize: common.font12,
-              }}
-            >操作</Text> : null
-        }
-      </View>
-    )
+  componentWillUnmount() {
+    const { dispatch, rechargeOrWithdraw } = this.props
+    if (rechargeOrWithdraw !== common.payment.recharge) {
+      dispatch(actions.rechargeOrWithdrawUpdate({
+        rechargeOrWithdraw: common.payment.recharge,
+      }))
+    }
+    dispatch(actions.skipPaymentUpdate({
+      skipRecharge: 0,
+      skipWithdraw: 0,
+      refreshStateRecharge: RefreshState.Idle,
+      refreshStateWithdraw: RefreshState.Idle,
+    }))
+    dispatch(actions.skipLegalDealUpdate({
+      skip: 0,
+      refreshState: RefreshState.Idle,
+    }))
   }
 
   render() {
-    const { dispatch, rechargeOrWithdraw, paymentRecharge, paymentWithdraw } = this.props
+    const { dispatch, rechargeOrWithdraw, paymentRecharge, paymentWithdraw, legalDeal, user,
+      skipLegalDeal, skipRecharge, skipWithdraw, refreshStateLegalDeal, refreshStateRecharge,
+      refreshStateWithdraw } = this.props
+
     return (
       <View
         style={{
@@ -135,25 +103,126 @@ class History extends Component {
         <TKSelectionBar
           leftTitle={'充值记录'}
           rightTitle={'提现记录'}
+          thirdTitle={'法币交易记录'}
+          rightViewStyle={{
+            marginLeft: 1,
+          }}
           leftBlock={() => {
             dispatch(actions.rechargeOrWithdrawUpdate({
-              rechargeOrWithdraw: common.recharge,
+              rechargeOrWithdraw: common.payment.recharge,
             }))
           }}
           rightBlock={() => {
             dispatch(actions.rechargeOrWithdrawUpdate({
-              rechargeOrWithdraw: common.withdraw,
+              rechargeOrWithdraw: common.payment.withdraw,
+            }))
+          }}
+          thirdBlock={() => {
+            dispatch(actions.rechargeOrWithdrawUpdate({
+              rechargeOrWithdraw: common.payment.legalDeal,
             }))
           }}
         />
 
-        <ListView
-          dataSource={this.dataSource(rechargeOrWithdraw === common.recharge ?
-            paymentRecharge : paymentWithdraw)}
-          renderRow={rd => this.renderRow(rd)}
-          renderHeader={() => this.renderHeader()}
-          enableEmptySections
-        />
+        {
+          rechargeOrWithdraw === common.payment.recharge
+            ? <HistoryList
+              data={paymentRecharge}
+              rechargeOrWithdraw={rechargeOrWithdraw}
+              refreshState={refreshStateRecharge}
+              onHeaderRefresh={() => {
+                if (refreshStateRecharge !== RefreshState.NoMoreData
+                  || refreshStateRecharge !== RefreshState.FooterRefreshing) {
+                  if (user) {
+                    dispatch(actions.findPaymentListRecharge(
+                      schemas.findPaymentListRecharge(
+                        user.id, 0, common.payment.limitRecharge,
+                      ), RefreshState.HeaderRefreshing))
+                  }
+                }
+              }}
+              onFooterRefresh={() => {
+                if (user && refreshStateRecharge !== RefreshState.NoMoreData
+                  || refreshStateRecharge !== RefreshState.HeaderRefreshing) {
+                  if (user) {
+                    dispatch(actions.findPaymentListRecharge(
+                      schemas.findPaymentListRecharge(
+                        user.id,
+                        skipRecharge * common.payment.limitRecharge,
+                        common.payment.limitRecharge,
+                      ), RefreshState.FooterRefreshing))
+                  }
+                }
+              }}
+            /> : null
+        }
+        {
+          rechargeOrWithdraw === common.payment.withdraw
+            ? <HistoryList
+              data={paymentWithdraw}
+              rechargeOrWithdraw={rechargeOrWithdraw}
+              refreshState={refreshStateWithdraw}
+              onHeaderRefresh={() => {
+                if (refreshStateWithdraw !== RefreshState.NoMoreData
+                  || refreshStateWithdraw !== RefreshState.FooterRefreshing) {
+                  if (user) {
+                    dispatch(actions.findPaymentListWithdraw(
+                      schemas.findPaymentListWithdraw(
+                        user.id, 0, common.payment.limitWithdraw,
+                      ), RefreshState.HeaderRefreshing))
+                  }
+                }
+              }}
+              onFooterRefresh={() => {
+                if (user && refreshStateWithdraw !== RefreshState.NoMoreData
+                  || refreshStateWithdraw !== RefreshState.HeaderRefreshing) {
+                  if (user) {
+                    dispatch(actions.findPaymentListWithdraw(
+                      schemas.findPaymentListWithdraw(
+                        user.id,
+                        skipWithdraw * common.payment.limitWithdraw,
+                        common.payment.limitWithdraw,
+                      ), RefreshState.FooterRefreshing))
+                  }
+                }
+              }}
+              cancelWithdraw={(rd, rid) => {
+                const temp = paymentWithdraw.concat()
+                temp[rid].status = '已取消'
+                dispatch(actions.cancelWithdraw({ id: rd.id }, temp))
+              }}
+            /> : null
+        }
+        {
+          rechargeOrWithdraw === common.payment.legalDeal
+            ? <HistoryList
+              data={legalDeal}
+              rechargeOrWithdraw={rechargeOrWithdraw}
+              refreshState={refreshStateLegalDeal}
+              onHeaderRefresh={() => {
+                if (refreshStateLegalDeal !== RefreshState.NoMoreData
+                  || refreshStateLegalDeal !== RefreshState.FooterRefreshing) {
+                  if (user) {
+                    dispatch(actions.findLegalDeal(
+                      schemas.findLegalDeal(user.id, 0, common.legalDeal.limit),
+                      RefreshState.HeaderRefreshing))
+                  }
+                }
+              }}
+              onFooterRefresh={() => {
+                if (user && refreshStateLegalDeal !== RefreshState.NoMoreData
+                  || refreshStateLegalDeal !== RefreshState.HeaderRefreshing) {
+                  if (user) {
+                    dispatch(actions.findLegalDeal(schemas.findLegalDeal(
+                      user.id,
+                      common.legalDeal.limit * skipLegalDeal,
+                      common.legalDeal.limit,
+                    ), RefreshState.FooterRefreshing))
+                  }
+                }
+              }}
+            /> : null
+        }
 
         <ScrollView />
       </View>
@@ -164,10 +233,17 @@ class History extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
-    asset: store.asset.asset,
+    skipRecharge: store.payment.skipRecharge,
+    refreshStateRecharge: store.payment.refreshStateRecharge,
     paymentRecharge: store.payment.paymentRecharge,
+    skipWithdraw: store.payment.skipWithdraw,
+    refreshStateWithdraw: store.payment.refreshStateWithdraw,
     paymentWithdraw: store.payment.paymentWithdraw,
     rechargeOrWithdraw: store.payment.rechargeOrWithdraw,
+
+    legalDeal: store.legalDeal.legalDeal,
+    skipLegalDeal: store.legalDeal.skip,
+    refreshStateLegalDeal: store.legalDeal.refreshState,
   }
 }
 

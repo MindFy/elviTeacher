@@ -3,13 +3,12 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
-  ListView,
   StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
-import MarketCell from './MarketCell'
+import MarketList from './MarketList'
 import actions from '../../actions/index'
 
 class Market extends Component {
@@ -28,73 +27,11 @@ class Market extends Component {
     }
   }
 
-  constructor(props) {
-    super(props)
-    this.listDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-  }
+  componentDidMount() { }
 
   tabBarPress(selectedIndex) {
     const { dispatch } = this.props
     dispatch(actions.marketListUpdate({ selectedIndex }))
-  }
-
-  renderRow(rd) {
-    return (
-      <MarketCell rd={rd} />
-    )
-  }
-
-  renderHeader() {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
-      >
-        <Text
-          style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
-          }}
-        >名称</Text>
-        <Text
-          style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
-          }}
-        >成交量</Text>
-        <Text
-          style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
-          }}
-        >最新价</Text>
-        <Text
-          style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
-          }}
-        >24h涨跌</Text>
-      </View>
-    )
   }
 
   render() {
@@ -155,12 +92,9 @@ class Market extends Component {
             {tabViews}
           </ScrollView>
         </View>
-        <ListView
-          dataSource={this.listDS(rose.length === 0 ? [] : rose[selectedIndex].sub)}
-          renderRow={(rd, sid, rid) => this.renderRow(rd, sid, rid)}
-          renderHeader={() => this.renderHeader()}
-          enableEmptySections
-          removeClippedSubviews={false}
+        <MarketList
+          data={rose.length === 0 ? [] : rose[selectedIndex].sub}
+          currencyName={rose.length === 0 ? '' : rose[selectedIndex].name}
         />
       </View>
     )

@@ -4,14 +4,18 @@ import {
   View,
   Image,
   StatusBar,
-  ListView,
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
+import {
+  Drawer,
+} from 'teaset'
 import Spinner from 'react-native-spinkit'
+import { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
-import TKSelectionBar from '../../components/TKSelectionBar'
 import DelegateListView from './DelegateListView'
+import TKSelectionBar from '../../components/TKSelectionBar'
+import DelegateDrawer from './DelegateDrawer'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -30,6 +34,11 @@ class Delegate extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -46,8 +55,15 @@ class Delegate extends Component {
       headerRight:
         (
           <TouchableOpacity
+            style={{
+              width: common.w40,
+              height: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
-            onPress={() => { }}
+            onPress={() => {
+              DeviceEventEmitter.emit(common.noti.delegateAllCancel, 'drawer')
+            }}
           >
             <Image
               style={{
@@ -62,31 +78,68 @@ class Delegate extends Component {
     }
   }
 
-  constructor() {
-    super()
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-  }
-
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, user, homeRoseSelected } = this.props
     if (user) {
-      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(user.id)))
-      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id)))
+      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+        user.id,
+        0,
+        common.delegate.limtCurrent,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+        user.id,
+        0,
+        common.delegate.limtHistory,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
     }
-    this.listener = DeviceEventEmitter.addListener(common.delegateListenerNoti, () => {
-      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(user.id)))
+    this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, (type) => {
+      if (type === 'drawer') {
+        const view = (
+          <DelegateDrawer
+            close={() => {
+              this.drawer.close()
+              dispatch(actions.delegateDrawerUpdate({ drawerOpen: false }))
+            }}
+          />
+        )
+        this.drawer = Drawer.open(view, 'right')
+        return
+      }
+      dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+        user.id,
+        0,
+        common.delegate.limtCurrent,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
+      dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+        user.id,
+        0,
+        common.delegate.limtHistory,
+        homeRoseSelected.goods.id,
+        homeRoseSelected.currency.id,
+      ), RefreshState.HeaderRefreshing))
     })
   }
 
   componentWillUnmount() {
     const { dispatch, currentOrHistory } = this.props
-    if (currentOrHistory !== common.current) {
+    if (currentOrHistory !== common.delegate.current) {
       dispatch(actions.currentOrHistoryUpdate({
-        currentOrHistory: common.current,
+        currentOrHistory: common.delegate.current,
       }))
     }
+    dispatch(actions.skipDelegateUpdate({
+      skipCurrent: 0,
+      skipHistory: 0,
+      refreshStateCurrent: RefreshState.Idle,
+      refreshStateHistory: RefreshState.Idle,
+    }))
+    dispatch(actions.delegateDrawerUpdate({ drawerOpen: false }))
     this.listener.remove()
   }
 
@@ -100,8 +153,9 @@ class Delegate extends Component {
   }
 
   render() {
-    const { dispatch, currentOrHistory, delegateSelfCurrent,
-      delegateSelfHistory, allCancelVisible } = this.props
+    const { dispatch, currentOrHistory, delegateSelfCurrent, delegateSelfHistory, allCancelVisible,
+      skipCurrent, skipHistory, refreshStateCurrent, refreshStateHistory, user, homeRoseSelected,
+      drawerOpen } = this.props
 
     return (
       <View style={{
@@ -110,30 +164,110 @@ class Delegate extends Component {
       }}
       >
         <StatusBar
-          barStyle={'light-content'}
+          barStyle={drawerOpen ? 'dark-content' : 'light-content'}
         />
 
         <TKSelectionBar
           leftTitle={'当前委托'}
           rightTitle={'历史委托'}
-          leftBlock={() => this.topBarPress(common.current)}
-          rightBlock={() => this.topBarPress(common.history)}
+          leftBlock={() => this.topBarPress(common.delegate.current)}
+          rightBlock={() => this.topBarPress(common.delegate.history)}
         />
 
-        <DelegateListView
-          currentOrHistory={currentOrHistory}
-          dataSource={this.dataSource(currentOrHistory === common.current ?
-            delegateSelfCurrent : delegateSelfHistory)}
-          cancelAllBlock={() => {
-            dispatch(actions.allCancel())
-          }}
-          cancelBlock={(rd, rid) => {
-            const temp = delegateSelfCurrent.concat()
-            temp.splice(rid, 1)
-            dispatch(actions.cancel({ id: rd.id }, temp))
-          }}
-        />
+        {
+          currentOrHistory === common.delegate.current
+            ? <DelegateListView
+              currentOrHistory={common.delegate.current}
+              data={delegateSelfCurrent}
+              refreshState={refreshStateCurrent}
+              cancelAllBlock={() => {
+                dispatch(actions.allCancel({
+                  goods_id: homeRoseSelected.goods.id,
+                  currency_id: homeRoseSelected.currency.id,
+                }))
+              }}
+              cancelBlock={(rd, rid) => {
+                const temp = delegateSelfCurrent.concat()
+                temp[rid].status = common.delegate.status.cancel
+                dispatch(actions.cancel({ id: rd.id }, temp))
+              }}
+              onHeaderRefresh={() => {
+                if (refreshStateCurrent !== RefreshState.NoMoreData
+                  || refreshStateCurrent !== RefreshState.FooterRefreshing) {
+                  dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+                    user.id,
+                    0,
+                    common.delegate.limtCurrent,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.HeaderRefreshing))
+                }
+              }}
+              onFooterRefresh={() => {
+                if (refreshStateCurrent !== RefreshState.NoMoreData
+                  || refreshStateCurrent !== RefreshState.HeaderRefreshing) {
+                  dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
+                    user.id,
+                    common.delegate.limtCurrent * skipCurrent,
+                    common.delegate.limtCurrent,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.FooterRefreshing))
+                }
+              }}
+            />
+            : <DelegateListView
+              currentOrHistory={common.delegate.history}
+              data={delegateSelfHistory}
+              refreshState={refreshStateHistory}
+              onHeaderRefresh={() => {
+                if (refreshStateHistory !== RefreshState.NoMoreData
+                  || refreshStateHistory !== RefreshState.FooterRefreshing) {
+                  dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+                    user.id,
+                    0,
+                    common.delegate.limtHistory,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.HeaderRefreshing))
+                }
+              }}
+              onFooterRefresh={() => {
+                if (refreshStateHistory !== RefreshState.NoMoreData
+                  || refreshStateHistory !== RefreshState.HeaderRefreshing) {
+                  dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
+                    user.id,
+                    common.delegate.limtHistory * skipHistory,
+                    common.delegate.limtHistory,
+                    homeRoseSelected.goods.id,
+                    homeRoseSelected.currency.id,
+                  ), RefreshState.FooterRefreshing))
+                }
+              }}
+            />
+        }
 
+        {/* <TouchableOpacity
+          style={{
+            position: 'absolute',
+            height: 40,
+            width: 40,
+          }}
+          onPress={() => {
+            const view = (
+              <DelegateDrawer
+                close={() => {
+                  this.drawer.close()
+                  dispatch(actions.delegateDrawerUpdate({ drawerOpen: false }))
+                }}
+              />
+            )
+            this.drawer = Drawer.open(view, 'right')
+            dispatch(actions.delegateDrawerUpdate({ drawerOpen: true }))
+          }}
+        >
+          <Text>666</Text>
+        </TouchableOpacity> */}
 
         <Spinner
           style={{
@@ -153,8 +287,13 @@ class Delegate extends Component {
 
 function mapStateToProps(store) {
   return {
+    skipCurrent: store.delegate.skipCurrent,
+    skipHistory: store.delegate.skipHistory,
+    refreshStateCurrent: store.delegate.refreshStateCurrent,
+    refreshStateHistory: store.delegate.refreshStateHistory,
     delegateSelfCurrent: store.delegate.delegateSelfCurrent,
     delegateSelfHistory: store.delegate.delegateSelfHistory,
+
     currentOrHistory: store.delegate.currentOrHistory,
 
     allCancelVisible: store.delegate.allCancelVisible,
@@ -163,7 +302,11 @@ function mapStateToProps(store) {
     cancelVisible: store.delegate.cancelVisible,
     cancelResponse: store.delegate.cancelResponse,
 
+    homeRoseSelected: store.dealstat.homeRoseSelected,
+
     user: store.user.user,
+
+    drawerOpen: store.ui.drawerOpen,
   }
 }
 

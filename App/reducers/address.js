@@ -5,6 +5,9 @@ import {
 
 const initialState = {
   address: [],
+  remark: '',
+  withdrawaddr: '',
+  selectedIndex: undefined,
   selectedToken: common.selectedTokenDefault,
   tokenListSelected: false,
 
@@ -19,6 +22,13 @@ export default function address(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
+    case constants.ADD_UPDATE_REQUEST:
+      nextState = {
+        ...state,
+        remark: action.data.remark,
+        withdrawaddr: action.data.withdrawaddr,
+      }
+      break
     case constants.ADD_REQUEST:
       nextState = {
         ...state,
@@ -50,6 +60,7 @@ export default function address(state = initialState, action) {
         ...state,
         findAddressVisible: false,
         findAddressResponse: action.response,
+        address: action.response.result.data.find_address,
       }
       break
     case constants.FIND_ADDRESS_FAILED:
@@ -65,6 +76,14 @@ export default function address(state = initialState, action) {
         ...state,
         selectedToken: action.data.selectedToken,
         tokenListSelected: action.data.tokenListSelected,
+        selectedIndex: action.data.selectedIndex,
+      }
+      break
+    case constants.FIND_ASSET_SELECT_TOKEN_UPDATE:
+      nextState = {
+        ...state,
+        selectedToken: state.selectedIndex
+          ? action.findAsset[state.selectedIndex] : state.selectedToken,
       }
       break
     default:

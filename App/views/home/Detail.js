@@ -5,17 +5,17 @@ import {
   Text,
   Image,
   StatusBar,
-  ListView,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import {
   Menu,
 } from 'teaset'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
-import TKSelectionBar from '../../components/TKSelectionBar'
 import KLine from './KLine'
 import Depth from '../transactions/Depth'
+import DetailList from './DetailList'
 import actions from '../../actions/index'
 
 class Detail extends Component {
@@ -33,6 +33,11 @@ class Detail extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -48,18 +53,7 @@ class Detail extends Component {
         ),
     }
   }
-  constructor() {
-    super()
-    this.shelvesBuyDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-    this.shelvesSellDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-    this.latestDealsDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-  }
+  componentDidMount() { }
 
   getUIData(goodsId, currencyId) {
     const { dispatch } = this.props
@@ -83,175 +77,9 @@ class Detail extends Component {
     Menu.show({ x: 55, y: 100 }, items)
   }
 
-  renderHeader(type) {
-    if (type === common.buy) {
-      return (
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            borderBottomColor: common.placeholderColor,
-            borderBottomWidth: 1,
-          }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              color: common.placeholderColor,
-              fontSize: common.font12,
-              paddingBottom: common.margin5,
-            }}
-          >买</Text>
-        </View>
-      )
-    } else if (type === common.sell) {
-      return (
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginRight: common.margin10,
-            borderBottomColor: common.placeholderColor,
-            borderBottomWidth: 1,
-          }}
-        >
-          <Text
-            style={{
-              color: common.placeholderColor,
-              fontSize: common.font12,
-              paddingBottom: common.margin5,
-            }}
-          >卖</Text>
-        </View>
-      )
-    }
-    return (
-      <View
-        style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-
-        }}
-      >
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: common.placeholderColor,
-            paddingBottom: common.margin5,
-          }}
-        >时间</Text>
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: common.placeholderColor,
-            paddingBottom: common.margin5,
-          }}
-        >价格</Text>
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: common.placeholderColor,
-            paddingBottom: common.margin5,
-          }}
-        >数量</Text>
-      </View>
-    )
-  }
-
-  renderRow(rd, type) {
-    if (type !== common.buy) {
-      return (
-        <View
-          style={{
-            marginTop: common.margin5,
-            marginLeft: common.margin10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.textColor,
-            }}
-          >{rd.sum_quantity}</Text>
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.redColor,
-            }}
-          >{rd.price}</Text>
-        </View>
-      )
-    } else if (type !== common.sell) {
-      return (
-        <View
-          style={{
-            marginTop: common.margin5,
-            marginRight: common.margin10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.greenColor,
-            }}
-          >{rd.price}</Text>
-          <Text
-            style={{
-              fontSize: common.font12,
-              color: common.textColor,
-            }}
-          >{rd.sum_quantity}</Text>
-        </View>
-      )
-    }
-    let textColor = null
-    if (rd.endDirect === common.buy) {
-      textColor = common.redColor
-    } else if (rd.endDirect === common.sell) {
-      textColor = common.greenColor
-    }
-    const createdAt = common.dfTime(rd.createdAt)
-    return (
-      <View
-        style={{
-          marginTop: common.margin5,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: common.textColor,
-          }}
-        >{createdAt}</Text>
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: textColor,
-          }}
-        >{rd.dealPrice}</Text>
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: common.textColor,
-          }}
-        >{rd.quantity}</Text>
-      </View>
-    )
-  }
-
   render() {
-    const { dispatch, homeRoseSelected, selectionBarSelected, navigation,
-      shelvesBuy, shelvesSell, latestDeals, kLineOrDepth, depthMap } = this.props
+    const { dispatch, homeRoseSelected, navigation, valuation, kLineOrDepth, depthMap,
+    } = this.props
     let goodsName = ''
     let currencyName = ''
     let lastprice = ''
@@ -261,22 +89,35 @@ class Detail extends Component {
     let quantity = 0
     let rose = 0
     let cpriceColor = common.redColor
-    let dirImageSource = require('../../assets/箭头.png')
+    let dirImageSource
+    let symbol = ''
+    let rmb = '0.00'
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
-      lastprice = homeRoseSelected.lastprice
-      cprice = homeRoseSelected.cprice
-      hprice = homeRoseSelected.hprice
-      lprice = homeRoseSelected.lprice
-      quantity = homeRoseSelected.quantity
-      rose = homeRoseSelected.rose
-      if (rose > 0) {
+      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
+        lastprice = new BigNumber(homeRoseSelected.lastprice).toFixed(p, 1)
+        cprice = new BigNumber(homeRoseSelected.cprice).toFixed(p, 1)
+        hprice = new BigNumber(homeRoseSelected.hprice).toFixed(p, 1)
+        lprice = new BigNumber(homeRoseSelected.lprice).toFixed(p, 1)
+        quantity = new BigNumber(homeRoseSelected.quantity).toFixed(q, 1)
+      })
+      rose = new BigNumber(homeRoseSelected.rose)
+      if (rose.gt(0)) {
         cpriceColor = common.redColor
         dirImageSource = require('../../assets/箭头.png')
-      } else if (rose <= 0) {
+        symbol = '+'
+      } else if (rose.lt(0)) {
         cpriceColor = common.greenColor
         dirImageSource = require('../../assets/箭头copy.png')
+        symbol = '-'
+      } else {
+        cpriceColor = common.textColor
+      }
+      rose = rose.multipliedBy(100).toFixed(2, 1)
+      if (valuation && valuation.rates) {
+        rmb = valuation.rates[currencyName][goodsName]
+        rmb = new BigNumber(rmb).toFixed(2)
       }
     }
 
@@ -325,15 +166,14 @@ class Detail extends Component {
 
           <View
             style={{
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
               flexDirection: 'row',
             }}
           >
             <View
               style={{
-                marginTop: common.margin10,
                 flex: 1,
+                marginTop: common.margin10,
+                marginLeft: common.margin10,
               }}
             >
               <View
@@ -345,31 +185,37 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font20,
                     color: cpriceColor,
+                    textAlign: 'left',
                   }}
                 >{`${cprice}`}</Text>
-                <Image
-                  style={{
-                    marginLeft: common.margin5,
-                    height: common.h13,
-                    width: common.w10,
-                    alignSelf: 'center',
-                    paddingBottom: 0,
-                  }}
-                  source={dirImageSource}
-                />
+                {
+                  dirImageSource
+                    ? <Image
+                      style={{
+                        marginLeft: common.margin5,
+                        marginBottom: common.margin5,
+                        height: common.h13,
+                        width: common.w10,
+                        alignSelf: 'flex-end',
+                      }}
+                      source={dirImageSource}
+                    /> : null
+                }
                 <Text
                   style={{
                     marginLeft: common.margin5,
+                    marginBottom: 2,
                     fontSize: common.font14,
                     color: common.textColor,
                     alignSelf: 'flex-end',
+                    textAlign: 'left',
                   }}
-                >¥ 0.18</Text>
+                >{`¥ ${rmb}`}</Text>
               </View>
 
               <View
                 style={{
-                  marginTop: common.margin5,
+                  marginTop: common.margin10,
                   flexDirection: 'row',
                 }}
               >
@@ -377,13 +223,16 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font14,
                     color: cpriceColor,
+                    textAlign: 'left',
                   }}
-                >{`${rose > 0 ? '+' : '-'}${lastprice}`}</Text>
+                >{`${symbol}${lastprice}`}</Text>
                 <Text
                   style={{
                     marginLeft: common.margin10,
                     fontSize: common.font14,
                     color: cpriceColor,
+                    alignSelf: 'center',
+                    textAlign: 'left',
                   }}
                 >{`${rose}%`}</Text>
               </View>
@@ -392,10 +241,13 @@ class Detail extends Component {
             <View
               style={{
                 flex: 1,
+                marginLeft: common.margin5,
+                marginRight: common.margin10,
               }}
             >
               <View
                 style={{
+                  flex: 1,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
                 }}
@@ -404,6 +256,7 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
+                    textAlign: 'right',
                   }}
                 >24小时成交量</Text>
                 <Text
@@ -411,12 +264,14 @@ class Detail extends Component {
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
+                    textAlign: 'right',
                   }}
                 >{`${quantity} ${currencyName}`}</Text>
               </View>
 
               <View
                 style={{
+                  flex: 1,
                   marginTop: common.margin8,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -426,6 +281,7 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
+                    textAlign: 'right',
                   }}
                 >24小时最低量</Text>
                 <Text
@@ -433,12 +289,14 @@ class Detail extends Component {
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
+                    textAlign: 'right',
                   }}
                 >{`${lprice}`}</Text>
               </View>
 
               <View
                 style={{
+                  flex: 1,
                   marginTop: common.margin8,
                   flexDirection: 'row',
                   justifyContent: 'flex-end',
@@ -448,6 +306,7 @@ class Detail extends Component {
                   style={{
                     fontSize: common.font10,
                     color: common.placeholderColor,
+                    textAlign: 'right',
                   }}
                 >24小时最高量</Text>
                 <Text
@@ -455,6 +314,7 @@ class Detail extends Component {
                     marginLeft: common.margin5,
                     fontSize: common.font10,
                     color: common.textColor,
+                    textAlign: 'right',
                   }}
                 >{`${hprice}`}</Text>
               </View>
@@ -540,47 +400,7 @@ class Detail extends Component {
               />
           }
 
-          <TKSelectionBar
-            leftTitle={'委托订单'}
-            rightTitle={'最新成交'}
-            leftBlock={() => {
-              dispatch(actions.selectionBarUpdate(common.selectionBar.left))
-            }}
-            rightBlock={() => {
-              dispatch(actions.selectionBarUpdate(common.selectionBar.right))
-            }}
-          />
-          {
-            selectionBarSelected === common.selectionBar.left
-              ? <View
-                style={{
-                  flexDirection: 'row',
-                }}
-              >
-                <ListView
-                  dataSource={this.shelvesBuyDS(shelvesBuy)}
-                  renderHeader={() => this.renderHeader(common.buy)}
-                  renderRow={rd => this.renderRow(rd, common.buy)}
-                  enableEmptySections
-                  removeClippedSubviews={false}
-                />
-                <ListView
-                  dataSource={this.shelvesSellDS(shelvesSell)}
-                  renderHeader={() => this.renderHeader(common.sell)}
-                  renderRow={rd => this.renderRow(rd, common.sell)}
-                  enableEmptySections
-                  removeClippedSubviews={false}
-                />
-              </View>
-              : <ListView
-                dataSource={this.latestDealsDS(latestDeals)}
-                renderHeader={() => this.renderHeader('')}
-                renderRow={rd => this.renderRow(rd, '')}
-                enableEmptySections
-                removeClippedSubviews={false}
-              />
-          }
-
+          <DetailList />
         </ScrollView>
 
         <View
@@ -607,6 +427,8 @@ class Detail extends Component {
                 navigation.navigate('Transactions', {
                   type: common.buy,
                 })
+                dispatch(actions.buyOrSellUpdate(true))
+                dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
               }}
             >
               <Text
@@ -635,6 +457,8 @@ class Detail extends Component {
                 navigation.navigate('Transactions', {
                   type: common.sell,
                 })
+                dispatch(actions.buyOrSellUpdate(false))
+                dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
               }}
             >
               <Text
@@ -654,16 +478,13 @@ class Detail extends Component {
 
 function mapStateToProps(store) {
   return {
-    shelvesBuy: store.delegate.shelvesBuy,
-    shelvesSell: store.delegate.shelvesSell,
     depthMap: store.delegate.depthMap,
 
-    latestDeals: store.deal.latestDeals,
+    valuation: store.asset.valuation,
 
     homeRose: store.dealstat.homeRose,
     homeRoseSelected: store.dealstat.homeRoseSelected,
 
-    selectionBarSelected: store.ui.selectionBarSelected,
     kLineOrDepth: store.ui.kLineOrDepth,
   }
 }

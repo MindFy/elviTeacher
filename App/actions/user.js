@@ -14,6 +14,13 @@ export function getVerificateCode(data) {
   }
 }
 
+export function getVerificateSmtpCode(data) {
+  return {
+    type: constants.GET_VERIFICATE_SMTP_CODE_REQUEST,
+    data,
+  }
+}
+
 export function findUser(schema) {
   return {
     type: constants.FIND_USER_REQUEST,
@@ -134,5 +141,19 @@ export function updateBank(data, user) {
     type: constants.UPDATE_BANK_REQUEST,
     data,
     user,
+  }
+}
+
+export function updateEmail(data) {
+  return {
+    type: constants.UPDATE_EMAIL_REQUEST,
+    data,
+  }
+}
+
+export function updateEmailUpdate(data) {
+  return {
+    type: constants.UPDATE_EMAIL_UPDATE,
+    data,
   }
 }

@@ -1,37 +1,37 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   View,
   ListView,
   TouchableOpacity,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'
 
-export default class ShelvesListView extends Component {
+class ShelvesListView extends Component {
   componentDidMount() { }
 
-  renderShelvesRow(rd, sid, rid) {
-    const { type, rowPress } = this.props
+  renderShelvesRow(rd) {
+    const { type, rowPress, homeRoseSelected } = this.props
     let textColor = null
-    let marginTop = null
+    let price
+    let sumQuantity
     if (type === common.buy) {
       textColor = common.redColor
     } else if (type === common.sell) {
       textColor = common.greenColor
     }
-    if (type === common.buy && rid === 0) {
-      marginTop = common.margin10
-    } else {
-      marginTop = common.margin8
-    }
-    const price = common.toFix8(rd.price)
-    const sumQuantity = common.toFix4(rd.sum_quantity)
+    common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
+      price = new BigNumber(rd.price).toFixed(p, 1)
+      sumQuantity = new BigNumber(rd.sum_quantity).toFixed(q, 1)
+    })
     return (
       <TouchableOpacity
         style={{
-          marginTop,
+          marginTop: common.margin8,
           marginLeft: common.margin10 / 2,
           marginRight: common.margin10,
           flexDirection: 'row',
@@ -44,12 +44,12 @@ export default class ShelvesListView extends Component {
           color: textColor,
           fontSize: common.font12,
         }}
-        >{Number(price)}</Text>
+        >{price}</Text>
         <Text style={{
           color: 'white',
           fontSize: common.font12,
         }}
-        >{Number(sumQuantity)}</Text>
+        >{sumQuantity}</Text>
       </TouchableOpacity>
     )
   }
@@ -87,7 +87,7 @@ export default class ShelvesListView extends Component {
     return (
       <ListView
         dataSource={dataSource}
-        renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, sid, rid)}
+        renderRow={rd => this.renderShelvesRow(rd)}
         renderHeader={() => this.renderShelvesHeader()}
         enableEmptySections
         scrollEnabled={false}
@@ -96,3 +96,13 @@ export default class ShelvesListView extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    homeRoseSelected: store.dealstat.homeRoseSelected,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(ShelvesListView)

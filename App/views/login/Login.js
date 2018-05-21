@@ -19,6 +19,7 @@ import TextInputLogin from './TextInputLogin'
 import BtnLogin from './BtnLogin'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import ws from '../../websocket/ws'
 
 class Login extends Component {
   constructor() {
@@ -59,7 +60,7 @@ class Login extends Component {
   }
 
   handleLoginRequest() {
-    const { dispatch, loginVisible, loginResponse, screenProps } = this.props
+    const { dispatch, loginVisible, loginResponse, screenProps, homeRoseSelected } = this.props
     if (!loginVisible && !this.showLoginResponse) return
 
     if (loginVisible) {
@@ -69,10 +70,14 @@ class Login extends Component {
       if (loginResponse.success) {
         Toast.success('登录成功')
         const user = loginResponse.result
-        storeSave(common.user, user, (error) => {
+        storeSave(common.user.string, user, (error) => {
           if (!error) {
             dispatch(actions.findUser(schemas.findUser(user.id)))
             dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+            if (homeRoseSelected) {
+              ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
+              ws.onopen(homeRoseSelected.goods.id, homeRoseSelected.currency.id, user)
+            }
             screenProps.dismiss()
           }
         })
@@ -226,6 +231,8 @@ function mapStateToProps(store) {
 
     loginVisible: store.user.loginVisible,
     loginResponse: store.user.loginResponse,
+
+    homeRoseSelected: store.dealstat.homeRoseSelected,
   }
 }
 

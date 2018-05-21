@@ -15,6 +15,7 @@ import {
 } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import actions from '../../actions/index'
+import BigNumber from 'bignumber.js';
 
 class LegalDeal extends Component {
   static navigationOptions(props) {
@@ -31,6 +32,11 @@ class LegalDeal extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -82,35 +88,34 @@ class LegalDeal extends Component {
 
   createPress() {
     const { dispatch, direct, quantity } = this.props
-    if (quantity === 0) {
+    const q = new BigNumber(quantity)
+    if (!quantity.length && q.eq(0)) {
       Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
       return
     }
-    if (common.bigNumber.lt(quantity, common.minQuantityLegalDeal)) {
+    if (q.lt(common.minQuantityLegalDeal)) {
       Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最少为${
         common.minQuantityLegalDeal}`)
       return
     }
-    if (common.bigNumber.gt(quantity, common.maxQuantityLegalDeal)) {
-      Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最大为${
-        common.maxQuantityLegalDeal}`)
-      return
-    }
     dispatch(actions.legalDealCreate({
       direct,
-      quantity,
+      quantity: q.toNumber(),
     }))
   }
 
-  quantityOnChange(event) {
-    const { text } = event.nativeEvent
+  quantityOnChange(text) {
     const { dispatch, direct } = this.props
-    const temp = common.toFix2(text)
+    const a = new BigNumber(text)
+    if (a.isNaN() && text.length) return // 1.限制只能输入数字、小数点
+    if (!a.isNaN() && a.gt(common.maxQuantityLegalDeal)) {
+      dispatch(actions.legalDealUpdate({ direct, quantity: `${common.maxQuantityLegalDeal}` }))
+      return // 2.限制最大输入数量
+    }
+    const aArr = text.split('.')
+    if (aArr.length > 1 && aArr[1].length > 2) return // 4.小数长度限制
 
-    dispatch(actions.legalDealUpdate({
-      direct,
-      quantity: isNaN(Number(temp)) ? 0 : Number(temp),
-    }))
+    dispatch(actions.legalDealUpdate({ direct, quantity: text }))
   }
 
   handleLegalDealCreateRequest() {
@@ -147,6 +152,7 @@ class LegalDeal extends Component {
   render() {
     const { direct, priceBuy, priceSell, quantity, legalDealCreateVisible } = this.props
     const price = direct === common.buy ? priceBuy : priceSell
+    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity)
     this.handleLegalDealCreateRequest()
 
     return (
@@ -217,10 +223,8 @@ class LegalDeal extends Component {
               }}
               placeholder={`${direct === common.buy ? '买入' : '卖出'}数量`}
               placeholderTextColor={common.placeholderColor}
-              // maxLength={common.textInputMaxLenLegalDeal}
-              value={quantity === 0 ? '' : `${quantity}`}
-              onChange={e => this.quantityOnChange(e)}
-              onEndEditing={e => this.quantityOnChange(e)}
+              value={quantity}
+              onChangeText={e => this.quantityOnChange(e)}
             />
             <Text
               style={{
@@ -241,7 +245,7 @@ class LegalDeal extends Component {
             }}
           >{`${
               direct === common.buy ? '买入' : '卖出'
-            }总计:${common.bigNumber.multipliedBy(price, quantity)}元`}</Text>
+            }总计:${amount}元`}</Text>
 
           <TouchableOpacity
             style={{

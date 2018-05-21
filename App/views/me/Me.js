@@ -15,6 +15,7 @@ import MeCell from './MeCell'
 import BtnLogout from './BtnLogout'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import ws from '../../websocket/ws'
 
 class Me extends Component {
   static navigationOptions() {
@@ -41,7 +42,7 @@ class Me extends Component {
   /* 读取用户数据并展示 */
   readAndDisplay() {
     const { dispatch } = this.props
-    storeRead(common.user, (result) => {
+    storeRead(common.user.string, (result) => {
       const objectResult = JSON.parse(result)
 
       dispatch(actions.findUserUpdate(objectResult))
@@ -71,36 +72,20 @@ class Me extends Component {
     } else {
       this.showLogoutResponse = false
       if (logoutResponse.success) {
-        storeDelete(common.user, (error) => {
+        storeDelete(common.user.string, (error) => {
           if (!error) {
             // 清除页面数据
             dispatch(actions.findUserUpdate(undefined))
             dispatch(actions.findAssetListUpdate({
-              asset: [
-                {
-                  amount: 0,
-                  freezed: 0,
-                  id: 1,
-                  rechargeaddr: '',
-                  token: { id: 1, name: 'TK' },
-                },
-                {
-                  amount: 0,
-                  freezed: 0,
-                  id: 2,
-                  rechargeaddr: '',
-                  token: { id: 2, name: 'BTC' },
-                },
-                {
-                  amount: 0,
-                  freezed: 0,
-                  id: 3,
-                  rechargeaddr: '',
-                  token: { id: 3, name: 'CNYT' },
-                },
-              ],
-              amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
+              asset: [],
+              amountVisible: undefined,
             }))
+            if (this.props.homeRoseSelected) {
+              ws.onclose(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id)
+              ws.onopen(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id, undefined)
+            }
             // 返回登录页
             this.navigateLogin()
           }
@@ -161,7 +146,7 @@ class Me extends Component {
             title="身份认证"
           />
           <MeCell
-            onPress={() => { }}
+            onPress={() => navigation.navigate('SecurityCenter')}
             leftImageSource={require('../../assets/手机认证.png')}
             title="安全中心"
           />
@@ -174,7 +159,10 @@ class Me extends Component {
             title="银行卡管理"
           />
           <MeCell
-            onPress={() => { }}
+            onPress={() => {
+              if (user) navigation.navigate('Rebates')
+              else navigation.navigate('LoginStack')
+            }}
             leftImageSource={require('../../assets/手机认证copy3.png')}
             title="超级返利"
           />
@@ -216,6 +204,8 @@ function mapStateToProps(store) {
 
     logoutVisible: store.user.logoutVisible,
     logoutResponse: store.user.logoutResponse,
+
+    homeRoseSelected: store.dealstat.homeRoseSelected,
   }
 }
 

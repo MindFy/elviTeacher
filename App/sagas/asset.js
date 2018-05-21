@@ -3,9 +3,6 @@ import {
 } from 'redux-saga/effects'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
-import {
-  common,
-} from '../constants/common'
 
 /* 创建充值地址,触发时创建，减少浪费 */
 export function* createAddress() {
@@ -25,6 +22,15 @@ export function* getAssets() {
     else yield put({ type: constants.GET_ASSETS_FAILED, response })
   }
 }
+/* 获取几种货币根据比特币换算的人民币价格和已提取数量 */
+export function* getValuation() {
+  while (true) {
+    yield take(constants.GET_VALUATION_REQUEST)
+    const response = yield call(api.getValuation)
+    if (response.success) yield put({ type: constants.GET_VALUATION_SUCCEED, response })
+    else yield put({ type: constants.GET_VALUATION_FAILED, response })
+  }
+}
 /* 获取资产列表的余额 */
 export function* findAssetList() {
   while (true) {
@@ -32,18 +38,13 @@ export function* findAssetList() {
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
       const findAsset = response.result.data.find_asset
-      const amountVisible = { TK: 0, BTC: 0, CNYT: 0 }
+      const amountVisible = findAsset.length ? {} : undefined
       for (let i = 0; i < findAsset.length; i++) {
         const element = findAsset[i]
-        if (element.token.id === 1) {
-          amountVisible.TK = common.bigNumber.minus(element.amount, element.freezed)
-        } else if (element.token.id === 2) {
-          amountVisible.BTC = common.bigNumber.minus(element.amount, element.freezed)
-        } else if (element.token.id === 3) {
-          amountVisible.CNYT = common.bigNumber.minus(element.amount, element.freezed)
-        }
+        amountVisible[element.token.name] = element.amount
       }
-      yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, find_asset: findAsset, amountVisible })
+      yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, findAsset, amountVisible })
+      yield put({ type: constants.FIND_ASSET_SELECT_TOKEN_UPDATE, findAsset })
     } else {
       yield put({ type: constants.FIND_ASSET_LIST_FAILED, response })
     }

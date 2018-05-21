@@ -11,6 +11,7 @@ import {
   Toast,
   Overlay,
 } from 'teaset'
+import { BigNumber } from 'bignumber.js'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import {
@@ -34,6 +35,11 @@ class LegalDealDetail extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -57,7 +63,7 @@ class LegalDealDetail extends Component {
 
   componentDidMount() {
     this.onHeaderRefresh()
-    this.listener = DeviceEventEmitter.addListener(common.confirmPayNoti, () => {
+    this.listener = DeviceEventEmitter.addListener(common.noti.legalDealConfirmPay, () => {
       Overlay.hide(this.overlayViewKey)
     })
   }
@@ -65,13 +71,17 @@ class LegalDealDetail extends Component {
   componentWillUnmount() {
     const { dispatch, mobile, password, passwordAgain } = this.props
     dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
+    dispatch(actions.skipLegalDealUpdate({
+      skip: 0,
+      refreshState: RefreshState.Idle,
+    }))
     this.listener.remove()
   }
 
   onHeaderRefresh() {
     const { dispatch, user } = this.props
     if (user) {
-      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0),
+      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0, common.legalDeal.limit),
         RefreshState.HeaderRefreshing))
     }
   }
@@ -89,7 +99,7 @@ class LegalDealDetail extends Component {
   }
 
   showOverlay(id, rid) {
-    const { dispatch, user, code, legalDeal } = this.props
+    const { dispatch, user, legalDeal } = this.props
     const overlayView = (
       <Overlay.View
         style={{
@@ -100,7 +110,6 @@ class LegalDealDetail extends Component {
       >
         <TKViewCheckAuthorize
           mobile={user.mobile}
-          code={code}
           onChange={e => this.onChange(e, 'code')}
           codePress={(count) => {
             this.count = count
@@ -158,15 +167,15 @@ class LegalDealDetail extends Component {
     let cancelBtnDisabled = true
     let confirmPayDisabled = true
     let havedPayDisabled = true
-    let price = 0
+    const dealPrice = new BigNumber(rd.dealPrice).toFixed(2)
+    const quantity = new BigNumber(rd.quantity).toFixed(2)
+    const amount = new BigNumber(dealPrice).multipliedBy(quantity)
     if (rd.direct === common.buy) {
-      price = rd.dealPrice
       textColor = common.redColor
       direct = '买入'
       paymentBtnTitle = '付款信息'
       secBtnTitle = '确认付款'
     } else if (rd.direct === common.sell) {
-      price = 0.99
       textColor = common.greenColor
       direct = '卖出'
       paymentBtnTitle = '收款信息'
@@ -254,7 +263,7 @@ class LegalDealDetail extends Component {
         >
           <View
             style={{
-              flex: 1,
+              width: '20%',
               borderWidth: 1,
               borderColor: common.borderColor,
               justifyContent: 'center',
@@ -266,11 +275,11 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >{`价格:¥${rd.dealPrice}`}</Text>
+            >{`价格:¥${dealPrice}`}</Text>
           </View>
           <View
             style={{
-              flex: 1,
+              width: '30%',
               borderWidth: 1,
               borderColor: common.borderColor,
               justifyContent: 'center',
@@ -282,11 +291,11 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >{`数量:${rd.quantity} ${common.legalDeal.token}`}</Text>
+            >{`数量:${quantity} ${common.legalDeal.token}`}</Text>
           </View>
           <View
             style={{
-              flex: 1,
+              width: '30%',
               borderWidth: 1,
               borderColor: common.borderColor,
               justifyContent: 'center',
@@ -298,11 +307,11 @@ class LegalDealDetail extends Component {
                 fontSize: common.font10,
                 textAlign: 'center',
               }}
-            >{`总价:¥${common.bigNumber.multipliedBy(price, rd.quantity)}`}</Text>
+            >{`总价:¥${amount}`}</Text>
           </View>
           <View
             style={{
-              flex: 1,
+              width: '20%',
               borderWidth: 1,
               borderColor: common.borderColor,
               justifyContent: 'center',
@@ -409,11 +418,20 @@ class LegalDealDetail extends Component {
         data={legalDeal}
         renderItem={({ item, index }) => this.renderRow(item, index)}
         refreshState={refreshState}
-        onHeaderRefresh={() => this.onHeaderRefresh()}
+        onHeaderRefresh={() => {
+          if (refreshState !== RefreshState.NoMoreData
+            || refreshState !== RefreshState.FooterRefreshing) {
+            dispatch(actions.findLegalDeal(
+              schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
+              , RefreshState.HeaderRefreshing))
+          }
+        }}
         onFooterRefresh={() => {
-          if (user && refreshState !== RefreshState.NoMoreData) {
-            dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 10 * skip),
-              RefreshState.FooterRefreshing))
+          if (user && refreshState !== RefreshState.NoMoreData
+            || refreshState !== RefreshState.HeaderRefreshing) {
+            dispatch(actions.findLegalDeal(
+              schemas.findLegalDeal(user.id, common.legalDeal.limit * skip, common.legalDeal.limit)
+              , RefreshState.FooterRefreshing))
           }
         }}
         footerTextStyle={{
@@ -430,7 +448,6 @@ function mapStateToProps(store) {
     skip: store.legalDeal.skip,
     legalDeal: store.legalDeal.legalDeal,
     refreshState: store.legalDeal.refreshState,
-    findLegalDealVisible: store.legalDeal.findLegalDealVisible,
 
     user: store.user.user,
 

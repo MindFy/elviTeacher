@@ -1,10 +1,12 @@
-export function findDelegateSelfCurrent(id) {
+export function findDelegateSelfCurrent(id, skip, limit, goodsId, currencyId) {
   return `{
     find_delegate(
-        skip: 0,
-        limit: 10,
+        skip: ${skip},
+        limit: ${limit},
         where: {
             user_id: ${id},
+            goods_id: ${goodsId},
+            currency_id: ${currencyId},
             status:{
                 in: ["waiting","dealing"]
             }
@@ -31,15 +33,17 @@ export function findDelegateSelfCurrent(id) {
 }`
 }
 
-export function findDelegateSelfHistory(id) {
+export function findDelegateSelfHistory(id, skip, limit, goodsId, currencyId) {
   return `{
     find_delegate(
-        skip: 0,
-        limit: 10,
+        skip: ${skip},
+        limit: ${limit},
         where: {
             user_id: ${id},
+            goods_id: ${goodsId},
+            currency_id: ${currencyId},
             status:{
-                in: ["complete", "cancel"]
+                in: ["complete", "cancel", "canceling"]
             }
         },
         order: "-createdAt"

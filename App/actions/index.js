@@ -1,5 +1,6 @@
 import {
   add,
+  addUpdate,
   findAddress,
   selectTokenUpdate,
 } from './address'
@@ -7,6 +8,7 @@ import findAnnouncement from './announcement'
 import {
   createAddress,
   getAssets,
+  getValuation,
   findAssetList,
   findAssetListUpdate,
 } from './asset'
@@ -14,6 +16,7 @@ import findBanners from './banners'
 import {
   findListSelf,
   latestDeals,
+  wsDealsUpdate,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
 } from './deal'
@@ -27,11 +30,15 @@ import {
   create,
   getDepthMap,
   getShelves,
+  wsGetShelvesUpdate,
   findDelegateSelfCurrent,
+  wsDelegatesCurrentUpdate,
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
+  skipDelegateUpdate,
 } from './delegate'
+import invitationTotalCount from './invitation'
 import {
   legalDealCancel,
   confirmPay,
@@ -39,6 +46,7 @@ import {
   findLegalDeal,
   havedPay,
   legalDealUpdate,
+  skipLegalDealUpdate,
 } from './legalDeal'
 import {
   cancelWithdraw,
@@ -47,10 +55,13 @@ import {
   recharge,
   withdraw,
   rechargeOrWithdrawUpdate,
+  skipPaymentUpdate,
 } from './payment'
+import rebatesCount from './rebates'
 import {
   checkVerificateCode,
   getVerificateCode,
+  getVerificateSmtpCode,
   findUser,
   findUserUpdate,
   idCardAuth,
@@ -69,14 +80,22 @@ import {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+  updateEmail,
+  updateEmailUpdate,
 } from './user'
 import {
   selectionBarUpdate,
   kLineOrDepthUpdate,
+  averagePriceOrPriceUpdate,
+  dealledOrQuantityUpdate,
+  cashAccountUpdate,
+  delegateDrawerUpdate,
+  codeAuthUpdate,
 } from './ui'
 
 const actions = {
   add,
+  addUpdate,
   findAddress,
   selectTokenUpdate,
 
@@ -84,6 +103,7 @@ const actions = {
 
   createAddress,
   getAssets,
+  getValuation,
   findAssetList,
   findAssetListUpdate,
 
@@ -91,6 +111,7 @@ const actions = {
 
   findListSelf,
   latestDeals,
+  wsDealsUpdate,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
 
@@ -102,10 +123,15 @@ const actions = {
   create,
   getDepthMap,
   getShelves,
+  wsGetShelvesUpdate,
   findDelegateSelfCurrent,
+  wsDelegatesCurrentUpdate,
   findDelegateSelfHistory,
   currentOrHistoryUpdate,
   textInputDelegateUpdate,
+  skipDelegateUpdate,
+
+  invitationTotalCount,
 
   legalDealCancel,
   confirmPay,
@@ -113,6 +139,7 @@ const actions = {
   findLegalDeal,
   havedPay,
   legalDealUpdate,
+  skipLegalDealUpdate,
 
   cancelWithdraw,
   findPaymentListRecharge,
@@ -120,9 +147,13 @@ const actions = {
   recharge,
   withdraw,
   rechargeOrWithdrawUpdate,
+  skipPaymentUpdate,
+
+  rebatesCount,
 
   checkVerificateCode,
   getVerificateCode,
+  getVerificateSmtpCode,
   findUser,
   findUserUpdate,
   idCardAuth,
@@ -141,8 +172,15 @@ const actions = {
   updatePasswordUpdate,
   updateBankUpdate,
   updateBank,
+  updateEmail,
+  updateEmailUpdate,
 
   selectionBarUpdate,
   kLineOrDepthUpdate,
+  averagePriceOrPriceUpdate,
+  dealledOrQuantityUpdate,
+  cashAccountUpdate,
+  delegateDrawerUpdate,
+  codeAuthUpdate,
 }
 export default actions

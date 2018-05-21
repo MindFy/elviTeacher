@@ -7,6 +7,13 @@ export function add(data) {
   }
 }
 
+export function addUpdate(data) {
+  return {
+    type: constants.ADD_UPDATE_REQUEST,
+    data,
+  }
+}
+
 export function findAddress(schema) {
   return {
     type: constants.FIND_ADDRESS_REQUEST,

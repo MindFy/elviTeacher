@@ -7,10 +7,14 @@ import {
   ListView,
   StatusBar,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
 } from 'react-native'
+import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import BalanceCell from './BalanceCell'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
 
 class Balance extends Component {
   static navigationOptions(props) {
@@ -54,17 +58,33 @@ class Balance extends Component {
   }
 
   renderRow(rd) {
+    const amount = new BigNumber(rd.amount).toFixed(8, 1)
     return (
       <BalanceCell
         leftImageSource={require('../../assets/111.png')}
         title={rd.token.name}
-        detail={rd.amount}
+        detail={amount}
       />
     )
   }
 
   render() {
-    const { asset, user, navigation } = this.props
+    const { asset, user, navigation, dispatch, findAssetListVisible, valuation } = this.props
+    let amountBTC = new BigNumber(0)
+    let amountRMB = new BigNumber(0)
+    if (valuation && valuation.rates) {
+      for (let i = 0; i < asset.length; i++) {
+        const element = asset[i]
+        const amount = new BigNumber(element.amount)
+        const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
+        const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
+        amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
+        amountRMB = amount.multipliedBy(scaleCNYT).plus(amountRMB)
+      }
+      amountBTC = amountBTC.toFixed(8, 1)
+      amountRMB = amountRMB.toFixed(2, 1)
+    }
+
     return (
       <View
         style={{
@@ -75,28 +95,43 @@ class Balance extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <ScrollView>
-          <View
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => {
+                if (user) {
+                  dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+                  dispatch(actions.getValuation())
+                }
+              }}
+              refreshing={findAssetListVisible}
+              colors={[common.textColor]}
+              progressBackgroundColor={common.navBgColor}
+              progressViewOffset={0}
+              tintColor={common.textColor}
+            />
+          }
+        >
+          <Text
             style={{
               marginTop: common.margin20,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}
-          >
-            <Text style={{
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font30,
               alignSelf: 'center',
+              textAlign: 'center',
             }}
-            >{0}</Text>
-            <Text style={{
-              marginLeft: common.margin5,
-              fontSize: common.font10,
+          >{amountBTC}</Text>
+          <Text
+            style={{
+              marginTop: common.margin5,
+              fontSize: common.font12,
               color: common.placeholderColor,
               alignSelf: 'center',
+              textAlign: 'center',
             }}
-            >(¥0.98)</Text>
-          </View>
+          >{`(¥${amountRMB})`}</Text>
           <Text
             style={{
               marginTop: common.margin10,
@@ -174,15 +209,24 @@ class Balance extends Component {
             </View>
           </View>
 
-          <ListView
-            style={{
-              marginTop: common.margin10,
-            }}
-            dataSource={this.dataSource(asset)}
-            renderRow={rd => this.renderRow(rd)}
-            enableEmptySections
-            removeClippedSubviews={false}
-          />
+          {
+            user
+              ? <ListView
+                style={{
+                  marginTop: common.margin10,
+                }}
+                dataSource={this.dataSource(asset)}
+                renderRow={rd => this.renderRow(rd)}
+                enableEmptySections
+                removeClippedSubviews={false}
+              />
+              : <BalanceCell
+                leftImageSource={require('../../assets/111.png')}
+                title={common.token.BTC}
+                detail={0}
+              />
+
+          }
 
         </ScrollView>
       </View>
@@ -193,7 +237,10 @@ class Balance extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
+
     asset: store.asset.asset,
+    valuation: store.asset.valuation,
+    findAssetListVisible: store.asset.findAssetListVisible,
   }
 }
 

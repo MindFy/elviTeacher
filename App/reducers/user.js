@@ -24,11 +24,17 @@ const initialState = {
   subbankName: '',
   bankNo: '',
 
+  email: '',
+  codeEmail: '',
+
   checkVerificateCodeVisible: false,
   checkVerificateCodeResponse: undefined,
 
   getVerificateCodeVisible: false,
   getVerificateCodeResponse: undefined,
+
+  getVerificateSmtpCodeVisible: false,
+  getVerificateSmtpCodeResponse: undefined,
 
   findUserVisible: false,
   findUserResponse: undefined,
@@ -56,6 +62,8 @@ const initialState = {
 
   updateBankVisible: false,
   updateBankResponse: undefined,
+
+  updateEmailVisible: false,
 }
 
 export default function user(state = initialState, action) {
@@ -100,6 +108,26 @@ export default function user(state = initialState, action) {
         ...state,
         getVerificateCodeVisible: false,
         getVerificateCodeResponse: action.response,
+      }
+      break
+    case constants.GET_VERIFICATE_SMTP_CODE_REQUEST:
+      nextState = {
+        ...state,
+        getVerificateSmtpCodeVisible: true,
+      }
+      break
+    case constants.GET_VERIFICATE_SMTP_CODE_SUCCEED:
+      nextState = {
+        ...state,
+        getVerificateSmtpCodeVisible: false,
+        getVerificateSmtpCodeResponse: action.response,
+      }
+      break
+    case constants.GET_VERIFICATE_SMTP_CODE_FAILED:
+      nextState = {
+        ...state,
+        getVerificateSmtpCodeVisible: false,
+        getVerificateSmtpCodeResponse: action.response,
       }
       break
     case constants.FIND_USER_SUCCEED:
@@ -300,6 +328,32 @@ export default function user(state = initialState, action) {
         bankName: action.data.bankName,
         subbankName: action.data.subbankName,
         bankNo: action.data.bankNo,
+      }
+      break
+    case constants.UPDATE_EMAIL_REQUEST:
+      nextState = {
+        ...state,
+        updateEmailVisible: true,
+      }
+      break
+    case constants.UPDATE_EMAIL_SUCCEED:
+      nextState = {
+        ...state,
+        updateEmailVisible: false,
+      }
+      break
+    case constants.UPDATE_EMAIL_FAILED:
+      nextState = {
+        ...state,
+        updateEmailVisible: false,
+      }
+      break
+
+    case constants.UPDATE_EMAIL_UPDATE:
+      nextState = {
+        ...state,
+        email: action.data.email,
+        codeEmail: action.data.codeEmail,
       }
       break
     case constants.UPDATE_BANK_REQUEST:

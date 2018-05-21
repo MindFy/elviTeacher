@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -9,7 +10,7 @@ import {
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 
-export default class SelectToken extends Component {
+class SelectToken extends Component {
   constructor() {
     super()
     this.dataSource = data => new ListView.DataSource({
@@ -20,10 +21,11 @@ export default class SelectToken extends Component {
   componentDidMount() { }
 
   cellRightImagePress() {
-    const { dispatch, selectedToken, tokenListSelected } = this.props
+    const { dispatch, selectedToken, tokenListSelected, selectedIndex } = this.props
     dispatch(actions.selectTokenUpdate({
       selectedToken,
       tokenListSelected: !tokenListSelected,
+      selectedIndex,
     }))
   }
 
@@ -42,20 +44,21 @@ export default class SelectToken extends Component {
     }
   }
 
-  rowPress(rd) {
+  rowPress(rd, rid) {
     const { dispatch, tokenListSelected, selectedTokenBlock } = this.props
     dispatch(actions.selectTokenUpdate({
       selectedToken: rd,
       tokenListSelected: !tokenListSelected,
+      selectedIndex: rid,
     }))
     selectedTokenBlock(rd.id)
   }
 
-  renderRow(rd) {
+  renderRow(rd, rid) {
     return (
       <TouchableOpacity
         activeOpacity={common.activeOpacity}
-        onPress={() => this.rowPress(rd)}
+        onPress={() => this.rowPress(rd, rid)}
       >
         <View
           style={{
@@ -85,7 +88,7 @@ export default class SelectToken extends Component {
       return (
         <ListView
           dataSource={this.dataSource(asset)}
-          renderRow={rd => this.renderRow(rd)}
+          renderRow={(rd, sid, rid) => this.renderRow(rd, rid)}
           enableEmptySections
         />
       )
@@ -145,3 +148,15 @@ export default class SelectToken extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    selectedToken: store.address.selectedToken,
+    selectedIndex: store.address.selectedIndex,
+    asset: store.asset.asset,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(SelectToken)

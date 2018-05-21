@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  ListView,
   StatusBar,
   ScrollView,
   RefreshControl,
@@ -17,66 +16,49 @@ import {
   storeDelete,
 } from '../../constants/common'
 import * as constants from '../../constants/index'
-import HomeCell from './HomeCell'
+import HomeRoseList from './HomeRoseList'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import ws from '../../websocket/ws'
 
 class Home extends Component {
   constructor() {
     super()
-    this.dataSource = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
     this.showFindBannersResponse = false
   }
 
   componentDidMount() {
-    const { dispatch, homeRoseSelected } = this.props
+    const { dispatch, homeRoseSelected, user } = this.props
     dispatch(actions.sync())
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
     dispatch(actions.findBanners(schemas.findBanners()))
-    dispatch(actions.getRose(homeRoseSelected))
+    dispatch(actions.getRose({ homeRoseSelected, user }))
+    dispatch(actions.getValuation())
 
-    this.listener = DeviceEventEmitter.addListener(common.listenerNoti, (type, resp) => {
+    this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
       switch (type) {
         case constants.SYNC_SUCCEED:
-          storeRead(common.user, (result) => {
+          storeRead(common.user.string, (result) => {
             const temp = JSON.parse(result)
             dispatch(actions.findUserUpdate(temp))
             dispatch(actions.findUser(schemas.findUser(temp.id)))
             dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
+            if (this.props.homeRoseSelected) {
+              ws.onclose(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id)
+              ws.onopen(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id, temp)
+            }
           })
           break
         case constants.SYNC_FAILED:
-          storeDelete(common.user, (error) => {
+          storeDelete(common.user.string, (error) => {
             if (!error) {
               dispatch(actions.findUserUpdate(undefined))
               dispatch(actions.findAssetListUpdate({
-                asset: [
-                  {
-                    amount: 0,
-                    freezed: 0,
-                    id: 1,
-                    rechargeaddr: '',
-                    token: { id: 1, name: 'TK' },
-                  },
-                  {
-                    amount: 0,
-                    freezed: 0,
-                    id: 2,
-                    rechargeaddr: '',
-                    token: { id: 2, name: 'BTC' },
-                  },
-                  {
-                    amount: 0,
-                    freezed: 0,
-                    id: 3,
-                    rechargeaddr: '',
-                    token: { id: 3, name: 'CNYT' },
-                  },
-                ],
-                amountVisible: { TK: 0, BTC: 0, CNYT: 0 },
+                asset: [],
+                amountVisible: undefined,
               }))
             }
           })
@@ -86,6 +68,29 @@ class Home extends Component {
           dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
           break
+
+        case common.ws.handicap:
+          if (this.props.user) {
+            dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
+          }
+          dispatch(actions.wsGetShelvesUpdate(resp))
+          break
+        case common.ws.market:
+          dispatch(actions.getRose({
+            homeRoseSelected: this.props.homeRoseSelected,
+            user: this.props.user,
+          }))
+          dispatch(actions.getValuation())
+          break
+        case common.ws.deals:
+          dispatch(actions.wsDealsUpdate(resp))
+          break
+        case common.ws.delegates:
+          if (resp.userid) {
+            dispatch(actions.wsDelegatesCurrentUpdate(resp.delegates))
+          }
+          break
+
         default:
           break
       }
@@ -96,16 +101,20 @@ class Home extends Component {
     this.listener.remove()
   }
 
-  renderRow(rd) {
-    const { navigation } = this.props
-    return (
-      <TouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={() => navigation.navigate('Detail')}
-      >
-        <HomeCell rd={rd} />
-      </TouchableOpacity>
-    )
+  getUIData(goodsId, currencyId) {
+    const { dispatch } = this.props
+    dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
+  }
+
+  homeRoseListCellPress(rd) {
+    const { navigation, dispatch, user, homeRoseSelected } = this.props
+    ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
+    dispatch(actions.homeRoseSelectedUpdate(rd))
+    ws.onopen(rd.goods.id, rd.currency.id, user)
+    this.getUIData(rd.goods.id, rd.currency.id)
+    navigation.navigate('Detail')
   }
 
   render() {
@@ -185,7 +194,7 @@ class Home extends Component {
               onRefresh={() => {
                 dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
                 dispatch(actions.findBanners(schemas.findBanners()))
-                dispatch(actions.getRose(homeRoseSelected))
+                dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
               }}
               refreshing={
                 !!((getRoseVisible || findBannersVisible || announcementVisible))
@@ -196,6 +205,7 @@ class Home extends Component {
               tintColor={common.textColor}
             />
           }
+          showsVerticalScrollIndicator={false}
         >
           <HomeSwiper
             announcement={announcement}
@@ -216,40 +226,9 @@ class Home extends Component {
             }}
           >{btns}</View>
 
-          <View
-            style={{
-              marginTop: common.margin10,
-              flexDirection: 'row',
-            }}
-          >
-            <Text
-              style={{
-                flex: 1,
-              }}
-            />
-            <Text
-              style={{
-                flex: 1,
-                color: common.placeholderColor,
-                fontSize: common.font12,
-                textAlign: 'center',
-              }}
-            >市场/最新价</Text>
-            <Text
-              style={{
-                flex: 1,
-                color: common.placeholderColor,
-                fontSize: common.font12,
-                textAlign: 'center',
-              }}
-            >涨跌幅</Text>
-          </View>
-
-          <ListView
-            dataSource={this.dataSource(homeRose)}
-            renderRow={rd => this.renderRow(rd)}
-            enableEmptySections
-            removeClippedSubviews={false}
+          <HomeRoseList
+            data={homeRose}
+            onPress={rd => this.homeRoseListCellPress(rd)}
           />
         </ScrollView>
       </View>

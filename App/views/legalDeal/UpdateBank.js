@@ -33,6 +33,11 @@ class UpdateBank extends Component {
       headerLeft:
         (
           <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.goBack()}
           >
@@ -75,6 +80,8 @@ class UpdateBank extends Component {
       mobile, password, passwordAgain } = this.props
     switch (tag) {
       case 'bankName':
+      console.log('--------->', text);
+      
         dispatch(actions.updateBankUpdate({ bankName: text, subbankName, bankNo }))
         break
       case 'subbankName':
@@ -125,7 +132,7 @@ class UpdateBank extends Component {
   }
 
   showOverlay() {
-    const { dispatch, user, code } = this.props
+    const { dispatch, user } = this.props
     const overlayView = (
       <Overlay.View
         style={{
@@ -136,9 +143,9 @@ class UpdateBank extends Component {
       >
         <TKViewCheckAuthorize
           mobile={user.mobile}
-          code={code}
           onChange={e => this.onChange(e, 'code')}
-          codePress={() => {
+          codePress={(count) => {
+            this.count = count
             dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
           confirmPress={() => {
@@ -182,6 +189,7 @@ class UpdateBank extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
+        this.count()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
@@ -219,10 +227,11 @@ class UpdateBank extends Component {
   }
 
   render() {
-    const { bankName, subbankName, bankNo, navigation } = this.props
+    const { bankName, subbankName, bankNo, navigation, user } = this.props
     this.handleUpdateBankRequest()
     this.handleGetVerificateCodeRequest()
     this.handleCheckVerificateCodeRequest()
+console.log('----->', bankName)
 
     return (
       <ScrollView
@@ -238,14 +247,14 @@ class UpdateBank extends Component {
           title={'开户银行'}
           value={bankName}
           placeholder={'请输入开户银行'}
-          onEndEditing={e => this.onChange(e, 'bankName')}
+          onChange={e => this.onChange(e, 'bankName')}
           maxLength={common.textInputMaxLenBankName}
         />
         <TextInputUpdateBank
           title={'开户支行'}
           value={subbankName}
           placeholder={'请输入正确的开户支行名称'}
-          onEndEditing={e => this.onChange(e, 'subbankName')}
+          onChange={e => this.onChange(e, 'subbankName')}
           maxLength={common.textInputMaxLenBankName}
         />
         <TextInputUpdateBank
@@ -302,7 +311,7 @@ class UpdateBank extends Component {
               fontSize: common.font14,
               alignSelf: 'center',
             }}
-          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe' && bankName.length) ? '重新添加' : '确认'}</Text>
+          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe' && user.bankName.length) ? '重新添加' : '确认'}</Text>
         </TouchableOpacity>
       </ScrollView>
     )

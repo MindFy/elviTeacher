@@ -21,6 +21,9 @@ import Recharge from './views/balance/Recharge'
 import AddAddress from './views/balance/AddAddress'
 import Me from './views/me/Me'
 import Authentication from './views/me/Authentication'
+import SecurityCenter from './views/me/SecurityCenter'
+import Rebates from './views/me/Rebates'
+import UpdateEmail from './views/me/UpdateEmail'
 import Settings from './views/me/Settings'
 import UpdatePassword from './views/me/UpdatePassword'
 import LegalDeal from './views/legalDeal/LegalDeal'
@@ -148,6 +151,14 @@ const TabBarStack = StackNavigator({
   Transactions,
   Banner,
   Announcement,
+  SecurityCenter,
+  UpdateEmail,
+  Rebates: {
+    screen: Rebates,
+    navigationOptions: {
+      header: null,
+    },
+  },
 })
 
 const LoginStack = DismissableStackNavigator({

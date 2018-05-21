@@ -1,10 +1,10 @@
-export default function findAddress(uid) {
+export default function findAddress(id) {
   return `{
     find_address(
         skip: 0,
         limit: 10,
         where:{
-          user_id: ${uid}
+          user_id: ${id}
         }
         order: "-createdAt"
     ){

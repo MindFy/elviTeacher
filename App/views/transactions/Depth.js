@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import Echarts from 'native-echarts'
 import { common } from '../../constants/common'
 
-export default class Depth extends Component {
+class Depth extends Component {
   componentDidMount() { }
 
   processData() {
@@ -10,6 +11,9 @@ export default class Depth extends Component {
     const prices = [] // 存放坐标
     const amountsBuy = [] // 存放买入
     const amountsSell = [] // 存放卖出
+    if (!depthMap) {
+      return { prices, amountsBuy, amountsSell }
+    }
 
     for (let i = 0; i < depthMap.buy.length; i++) {
       prices.push(depthMap.buy[i].price)
@@ -27,11 +31,7 @@ export default class Depth extends Component {
       amountsBuy.push('-')
     }
 
-    return {
-      prices,
-      amountsBuy,
-      amountsSell,
-    }
+    return { prices, amountsBuy, amountsSell }
   }
 
   render() {
@@ -194,7 +194,6 @@ export default class Depth extends Component {
           lineStyle: {
             color: 'transparent',
             width: 0,
-            type: 'dashed',
           },
         },
         showContent: true,
@@ -205,15 +204,15 @@ export default class Depth extends Component {
         snapshot: true,
         confine: true,
         transitionDuration: 0.3,
-        formatter: (params) => {
+        formatter: params => {
           if (params[0].data !== '-') {
-            const name = params[0].name
-            const data = Number(params[0].data).toFixed(2)
+            const name = Number(params[0].name).toString()
+            const data = params[0].data
             const str = '价格: ' + name + '<br />数量: ' + data
             return str
           }
-          const name = params[1].name
-          const data = Number(params[1].data).toFixed(2)
+          const name = Number(params[1].name).toString()
+          const data = params[1].data
           const str = '价格: ' + name + '<br />数量: ' + data
           return str
         },
@@ -296,7 +295,21 @@ export default class Depth extends Component {
       }],
     }
     return (
-      <Echarts option={option} height={this.props.height} width={this.props.width} />
+      <Echarts
+        option={option}
+        width={common.sw}
+        height={common.sw * common.sw / common.sh}
+      />
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    depthMap: store.delegate.depthMap,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Depth)

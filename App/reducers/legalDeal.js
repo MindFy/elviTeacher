@@ -88,11 +88,11 @@ export default function legalDeal(state = initialState, action) {
         ...state,
         legalDeal: state.refreshState === RefreshState.HeaderRefreshing
           ? action.legalDeal : state.legalDeal.concat(action.legalDeal),
-        skip: state.refreshState === RefreshState.HeaderRefreshing ? 0 : (state.skip + 1),
+        skip: (state.refreshState === RefreshState.FooterRefreshing
+          && !action.legalDeal.length) ? 0 : (state.skip + 1),
         findLegalDealVisible: false,
-        refreshState: ((state.refreshState === RefreshState.FooterRefreshing)
-          && !action.legalDeal.length)
-          ? RefreshState.NoMoreData : RefreshState.Idle,
+        refreshState: (state.refreshState === RefreshState.FooterRefreshing
+          && !action.legalDeal.length) ? RefreshState.NoMoreData : RefreshState.Idle,
       }
       break
     case constants.FIND_LEGAL_DEAL_FAILED:
@@ -127,6 +127,13 @@ export default function legalDeal(state = initialState, action) {
         ...state,
         direct: action.data.direct,
         quantity: action.data.quantity,
+      }
+      break
+    case constants.SKIP_LEGAL_DEAL_UPDATE:
+      nextState = {
+        ...state,
+        skip: action.data.skip,
+        refreshState: action.data.refreshState,
       }
       break
     default:

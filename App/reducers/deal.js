@@ -58,6 +58,12 @@ export default function deal(state = initialState, action) {
         latestDealsResponse: action.response,
       }
       break
+    case constants.WS_DEALS_UPDATE:
+      nextState = {
+        ...state,
+        latestDeals: action.data.concat(state.latestDeals),
+      }
+      break
 
     case constants.BUY_OR_SELL_UPDATE:
       nextState = {

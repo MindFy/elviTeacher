@@ -1,7 +1,9 @@
 import { fork } from 'redux-saga/effects'
 import * as user from './user'
+import rebatesCount from './rebates'
 import * as payment from './payment'
 import * as legalDeal from './legalDeal'
+import invitationTotalCount from './invitation'
 import * as delegate from './delegate'
 import getRose from './dealstat'
 import * as deal from './deal'
@@ -14,6 +16,7 @@ export default function* rootSaga() {
   yield [
     fork(user.checkVerificateCode),
     fork(user.getVerificateCode),
+    fork(user.getVerificateSmtpCode),
     fork(user.findUser),
     fork(user.idCardAuth),
     fork(user.isExist),
@@ -22,8 +25,11 @@ export default function* rootSaga() {
     fork(user.register),
     fork(user.resetPassword),
     fork(user.sync),
-    fork(user.updatePassword),
     fork(user.updateBank),
+    fork(user.updateEmail),
+    fork(user.updatePassword),
+
+    fork(rebatesCount),
 
     fork(payment.cancelWithdraw),
     fork(payment.findPaymentListRecharge),
@@ -36,6 +42,8 @@ export default function* rootSaga() {
     fork(legalDeal.legalDealCreate),
     fork(legalDeal.findLegalDeal),
     fork(legalDeal.havedPay),
+
+    fork(invitationTotalCount),
 
     fork(delegate.allCancel),
     fork(delegate.cancel),
@@ -54,6 +62,7 @@ export default function* rootSaga() {
 
     fork(asset.createAddress),
     fork(asset.getAssets),
+    fork(asset.getValuation),
     fork(asset.findAssetList),
 
     fork(findAnnouncement),

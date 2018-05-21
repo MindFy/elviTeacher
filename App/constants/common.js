@@ -11,26 +11,39 @@ const w = 375
 const common = {
   badNet: 'Network request failed',
 
-  user: 'user',
   selectedTokenDefault: '选择币种',
-  listenerNoti: 'listenerNoti',
-  confirmPayNoti: 'confirmPayNoti',
-  delegateListenerNoti: 'delegateListenerNoti',
-  authenticationListenerNoti: 'authenticationListenerNoti',
+
+  noti: {
+    home: 'home',
+    updateEmail: 'updateEmail',
+    idCardAuth: 'idCardAuth',
+    delegateAllCancel: 'delegateAllCancel',
+    legalDealConfirmPay: 'legalDealConfirmPay',
+    addAddress: 'addAddress',
+    withdraw: 'withdraw',
+  },
+
   buy: 'buy',
   sell: 'sell',
-  recharge: 'recharge',
-  withdraw: 'withdraw',
-  current: 'current',
-  history: 'history',
   btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
 
-  never: 'never',
-  waiting: 'waiting',
-  pass: 'pass',
-  refuse: 'refuse',
+  payment: {
+    charge: {
+      BTC: 0.01,
+      ETH: 0.01,
+    },
+    limitRecharge: 10,
+    limitWithdraw: 10,
+    recharge: 'recharge',
+    withdraw: 'withdraw',
+    legalDeal: 'legalDeal',
+  },
 
   delegate: {
+    limtCurrent: 10,
+    limtHistory: 10,
+    current: 'current',
+    history: 'history',
     status: {
       dealing: 'dealing',
       waiting: 'waiting',
@@ -39,7 +52,23 @@ const common = {
     },
   },
 
+  ws: {
+    handicap: 'handicap',
+    market: 'market',
+    deals: 'deals',
+    delegates: 'delegates',
+  },
+
+  token: {
+    TK: 'TK',
+    BTC: 'BTC',
+    CNYT: 'CNYT',
+    CNY: 'CNY',
+    ETH: 'ETH',
+  },
+
   legalDeal: {
+    limit: 10,
     token: 'CNYT',
     status: {
       waitpay: 'waitpay',
@@ -52,11 +81,30 @@ const common = {
   selectionBar: {
     left: 'left',
     right: 'right',
+    third: 'third',
   },
 
   ui: {
     kLine: 'kLine',
     depth: 'depth',
+    averagePrice: 'averagePrice',
+    price: 'price',
+    dealled: 'dealled',
+    quantity: 'quantity',
+  },
+
+  user: {
+    string: 'user',
+    status: {
+      never: 'never',
+      waiting: 'waiting',
+      pass: 'pass',
+      refuse: 'refuse',
+      bind: 'bind',
+      unbind: 'unbind',
+    },
+    level0: 'level0',
+    level1: 'level1',
   },
 
   redColor: 'rgb(213,69,80)',
@@ -73,6 +121,8 @@ const common = {
   loginBtnTitleColor: '#191B2B', // 登录/注册/下一步标题颜色
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
+  rgb242: 'rgb(242,242,242)',
+  rgb223: 'rgb(223,223,223)',
 
   bgColor: 'rgb(24,27,42)', // 视图背景色
 
@@ -82,9 +132,11 @@ const common = {
   margin5: 5 / w * sw,
   margin8: 8 / w * sw,
   margin10: 10 / w * sw,
+  margin12: 12 / w * sw,
   margin15: 15 / w * sw,
   margin20: 20 / w * sw,
   margin22: 22 / w * sw,
+  margin25: 25 / w * sw,
   margin28: 28 / w * sw,
   margin30: 30 / w * sw,
   margin35: 35 / w * sw,
@@ -109,6 +161,7 @@ const common = {
   h5: 5 / w * sw,
   h13: 13 / w * sw, // 首页详情页面中向上箭头高度
   h14_5: 14.5 / w * sw, // 交易五档文字高度
+  h15: 15 / w * sw,
   h20: 20 / w * sw,
   h30: 30 / w * sw,
   h32: 32 / w * sw,
@@ -123,7 +176,7 @@ const common = {
   h80: 80 / w * sw,
   h97: 97 / w * sw,
   h100: 100 / w * sw, // 二维码宽高
-  h120: 120 / w * sw,
+  h120: 120 / w * sw, // 超级返利已推荐好友
   h154: 154 / w * sw, // 短信验证码视图高度
   h234: 234 / w * sw, // 首页公告图片高度
 
@@ -147,6 +200,7 @@ const common = {
   regIdCard: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
   regBankName: /^[\u4e00-\u9fa5]{4}/,
   regBankNo: /[0-9]{16,19}$/,
+  regEmail: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
   toFix2(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3') },
   toFix4(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d).*$/, '$1$2.$3') },
   toFix6(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d).*$/, '$1$2.$3') },
@@ -157,6 +211,7 @@ const common = {
   textInputMaxLenBankNo: 19,
   textInputMaxLenBankName: 15,
   textInputMaxLenLegalDeal: 7,
+  maxLenDelegate: 14,
 
   maxQuantityLegalDeal: 1000000,
   minQuantityLegalDeal: 100,
@@ -201,25 +256,33 @@ const common = {
     const dfStr = `${getHours}:${getMinutes}:${getSeconds}`
     return dfStr
   },
-  bigNumber: {
-    plus(a, b) { // "+"
-      return Number(BigNumber(a).plus(b).valueOf())
-    },
-    dividedBy(a, b) { // "/"
-      return Number(BigNumber(a).dividedBy(b).valueOf())
-    },
-    multipliedBy(a, b) { // "*"
-      return Number(BigNumber(a).multipliedBy(b).valueOf())
-    },
-    minus(a, b) { // "-"
-      return Number(BigNumber(a).minus(b).valueOf())
-    },
-    gt(a, b) { // ">"
-      return BigNumber(a).gt(b)
-    },
-    lt(a, b) { // "<"
-      return BigNumber(a).lt(b)
-    },
+
+  // 币币交易小数精度规则
+  precision(goodsName, currencyName, block) {
+    if (goodsName === common.token.ETH
+      && currencyName === common.token.BTC) {
+      // p:6 q:4 a:6
+      block(6, 4, 6)
+    } else if (goodsName === common.token.TK
+      && currencyName === common.token.CNYT) {
+      // p:4 q:0 a:4
+      block(4, 0, 4)
+    } else if (goodsName === common.token.TK
+      && currencyName === common.token.BTC) {
+      // p:8 q:0 a:8
+      block(8, 0, 8)
+      // } else if (
+      //   ((goodsName === common.token.BTC
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.ETH
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.ETH
+      //     && currencyName === common.token.TK))
+      // ) {
+    } else {
+      // p:2 q:4 a:6
+      block(2, 4, 6)
+    }
   },
 }
 
