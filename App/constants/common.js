@@ -211,7 +211,7 @@ const common = {
   textInputMaxLenBankNo: 19,
   textInputMaxLenBankName: 15,
   textInputMaxLenLegalDeal: 7,
-  maxLenDelegate: 14,
+  maxLenDelegate: 15,
 
   maxQuantityLegalDeal: 1000000,
   minQuantityLegalDeal: 100,

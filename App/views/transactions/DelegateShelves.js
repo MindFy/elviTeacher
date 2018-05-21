@@ -85,9 +85,9 @@ class DelegateShelves extends Component {
     }
 
     a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-    p = p.isNaN() ? '' : `${p.toNumber()}`
-    q = q.isNaN() ? '' : `${q.toNumber()}`
-    a = a.isNaN() ? '' : `${a.toNumber()}`
+    p = p.isNaN() ? '' : p.toString()
+    q = q.isNaN() ? '' : q.toString()
+    a = a.isNaN() ? '' : a.toString()
     return { p, q, a }
   }
 
@@ -167,7 +167,7 @@ class DelegateShelves extends Component {
         direct: buyOrSell ? 'buy' : 'sell',
         price: p,
         quantity: q,
-        total_money: a,
+        total_money: a.toString(),
       }))
     }
   }
@@ -193,7 +193,7 @@ class DelegateShelves extends Component {
           amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${currencyName}`
         } else {
           currentVisible = amountVisible[goodsName] ? amountVisible[goodsName] : 0
-          maximumValueSlider = currentVisible === 0 ? 0 : 1
+          maximumValueSlider = !price.length || currentVisible === 0 ? 0 : 1
           amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${goodsName}`
         }
       }
@@ -297,11 +297,12 @@ class DelegateShelves extends Component {
             maximumValue={maximumValueSlider}
             percentSlider={percentSlider}
             onValueChange={(percent) => {
-              const temp = currentVisible * percent
+              let temp = currentVisible * percent
               if (buyOrSell) {
                 this.textInputUpdate(price, quantity, temp)
               } else {
-                this.textInputUpdate(price, `${temp}`)
+                temp = new BigNumber(temp).dp(0, 1)
+                this.textInputUpdate(price, temp.toString())
               }
             }}
           />
