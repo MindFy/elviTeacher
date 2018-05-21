@@ -42,8 +42,6 @@ class Home extends Component {
         this.getUIData(this.props.homeRoseSelected.goods.id,
           this.props.homeRoseSelected.currency.id)
       }
-      dispatch(actions.sync())
-      dispatch(actions.getValuation())
     }, 5000)
 
     this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
