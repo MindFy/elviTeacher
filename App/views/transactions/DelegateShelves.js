@@ -197,9 +197,9 @@ class DelegateShelves extends Component {
           amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${goodsName}`
         }
       }
-      if (valuation && valuation.rates) {
-        rmb = valuation.rates[currencyName][goodsName]
-        rmb = new BigNumber(rmb).toFixed(2)
+      if (valuation && valuation.rates && price.length) {
+        rmb = valuation.rates[currencyName][common.token.CNYT]
+        rmb = new BigNumber(price).multipliedBy(rmb).toFixed(2, 1)
       }
     }
     if (currentVisible === 0) {

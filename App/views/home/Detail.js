@@ -116,8 +116,8 @@ class Detail extends Component {
       }
       rose = rose.multipliedBy(100).toFixed(2, 1)
       if (valuation && valuation.rates) {
-        rmb = valuation.rates[currencyName][goodsName]
-        rmb = new BigNumber(rmb).toFixed(2)
+        rmb = valuation.rates[currencyName][common.token.CNYT]
+        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
       }
     }
 
