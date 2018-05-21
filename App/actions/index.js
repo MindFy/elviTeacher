@@ -91,6 +91,7 @@ import {
   cashAccountUpdate,
   delegateDrawerUpdate,
   codeAuthUpdate,
+  bankTextInputUpdate,
 } from './ui'
 
 const actions = {
@@ -182,5 +183,6 @@ const actions = {
   cashAccountUpdate,
   delegateDrawerUpdate,
   codeAuthUpdate,
+  bankTextInputUpdate,
 }
 export default actions

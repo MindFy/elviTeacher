@@ -12,7 +12,8 @@ export default class TextInputUpdateBank extends Component {
   componentDidMount() { }
 
   render() {
-    const { viewStyle, title, placeholder, onChange, keyboardType, maxLength, value } = this.props
+    const { viewStyle, title, placeholder, onChange, keyboardType, maxLength, value, autoFocus,
+      editable } = this.props
     return (
       <View
         style={[{
@@ -43,6 +44,8 @@ export default class TextInputUpdateBank extends Component {
           onChange={onChange}
           keyboardType={keyboardType}
           maxLength={maxLength}
+          autoFocus={autoFocus}
+          editable={editable}
         />
       </View>
     )

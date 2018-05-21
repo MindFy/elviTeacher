@@ -72,6 +72,7 @@ class UpdateBank extends Component {
     const { dispatch, mobile, password, passwordAgain } = this.props
     dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
     dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
+    dispatch(actions.bankTextInputUpdate({ clearTextInputBank: false }))
   }
 
   onChange(event, tag) {
@@ -80,8 +81,6 @@ class UpdateBank extends Component {
       mobile, password, passwordAgain } = this.props
     switch (tag) {
       case 'bankName':
-      console.log('--------->', text);
-      
         dispatch(actions.updateBankUpdate({ bankName: text, subbankName, bankNo }))
         break
       case 'subbankName':
@@ -98,16 +97,19 @@ class UpdateBank extends Component {
     }
   }
 
-  confirmPress() {
-    const { bankName, subbankName, bankNo } = this.props
-    if (!bankName.length || !common.regBankName.test(bankName)
-      || !common.regSpace.test(bankName)) {
-      Toast.message('请输入开户银行, 至少四位中文')
+  confirmPress(title) {
+    const { dispatch, bankName, subbankName, bankNo, clearTextInputBank } = this.props
+    if (title === '重新添加') {
+      dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
+      dispatch(actions.bankTextInputUpdate({ clearTextInputBank: !clearTextInputBank }))
       return
     }
-    if (!subbankName.length || !common.regBankName.test(subbankName)
-      || !common.regSpace.test(bankName)) {
-      Toast.message('请输入开户支行名称, 至少四位中文')
+    if (!bankName.length || bankName.length < 4) {
+      Toast.message('请输入开户银行, 至少四位')
+      return
+    }
+    if (!subbankName.length || subbankName.length < 4) {
+      Toast.message('请输入开户支行名称, 至少四位')
       return
     }
     if (!bankNo.length || !common.regBankNo.test(bankNo) || !common.regSpace.test(bankNo)) {
@@ -192,7 +194,7 @@ class UpdateBank extends Component {
         this.count()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
       } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
+        Toast.fail('验证码不能为空')
       } else if (getVerificateCodeResponse.error.code === 4000102) {
         Toast.fail('一分钟内不能重复发送验证码')
       } else if (getVerificateCodeResponse.error.code === 4000104) {
@@ -227,11 +229,14 @@ class UpdateBank extends Component {
   }
 
   render() {
-    const { bankName, subbankName, bankNo, navigation, user } = this.props
+    const { bankName, subbankName, bankNo, navigation, user, clearTextInputBank } = this.props
+    
+    const editable = !(navigation.state.params
+      && navigation.state.params.fromMe === 'fromMe'
+      && user.bankName.length && !clearTextInputBank)
     this.handleUpdateBankRequest()
     this.handleGetVerificateCodeRequest()
     this.handleCheckVerificateCodeRequest()
-console.log('----->', bankName)
 
     return (
       <ScrollView
@@ -246,9 +251,11 @@ console.log('----->', bankName)
           }}
           title={'开户银行'}
           value={bankName}
+          autoFocus={clearTextInputBank}
           placeholder={'请输入开户银行'}
           onChange={e => this.onChange(e, 'bankName')}
           maxLength={common.textInputMaxLenBankName}
+          editable={editable}
         />
         <TextInputUpdateBank
           title={'开户支行'}
@@ -256,6 +263,7 @@ console.log('----->', bankName)
           placeholder={'请输入正确的开户支行名称'}
           onChange={e => this.onChange(e, 'subbankName')}
           maxLength={common.textInputMaxLenBankName}
+          editable={editable}
         />
         <TextInputUpdateBank
           title={'银行卡号'}
@@ -264,6 +272,7 @@ console.log('----->', bankName)
           onChange={e => this.onChange(e, 'bankNo')}
           keyboardType={'numbers-and-punctuation'}
           maxLength={common.textInputMaxLenBankNo}
+          editable={editable}
         />
 
         <View
@@ -303,7 +312,10 @@ console.log('----->', bankName)
             height: common.h40,
             justifyContent: 'center',
           }}
-          onPress={() => this.confirmPress()}
+          onPress={() => {
+            const title = editable ? '确认' : '重新添加'
+            this.confirmPress(title)
+          }}
         >
           <Text
             style={{
@@ -311,7 +323,7 @@ console.log('----->', bankName)
               fontSize: common.font14,
               alignSelf: 'center',
             }}
-          >{(navigation.state.params && navigation.state.params.fromMe === 'fromMe' && user.bankName.length) ? '重新添加' : '确认'}</Text>
+          >{editable ? '确认' : '重新添加'}</Text>
         </TouchableOpacity>
       </ScrollView>
     )
@@ -337,6 +349,8 @@ function mapStateToProps(store) {
 
     checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
     checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
+
+    clearTextInputBank: store.ui.clearTextInputBank,
   }
 }
 
