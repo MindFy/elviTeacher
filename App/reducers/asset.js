@@ -2,49 +2,17 @@ import * as constants from '../constants/index'
 
 const initialState = {
   selectTokenList: [{
-    amount: '',
-    createdAt: '',
-    freezed: '',
-    id: 0,
-    rechargeaddr: '',
-    token: {
-      id: 1,
-      name: 'TK',
-    },
-    totalRechargeAmount: 0,
+    id: 1,
+    name: 'TK',
   }, {
-    amount: '',
-    createdAt: '',
-    freezed: '',
-    id: 0,
-    rechargeaddr: 'mgVRdRatozZqvfpTEWwdzEFvuaAC3gwNgX',
-    token: {
-      id: 2,
-      name: 'BTC',
-    },
-    totalRechargeAmount: 0,
+    id: 2,
+    name: 'BTC',
   }, {
-    amount: '',
-    createdAt: '',
-    freezed: '',
-    id: 0,
-    rechargeaddr: '',
-    token: {
-      id: 3,
-      name: 'CNYT',
-    },
-    totalRechargeAmount: 0,
+    id: 3,
+    name: 'CNYT',
   }, {
-    amount: '',
-    createdAt: '',
-    freezed: '',
-    id: 0,
-    rechargeaddr: '0x6495319a3c04616b8922c53dcf781381a3b32154',
-    token: {
-      id: 5,
-      name: 'ETH',
-    },
-    totalRechargeAmount: 0,
+    id: 5,
+    name: 'ETH',
   }],
   asset: [],
   amountVisible: undefined,
@@ -132,7 +100,6 @@ export default function asset(state = initialState, action) {
       nextState = {
         ...state,
         asset: action.findAsset,
-        selectTokenList: action.findAsset,
         amountVisible: action.amountVisible,
         findAssetListVisible: false,
       }
