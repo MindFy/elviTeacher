@@ -158,7 +158,7 @@ class Cash extends Component {
   withdrawPress() {
     const { cashAccount, currentAddress } = this.props
     const ca = new BigNumber(cashAccount)
-    if (!cashAccount.length && ca.eq(0)) {
+    if (!cashAccount.length || ca.eq(0)) {
       Toast.message('请输入提现金额')
       return
     }
@@ -166,8 +166,8 @@ class Cash extends Component {
       Toast.message('请输入提现地址')
       return
     }
-    if (cashAccount.lt(common.payment.charge.BTC)
-      || cashAccount.lt(common.payment.charge.ETH)) {
+    if (ca.lt(common.payment.charge.BTC)
+      || ca.lt(common.payment.charge.ETH)) {
       Toast.message('提现金额过小, 请重新输入')
       return
     }
