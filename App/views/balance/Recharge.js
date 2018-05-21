@@ -154,7 +154,10 @@ class Recharge extends Component {
 
   renderBottomCell() {
     const { selectedToken } = this.props
-    if (selectedToken !== common.selectedTokenDefault) {
+    if ((selectedToken !== common.selectedTokenDefault
+      && selectedToken.token.id === 2)
+    || (selectedToken !== common.selectedTokenDefault
+      && selectedToken.token.id === 5)) {
       return (
         <View>
           <View
@@ -243,7 +246,7 @@ class Recharge extends Component {
     return null
   }
   render() {
-    const { dispatch, selectedToken, asset, tokenListSelected } = this.props
+    const { dispatch, selectedToken, tokenListSelected } = this.props
     return (
       <View
         style={{
@@ -256,7 +259,6 @@ class Recharge extends Component {
         />
         <ScrollView>
           <SelectToken
-            asset={asset}
             selectedToken={selectedToken}
             tokenListSelected={tokenListSelected}
             dispatch={dispatch}

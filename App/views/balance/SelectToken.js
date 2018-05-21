@@ -83,11 +83,11 @@ class SelectToken extends Component {
   }
 
   renderTokenList() {
-    const { asset, tokenListSelected } = this.props
+    const { selectTokenList, tokenListSelected } = this.props
     if (tokenListSelected) {
       return (
         <ListView
-          dataSource={this.dataSource(asset)}
+          dataSource={this.dataSource(selectTokenList)}
           renderRow={(rd, sid, rid) => this.renderRow(rd, rid)}
           enableEmptySections
         />
@@ -153,7 +153,7 @@ function mapStateToProps(store) {
   return {
     selectedToken: store.address.selectedToken,
     selectedIndex: store.address.selectedIndex,
-    asset: store.asset.asset,
+    selectTokenList: store.asset.selectTokenList,
   }
 }
 
