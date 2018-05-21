@@ -13,16 +13,16 @@ export default class KLine extends Component {
           width,
           height,
         }}
-        bounces={false}
-        contentInset={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-        }}
-        scalesPageToFit={false}
-        scrollEnabled={false}
-        source={require('./index.html')}
+        // bounces={false}
+        // contentInset={{
+        //   top: 0,
+        //   left: 0,
+        //   bottom: 0,
+        //   right: 0,
+        // }}
+        // scalesPageToFit={false}
+        // scrollEnabled={false}
+        source={require('./build/index.html')}
         // source={{ uri: 'https://demo_chart.tradingview.com/' }}
       />
     )

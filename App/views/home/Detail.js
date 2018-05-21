@@ -13,7 +13,7 @@ import {
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
-import KLine from './KLine'
+import KLine from './KLineWeb'
 import Depth from '../transactions/Depth'
 import DetailList from './DetailList'
 import actions from '../../actions/index'
