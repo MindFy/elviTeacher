@@ -92,7 +92,7 @@ class Cash extends Component {
 
   onChange(event, tag) {
     const { dispatch, cashAccount, currentAddress, selectedToken } = this.props
-    const maxAmount = new BigNumber(selectedToken.amount).toString()
+    const maxAmount = new BigNumber(selectedToken.amount).dp(8, 1).toString()
 
     if (tag === 'cashAccount') {
       const a = new BigNumber(event)
