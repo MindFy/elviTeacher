@@ -266,8 +266,8 @@ class Cash extends Component {
         charge = common.payment.charge.ETH
       }
       const cashAccountNum = new BigNumber(cashAccount)
-      let actualAccount = cashAccountNum.multipliedBy(1 - charge)
-      actualAccount = actualAccount.isNaN() ? 0 : actualAccount.dp(8, 1)
+      const actualAccount = cashAccountNum.isNaN()
+        ? 0 : cashAccountNum.minus(common.payment.charge.BTC)
       const amount = new BigNumber(selectedToken.amount).toFixed(8, 1)
       return (
         <View>
@@ -327,7 +327,7 @@ class Cash extends Component {
                       fontSize: common.font12,
                       alignSelf: 'center',
                     }}
-                  >{`手续费：${charge}${selectedToken.token.name}`}</Text>
+                  >{`手续费：${common.payment.charge.BTC}${selectedToken.token.name}`}</Text>
                   <Text
                     style={{
                       marginRight: common.margin10,

@@ -30,7 +30,7 @@ const common = {
   payment: {
     charge: {
       BTC: 0.01,
-      ETH: 0.01,
+      ETH: 0.015,
     },
     limitRecharge: 10,
     limitWithdraw: 10,
