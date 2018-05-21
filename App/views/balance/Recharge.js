@@ -81,7 +81,7 @@ class Recharge extends Component {
     const { selectedToken } = this.props
     if (selectedToken.rechargeaddr.length) {
       Clipboard.setString(selectedToken.rechargeaddr)
-      Toast.message('以复制到剪贴板')
+      Toast.message('已复制到剪贴板')
     }
   }
 
