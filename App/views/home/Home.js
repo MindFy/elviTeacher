@@ -6,7 +6,6 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  RefreshControl,
   TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
@@ -31,10 +30,21 @@ class Home extends Component {
   componentDidMount() {
     const { dispatch, homeRoseSelected, user } = this.props
     dispatch(actions.sync())
-    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-    dispatch(actions.findBanners(schemas.findBanners()))
-    dispatch(actions.getRose({ homeRoseSelected, user }))
     dispatch(actions.getValuation())
+    dispatch(actions.getRose({ homeRoseSelected, user }))
+    dispatch(actions.findBanners(schemas.findBanners()))
+    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+    this.timer1 = setInterval(() => {
+      dispatch(actions.getRose({
+        homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
+      }))
+      if (this.props.homeRoseSelected) {
+        this.getUIData(this.props.homeRoseSelected.goods.id,
+          this.props.homeRoseSelected.currency.id)
+      }
+      dispatch(actions.sync())
+      dispatch(actions.getValuation())
+    }, 5000)
 
     this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
       switch (type) {
@@ -98,6 +108,7 @@ class Home extends Component {
   }
 
   componentWillUnmount() {
+    clearInterval(this.timer1)
     this.listener.remove()
   }
 
@@ -118,8 +129,7 @@ class Home extends Component {
   }
 
   render() {
-    const { announcement, imgHashApi, banners, getRoseVisible, findBannersVisible,
-      announcementVisible, navigation, user, homeRose, dispatch, homeRoseSelected } = this.props
+    const { announcement, imgHashApi, banners, navigation, user, homeRose } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -189,22 +199,22 @@ class Home extends Component {
           barStyle={'light-content'}
         />
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => {
-                dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-                dispatch(actions.findBanners(schemas.findBanners()))
-                dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
-              }}
-              refreshing={
-                !!((getRoseVisible || findBannersVisible || announcementVisible))
-              }
-              colors={[common.textColor]}
-              progressBackgroundColor={common.navBgColor}
-              progressViewOffset={0}
-              tintColor={common.textColor}
-            />
-          }
+          // refreshControl={
+          //   <RefreshControl
+          //     onRefresh={() => {
+          //       dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+          //       dispatch(actions.findBanners(schemas.findBanners()))
+          //       dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
+          //     }}
+          //     refreshing={
+          //       !!((getRoseVisible || findBannersVisible || announcementVisible))
+          //     }
+          //     colors={[common.textColor]}
+          //     progressBackgroundColor={common.navBgColor}
+          //     progressViewOffset={0}
+          //     tintColor={common.textColor}
+          //   />
+          // }
           showsVerticalScrollIndicator={false}
         >
           <HomeSwiper

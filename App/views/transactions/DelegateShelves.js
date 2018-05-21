@@ -180,7 +180,7 @@ class DelegateShelves extends Component {
     let currencyName = ''
     let amountVisibleTitle = ''
     let maximumValueSlider = 0
-    let currentVisible = 0
+    let currentVisible = new BigNumber(0)
     let percentSlider = 0
     let rmb = '0.00'
     if (homeRoseSelected) {
@@ -188,12 +188,12 @@ class DelegateShelves extends Component {
       currencyName = homeRoseSelected.currency.name
       if (amountVisible) {
         if (buyOrSell) {
-          currentVisible = amountVisible[currencyName] ? amountVisible[currencyName] : 0
+          currentVisible = new BigNumber(amountVisible[currencyName] ? amountVisible[currencyName] : 0)
           maximumValueSlider = !price.length || Number(price) === 0 ? 0 : 1
           amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${currencyName}`
         } else {
-          currentVisible = amountVisible[goodsName] ? amountVisible[goodsName] : 0
-          maximumValueSlider = !price.length || currentVisible === 0 ? 0 : 1
+          currentVisible = new BigNumber(amountVisible[goodsName] ? amountVisible[goodsName] : 0)
+          maximumValueSlider = !price.length || currentVisible.eq(0) ? 0 : 1
           amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${goodsName}`
         }
       }
@@ -202,10 +202,11 @@ class DelegateShelves extends Component {
         rmb = new BigNumber(price).multipliedBy(rmb).toFixed(2, 1)
       }
     }
-    if (currentVisible === 0) {
+
+    if (currentVisible.eq(0)) {
       percentSlider = 0
     } else if (buyOrSell) {
-      let temp = amount / currentVisible
+      let temp = amount / currentVisible.toNumber()
       if (BigNumber(temp).lt(0.01) && BigNumber(temp).gt(0)) {
         temp = 0.01
       }
@@ -214,7 +215,7 @@ class DelegateShelves extends Component {
       }
       percentSlider = temp
     } else {
-      let temp = quantity / currentVisible
+      let temp = quantity / currentVisible.toNumber()
       if (BigNumber(temp).lt(0.01) && BigNumber(temp).gt(0)) {
         temp = 0.01
       }
@@ -297,7 +298,7 @@ class DelegateShelves extends Component {
             maximumValue={maximumValueSlider}
             percentSlider={percentSlider}
             onValueChange={(percent) => {
-              let temp = currentVisible * percent
+              let temp = currentVisible.toNumber() * percent
               if (buyOrSell) {
                 this.textInputUpdate(price, quantity, temp)
               } else {

@@ -96,21 +96,21 @@ class Balance extends Component {
           barStyle={'light-content'}
         />
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => {
-                if (user) {
-                  dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-                  dispatch(actions.getValuation())
-                }
-              }}
-              refreshing={findAssetListVisible}
-              colors={[common.textColor]}
-              progressBackgroundColor={common.navBgColor}
-              progressViewOffset={0}
-              tintColor={common.textColor}
-            />
-          }
+          // refreshControl={
+          //   <RefreshControl
+          //     onRefresh={() => {
+          //       if (user) {
+          //         dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+          //         dispatch(actions.getValuation())
+          //       }
+          //     }}
+          //     refreshing={findAssetListVisible}
+          //     colors={[common.textColor]}
+          //     progressBackgroundColor={common.navBgColor}
+          //     progressViewOffset={0}
+          //     tintColor={common.textColor}
+          //   />
+          // }
         >
           <Text
             style={{
