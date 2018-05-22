@@ -6,10 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
+import BigNumber from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'
-import BigNumber from 'bignumber.js';
 
 export default class Payment extends Component {
   static navigationOptions(props) {

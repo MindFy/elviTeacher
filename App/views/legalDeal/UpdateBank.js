@@ -230,7 +230,7 @@ class UpdateBank extends Component {
 
   render() {
     const { bankName, subbankName, bankNo, navigation, user, clearTextInputBank } = this.props
-    
+
     const editable = !(navigation.state.params
       && navigation.state.params.fromMe === 'fromMe'
       && user.bankName.length && !clearTextInputBank)
