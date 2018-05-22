@@ -22,7 +22,7 @@ export default class KLine extends Component {
         // }}
         // scalesPageToFit={false}
         // scrollEnabled={false}
-        source={require('./build/index.html')}
+        // source={require('./build/index.html')}
         // source={{ uri: 'https://demo_chart.tradingview.com/' }}
       />
     )

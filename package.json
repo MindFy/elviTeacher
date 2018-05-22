@@ -6,8 +6,15 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "eslint ./App",
     "lint-fix": "eslint ./App --fix",
+    "precommit": "lint-staged",
     "upload2fir": "cd ios && fastlane fir",
     "test": "jest"
+  },
+  "lint-staged": {
+    "App/**/*.{js,jsx,json,css}": [
+      "eslint",
+      "git add"
+    ]
   },
   "dependencies": {
     "bignumber.js": "^7.0.1",
@@ -29,6 +36,8 @@
     "teaset": "0.5.6"
   },
   "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^7.1.2",
     "babel-jest": "22.4.3",
     "babel-preset-react-native": "4.0.0",
     "eslint": "^4.8.0",

@@ -1,5 +1,5 @@
-export const API_ROOT = 'http://47.52.34.160:8080'
-export const ws = 'ws://47.52.34.160:8080/1.0/push'
+export const API_ROOT = 'http://47.91.202.112:8080'
+export const ws = 'ws://47.91.202.112:8080/1.0/push'
 
 function makePostAPI(endpoint) {
   return params => fetch(`${API_ROOT}${endpoint}`, {
