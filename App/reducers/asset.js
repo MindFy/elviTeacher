@@ -1,6 +1,19 @@
 import * as constants from '../constants/index'
 
 const initialState = {
+  selectTokenList: [{
+    id: 1,
+    name: 'TK',
+  }, {
+    id: 2,
+    name: 'BTC',
+  }, {
+    id: 3,
+    name: 'CNYT',
+  }, {
+    id: 5,
+    name: 'ETH',
+  }],
   asset: [],
   amountVisible: undefined,
   valuation: undefined,

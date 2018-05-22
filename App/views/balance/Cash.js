@@ -92,7 +92,7 @@ class Cash extends Component {
 
   onChange(event, tag) {
     const { dispatch, cashAccount, currentAddress, selectedToken } = this.props
-    const maxAmount = new BigNumber(selectedToken.amount).toString()
+    const maxAmount = new BigNumber(selectedToken.amount).dp(8, 1).toString()
 
     if (tag === 'cashAccount') {
       const a = new BigNumber(event)
@@ -158,7 +158,7 @@ class Cash extends Component {
   withdrawPress() {
     const { cashAccount, currentAddress } = this.props
     const ca = new BigNumber(cashAccount)
-    if (!cashAccount.length && ca.eq(0)) {
+    if (!cashAccount.length || ca.eq(0)) {
       Toast.message('请输入提现金额')
       return
     }
@@ -166,8 +166,8 @@ class Cash extends Component {
       Toast.message('请输入提现地址')
       return
     }
-    if (cashAccount.lt(common.payment.charge.BTC)
-      || cashAccount.lt(common.payment.charge.ETH)) {
+    if (ca.lt(common.payment.charge.BTC)
+      || ca.lt(common.payment.charge.ETH)) {
       Toast.message('提现金额过小, 请重新输入')
       return
     }
@@ -266,8 +266,8 @@ class Cash extends Component {
         charge = common.payment.charge.ETH
       }
       const cashAccountNum = new BigNumber(cashAccount)
-      let actualAccount = cashAccountNum.multipliedBy(1 - charge)
-      actualAccount = actualAccount.isNaN() ? 0 : actualAccount.dp(8, 1)
+      const actualAccount = cashAccountNum.isNaN()
+        ? 0 : cashAccountNum.minus(common.payment.charge.BTC)
       const amount = new BigNumber(selectedToken.amount).toFixed(8, 1)
       return (
         <View>
@@ -327,7 +327,7 @@ class Cash extends Component {
                       fontSize: common.font12,
                       alignSelf: 'center',
                     }}
-                  >{`手续费：${charge}${selectedToken.token.name}`}</Text>
+                  >{`手续费：${common.payment.charge.BTC}${selectedToken.token.name}`}</Text>
                   <Text
                     style={{
                       marginRight: common.margin10,

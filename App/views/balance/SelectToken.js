@@ -45,9 +45,25 @@ class SelectToken extends Component {
   }
 
   rowPress(rd, rid) {
-    const { dispatch, tokenListSelected, selectedTokenBlock } = this.props
+    const { dispatch, tokenListSelected, selectedTokenBlock, asset } = this.props
+    let selectedToken = asset.find(value => value.token.id === rd.id)
+    let rechargeaddr = ''
+    if (rd.id === 2) {
+      rechargeaddr = 'mfXxAZpxNvrGrX2GerXyDKUcsycBvioNVH'
+    } else if (rd.id === 5) {
+      rechargeaddr = '0xa4cd4891c28ffc089c92bb7408561772c403d039'
+    }
+    selectedToken = selectedToken || {
+      amount: 0,
+      createdAt: '',
+      freezed: '',
+      id: 0,
+      rechargeaddr,
+      token: { id: rd.id, name: rd.name },
+      totalRechargeAmount: '',
+    }
     dispatch(actions.selectTokenUpdate({
-      selectedToken: rd,
+      selectedToken,
       tokenListSelected: !tokenListSelected,
       selectedIndex: rid,
     }))
@@ -76,18 +92,18 @@ class SelectToken extends Component {
               color: common.textColor,
               alignSelf: 'center',
             }}
-          >{rd.token.name}</Text>
+          >{rd.name}</Text>
         </View>
       </TouchableOpacity>
     )
   }
 
   renderTokenList() {
-    const { asset, tokenListSelected } = this.props
+    const { selectTokenList, tokenListSelected } = this.props
     if (tokenListSelected) {
       return (
         <ListView
-          dataSource={this.dataSource(asset)}
+          dataSource={this.dataSource(selectTokenList)}
           renderRow={(rd, sid, rid) => this.renderRow(rd, rid)}
           enableEmptySections
         />
@@ -154,6 +170,7 @@ function mapStateToProps(store) {
     selectedToken: store.address.selectedToken,
     selectedIndex: store.address.selectedIndex,
     asset: store.asset.asset,
+    selectTokenList: store.asset.selectTokenList,
   }
 }
 

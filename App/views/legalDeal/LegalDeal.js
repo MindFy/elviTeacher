@@ -152,7 +152,7 @@ class LegalDeal extends Component {
   render() {
     const { direct, priceBuy, priceSell, quantity, legalDealCreateVisible } = this.props
     const price = direct === common.buy ? priceBuy : priceSell
-    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity)
+    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).dp(2, 1)
     this.handleLegalDealCreateRequest()
 
     return (

@@ -120,9 +120,10 @@ const TabBar = TabNavigator(
   {
     tabBarOptions: {
       activeTintColor: common.btnTextColor,
-      activeBackgroundColor: common.navBgColor,
       inactiveTintColor: common.placeholderColor,
-      inactiveBackgroundColor: common.navBgColor,
+      style: {
+        backgroundColor: common.navBgColor,
+      },
       labelStyle: {
         fontSize: common.font12,
       },

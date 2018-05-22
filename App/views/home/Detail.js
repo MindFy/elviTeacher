@@ -13,7 +13,7 @@ import {
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
-import KLine from './KLine'
+import KLine from './KLineWeb'
 import Depth from '../transactions/Depth'
 import DetailList from './DetailList'
 import actions from '../../actions/index'
@@ -116,8 +116,8 @@ class Detail extends Component {
       }
       rose = rose.multipliedBy(100).toFixed(2, 1)
       if (valuation && valuation.rates) {
-        rmb = valuation.rates[currencyName][goodsName]
-        rmb = new BigNumber(rmb).toFixed(2)
+        rmb = valuation.rates[currencyName][common.token.CNYT]
+        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
       }
     }
 

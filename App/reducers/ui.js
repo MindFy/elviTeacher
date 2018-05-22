@@ -13,6 +13,7 @@ const initialState = {
   drawerOpen: false,
 
   codeAuth: '',
+  clearTextInputBank: false,
 }
 
 export default function ui(state = initialState, action) {
@@ -60,6 +61,12 @@ export default function ui(state = initialState, action) {
       nextState = {
         ...state,
         codeAuth: action.data.codeAuth,
+      }
+      break
+    case constants.BANK_TEXT_INPUT_UPDATE:
+      nextState = {
+        ...state,
+        clearTextInputBank: action.data.clearTextInputBank,
       }
       break
     default:

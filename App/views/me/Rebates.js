@@ -54,6 +54,7 @@ class Rebates extends Component {
     const prefixNo = user.prefixNo ? user.prefixNo : ''
     const recommendId = user.recommendId ? user.recommendId : ''
     const rebatesLinkQr = recommendId.length ? (api.rebatesLinkQr + prefixNo + recommendId) : ''
+
     const overlayView = (
       <Overlay.View
         style={{
@@ -66,10 +67,9 @@ class Rebates extends Component {
         <View
           style={{
             backgroundColor: '#fff',
-            top: -common.w40,
             borderRadius: common.radius6,
-            height: 2 * common.h100,
-            width: 2 * common.h100,
+            height: '80%',
+            width: '80%',
             alignItems: 'center',
             justifyContent: 'center',
           }}
@@ -78,8 +78,8 @@ class Rebates extends Component {
             rebatesLinkQr.length ?
               <Image
                 style={{
-                  height: 2 * common.h100,
-                  width: 2 * common.h100,
+                  height: '100%',
+                  width: '100%',
                   alignSelf: 'center',
                 }}
                 source={{ uri: rebatesLinkQr }}

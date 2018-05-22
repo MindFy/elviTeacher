@@ -12,7 +12,7 @@ import {
 export default class Announcement extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '活动',
+      headerTitle: '公告中心',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -48,6 +48,9 @@ export default class Announcement extends Component {
 
   render() {
     const { navigation } = this.props
+    
+    const createdAt = common.dfFullDate(navigation.state.params.element.createdAt)
+    const title = navigation.state.params.element.title
     const content = navigation.state.params.element.content
     return (
       <ScrollView
@@ -59,6 +62,24 @@ export default class Announcement extends Component {
         <Text
           style={{
             marginTop: common.margin60,
+            color: common.textColor,
+            fontSize: common.font14,
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >{title}</Text>
+        <Text
+          style={{
+            marginTop: common.margin10,
+            color: common.textColor,
+            fontSize: common.font14,
+            textAlign: 'center',
+            width: '100%',
+          }}
+        >{createdAt}</Text>
+        <Text
+          style={{
+            marginTop: common.margin20,
             color: common.textColor,
             fontSize: common.font14,
             textAlign: 'center',

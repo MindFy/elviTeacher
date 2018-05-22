@@ -15,7 +15,7 @@ export default class Payment extends Component {
   static navigationOptions(props) {
     const { navigation } = props
     return {
-      headerTitle: navigation.state.params.data.direct === common.buy ? '付款信息' : '收款信息',
+      headerTitle: navigation.state.params.data.direct === common.buy ? '付款方信息' : '收款方信息',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -59,18 +59,18 @@ export default class Payment extends Component {
     let bankName = ''
     let bankNo = ''
     let remark = ''
-    const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity)
+    const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity).toFixed(2, 1)
     if (rd.direct === common.buy) {
-      name = rd.traderPayinfo.name
-      bankName = rd.traderPayinfo.bankName
+      name = rd.traderPayinfo.cardHolderName
+      bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
       bankNo = rd.traderPayinfo.bankNo
       remark = rd.traderPayinfo.remark
       titleName = '收款方户名'
       titleBankName = '收款方开户行'
       titleBankNo = '收款方账号'
     } else if (rd.direct === common.sell) {
-      name = rd.createrPayinfo.name
-      bankName = rd.createrPayinfo.bankName
+      name = rd.createrPayinfo.cardHolderName
+      bankName = rd.createrPayinfo.bankName + rd.createrPayinfo.subbankName
       bankNo = rd.createrPayinfo.bankNo
       remark = rd.createrPayinfo.remark
       titleName = '汇款方户名'

@@ -89,6 +89,8 @@ class Login extends Component {
         Toast.fail('手机号码未注册')
       } else if (loginResponse.error.code === 4000117) {
         Toast.fail('账号或密码错误')
+      } else if (loginResponse.error.code === 4000118) {
+        Toast.fail('您已错误输入三次密码，请三十分钟后登录')
       } else if (loginResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {

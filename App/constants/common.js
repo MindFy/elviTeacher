@@ -30,7 +30,7 @@ const common = {
   payment: {
     charge: {
       BTC: 0.01,
-      ETH: 0.01,
+      ETH: 0.015,
     },
     limitRecharge: 10,
     limitWithdraw: 10,
@@ -192,7 +192,7 @@ const common = {
 
   activeOpacity: 0.7,
 
-  regMobile: /^1[3|4|5|8][0-9]\d{4,8}$/,
+  regMobile: /^1[3|4|5|7|8][0-9]\d{4,8}$/,
   regMobileMsg: '请输入正确的手机号', // 手机号提示
   regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
   regSpace: /^[^ ]+$/, // 空格正则
@@ -211,7 +211,7 @@ const common = {
   textInputMaxLenBankNo: 19,
   textInputMaxLenBankName: 15,
   textInputMaxLenLegalDeal: 7,
-  maxLenDelegate: 14,
+  maxLenDelegate: 15,
 
   maxQuantityLegalDeal: 1000000,
   minQuantityLegalDeal: 100,

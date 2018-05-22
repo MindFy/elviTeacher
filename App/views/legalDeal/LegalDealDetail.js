@@ -336,28 +336,25 @@ class LegalDealDetail extends Component {
                 }}
               >{paymentBtnTitle}</Text>
             </TouchableOpacity>
-            {
-              rd.direct === common.buy ?
-                <TouchableOpacity
-                  activeOpacity={common.activeOpacity}
-                  style={{
-                    marginTop: common.margin8,
-                    alignSelf: 'center',
-                  }}
-                  disabled={cancelBtnDisabled}
-                  onPress={() => {
-                    legalDeal[rid].status = common.legalDeal.status.cancel
-                    dispatch(actions.legalDealCancel({ id: rd.id }, legalDeal.concat()))
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: cancelBtnDisabled ? common.placeholderColor : common.btnTextColor,
-                      fontSize: common.font10,
-                    }}
-                  >撤单</Text>
-                </TouchableOpacity> : null
-            }
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              style={{
+                marginTop: common.margin8,
+                alignSelf: 'center',
+              }}
+              disabled={cancelBtnDisabled}
+              onPress={() => {
+                legalDeal[rid].status = common.legalDeal.status.cancel
+                dispatch(actions.legalDealCancel({ id: rd.id }, legalDeal.concat()))
+              }}
+            >
+              <Text
+                style={{
+                  color: cancelBtnDisabled ? common.placeholderColor : common.btnTextColor,
+                  fontSize: common.font10,
+                }}
+              >撤单</Text>
+            </TouchableOpacity>
             {
               rd.direct === common.buy
                 ? <TouchableOpacity

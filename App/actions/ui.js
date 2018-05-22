@@ -48,3 +48,10 @@ export function codeAuthUpdate(data) {
     data,
   }
 }
+
+export function bankTextInputUpdate(data) {
+  return {
+    type: constants.BANK_TEXT_INPUT_UPDATE,
+    data,
+  }
+}
