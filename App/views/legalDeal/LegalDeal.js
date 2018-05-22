@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import BigNumber from 'bignumber.js'
 import {
   Text,
   View,
@@ -15,7 +16,6 @@ import {
 } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import actions from '../../actions/index'
-import BigNumber from 'bignumber.js';
 
 class LegalDeal extends Component {
   static navigationOptions(props) {

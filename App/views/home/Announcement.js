@@ -48,7 +48,7 @@ export default class Announcement extends Component {
 
   render() {
     const { navigation } = this.props
-    
+
     const createdAt = common.dfFullDate(navigation.state.params.element.createdAt)
     const title = navigation.state.params.element.title
     const content = navigation.state.params.element.content

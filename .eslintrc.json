@@ -11,6 +11,7 @@
   "globals": {
     "fetch": false
   },
+  "parser": "babel-eslint",
   "rules": {
     "semi": [
       2,
