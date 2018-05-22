@@ -69,10 +69,10 @@ export default class Payment extends Component {
       titleBankName = '收款方开户行'
       titleBankNo = '收款方账号'
     } else if (rd.direct === common.sell) {
-      name = rd.createrPayinfo.cardHolderName
-      bankName = rd.createrPayinfo.bankName + rd.createrPayinfo.subbankName
-      bankNo = rd.createrPayinfo.bankNo
-      remark = rd.createrPayinfo.remark
+      name = rd.traderPayinfo.cardHolderName
+      bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
+      bankNo = rd.traderPayinfo.bankNo
+      remark = rd.traderPayinfo.remark
       titleName = '汇款方户名'
       titleBankName = '汇款方开户行'
       titleBankNo = '汇款方账号'
