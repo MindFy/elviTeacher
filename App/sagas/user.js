@@ -23,6 +23,19 @@ export function* checkVerificateCode() {
     else yield put({ type: constants.CHECK_VERIFICATE_CODE_FAILED, response })
   }
 }
+/* 获取谷歌验证信息 */
+export function* getGoogleAuth() {
+  while (true) {
+    yield take(constants.GET_GOOGLE_AUTH_REQUEST)
+    const response = yield call(api.getGoogleAuth)
+    if (response.success) {
+      yield put({ type: constants.GET_GOOGLE_AUTH_SUCCEED, response })
+    } else if (response.error.code === 4000180) {
+      yield put({ type: constants.GET_GOOGLE_AUTH_FAILED })
+    }
+    DeviceEventEmitter.emit(common.noti.googleAuth)
+  }
+}
 /* 获取验证码 */
 export function* getVerificateCode() {
   while (true) {

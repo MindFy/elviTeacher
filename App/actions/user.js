@@ -7,6 +7,12 @@ export function checkVerificateCode(data) {
   }
 }
 
+export function getGoogleAuth() {
+  return {
+    type: constants.GET_GOOGLE_AUTH_REQUEST,
+  }
+}
+
 export function getVerificateCode(data) {
   return {
     type: constants.GET_VERIFICATE_CODE_REQUEST,

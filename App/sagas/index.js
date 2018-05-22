@@ -15,6 +15,7 @@ import * as address from './address'
 export default function* rootSaga() {
   yield [
     fork(user.checkVerificateCode),
+    fork(user.getGoogleAuth),
     fork(user.getVerificateCode),
     fork(user.getVerificateSmtpCode),
     fork(user.findUser),

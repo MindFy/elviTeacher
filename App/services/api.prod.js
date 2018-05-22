@@ -90,6 +90,7 @@ function graphqlAPI(endpoint) {
 
 // User
 export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCode')
+export const getGoogleAuth = makePostAPI('/1.0/app/user/getGoogleAuth')
 export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
 export const getVerificateSmtpCode = makePostAPI('/1.0/app/user/getVerificateSmtpCode')
 export const idCardAuth = makePostAPI('/1.0/app/user/idCardAuth')

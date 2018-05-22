@@ -7,12 +7,14 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native'
 import {
   Overlay,
 } from 'teaset'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
+import actions from '../../actions/index'
 
 class SecurityCenter extends Component {
   static navigationOptions(props) {
@@ -49,7 +51,15 @@ class SecurityCenter extends Component {
         ),
     }
   }
-  componentDidMount() { }
+  componentDidMount() {
+    this.listener = DeviceEventEmitter.addListener(common.noti.googleAuth, () => {
+      this.showOverlay()
+    })
+  }
+
+  componentWillUnmount() {
+    this.listener.remove()
+  }
 
   showOverlay() {
     const overlayView = (
@@ -77,7 +87,7 @@ class SecurityCenter extends Component {
               color: common.blackColor,
               alignSelf: 'center',
             }}
-          >请前去官网完成绑定</Text>
+          >{this.props.googleAuth ? '谷歌认证已绑定' : '请前去官网完成绑定'}</Text>
         </View>
       </Overlay.View>
     )
@@ -88,7 +98,7 @@ class SecurityCenter extends Component {
   }
 
   render() {
-    const { navigation, user } = this.props
+    const { navigation, user, dispatch } = this.props
     return (
       <ScrollView
         style={{
@@ -113,7 +123,10 @@ class SecurityCenter extends Component {
         />
         <MeCell
           leftImageHide
-          onPress={() => this.showOverlay()}
+          onPress={() => {
+            if (user) dispatch(actions.getGoogleAuth())
+            else navigation.navigate('LoginStack')
+          }}
           title="谷歌验证码"
         />
 
@@ -125,6 +138,7 @@ class SecurityCenter extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
+    googleAuth: store.user.googleAuth,
   }
 }
 

@@ -60,6 +60,7 @@ import {
 import rebatesCount from './rebates'
 import {
   checkVerificateCode,
+  getGoogleAuth,
   getVerificateCode,
   getVerificateSmtpCode,
   findUser,
@@ -153,6 +154,7 @@ const actions = {
   rebatesCount,
 
   checkVerificateCode,
+  getGoogleAuth,
   getVerificateCode,
   getVerificateSmtpCode,
   findUser,
