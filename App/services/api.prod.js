@@ -104,7 +104,7 @@ export const updateEmail = makePostAPI('/1.0/app/user/updateEmail')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
 // Rebates
 export const rebatesLink = `${API_ROOT}/signup?invitation=`
-export const rebatesLinkQr = `${API_ROOT}/qr/signup?invitation=`
+export const rebatesLinkQr = `${API_ROOT}/img-qr/${rebatesLink}`
 export const rebatesCount = makePostAPI('/1.0/app/rebates/rebatesCount')
 // Payment
 export const cancelWithdraw = makePostAPITestCancelWithdraw('/1.0/payment/cancelWithdraw')
