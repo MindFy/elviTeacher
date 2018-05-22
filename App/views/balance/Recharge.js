@@ -8,6 +8,7 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  CameraRoll,
 } from 'react-native'
 import {
   Toast,
@@ -85,6 +86,21 @@ class Recharge extends Component {
     }
   }
 
+  _saveImageToCameraRoll() {
+    const { selectedToken, qrApi } = this.props
+    if (selectedToken.rechargeaddr.length === 0) {
+      return
+    }
+    const uri = `${qrApi}${selectedToken.rechargeaddr}`
+    CameraRoll.saveToCameraRoll(uri).then(() => {
+      Toast.message('保存成功')
+      Overlay.hide(this.overlayViewKey)
+    }).catch(() => {
+      Toast.message('保存失败')
+      Overlay.hide(this.overlayViewKey)
+    })
+  }
+
   qrPress() {
     const { selectedToken, qrApi } = this.props
     const overlayView = (
@@ -136,6 +152,7 @@ class Recharge extends Component {
                 activeOpacity={common.activeOpacity}
                 onPress={() => {
                   // 保存图片
+                  this._saveImageToCameraRoll()
                 }}
               >
                 <Text
@@ -149,7 +166,7 @@ class Recharge extends Component {
         </View>
       </Overlay.View>
     )
-    Overlay.show(overlayView)
+    this.overlayViewKey = Overlay.show(overlayView)
   }
 
   renderBottomCell() {
