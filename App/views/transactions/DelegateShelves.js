@@ -188,7 +188,8 @@ class DelegateShelves extends Component {
       currencyName = homeRoseSelected.currency.name
       if (amountVisible) {
         if (buyOrSell) {
-          currentVisible = new BigNumber(amountVisible[currencyName] ? amountVisible[currencyName] : 0)
+          currentVisible = new BigNumber(amountVisible[currencyName]
+            ? amountVisible[currencyName] : 0)
           maximumValueSlider = !price.length || Number(price) === 0 ? 0 : 1
           amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${currencyName}`
         } else {

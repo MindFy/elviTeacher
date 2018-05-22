@@ -10,12 +10,12 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
+import BigNumber from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import actions from '../../actions/index'
-import BigNumber from 'bignumber.js';
 
 class LegalDeal extends Component {
   static navigationOptions(props) {
