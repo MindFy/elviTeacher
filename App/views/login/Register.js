@@ -262,7 +262,7 @@ class Register extends Component {
                     color: common.btnTextColor,
                     fontSize: common.font12,
                   }}
-                >《xxx服务协议》</Text>
+                >《用户协议》</Text>
               </TouchableOpacity>
             </View>
             <TouchableOpacity
