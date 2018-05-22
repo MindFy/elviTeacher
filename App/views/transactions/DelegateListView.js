@@ -320,6 +320,9 @@ class DelegateListView extends Component {
     }
 
     let averagePrice = new BigNumber(rd.dealamount).dividedBy(rd.dealled)
+    if (averagePrice.isNaN()) {
+      averagePrice = 0
+    }
     let price
     let dealled
     let dealamount
