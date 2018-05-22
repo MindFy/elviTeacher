@@ -215,7 +215,7 @@ class Authentication extends Component {
       } else if (idCardAuthResponse.error.code === 4000150) {
         Toast.fail('身份认证失败，请确认信息是否正确')
       } else if (idCardAuthResponse.error.code === 4000151) {
-        Toast.fail('您已进行过认证操作')
+        Toast.fail('身份证号错误')
       } else if (idCardAuthResponse.error.code === 4000155) {
         Toast.fail('身份证号已存在')
       } else {
@@ -276,7 +276,7 @@ class Authentication extends Component {
   }
 
   renderContentView() {
-    const { dispatch, name, idNo, user, authenticationAgain } = this.props
+    const { dispatch, user, authenticationAgain } = this.props
     if (!user.idCardAuthStatus) return null
     if (authenticationAgain) return this.renderScrollView()
 
@@ -340,8 +340,8 @@ class Authentication extends Component {
               activeOpacity={common.activeOpacity}
               onPress={() => {
                 dispatch(actions.idCardAuthUpdate({
-                  name,
-                  idNo,
+                  name: '',
+                  idNo: '',
                   idCardImages: {},
                   authenticationAgain: true,
                 }))
