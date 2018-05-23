@@ -70,8 +70,7 @@ class Register extends Component {
           mobile,
           code,
           password,
-          passwordAgain:
-          text,
+          passwordAgain: text,
           recommendNo,
         }))
         break
