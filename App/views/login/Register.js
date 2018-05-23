@@ -145,6 +145,9 @@ class Register extends Component {
 
       if (registerResponse.success) {
         Toast.success('注册成功')
+
+        const { dispatch } = this.props
+        dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
       } else if (registerResponse.error.code === 4000104) {
         Toast.fail('注册用户失败')

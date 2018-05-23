@@ -87,6 +87,7 @@ class Me extends Component {
                 this.props.homeRoseSelected.currency.id, undefined)
             }
             // 返回登录页
+            dispatch(actions.loginUpdate({ mobile: '', password: '' }))
             this.navigateLogin()
           }
         })

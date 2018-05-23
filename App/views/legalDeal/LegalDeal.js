@@ -79,17 +79,17 @@ class LegalDeal extends Component {
   }
 
   selectionBarPress(direct) {
-    const { dispatch, quantity } = this.props
+    const { dispatch } = this.props
     dispatch(actions.legalDealUpdate({
       direct,
-      quantity,
+      quantity: 0,
     }))
   }
 
   createPress() {
     const { dispatch, direct, quantity } = this.props
     const q = new BigNumber(quantity)
-    if (!quantity.length && q.eq(0)) {
+    if (!quantity.length || q.eq(0)) {
       Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
       return
     }
@@ -225,6 +225,7 @@ class LegalDeal extends Component {
               placeholderTextColor={common.placeholderColor}
               value={quantity}
               onChangeText={e => this.quantityOnChange(e)}
+              maxLength={7}
             />
             <Text
               style={{
