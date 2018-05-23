@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import BigNumber from 'bignumber.js'
 import {
   Text,
   View,
