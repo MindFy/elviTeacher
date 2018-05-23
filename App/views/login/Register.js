@@ -30,25 +30,59 @@ class Register extends Component {
       code: '',
       password: '',
       passwordAgain: '',
+      recommendNo: '',
     }))
   }
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, mobile, code, password, passwordAgain } = this.props
-
+    const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
     switch (tag) {
       case 'mobile':
-        dispatch(actions.registerUpdate({ mobile: text, code, password, passwordAgain }))
+        dispatch(actions.registerUpdate({
+          mobile: text,
+          code,
+          password,
+          passwordAgain,
+          recommendNo,
+        }))
         break
       case 'code':
-        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
+        dispatch(actions.registerUpdate({
+          mobile,
+          code: text,
+          password,
+          passwordAgain,
+          recommendNo,
+        }))
         break
       case 'password':
-        dispatch(actions.registerUpdate({ mobile, code, password: text, passwordAgain }))
+        dispatch(actions.registerUpdate({
+          mobile,
+          code,
+          password: text,
+          passwordAgain,
+          recommendNo,
+        }))
         break
       case 'passwordAgain':
-        dispatch(actions.registerUpdate({ mobile, code, password, passwordAgain: text }))
+        dispatch(actions.registerUpdate({
+          mobile,
+          code,
+          password,
+          passwordAgain:
+          text,
+          recommendNo,
+        }))
+        break
+      case 'recommendNo':
+        dispatch(actions.registerUpdate({
+          mobile,
+          code,
+          password,
+          passwordAgain,
+          recommendNo: text,
+        }))
         break
       default:
         break
@@ -69,7 +103,7 @@ class Register extends Component {
   }
 
   registerPress() {
-    const { dispatch, mobile, code, password, passwordAgain } = this.props
+    const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
     if (!mobile.length) {
       Toast.message('请输入手机号')
       return
@@ -106,6 +140,7 @@ class Register extends Component {
       mobile,
       code,
       password,
+      recommendNo,
     }))
   }
 
@@ -159,6 +194,8 @@ class Register extends Component {
         Toast.fail('验证码已过期，请重新获取')
       } else if (registerResponse.error.code === 4000114) {
         Toast.fail('手机号码已被注册')
+      } else if (registerResponse.error.code === 4000113) {
+        Toast.fail('邀请码不正确')
       } else if (registerResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
@@ -171,7 +208,16 @@ class Register extends Component {
     this.handleGetVerificateCodeRequest()
     this.handleRegisterRequest()
 
-    const { navigation, mobile, code, password, passwordAgain, registerVisible } = this.props
+    const {
+      navigation,
+      mobile,
+      code,
+      password,
+      passwordAgain,
+      registerVisible,
+      recommendNo,
+    } = this.props
+
     return (
       <KeyboardAvoidingView
         style={{
@@ -231,6 +277,17 @@ class Register extends Component {
             onChange={e => this.onChange(e, 'passwordAgain')}
             passwordAgain={passwordAgain}
             secureTextEntry
+          />
+
+          <TextInputLogin
+            textStyle={{
+              width: common.w100,
+            }}
+            textInputStyle={{ marginRight: common.w10, flex: 1 }}
+            title="邀请码"
+            placeholder="选填"
+            value={recommendNo}
+            onChange={e => this.onChange(e, 'recommendNo')}
           />
 
           <View
@@ -313,6 +370,7 @@ function mapStateToProps(store) {
     code: store.user.codeRegister,
     password: store.user.passwordRegister,
     passwordAgain: store.user.passwordAgainRegister,
+    recommendNo: store.user.recommendNo,
 
     registerVisible: store.user.registerVisible,
     registerResponse: store.user.registerResponse,
