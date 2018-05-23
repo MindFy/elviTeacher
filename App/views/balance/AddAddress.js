@@ -91,12 +91,14 @@ class AddAddress extends Component {
 
   confirmPress() {
     const { remark, withdrawaddr } = this.props
-    if (!remark.length) {
-      Toast.message('请填写备注')
-      return
-    }
+
     if (!withdrawaddr.length) {
       Toast.message('请填写提币地址')
+      return
+    }
+
+    if (!remark.length) {
+      Toast.message('请填写备注')
       return
     }
     this.showOverlay()
@@ -213,12 +215,13 @@ class AddAddress extends Component {
                 fontSize: common.font14,
                 color: 'white',
               }}
-              placeholder="备注"
+              placeholder="地址"
               placeholderTextColor={common.placeholderColor}
-              value={remark}
-              onChange={e => this.onChange(e, 'remark')}
+              value={withdrawaddr}
+              onChange={e => this.onChange(e, 'withdrawaddr')}
             />
           </View>
+
           <View
             style={{
               marginTop: common.margin10,
@@ -238,10 +241,10 @@ class AddAddress extends Component {
                 fontSize: common.font14,
                 color: 'white',
               }}
-              placeholder="地址"
+              placeholder="备注"
               placeholderTextColor={common.placeholderColor}
-              value={withdrawaddr}
-              onChange={e => this.onChange(e, 'withdrawaddr')}
+              value={remark}
+              onChange={e => this.onChange(e, 'remark')}
             />
           </View>
 
