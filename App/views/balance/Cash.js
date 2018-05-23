@@ -449,7 +449,9 @@ class Cash extends Component {
           <SelectToken
             tokenListSelected={tokenListSelected}
             dispatch={dispatch}
-            selectedTokenBlock={() => { }}
+            selectedTokenBlock={() => {
+              dispatch(actions.cashAccountUpdate({ cashAccount: '', currentAddress: '' }))
+            }}
           />
 
           {this.renderBottomView()}
