@@ -258,7 +258,7 @@ class Detail extends Component {
                     color: common.placeholderColor,
                     textAlign: 'right',
                   }}
-                >24小时成交量</Text>
+                >24小时成交价</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
@@ -266,7 +266,7 @@ class Detail extends Component {
                     color: common.textColor,
                     textAlign: 'right',
                   }}
-                >{`${quantity} ${currencyName}`}</Text>
+                >{lastprice}</Text>
               </View>
 
               <View
@@ -283,7 +283,7 @@ class Detail extends Component {
                     color: common.placeholderColor,
                     textAlign: 'right',
                   }}
-                >24小时最低量</Text>
+                >24小时最低价</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
@@ -308,7 +308,7 @@ class Detail extends Component {
                     color: common.placeholderColor,
                     textAlign: 'right',
                   }}
-                >24小时最高量</Text>
+                >24小时最高价</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
