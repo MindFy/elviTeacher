@@ -173,12 +173,12 @@ class LegalDealDetail extends Component {
     if (rd.direct === common.buy) {
       textColor = common.redColor
       direct = '买入'
-      paymentBtnTitle = '付款信息'
+      paymentBtnTitle = '收款信息'
       secBtnTitle = '确认付款'
     } else if (rd.direct === common.sell) {
       textColor = common.greenColor
       direct = '卖出'
-      paymentBtnTitle = '收款信息'
+      paymentBtnTitle = '付款信息'
       secBtnTitle = '我已收款'
     }
     switch (rd.status) {
