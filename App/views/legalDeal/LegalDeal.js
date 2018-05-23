@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import BigNumber from 'bignumber.js'
 import {
   Text,
   View,
@@ -11,6 +10,7 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
+import { BigNumber } from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'

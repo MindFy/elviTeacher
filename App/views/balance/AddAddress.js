@@ -109,7 +109,7 @@ class AddAddress extends Component {
   }
 
   showOverlay() {
-    const { dispatch, user, codeAuth } = this.props
+    const { dispatch, user } = this.props
     const overlayView = (
       <Overlay.View
         style={{

@@ -156,7 +156,7 @@ class Cash extends Component {
   }
 
   withdrawPress() {
-    const { cashAccount, currentAddress } = this.props
+    const { cashAccount, currentAddress, selectedToken } = this.props
     const ca = new BigNumber(cashAccount)
     if (!cashAccount.length || ca.eq(0)) {
       Toast.message('请输入提现金额')
@@ -166,8 +166,8 @@ class Cash extends Component {
       Toast.message('请输入提现地址')
       return
     }
-    if (ca.lt(common.payment.charge.BTC)
-      || ca.lt(common.payment.charge.ETH)) {
+    if ((selectedToken.token.id === 2 && ca.lt(0.01))
+      || (selectedToken.token.id === 5 && ca.lt(0.015))) {
       Toast.message('提现金额过小, 请重新输入')
       return
     }
@@ -259,15 +259,16 @@ class Cash extends Component {
   renderBottomView() {
     const { selectedToken, cashAccount, currentAddress } = this.props
     if (selectedToken !== common.selectedTokenDefault) {
-      let charge = 0
+      let minAcount = 0
       if (selectedToken.token.name === common.token.BTC) {
-        charge = common.payment.charge.BTC
+        minAcount = 0.01
       } else if (selectedToken.token.name === common.token.ETH) {
-        charge = common.payment.charge.ETH
+        minAcount = 0.015
       }
-      const cashAccountNum = new BigNumber(cashAccount)
-      const actualAccount = cashAccountNum.isNaN()
-        ? 0 : cashAccountNum.minus(common.payment.charge.BTC)
+      let actualAccount = new BigNumber(cashAccount)
+      actualAccount = actualAccount.isNaN()
+        ? 0 : actualAccount.minus(common.payment.charge.BTC)
+      actualAccount = BigNumber(actualAccount).lt(0) ? 0 : actualAccount
       const amount = new BigNumber(selectedToken.amount).toFixed(8, 1)
       return (
         <View>
@@ -421,7 +422,7 @@ class Cash extends Component {
                     fontSize: common.font10,
                     lineHeight: common.h15,
                   }}
-                >{`1. 最小提币数量为：${charge} ${selectedToken.token.name}
+                >{`1. 最小提币数量为：${minAcount} ${selectedToken.token.name}
 2. 最大提币数量为：未身份认证：单日限1 ${selectedToken.token.name}或等额其他币种， 已身份认证：单日限50 ${selectedToken.token.name}或等额其他币种
 3. 为保障资金安全，请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
               </View> : null

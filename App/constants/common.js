@@ -2,7 +2,6 @@ import {
   Dimensions,
   AsyncStorage,
 } from 'react-native'
-import { BigNumber } from 'bignumber.js'
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
@@ -21,6 +20,7 @@ const common = {
     legalDealConfirmPay: 'legalDealConfirmPay',
     addAddress: 'addAddress',
     withdraw: 'withdraw',
+    googleAuth: 'googleAuth',
   },
 
   buy: 'buy',
@@ -29,8 +29,7 @@ const common = {
 
   payment: {
     charge: {
-      BTC: 0.01,
-      ETH: 0.015,
+      BTC: 0.001,
     },
     limitRecharge: 10,
     limitWithdraw: 10,

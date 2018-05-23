@@ -8,6 +8,8 @@ const initialState = {
   idCardImages: {},
   authenticationAgain: false,
 
+  googleAuth: false,
+
   mobileLogin: '',
   passwordLogin: '',
 
@@ -88,6 +90,12 @@ export default function user(state = initialState, action) {
         ...state,
         checkVerificateCodeVisible: false,
         checkVerificateCodeResponse: action.response,
+      }
+      break
+    case constants.GET_GOOGLE_AUTH_FAILED:
+      nextState = {
+        ...state,
+        googleAuth: true,
       }
       break
     case constants.GET_VERIFICATE_CODE_REQUEST:
