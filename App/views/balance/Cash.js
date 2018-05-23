@@ -147,30 +147,76 @@ class Cash extends Component {
     }
     let code = new BigNumber(this.props.codeAuth)
     code = code.isNaN() ? 0 : code.toNumber()
+    let amount = new BigNumber(cashAccount)
+    amount = amount.isNaN() ? 0 : amount.toNumber()
     dispatch(actions.withdraw({
       token_id: selectedToken.token.id,
-      amount: cashAccount,
+      amount,
       toaddr: currentAddress,
       code,
     }))
   }
 
   withdrawPress() {
-    const { cashAccount, currentAddress, selectedToken } = this.props
-    const ca = new BigNumber(cashAccount)
-    if (!cashAccount.length || ca.eq(0)) {
+    const { cashAccount, currentAddress, selectedToken, count, rates } = this.props
+    // const ca = new BigNumber(cashAccount)
+    // if (!cashAccount.length || ca.eq(0)) {
+    //   Toast.message('请输入提现金额')
+    //   return
+    // }
+
+    const { quotaCount, withdrawedCount } = count
+    const bAmount = new BigNumber(cashAccount)
+    const bQuotaCount = new BigNumber(quotaCount)
+    const bWithdrawedCount = new BigNumber(withdrawedCount)
+    const bToBTC = new BigNumber(rates.ETH.BTC)
+
+    if (!cashAccount.length || bAmount.isEqualTo(0)) {
       Toast.message('请输入提现金额')
       return
     }
+
+    if (bAmount.isGreaterThan(bQuotaCount)) {
+      Toast.message('提现金额超过可用额度')
+      return
+    }
+
+    const limitNumber = bQuotaCount.minus(bWithdrawedCount).toFixed(8, 1)
+    if (selectedToken.token.id === 2) {
+      if (bAmount.gt(limitNumber)) {
+        Toast.message('提现金额已超过当日限额！')
+        return
+      }
+
+      if (bAmount.isLessThan('0.01')) {
+        Toast.message('最小提币金额为0.01！')
+        return
+      }
+    }
+
+    if (selectedToken.token.id === 5) {
+      if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
+        Toast.message('提现金额已超过当日限额！')
+        return
+      }
+
+      if (bAmount.isLessThan('0.015')) {
+        Toast.message('最小提币金额为0.015！')
+        return
+      }
+    }
+
     if (!currentAddress.length) {
       Toast.message('请输入提现地址')
       return
     }
-    if ((selectedToken.token.id === 2 && ca.lt(0.01))
-      || (selectedToken.token.id === 5 && ca.lt(0.015))) {
-      Toast.message('提现金额过小, 请重新输入')
-      return
-    }
+    // 如果是 BTC, 验证地址
+    // 如果是 ETH, 验证地址
+    // if ((selectedToken.token.id === 2 && ca.lt(0.01))
+    //   || (selectedToken.token.id === 5 && ca.lt(0.015))) {
+    //   Toast.message('提现金额过小, 请重新输入')
+    //   return
+    // }
     this.showOverlay()
   }
 
@@ -466,6 +512,7 @@ function mapStateToProps(store) {
     getVerificateCodeResponse: store.user.getVerificateCodeResponse,
 
     asset: store.asset.asset,
+    valuation: store.asset.valuation,
 
     address: store.address.address,
     selectedToken: store.address.selectedToken,
