@@ -94,6 +94,7 @@ class HomeRoseList extends Component {
     })
 
     this.timer1 = setInterval(() => {
+      dispatch(actions.getValuation())
       dispatch(actions.getRose({
         homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
       }))
