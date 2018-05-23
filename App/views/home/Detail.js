@@ -94,7 +94,7 @@ class Detail extends Component {
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
-      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
+      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p) => {
         lastprice = new BigNumber(homeRoseSelected.lastprice).toFixed(p, 1)
         cprice = new BigNumber(homeRoseSelected.cprice).toFixed(p, 1)
         hprice = new BigNumber(homeRoseSelected.hprice).toFixed(p, 1)
