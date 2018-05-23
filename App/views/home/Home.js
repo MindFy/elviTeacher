@@ -141,7 +141,9 @@ class Home extends Component {
             }}
           >{btns}</View>
 
-          <HomeRoseList />
+          <HomeRoseList
+            navigation={navigation}
+          />
         </ScrollView>
       </View>
     )
