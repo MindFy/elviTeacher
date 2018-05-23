@@ -86,7 +86,6 @@ class Detail extends Component {
     let cprice = ''
     let hprice = ''
     let lprice = ''
-    let quantity = 0
     let rose = 0
     let cpriceColor = common.redColor
     let dirImageSource
@@ -100,7 +99,6 @@ class Detail extends Component {
         cprice = new BigNumber(homeRoseSelected.cprice).toFixed(p, 1)
         hprice = new BigNumber(homeRoseSelected.hprice).toFixed(p, 1)
         lprice = new BigNumber(homeRoseSelected.lprice).toFixed(p, 1)
-        quantity = new BigNumber(homeRoseSelected.quantity).toFixed(q, 1)
       })
       rose = new BigNumber(homeRoseSelected.rose)
       if (rose.gt(0)) {
