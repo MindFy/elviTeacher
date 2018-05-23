@@ -25,21 +25,6 @@ function makePostAPI(endpoint) {
     }))
 }
 
-function makePostAPITest() {
-  return params => fetch('http://47.52.34.160:8080/1.0/app/payment/withdraw', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(params),
-  }).then(resp => resp.json())
-    .then((result) => {
-      if (result.id) return { success: true, result }
-      return { success: false, error: result }
-    })
-}
-
 function makePostAPITestCancelWithdraw() {
   return params => fetch('http://47.52.34.160:8080/1.0/app/payment/cancelWithdraw', {
     method: 'POST',
@@ -110,7 +95,7 @@ export const rebatesCount = makePostAPI('/1.0/app/rebates/rebatesCount')
 // Payment
 export const cancelWithdraw = makePostAPITestCancelWithdraw('/1.0/payment/cancelWithdraw')
 export const recharge = makePostAPI('/1.0/payment/recharge')
-export const withdraw = makePostAPITest('/1.0/payment/withdraw')
+export const withdraw = makePostAPI('/1.0/app/payment/withdraw')
 export const qrApi = `${API_ROOT}/qr/`
 // LegalDeal
 export const legalDealCancel = makePostAPI('/1.0/app/legalDeal/cancel')
