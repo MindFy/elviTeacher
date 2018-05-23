@@ -6,20 +6,16 @@ import {
   Image,
   StatusBar,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
-  DeviceEventEmitter,
 } from 'react-native'
 import {
   common,
-  storeRead,
-  storeDelete,
 } from '../../constants/common'
-import * as constants from '../../constants/index'
 import HomeRoseList from './HomeRoseList'
 import HomeSwiper from './HomeSwiper'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
-import ws from '../../websocket/ws'
 
 class Home extends Component {
   constructor() {
@@ -28,106 +24,18 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, homeRoseSelected, user } = this.props
-    dispatch(actions.sync())
-    dispatch(actions.getValuation())
-    dispatch(actions.getRose({ homeRoseSelected, user }))
+    const { dispatch } = this.props
     dispatch(actions.findBanners(schemas.findBanners()))
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-    this.timer1 = setInterval(() => {
-      dispatch(actions.getRose({
-        homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
-      }))
-      if (this.props.homeRoseSelected) {
-        this.getUIData(this.props.homeRoseSelected.goods.id,
-          this.props.homeRoseSelected.currency.id)
-      }
-    }, 5000)
-
-    this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
-      switch (type) {
-        case constants.SYNC_SUCCEED:
-          storeRead(common.user.string, (result) => {
-            const temp = JSON.parse(result)
-            dispatch(actions.findUserUpdate(temp))
-            dispatch(actions.findUser(schemas.findUser(temp.id)))
-            dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
-            if (this.props.homeRoseSelected) {
-              ws.onclose(this.props.homeRoseSelected.goods.id,
-                this.props.homeRoseSelected.currency.id)
-              ws.onopen(this.props.homeRoseSelected.goods.id,
-                this.props.homeRoseSelected.currency.id, temp)
-            }
-          })
-          break
-        case constants.SYNC_FAILED:
-          storeDelete(common.user.string, (error) => {
-            if (!error) {
-              dispatch(actions.findUserUpdate(undefined))
-              dispatch(actions.findAssetListUpdate({
-                asset: [],
-                amountVisible: undefined,
-              }))
-            }
-          })
-          break
-        case constants.GET_ROSE_SUCCEED:
-          dispatch(actions.getShelves({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          break
-
-        case common.ws.handicap:
-          if (this.props.user) {
-            dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
-          }
-          dispatch(actions.wsGetShelvesUpdate(resp))
-          break
-        case common.ws.market:
-          dispatch(actions.getRose({
-            homeRoseSelected: this.props.homeRoseSelected,
-            user: this.props.user,
-          }))
-          dispatch(actions.getValuation())
-          break
-        case common.ws.deals:
-          dispatch(actions.wsDealsUpdate(resp))
-          break
-        case common.ws.delegates:
-          if (resp.userid) {
-            dispatch(actions.wsDelegatesCurrentUpdate(resp.delegates))
-          }
-          break
-
-        default:
-          break
-      }
-    })
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer1)
     this.listener.remove()
   }
 
-  getUIData(goodsId, currencyId) {
-    const { dispatch } = this.props
-    dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
-    dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
-    dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
-  }
-
-  homeRoseListCellPress(rd) {
-    const { navigation, dispatch, user, homeRoseSelected } = this.props
-    ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
-    dispatch(actions.homeRoseSelectedUpdate(rd))
-    ws.onopen(rd.goods.id, rd.currency.id, user)
-    this.getUIData(rd.goods.id, rd.currency.id)
-    navigation.navigate('Detail')
-  }
-
   render() {
-    const { announcement, imgHashApi, banners, navigation, user, homeRose } = this.props
+    const { dispatch, announcement, imgHashApi, banners, navigation, user, announcementVisible,
+      findBannersVisible } = this.props
 
     const btnTitles = ['充值', '提现', '当前委托', '法币交易']
     const btns = []
@@ -197,22 +105,21 @@ class Home extends Component {
           barStyle={'light-content'}
         />
         <ScrollView
-          // refreshControl={
-          //   <RefreshControl
-          //     onRefresh={() => {
-          //       dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-          //       dispatch(actions.findBanners(schemas.findBanners()))
-          //       dispatch(actions.getRose({ homeRoseSelected, user: this.props.user }))
-          //     }}
-          //     refreshing={
-          //       !!((getRoseVisible || findBannersVisible || announcementVisible))
-          //     }
-          //     colors={[common.textColor]}
-          //     progressBackgroundColor={common.navBgColor}
-          //     progressViewOffset={0}
-          //     tintColor={common.textColor}
-          //   />
-          // }
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => {
+                dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+                dispatch(actions.findBanners(schemas.findBanners()))
+              }}
+              refreshing={
+                !!((findBannersVisible || announcementVisible))
+              }
+              colors={[common.textColor]}
+              progressBackgroundColor={common.navBgColor}
+              progressViewOffset={0}
+              tintColor={common.textColor}
+            />
+          }
           showsVerticalScrollIndicator={false}
         >
           <HomeSwiper
@@ -234,10 +141,7 @@ class Home extends Component {
             }}
           >{btns}</View>
 
-          <HomeRoseList
-            data={homeRose}
-            onPress={rd => this.homeRoseListCellPress(rd)}
-          />
+          <HomeRoseList />
         </ScrollView>
       </View>
     )
@@ -252,10 +156,6 @@ function mapStateToProps(store) {
     banners: store.banners.banners,
     imgHashApi: store.banners.imgHashApi,
     findBannersVisible: store.banners.findBannersVisible,
-
-    homeRose: store.dealstat.homeRose,
-    homeRoseSelected: store.dealstat.homeRoseSelected,
-    getRoseVisible: store.dealstat.getRoseVisible,
 
     user: store.user.user,
   }
