@@ -86,7 +86,6 @@ class Detail extends Component {
     let cprice = ''
     let hprice = ''
     let lprice = ''
-    let quantity = 0
     let rose = 0
     let cpriceColor = common.redColor
     let dirImageSource
@@ -95,12 +94,11 @@ class Detail extends Component {
     if (homeRoseSelected) {
       goodsName = homeRoseSelected.goods.name
       currencyName = homeRoseSelected.currency.name
-      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
+      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p) => {
         lastprice = new BigNumber(homeRoseSelected.lastprice).toFixed(p, 1)
         cprice = new BigNumber(homeRoseSelected.cprice).toFixed(p, 1)
         hprice = new BigNumber(homeRoseSelected.hprice).toFixed(p, 1)
         lprice = new BigNumber(homeRoseSelected.lprice).toFixed(p, 1)
-        quantity = new BigNumber(homeRoseSelected.quantity).toFixed(q, 1)
       })
       rose = new BigNumber(homeRoseSelected.rose)
       if (rose.gt(0)) {
@@ -258,7 +256,7 @@ class Detail extends Component {
                     color: common.placeholderColor,
                     textAlign: 'right',
                   }}
-                >24小时成交量</Text>
+                >24小时成交价</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
@@ -266,7 +264,7 @@ class Detail extends Component {
                     color: common.textColor,
                     textAlign: 'right',
                   }}
-                >{`${quantity} ${currencyName}`}</Text>
+                >{lastprice}</Text>
               </View>
 
               <View
@@ -283,7 +281,7 @@ class Detail extends Component {
                     color: common.placeholderColor,
                     textAlign: 'right',
                   }}
-                >24小时最低量</Text>
+                >24小时最低价</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,
@@ -308,7 +306,7 @@ class Detail extends Component {
                     color: common.placeholderColor,
                     textAlign: 'right',
                   }}
-                >24小时最高量</Text>
+                >24小时最高价</Text>
                 <Text
                   style={{
                     marginLeft: common.margin5,

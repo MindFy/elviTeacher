@@ -81,9 +81,9 @@ class Balance extends Component {
         amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
         amountRMB = amount.multipliedBy(scaleCNYT).plus(amountRMB)
       }
-      amountBTC = amountBTC.toFixed(8, 1)
-      amountRMB = amountRMB.toFixed(2, 1)
     }
+    amountBTC = amountBTC.toFixed(8, 1)
+    amountRMB = amountRMB.toFixed(2, 1)
 
     return (
       <View

@@ -18,23 +18,26 @@ const styles = StyleSheet.create({
   },
   noticeView: {
     position: 'absolute',
-    height: common.h32,
     width: '100%',
     bottom: 0,
+    height: common.h32,
     backgroundColor: common.borderColor05,
   },
   noticeTitle: {
     marginTop: common.margin10,
     marginLeft: common.margin10,
     marginRight: common.margin10,
-    height: common.h32,
     color: common.placeholderColor,
     fontSize: common.font12,
   },
 })
 
 export default class HomeSwiper extends Component {
-  componentDidMount() { }
+  constructor() {
+    super()
+    this.bannerIndex = 0
+    this.titleIndex = 0
+  }
 
   render() {
     const images = []
@@ -53,8 +56,8 @@ export default class HomeSwiper extends Component {
               width: common.sw,
               height: common.h234,
             }}
-            resizeMode="cover" // "cover" | "contain" | "stretch" | "cover" | "center";
-            resizeMethod="resize" // "auto" | "resize" | "scale"
+            resizeMode="contain" // "cover" | "contain" | "stretch" | "cover" | "center";
+            // resizeMethod="resize" // "auto" | "resize" | "scale"
             source={{ uri: `${imgHashApi}${element.imghash}` }}
           />
         </TouchableOpacity>,
@@ -70,7 +73,8 @@ export default class HomeSwiper extends Component {
         >
           <Text
             style={styles.noticeTitle}
-          >{`公告: ${element.title}`}</Text>
+            numberOfLines={1}
+          >{element.title}</Text>
         </TouchableOpacity>,
       )
     }
@@ -81,9 +85,13 @@ export default class HomeSwiper extends Component {
           images.length ?
             <Swiper
               style={styles.swiper}
+              index={this.bannerIndex}
               showsButtons={false}
               autoplay
               dotStyle={styles.dot}
+              onIndexChanged={(i) => {
+                this.bannerIndex = i
+              }}
               activeDotStyle={styles.dot}
               dotColor={common.borderColor}
               activeDotColor={common.placeholderColor}
@@ -97,9 +105,13 @@ export default class HomeSwiper extends Component {
               style={styles.noticeView}
             >
               <Swiper
+                index={this.titleIndex}
                 showsButtons={false}
                 autoplay
                 scrollEnabled={false}
+                onIndexChanged={(i) => {
+                  this.titleIndex = i
+                }}
                 dotColor={'transparent'}
                 activeDotColor={'transparent'}
               >

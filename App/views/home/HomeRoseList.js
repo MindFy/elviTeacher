@@ -1,20 +1,127 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
   Image,
   ListView,
   TouchableOpacity,
+  DeviceEventEmitter,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
-import { common } from '../../constants/common'
+import {
+  common,
+  storeRead,
+  storeDelete,
+} from '../../constants/common'
+import actions from '../../actions/index'
+import schemas from '../../schemas/index'
+import * as constants from '../../constants/index'
+import ws from '../../websocket/ws'
 
-export default class HomeRoseList extends Component {
+class HomeRoseList extends Component {
   constructor() {
     super()
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+  }
+
+  componentWillMount() {
+    const { dispatch, homeRoseSelected, user } = this.props
+    dispatch(actions.sync())
+    dispatch(actions.getValuation())
+    dispatch(actions.getRose({ homeRoseSelected, user }))
+
+    // this.timer1 = setInterval(() => {
+    //   dispatch(actions.getRose({
+    //     homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
+    //   }))
+    //   if (this.props.homeRoseSelected) {
+    //     this.getUIData(this.props.homeRoseSelected.goods.id,
+    //       this.props.homeRoseSelected.currency.id)
+    //   }
+    // }, 5000)
+
+    this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
+      switch (type) {
+        case constants.SYNC_SUCCEED:
+          storeRead(common.user.string, (result) => {
+            const temp = JSON.parse(result)
+            dispatch(actions.findUserUpdate(temp))
+            dispatch(actions.findUser(schemas.findUser(temp.id)))
+            dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
+            if (this.props.homeRoseSelected) {
+              ws.onclose(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id)
+              ws.onopen(this.props.homeRoseSelected.goods.id,
+                this.props.homeRoseSelected.currency.id, temp)
+            }
+          })
+          break
+        case constants.SYNC_FAILED:
+          storeDelete(common.user.string, (error) => {
+            if (!error) {
+              dispatch(actions.findUserUpdate(undefined))
+              dispatch(actions.findAssetListUpdate({
+                asset: [],
+                amountVisible: undefined,
+              }))
+            }
+          })
+          break
+        case constants.GET_ROSE_SUCCEED:
+          dispatch(actions.getShelves({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
+          break
+
+        case common.ws.handicap:
+          if (this.props.user) {
+            dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
+          }
+          dispatch(actions.wsGetShelvesUpdate(resp))
+          break
+        case common.ws.market:
+          dispatch(actions.getRose({
+            homeRoseSelected: this.props.homeRoseSelected,
+            user: this.props.user,
+          }))
+          dispatch(actions.getValuation())
+          break
+        case common.ws.deals:
+          dispatch(actions.wsDealsUpdate(resp))
+          break
+        case common.ws.delegates:
+          if (resp.userid) {
+            dispatch(actions.wsDelegatesCurrentUpdate(resp.delegates))
+          }
+          break
+
+        default:
+          break
+      }
+    })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer1)
+  }
+
+  getUIData(goodsId, currencyId) {
+    const { dispatch } = this.props
+    dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
+    dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
+  }
+
+  homeRoseListCellPress(rd) {
+    const { navigation, dispatch, user, homeRoseSelected } = this.props
+    ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
+    dispatch(actions.homeRoseSelectedUpdate(rd))
+    ws.onopen(rd.goods.id, rd.currency.id, user)
+    this.getUIData(rd.goods.id, rd.currency.id)
+    navigation.navigate('Detail')
   }
 
   renderHeader() {
@@ -75,7 +182,6 @@ export default class HomeRoseList extends Component {
   }
 
   renderRow(rd) {
-    const { onPress } = this.props
     let dirImageSource
     let priceColor = null
     let rangeColor = null
@@ -109,7 +215,7 @@ export default class HomeRoseList extends Component {
           flexDirection: 'row',
         }}
         activeOpacity={common.activeOpacity}
-        onPress={() => onPress(rd)}
+        onPress={() => this.homeRoseListCellPress(rd)}
       >
         <View
           style={{
@@ -211,10 +317,10 @@ export default class HomeRoseList extends Component {
   }
 
   render() {
-    const { data } = this.props
+    const { homeRose } = this.props
     return (
       <ListView
-        dataSource={this.dataSource(data)}
+        dataSource={this.dataSource(homeRose)}
         renderRow={rd => this.renderRow(rd)}
         renderHeader={() => this.renderHeader()}
         enableEmptySections
@@ -223,3 +329,18 @@ export default class HomeRoseList extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+
+    homeRose: store.dealstat.homeRose,
+    homeRoseSelected: store.dealstat.homeRoseSelected,
+    getRoseVisible: store.dealstat.getRoseVisible,
+
+    user: store.user.user,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(HomeRoseList)

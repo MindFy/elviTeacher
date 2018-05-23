@@ -26,7 +26,6 @@ export default function dealstat(state = initialState, action) {
         rose: action.data.rose,
         homeRose: action.data.homeRose,
         homeRoseSelected: action.data.homeRoseSelected,
-        selectedIndex: 0,
       }
       break
     case constants.GET_ROSE_FAILED:
