@@ -181,10 +181,12 @@ class Delegate extends Component {
               data={delegateSelfCurrent}
               refreshState={refreshStateCurrent}
               cancelAllBlock={() => {
-                dispatch(actions.allCancel({
-                  goods_id: homeRoseSelected.goods.id,
-                  currency_id: homeRoseSelected.currency.id,
-                }))
+                if (delegateSelfCurrent.length > 0) {
+                  dispatch(actions.allCancel({
+                    goods_id: homeRoseSelected.goods.id,
+                    currency_id: homeRoseSelected.currency.id,
+                  }))
+                }
               }}
               cancelBlock={(rd, rid) => {
                 const temp = delegateSelfCurrent.concat()
