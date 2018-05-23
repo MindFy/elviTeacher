@@ -141,7 +141,7 @@ export default class MarketList extends Component {
           style={{
             marginLeft: common.margin10,
             marginRight: common.margin10,
-            height: 1,
+            height: 0.5,
             backgroundColor: common.placeholderColor,
           }}
         />
