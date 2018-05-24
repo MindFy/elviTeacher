@@ -8,22 +8,89 @@ import {
   Clipboard,
   ScrollView,
   TouchableOpacity,
+  StyleSheet,
+  CameraRoll,
+  Alert,
 } from 'react-native'
 import {
   Toast,
   Overlay,
+  ActionSheet,
 } from 'teaset'
+import BigNumber from 'bignumber.js'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 import * as api from '../../services/api'
 
+
+const styles = StyleSheet.create({
+  textOutContainer: {
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+  },
+  textTitle: {
+    marginTop: common.margin15,
+    fontSize: common.font14,
+    color: common.placeholderColor,
+  },
+  textInner: {
+    color: common.textColor,
+    marginLeft: common.margin10,
+  },
+  textContainer: {
+    marginTop: common.margin15,
+    borderColor: common.borderColor,
+    backgroundColor: common.navBgColor,
+    borderWidth: 1,
+    height: common.h40,
+    justifyContent: 'center',
+  },
+})
+
 class Rebates extends Component {
+  static navigationOptions(props) {
+    return ({
+      headerTitle: '超级返利',
+      headerLeft:
+      (
+        <TouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={{
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
+            }}
+            source={require('../../assets/下拉copy.png')}
+          />
+        </TouchableOpacity>
+      ),
+      headerStyle: {
+        backgroundColor: 'transparent',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: '#fff',
+    })
+  }
+
   componentDidMount() {
     const { dispatch, user } = this.props
     if (user.levelName && user.levelName === common.user.level0) {
-      dispatch(actions.rebatesCount({ user_id: user.id, token_id: 1 }))
+      dispatch(actions.rebatesCountTK({ user_id: user.id, token_id: 1 }))
     } else if (user.levelName && user.levelName === common.user.level1) {
-      dispatch(actions.rebatesCount({ user_id: user.id, token_id: 2 }))
+      dispatch(actions.rebatesCountTK({ user_id: user.id, token_id: 1 }))
+      dispatch(actions.rebatesCountBTC({ user_id: user.id, token_id: 2 }))
     }
     dispatch(actions.invitationTotalCount({ parentid: user.id }))
   }
@@ -49,12 +116,35 @@ class Rebates extends Component {
     }
   }
 
+  _shareImage = () => {
+    Alert.alert('暂时不用做')
+  }
+
+  _saveImage = (uri) => {
+    CameraRoll.saveToCameraRoll(uri).then((() => {
+      Toast.message('保存成功')
+    })).catch(() => {
+      Toast.message('保存失败')
+    })
+  }
+
+  _tapLinkQRImage = (uri) => {
+    const items = [
+      { title: '分享', onPress: this._shareImage },
+      { title: '保存图片',
+        onPress: () => {
+          this._saveImage(uri)
+        } },
+    ]
+    const cancelItem = { title: '取消', type: 'cancel' }
+    ActionSheet.show(items, cancelItem)
+  }
+
   showLinkQr() {
     const { user } = this.props
     const prefixNo = user.prefixNo ? user.prefixNo : ''
     const recommendId = user.recommendId ? user.recommendId : ''
     const rebatesLinkQr = recommendId.length ? (api.rebatesLinkQr + prefixNo + recommendId) : ''
-
     const overlayView = (
       <Overlay.View
         style={{
@@ -63,8 +153,9 @@ class Rebates extends Component {
         }}
         modal={false}
         overlayOpacity={0}
+        ref={(e) => { this.overlayView = e }}
       >
-        <View
+        <TouchableOpacity
           style={{
             backgroundColor: '#fff',
             borderRadius: common.radius6,
@@ -72,6 +163,10 @@ class Rebates extends Component {
             width: '80%',
             alignItems: 'center',
             justifyContent: 'center',
+          }}
+          activeOpacity={1}
+          onPress={() => {
+            this._tapLinkQRImage(rebatesLinkQr)
           }}
         >
           {
@@ -85,23 +180,49 @@ class Rebates extends Component {
                 source={{ uri: rebatesLinkQr }}
               /> : null
           }
-        </View>
+        </TouchableOpacity>
       </Overlay.View>
     )
     Overlay.show(overlayView)
   }
 
   render() {
-    const { navigation, user, totalCount, invitationTotalCount } = this.props
+    const { user, totalCountTK, totalCountBTC, invitationTotalCount } = this.props
     const prefixNo = user.prefixNo ? user.prefixNo : ''
     const recommendId = user.recommendId ? user.recommendId : ''
     const rebatesLink = recommendId.length ? (api.rebatesLink + prefixNo + recommendId) : ''
-    let levelToken = ''
-    if (user.levelName && user.levelName === common.user.level0) {
-      levelToken = 'TK'
-    } else if (user.levelName && user.levelName === common.user.level0) {
-      levelToken = 'BTC'
+
+    const tkINum = totalCountTK ? BigNumber(totalCountTK).toFixed(8, 1) : 0
+    const tkItem = (
+      <View style={styles.textOutContainer}>
+        <Text style={styles.textTitle}>
+          已获得的收益TK
+        </Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.textInner}>
+            {tkINum}
+          </Text>
+        </View>
+      </View>
+    )
+
+    let btcItem = null
+    if (user.levelName && user.levelName === common.user.level1) {
+      const btcNum = totalCountBTC ? BigNumber(totalCountBTC).toFixed(8, 1) : 0
+      btcItem = (
+        <View style={styles.textOutContainer}>
+          <Text style={styles.textTitle}>
+          已获得的收益BTC
+          </Text>
+          <View style={styles.textContainer}>
+            <Text style={styles.textInner}>
+              {btcNum}
+            </Text>
+          </View>
+        </View>
+      )
     }
+
     return (
       <View
         style={{
@@ -171,7 +292,7 @@ class Rebates extends Component {
             style={{
               marginTop: common.margin15,
               marginLeft: common.margin10,
-              color: common.textColor,
+              color: common.placeholderColor,
               fontSize: common.font14,
             }}
           >推荐链接</Text>
@@ -240,71 +361,22 @@ class Rebates extends Component {
             >推荐二维码</Text>
           </TouchableOpacity>
 
-          <View
-            style={{
-              marginTop: common.margin20,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h120,
-              flexDirection: 'row',
-            }}
-          >
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => {
-
-              }}
-              style={{
-                flex: 1,
-                backgroundColor: common.navBgColor,
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  alignSelf: 'center',
-                  color: common.placeholderColor,
-                  fontSize: common.font12,
-                }}
-              >已推荐好友</Text>
-              <Text
-                style={{
-                  marginTop: common.margin20,
-                  color: common.textColor,
-                  fontSize: common.font30,
-                  alignSelf: 'center',
-                }}
-              >{invitationTotalCount}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => {
-
-              }}
-              style={{
-                flex: 1,
-                marginLeft: common.margin5,
-                backgroundColor: common.navBgColor,
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  alignSelf: 'center',
-                  color: common.placeholderColor,
-                  fontSize: common.font12,
-                }}
-              >已获得的收益</Text>
-              <Text
-                style={{
-                  marginTop: common.margin20,
-                  color: common.textColor,
-                  fontSize: common.font30,
-                  alignSelf: 'center',
-                }}
-              >{`${totalCount} ${levelToken}`}</Text>
-            </TouchableOpacity>
+          <View style={styles.textOutContainer}>
+            <Text style={styles.textTitle}>
+              已推荐好友
+            </Text>
+            <View style={styles.textContainer}>
+              <Text style={styles.textInner}>
+                {invitationTotalCount}
+              </Text>
+            </View>
           </View>
+
+          {tkItem}
+
+          {btcItem}
+
+          <View style={{ height: 44 }} />
 
           <View
             style={{
@@ -315,52 +387,6 @@ class Rebates extends Component {
             }}
           />
         </ScrollView>
-
-        <View
-          style={{
-            position: 'absolute',
-            top: common.margin20,
-            left: 0,
-            right: 0,
-            height: common.h44,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              width: common.w60,
-              height: common.h44,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontSize: common.font16,
-              color: 'white',
-              alignSelf: 'center',
-              textAlign: 'center',
-            }}
-          >超级返利</Text>
-          <View
-            style={{
-              width: common.w60,
-              height: common.h44,
-            }}
-          />
-        </View>
-
       </View>
     )
   }
@@ -371,6 +397,9 @@ function mapStateToProps(store) {
     user: store.user.user,
 
     totalCount: store.rebates.totalCount,
+    totalCountET: store.rebates.totalCountET,
+    totalCountBTC: store.rebates.totalCountBTC,
+
     invitationTotalCount: store.invitation.totalCount,
   }
 }

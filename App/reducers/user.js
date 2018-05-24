@@ -17,6 +17,7 @@ const initialState = {
   codeRegister: '',
   passwordRegister: '',
   passwordAgainRegister: '',
+  recommendNo: '',
 
   oldPassword: '',
   newPassword: '',
@@ -279,6 +280,7 @@ export default function user(state = initialState, action) {
         codeRegister: action.data.code,
         passwordRegister: action.data.password,
         passwordAgainRegister: action.data.passwordAgain,
+        recommendNo: action.data.recommendNo,
       }
       break
     case constants.RESET_PASSWORD_REQUEST:
