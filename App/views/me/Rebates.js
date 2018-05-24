@@ -117,9 +117,10 @@ class Rebates extends Component {
           <Image
             style={{
               height: common.h234,
+              width: '100%',
             }}
             source={require('../../assets/VCG.png')}
-            resizeMode={'repeat'}
+            resizeMode="cover" // "cover" | "contain" | "stretch" | "repeat" | "center";
           />
 
           <Text
