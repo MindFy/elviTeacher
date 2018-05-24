@@ -474,8 +474,7 @@ class Cash extends Component {
                     lineHeight: common.h15,
                   }}
                 >{`1. 最小提币数量为：${minAcount} ${selectedToken.token.name}
-2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种
-3. 为保障资金安全，请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
+2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种`}</Text>
               </View> : null
           }
         </View>
