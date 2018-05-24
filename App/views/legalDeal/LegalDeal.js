@@ -62,7 +62,7 @@ class LegalDeal extends Component {
     const { dispatch, direct } = this.props
     if (direct !== newDirect) {
       dispatch(actions.legalDealUpdate({
-        direct,
+        direct: newDirect,
         quantity: '',
       }))
     }
