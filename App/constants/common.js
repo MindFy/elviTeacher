@@ -214,8 +214,6 @@ const common = {
 
   maxQuantityLegalDeal: 1000000,
   minQuantityLegalDeal: 100,
-  minQuantityTK: 10,
-  minQuantityBTC: 0.000001,
 
   messageBarDur: 2000,
 

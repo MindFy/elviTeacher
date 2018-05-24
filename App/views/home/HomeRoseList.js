@@ -33,16 +33,6 @@ class HomeRoseList extends Component {
     dispatch(actions.getValuation())
     dispatch(actions.getRose({ homeRoseSelected, user }))
 
-    // this.timer1 = setInterval(() => {
-    //   dispatch(actions.getRose({
-    //     homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
-    //   }))
-    //   if (this.props.homeRoseSelected) {
-    //     this.getUIData(this.props.homeRoseSelected.goods.id,
-    //       this.props.homeRoseSelected.currency.id)
-    //   }
-    // }, 5000)
-
     this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
       switch (type) {
         case constants.SYNC_SUCCEED:
@@ -102,6 +92,17 @@ class HomeRoseList extends Component {
           break
       }
     })
+
+    this.timer1 = setInterval(() => {
+      dispatch(actions.getValuation())
+      dispatch(actions.getRose({
+        homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
+      }))
+      if (this.props.homeRoseSelected) {
+        this.getUIData(this.props.homeRoseSelected.goods.id,
+          this.props.homeRoseSelected.currency.id)
+      }
+    }, 5000)
   }
 
   componentWillUnmount() {

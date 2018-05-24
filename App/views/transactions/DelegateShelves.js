@@ -62,7 +62,7 @@ class DelegateShelves extends Component {
     const qArr = quantity.split('.')
     if (pArr[0].length > common.maxLenDelegate) return undefined // 4.整数长度限制
     if (pArr.length > 1 && pArr[1].length > precisionPrice) return undefined // 5.小数长度限制
-    if (price.endsWith('.')) {
+    if (price.endsWith('.') || (pArr.length > 1 && p.eq(0))) {
       a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
       a = a.isNaN() ? '' : a.toString()
       return { p: price, q: quantity, a }
@@ -71,12 +71,12 @@ class DelegateShelves extends Component {
     if (precisionQuantity === 0) {
       if (qArr.length > 1) return undefined // 7.限制只能输入整数
     } else {
-      if (quantity.endsWith('.')) {
+      if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 8.小数长度限制
+      if (quantity.endsWith('.') || (qArr.length > 1 && q.eq(0))) {
         a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
         a = a.isNaN() ? '' : a.toString()
         return { p: price, q: quantity, a }
       }
-      if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 8.小数长度限制
     }
 
     if (amount || amount === 0) {
@@ -151,16 +151,6 @@ class DelegateShelves extends Component {
     }
 
     if (homeRoseSelected) {
-      if (homeRoseSelected.goods.name === common.token.TK
-        && BigNumber(quantity).lt(common.minQuantityTK)) {
-        Toast.message(`TK${buyOrSell ? '买入' : '卖出'}数量至少为${common.minQuantityTK}`)
-        return
-      }
-      if (homeRoseSelected.goods.name === common.token.BTC
-        && BigNumber(quantity).lt(common.minQuantityBTC)) {
-        Toast.message(`BTC${buyOrSell ? '买入' : '卖出'}数量至少为${common.minQuantityBTC}`)
-        return
-      }
       dispatch(actions.create({
         goods_id: homeRoseSelected.goods.id,
         currency_id: homeRoseSelected.currency.id,
