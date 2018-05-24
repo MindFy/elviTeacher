@@ -32,7 +32,9 @@ class LegalDeal extends Component {
         (
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.navigate('LegalDealDetail')}
+            onPress={() => {
+              props.navigation.navigate('LegalDealDetail')
+            }}
           >
             <Text
               style={{
@@ -67,7 +69,7 @@ class LegalDeal extends Component {
   }
 
   createPress() {
-    const { dispatch, direct, quantity } = this.props
+    const { dispatch, direct, quantity, user, navigation } = this.props
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
       Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
@@ -78,10 +80,14 @@ class LegalDeal extends Component {
         common.minQuantityLegalDeal}`)
       return
     }
-    dispatch(actions.legalDealCreate({
-      direct,
-      quantity: q.toNumber(),
-    }))
+    if (user) {
+      dispatch(actions.legalDealCreate({
+        direct,
+        quantity: q.toNumber(),
+      }))
+    } else {
+      navigation.navigate('LoginStack')
+    }
   }
 
   quantityOnChange(text) {
@@ -286,6 +292,8 @@ class LegalDeal extends Component {
 
 function mapStateToProps(store) {
   return {
+    user: store.user.user,
+
     direct: store.legalDeal.direct,
     priceBuy: store.legalDeal.priceBuy,
     priceSell: store.legalDeal.priceSell,
