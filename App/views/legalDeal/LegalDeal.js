@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   Text,
   View,
-  Image,
   TextInput,
   ScrollView,
   TouchableOpacity,
@@ -29,32 +28,13 @@ class LegalDeal extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <TouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-        ),
       headerRight:
         (
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.navigate('LegalDealDetail')}
+            onPress={() => {
+              props.navigation.navigate('LegalDealDetail')
+            }}
           >
             <Text
               style={{
@@ -75,19 +55,21 @@ class LegalDeal extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(actions.legalDealUpdate({ direct: common.buy, quantity: 0 }))
+    dispatch(actions.legalDealUpdate({ direct: common.buy, quantity: '' }))
   }
 
-  selectionBarPress(direct) {
-    const { dispatch } = this.props
-    dispatch(actions.legalDealUpdate({
-      direct,
-      quantity: 0,
-    }))
+  selectionBarPress(newDirect) {
+    const { dispatch, direct } = this.props
+    if (direct !== newDirect) {
+      dispatch(actions.legalDealUpdate({
+        direct,
+        quantity: '',
+      }))
+    }
   }
 
   createPress() {
-    const { dispatch, direct, quantity } = this.props
+    const { dispatch, direct, quantity, user, navigation } = this.props
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
       Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
@@ -98,10 +80,14 @@ class LegalDeal extends Component {
         common.minQuantityLegalDeal}`)
       return
     }
-    dispatch(actions.legalDealCreate({
-      direct,
-      quantity: q.toNumber(),
-    }))
+    if (user) {
+      dispatch(actions.legalDealCreate({
+        direct,
+        quantity: q.toNumber(),
+      }))
+    } else {
+      navigation.navigate('LoginStack')
+    }
   }
 
   quantityOnChange(text) {
@@ -152,7 +138,7 @@ class LegalDeal extends Component {
   render() {
     const { direct, priceBuy, priceSell, quantity, legalDealCreateVisible } = this.props
     const price = direct === common.buy ? priceBuy : priceSell
-    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).dp(2, 1)
+    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).toFixed(2, 1)
     this.handleLegalDealCreateRequest()
 
     return (
@@ -306,6 +292,8 @@ class LegalDeal extends Component {
 
 function mapStateToProps(store) {
   return {
+    user: store.user.user,
+
     direct: store.legalDeal.direct,
     priceBuy: store.legalDeal.priceBuy,
     priceSell: store.legalDeal.priceSell,

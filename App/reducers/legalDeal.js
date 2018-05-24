@@ -9,7 +9,7 @@ const initialState = {
   direct: common.buy,
   priceBuy: 1,
   priceSell: 0.99,
-  quantity: 0,
+  quantity: '',
   skip: 0,
   refreshState: RefreshState.Idle,
 
