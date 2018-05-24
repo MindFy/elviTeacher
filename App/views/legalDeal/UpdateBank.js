@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -98,6 +99,8 @@ class UpdateBank extends Component {
   }
 
   confirmPress(title) {
+    Keyboard.dismiss()
+
     const { dispatch, bankName, subbankName, bankNo, clearTextInputBank } = this.props
     if (title === '重新添加') {
       dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
@@ -244,6 +247,7 @@ class UpdateBank extends Component {
           flex: 1,
           backgroundColor: common.blackColor,
         }}
+        keyboardShouldPersistTaps="handled"
       >
         <TextInputUpdateBank
           viewStyle={{

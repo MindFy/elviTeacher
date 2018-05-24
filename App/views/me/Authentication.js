@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import PutObject from 'rn-put-object'
@@ -112,6 +113,8 @@ class Authentication extends Component {
   }
 
   confirmPress() {
+    Keyboard.dismiss()
+
     const { dispatch, name, idNo, idCardImages, imgHashApi } = this.props
     if (!name.length) {
       Toast.message('请输入姓名')
@@ -230,7 +233,9 @@ class Authentication extends Component {
       <KeyboardAvoidingView
         behavior="padding"
       >
-        <ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
           <TextInputPwd
             placeholder="姓名"
             value={name}
