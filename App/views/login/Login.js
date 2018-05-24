@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
@@ -39,6 +40,8 @@ class Login extends Component {
   }
 
   loginPress() {
+    Keyboard.dismiss()
+
     const { dispatch, mobile, password } = this.props
     if (!mobile.length) {
       Toast.message('请输入账号')
@@ -111,7 +114,9 @@ class Login extends Component {
         }}
         behavior="padding"
       >
-        <ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
           <StatusBar
             barStyle={'light-content'}
           />
