@@ -14,7 +14,7 @@ import TransactionsTopBar from './TransactionsTopBar'
 
 export default class Transactions extends Component {
   static navigationOptions(props) {
-    const { navigation } = props
+    // const { navigation } = props
     return {
       headerTitle: '交易',
       headerStyle: {
@@ -27,40 +27,40 @@ export default class Transactions extends Component {
       },
       headerLeft:
         (
-          (navigation.state.params && navigation.state.params.type)
-            ? <TouchableOpacity
+          // (navigation.state.params && navigation.state.params.type) ?
+          <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
               style={{
-                height: common.w40,
-                width: common.w40,
-                justifyContent: 'center',
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
               }}
-              activeOpacity={common.activeOpacity}
-              onPress={() => props.navigation.goBack()}
-            >
-              <Image
-                style={{
-                  marginLeft: common.margin10,
-                  width: common.w10,
-                  height: common.h20,
-                }}
-                source={require('../../assets/下拉copy.png')}
-              />
-            </TouchableOpacity>
-            : <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => {
-                navigation.navigate('Detail')
-              }}
-            >
-              <Image
-                style={{
-                  marginLeft: common.margin10,
-                  width: common.w20,
-                  height: common.h20,
-                }}
-                source={require('../../assets/市场分析.png')}
-              />
-            </TouchableOpacity>
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+          // {/* : <TouchableOpacity
+          //   activeOpacity={common.activeOpacity}
+          //   onPress={() => {
+          //     navigation.navigate('Detail')
+          //   }}
+          // >
+          //   <Image
+          //     style={{
+          //       marginLeft: common.margin10,
+          //       width: common.w20,
+          //       height: common.h20,
+          //     }}
+          //     source={require('../../assets/市场分析.png')}
+          //   />
+          // </TouchableOpacity> */}
         ),
     }
   }

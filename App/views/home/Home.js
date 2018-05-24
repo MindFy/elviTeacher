@@ -37,9 +37,9 @@ class Home extends Component {
     const { dispatch, announcement, imgHashApi, banners, navigation, user, announcementVisible,
       findBannersVisible } = this.props
 
-    const btnTitles = ['充值', '提现', '当前委托', '法币交易']
+    const btnTitles = ['充值', '提现', '当前委托', '交易']
     const btns = []
-    const navigateKeys = ['Recharge', 'Cash', 'Delegate', 'LegalDeal']
+    const navigateKeys = ['Recharge', 'Cash', 'Delegate', 'Transactions']
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {

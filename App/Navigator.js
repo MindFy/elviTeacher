@@ -71,10 +71,10 @@ const TabBar = TabNavigator(
         ),
       },
     },
-    Transaction: {
-      screen: Transactions,
+    LegalDeal: {
+      screen: LegalDeal,
       navigationOptions: {
-        tabBarLabel: '交易',
+        tabBarLabel: '法币交易',
         tabBarIcon: ({ focused }) => (
           <Image
             style={{

@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   Text,
   View,
-  Image,
   TextInput,
   ScrollView,
   TouchableOpacity,
@@ -29,27 +28,6 @@ class LegalDeal extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <TouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-        ),
       headerRight:
         (
           <TouchableOpacity
