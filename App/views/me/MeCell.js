@@ -4,9 +4,9 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -40,7 +40,7 @@ export default class MeCell extends Component {
   componentDidMount() { }
   render() {
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
@@ -68,7 +68,7 @@ export default class MeCell extends Component {
               source={require('../../assets/下拉--向右.png')}
             />)
         }
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 }
