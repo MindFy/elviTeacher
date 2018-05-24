@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -111,6 +112,8 @@ class UpdateEmail extends Component {
   }
 
   confirmPress() {
+    Keyboard.dismiss()
+
     const { dispatch, email, codeEmail } = this.props
     if (!email.length) {
       Toast.message('请输入邮箱地址')
@@ -167,7 +170,9 @@ class UpdateEmail extends Component {
         }}
         behavior="padding"
       >
-        <ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
           <StatusBar
             barStyle={'light-content'}
           />
