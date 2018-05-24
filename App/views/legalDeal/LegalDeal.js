@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
@@ -69,6 +70,8 @@ class LegalDeal extends Component {
   }
 
   createPress() {
+    Keyboard.dismiss()
+
     const { dispatch, direct, quantity, user, navigation } = this.props
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
@@ -148,7 +151,9 @@ class LegalDeal extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
           <TKSelectionBar
             leftTitle={'买入'}
             rightTitle={'卖出'}
