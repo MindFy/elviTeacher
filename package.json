@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "bignumber.js": "^7.0.1",
-    "coinslot": "^1.0.5",
     "native-echarts": "^0.4.0",
     "react": "^16.0.0",
     "react-native": "0.51.0",

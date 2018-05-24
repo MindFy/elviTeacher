@@ -15,7 +15,6 @@ import {
   Overlay,
 } from 'teaset'
 import Spinner from 'react-native-spinkit'
-import { validate, SUPPORTED_CURRENCIES } from 'coinslot'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
@@ -97,11 +96,11 @@ class AddAddress extends Component {
       Toast.message('请填写提币地址')
       return
     }
-    if (!validate(withdrawaddr, SUPPORTED_CURRENCIES.ethereum)
-      && !validate(withdrawaddr, SUPPORTED_CURRENCIES.bitcoin)) {
-      Toast.message('请填写正确的提币地址')
-      return
-    }
+    // if (!validate(withdrawaddr, SUPPORTED_CURRENCIES.ethereum)
+    //   && !validate(withdrawaddr, SUPPORTED_CURRENCIES.bitcoin)) {
+    //   Toast.message('请填写正确的提币地址')
+    //   return
+    // }
     if (!remark.length) {
       Toast.message('请填写备注')
       return

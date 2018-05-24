@@ -18,7 +18,6 @@ import {
   ActionSheet,
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
-import { validate, SUPPORTED_CURRENCIES } from 'coinslot'
 import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
@@ -212,16 +211,16 @@ class Cash extends Component {
       Toast.message('请输入提现地址')
       return
     }
-    if (selectedToken.token.id === 2
-      && !validate(currentAddress, SUPPORTED_CURRENCIES.bitcoin)) {
-      Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
-      return
-    }
-    if (selectedToken.token.id === 5
-      && !validate(currentAddress, SUPPORTED_CURRENCIES.ethereum)) {
-      Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
-      return
-    }
+    // if (selectedToken.token.id === 2
+    //   && !validate(currentAddress, SUPPORTED_CURRENCIES.bitcoin)) {
+    //   Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
+    //   return
+    // }
+    // if (selectedToken.token.id === 5
+    //   && !validate(currentAddress, SUPPORTED_CURRENCIES.ethereum)) {
+    //   Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
+    //   return
+    // }
     this.showOverlay()
   }
 
