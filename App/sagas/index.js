@@ -1,6 +1,6 @@
 import { fork } from 'redux-saga/effects'
 import * as user from './user'
-import rebatesCount from './rebates'
+import * as rebates from './rebates'
 import * as payment from './payment'
 import * as legalDeal from './legalDeal'
 import invitationTotalCount from './invitation'
@@ -30,7 +30,9 @@ export default function* rootSaga() {
     fork(user.updateEmail),
     fork(user.updatePassword),
 
-    fork(rebatesCount),
+    fork(rebates.rebatesCount),
+    fork(rebates.rebatesCountTK),
+    fork(rebates.rebateCountBTC),
 
     fork(payment.cancelWithdraw),
     fork(payment.findPaymentListRecharge),

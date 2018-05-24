@@ -57,7 +57,11 @@ import {
   rechargeOrWithdrawUpdate,
   skipPaymentUpdate,
 } from './payment'
-import rebatesCount from './rebates'
+import {
+  rebatesCount,
+  rebatesCountTK,
+  rebatesCountBTC,
+} from './rebates'
 import {
   checkVerificateCode,
   getGoogleAuth,
@@ -152,6 +156,8 @@ const actions = {
   skipPaymentUpdate,
 
   rebatesCount,
+  rebatesCountTK,
+  rebatesCountBTC,
 
   checkVerificateCode,
   getGoogleAuth,
