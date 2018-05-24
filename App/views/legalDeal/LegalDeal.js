@@ -75,15 +75,17 @@ class LegalDeal extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(actions.legalDealUpdate({ direct: common.buy, quantity: 0 }))
+    dispatch(actions.legalDealUpdate({ direct: common.buy, quantity: '' }))
   }
 
-  selectionBarPress(direct) {
-    const { dispatch } = this.props
-    dispatch(actions.legalDealUpdate({
-      direct,
-      quantity: 0,
-    }))
+  selectionBarPress(newDirect) {
+    const { dispatch, direct } = this.props
+    if (direct !== newDirect) {
+      dispatch(actions.legalDealUpdate({
+        direct,
+        quantity: '',
+      }))
+    }
   }
 
   createPress() {
@@ -152,7 +154,7 @@ class LegalDeal extends Component {
   render() {
     const { direct, priceBuy, priceSell, quantity, legalDealCreateVisible } = this.props
     const price = direct === common.buy ? priceBuy : priceSell
-    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).dp(2, 1)
+    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).toFixed(2, 1)
     this.handleLegalDealCreateRequest()
 
     return (
