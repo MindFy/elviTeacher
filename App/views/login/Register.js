@@ -193,6 +193,8 @@ class Register extends Component {
         Toast.fail('验证码已过期，请重新获取')
       } else if (registerResponse.error.code === 4000114) {
         Toast.fail('手机号码已被注册')
+      } else if (registerResponse.error.code === 4000115) {
+        Toast.fail('邀请用户不存在')
       } else if (registerResponse.error.code === 4000113) {
         Toast.fail('邀请码不正确')
       } else if (registerResponse.error.message === common.badNet) {

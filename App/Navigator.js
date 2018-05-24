@@ -8,11 +8,11 @@ import {
 } from './constants/common'
 
 import Home from './views/home/Home'
-import Detail from './views/home/Detail'
 import Banner from './views/home/Banner'
 import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
 import Transactions from './views/transactions/Transactions'
+import Detail from './views/transactions/Detail'
 import Delegate from './views/transactions/Delegate'
 import Balance from './views/balance/Balance'
 import History from './views/balance/History'
@@ -136,7 +136,12 @@ const TabBar = TabNavigator(
 
 const TabBarStack = StackNavigator({
   TabBar,
-  Detail,
+  Detail: {
+    screen: Detail,
+    navigationOptions: {
+      header: null,
+    },
+  },
   Delegate,
   History,
   Cash,
