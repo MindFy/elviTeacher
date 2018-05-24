@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -86,6 +87,8 @@ class UpdatePassword extends Component {
   }
 
   confirmPress() {
+    Keyboard.dismiss()
+
     const { oldPassword, newPassword, newPasswordAgain } = this.props
     if (!oldPassword.length) {
       Toast.message('请输入旧密码')
@@ -163,7 +166,9 @@ class UpdatePassword extends Component {
         }}
         behavior="padding"
       >
-        <ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
           <StatusBar
             barStyle={'light-content'}
           />
