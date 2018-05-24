@@ -412,20 +412,20 @@ class LegalDealDetail extends Component {
         style={{
           backgroundColor: common.blackColor,
         }}
-        data={legalDeal}
+        data={!user ? [] : legalDeal}
         renderItem={({ item, index }) => this.renderRow(item, index)}
         refreshState={refreshState}
         onHeaderRefresh={() => {
-          if (refreshState !== RefreshState.NoMoreData
-            || refreshState !== RefreshState.FooterRefreshing) {
+          if ((user && refreshState !== RefreshState.NoMoreData)
+            || (user && refreshState !== RefreshState.FooterRefreshing)) {
             dispatch(actions.findLegalDeal(
               schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
               , RefreshState.HeaderRefreshing))
           }
         }}
         onFooterRefresh={() => {
-          if (user && refreshState !== RefreshState.NoMoreData
-            || refreshState !== RefreshState.HeaderRefreshing) {
+          if ((user && refreshState !== RefreshState.NoMoreData)
+            || (refreshState !== RefreshState.HeaderRefreshing)) {
             dispatch(actions.findLegalDeal(
               schemas.findLegalDeal(user.id, common.legalDeal.limit * skip, common.legalDeal.limit)
               , RefreshState.FooterRefreshing))

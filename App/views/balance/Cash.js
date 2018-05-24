@@ -18,7 +18,6 @@ import {
   ActionSheet,
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
-import { validate, SUPPORTED_CURRENCIES } from 'coinslot'
 import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
@@ -212,16 +211,16 @@ class Cash extends Component {
       Toast.message('请输入提现地址')
       return
     }
-    if (selectedToken.token.id === 2
-      && !validate(currentAddress, SUPPORTED_CURRENCIES.bitcoin)) {
-      Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
-      return
-    }
-    if (selectedToken.token.id === 5
-      && !validate(currentAddress, SUPPORTED_CURRENCIES.ethereum)) {
-      Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
-      return
-    }
+    // if (selectedToken.token.id === 2
+    //   && !validate(currentAddress, SUPPORTED_CURRENCIES.bitcoin)) {
+    //   Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
+    //   return
+    // }
+    // if (selectedToken.token.id === 5
+    //   && !validate(currentAddress, SUPPORTED_CURRENCIES.ethereum)) {
+    //   Toast.message(`请输入正确的${selectedToken.token.name}提现地址`)
+    //   return
+    // }
     this.showOverlay()
   }
 
@@ -474,8 +473,7 @@ class Cash extends Component {
                     lineHeight: common.h15,
                   }}
                 >{`1. 最小提币数量为：${minAcount} ${selectedToken.token.name}
-2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种
-3. 为保障资金安全，请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
+2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种`}</Text>
               </View> : null
           }
         </View>

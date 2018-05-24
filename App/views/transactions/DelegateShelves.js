@@ -56,15 +56,25 @@ class DelegateShelves extends Component {
     let q = new BigNumber(quantity)
     let a
 
+    if (amount || amount === 0) {
+      q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
+      if (q.isNaN()) return undefined // 9.分子不能为0，非数字
+      a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
+      p = p.isNaN() ? '' : p.toString()
+      q = q.isNaN() ? '' : q.toString()
+      a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
+      return { p, q, a }
+    }
+
     if (tag === 'price' && p.isNaN()) return undefined // 2.限制只能输入数字、小数点
     if (tag === 'quantity' && q.isNaN()) return undefined // 3.限制只能输入数字、小数点
     const pArr = price.split('.')
     const qArr = quantity.split('.')
     if (pArr[0].length > common.maxLenDelegate) return undefined // 4.整数长度限制
     if (pArr.length > 1 && pArr[1].length > precisionPrice) return undefined // 5.小数长度限制
-    if (price.endsWith('.') || (pArr.length > 1 && p.eq(0))) {
+    if (price.endsWith('.') || pArr.length > 1) {
       a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-      a = a.isNaN() ? '' : a.toString()
+      a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
       return { p: price, q: quantity, a }
     }
     if (qArr[0].length > common.maxLenDelegate) return undefined // 6.整数长度限制
@@ -72,22 +82,17 @@ class DelegateShelves extends Component {
       if (qArr.length > 1) return undefined // 7.限制只能输入整数
     } else {
       if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 8.小数长度限制
-      if (quantity.endsWith('.') || (qArr.length > 1 && q.eq(0))) {
+      if (quantity.endsWith('.') || qArr.length > 1) {
         a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-        a = a.isNaN() ? '' : a.toString()
+        a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
         return { p: price, q: quantity, a }
       }
-    }
-
-    if (amount || amount === 0) {
-      q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
-      if (q.isNaN()) return undefined // 9.分子不能为0，非数字
     }
 
     a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
     p = p.isNaN() ? '' : p.toString()
     q = q.isNaN() ? '' : q.toString()
-    a = a.isNaN() ? '' : a.toString()
+    a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
     return { p, q, a }
   }
 
