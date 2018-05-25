@@ -12,6 +12,7 @@ import payment from './payment'
 import rebates from './rebates'
 import user from './user'
 import ui from './ui'
+import detailDeal from './detailDeal'
 
 const rootReducer = combineReducers({
   address,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   rebates,
   user,
   ui,
+  detailDeal,
 })
 
 export default rootReducer
