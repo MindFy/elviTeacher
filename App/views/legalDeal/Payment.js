@@ -15,7 +15,7 @@ export default class Payment extends Component {
   static navigationOptions(props) {
     const { navigation } = props
     return {
-      headerTitle: navigation.state.params.data.direct === common.buy ? '付款方信息' : '收款方信息',
+      headerTitle: navigation.state.params.data.direct === common.buy ? '收款方信息' : '付款方信息',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -73,9 +73,9 @@ export default class Payment extends Component {
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
       bankNo = rd.traderPayinfo.bankNo
       remark = rd.traderPayinfo.remark
-      titleName = '汇款方户名'
-      titleBankName = '汇款方开户行'
-      titleBankNo = '汇款方账号'
+      titleName = '付款方户名'
+      titleBankName = '付款方开户行'
+      titleBankNo = '付款方账号'
     }
     return (
       <ScrollView
