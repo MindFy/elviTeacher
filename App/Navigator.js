@@ -162,7 +162,7 @@ const TabBarStack = StackNavigator({
   Rebates: {
     screen: Rebates,
     navigationOptions: {
-      header: null,
+      // header: null,
     },
   },
 })

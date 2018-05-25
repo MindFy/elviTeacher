@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   DeviceEventEmitter,
   KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -158,6 +159,8 @@ class Cash extends Component {
   }
 
   withdrawPress() {
+    Keyboard.dismiss()
+
     const { cashAccount, currentAddress, selectedToken, valuation } = this.props
     // const ca = new BigNumber(cashAccount)
     // if (!cashAccount.length || ca.eq(0)) {
@@ -494,7 +497,9 @@ class Cash extends Component {
         behavior="padding"
       >
         <StatusBar barStyle={'light-content'} />
-        <ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
           <SelectToken
             tokenListSelected={tokenListSelected}
             dispatch={dispatch}
