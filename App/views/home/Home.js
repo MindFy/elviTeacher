@@ -37,9 +37,9 @@ class Home extends Component {
     const { dispatch, announcement, imgHashApi, banners, navigation, user, announcementVisible,
       findBannersVisible } = this.props
 
-    const btnTitles = ['充值', '提现', '当前委托', '交易']
+    const btnTitles = ['充值', '提现', '当前委托', '历史委托']
     const btns = []
-    const navigateKeys = ['Recharge', 'Cash', 'Delegate', 'Transactions']
+    const navigateKeys = ['Recharge', 'Cash', 'Delegate', 'Delegate']
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {
@@ -68,6 +68,17 @@ class Home extends Component {
             if (!user) {
               navigation.navigate('LoginStack')
             } else {
+              if (i === 2) {
+                dispatch(actions.selectionBarUpdate(common.selectionBar.left))
+                dispatch(actions.currentOrHistoryUpdate({
+                  currentOrHistory: common.delegate.current,
+                }))
+              } else if (i === 3) {
+                dispatch(actions.selectionBarUpdate(common.selectionBar.right))
+                dispatch(actions.currentOrHistoryUpdate({
+                  currentOrHistory: common.delegate.history,
+                }))
+              }
               navigation.navigate(navigateKeys[i])
             }
           }}

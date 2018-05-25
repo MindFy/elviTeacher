@@ -3,8 +3,8 @@ import { Provider } from 'react-redux'
 import Navigator from './Navigator'
 import configureStore from './store/configureStore'
 
-const store = configureStore()
-export default function App() {
+export const store = configureStore()
+export function App() {
   return (
     <Provider store={store}>
       <Navigator />

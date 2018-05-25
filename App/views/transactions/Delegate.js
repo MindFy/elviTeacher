@@ -79,21 +79,17 @@ class Delegate extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, homeRoseSelected } = this.props
+    const { dispatch, user } = this.props
     if (user) {
       dispatch(actions.findDelegateSelfCurrent(schemas.findDelegateSelfCurrent(
         user.id,
         0,
         common.delegate.limtCurrent,
-        homeRoseSelected.goods.id,
-        homeRoseSelected.currency.id,
       ), RefreshState.HeaderRefreshing))
       dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
         user.id,
         0,
         common.delegate.limtHistory,
-        homeRoseSelected.goods.id,
-        homeRoseSelected.currency.id,
       ), RefreshState.HeaderRefreshing))
     }
     this.listener = DeviceEventEmitter.addListener(common.noti.delegateAllCancel, (type) => {
@@ -113,15 +109,11 @@ class Delegate extends Component {
         user.id,
         0,
         common.delegate.limtCurrent,
-        homeRoseSelected.goods.id,
-        homeRoseSelected.currency.id,
       ), RefreshState.HeaderRefreshing))
       dispatch(actions.findDelegateSelfHistory(schemas.findDelegateSelfHistory(
         user.id,
         0,
         common.delegate.limtHistory,
-        homeRoseSelected.goods.id,
-        homeRoseSelected.currency.id,
       ), RefreshState.HeaderRefreshing))
     })
   }
@@ -200,8 +192,6 @@ class Delegate extends Component {
                     user.id,
                     0,
                     common.delegate.limtCurrent,
-                    homeRoseSelected.goods.id,
-                    homeRoseSelected.currency.id,
                   ), RefreshState.HeaderRefreshing))
                 }
               }}
@@ -212,8 +202,6 @@ class Delegate extends Component {
                     user.id,
                     common.delegate.limtCurrent * skipCurrent,
                     common.delegate.limtCurrent,
-                    homeRoseSelected.goods.id,
-                    homeRoseSelected.currency.id,
                   ), RefreshState.FooterRefreshing))
                 }
               }}
@@ -229,8 +217,6 @@ class Delegate extends Component {
                     user.id,
                     0,
                     common.delegate.limtHistory,
-                    homeRoseSelected.goods.id,
-                    homeRoseSelected.currency.id,
                   ), RefreshState.HeaderRefreshing))
                 }
               }}
@@ -241,8 +227,6 @@ class Delegate extends Component {
                     user.id,
                     common.delegate.limtHistory * skipHistory,
                     common.delegate.limtHistory,
-                    homeRoseSelected.goods.id,
-                    homeRoseSelected.currency.id,
                   ), RefreshState.FooterRefreshing))
                 }
               }}

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -9,7 +8,6 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
-// import actions from '../../actions/index'
 
 export default class DelegateDrawer extends Component {
   componentDidMount() { }

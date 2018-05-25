@@ -13,16 +13,11 @@ export default class TextInputTranscations extends Component {
     return (
       <TextInput
         style={[{
-          marginLeft: common.margin10,
-          marginRight: common.margin10 / 2,
-          borderColor: common.borderColor,
-          borderWidth: 1,
-          borderRadius: 1,
-          backgroundColor: common.navBgColor,
-          height: common.h35,
+          flex: 1,
           fontSize: common.font12,
+          color: common.placeholderColor,
+          alignSelf: 'center',
           textAlign: 'center',
-          color: 'white',
         }, textInputStyle]}
         keyboardType={keyboardType}
         placeholder={placeholder}
