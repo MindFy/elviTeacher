@@ -4,6 +4,8 @@ import {
   Text,
   View,
   Image,
+  Animated,
+  Keyboard,
   TouchableOpacity,
 } from 'react-native'
 import {
@@ -16,7 +18,30 @@ import { common } from '../../constants/common'
 import actions from '../../actions/index'
 
 class DelegateBuySellDrawer extends Component {
-  componentDidMount() { }
+  constructor() {
+    super()
+    this.state = {
+      KeyboardShown: false,
+    }
+  }
+
+  componentWillMount() {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      this.setState({ KeyboardShown: true })
+    })
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      this.setState({ KeyboardShown: false })
+    })
+  }
+
+  componentWillUnmount() {
+    if (this.keyboardDidShowListener != null) {
+      this.keyboardDidShowListener.remove()
+    }
+    if (this.keyboardDidHideListener != null) {
+      this.keyboardDidHideListener.remove()
+    }
+  }
 
   onChange(text, tag) {
     const { price, quantity } = this.props
@@ -393,6 +418,12 @@ class DelegateBuySellDrawer extends Component {
           }}
           >{buyOrSell ? '买入' : '卖出'}</Text>
         </TouchableOpacity>
+
+        <Animated.View
+          style={{
+            height: this.state.KeyboardShown ? 216 : 0,
+          }}
+        />
       </View>
     )
   }
