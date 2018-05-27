@@ -1,57 +1,57 @@
 import {
-  DeviceEventEmitter,
-} from 'react-native'
-import {
-  take, call, put,
+  take,
+  call,
+  put,
+  takeEvery,
 } from 'redux-saga/effects'
-import {
-  Toast,
-} from 'teaset'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
-import {
-  common,
-} from '../constants/common'
+import { common } from '../constants/common'
 
 /* 增加一个提币地址 */
-export function* add() {
+export function* addAddress() {
   while (true) {
     const request = yield take(constants.ADD_REQUEST)
     const response = yield call(api.add, request.data)
     if (response.success) {
-      Toast.success('添加成功')
-      DeviceEventEmitter.emit(common.noti.addAddress)
+      // Toast.success('添加成功')
       yield put({ type: constants.ADD_SUCCEED, response })
     } else {
       yield put({ type: constants.ADD_FAILED, response })
       if (response.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        // Toast.fail('网络连接失败，请稍后重试')
       } else if (response.error.code === 4000411) {
-        Toast.fail('货币或地址有误')
+        // Toast.fail('货币或地址有误')
       } else if (response.error.code === 4000412) {
-        Toast.fail('货币不存在')
+        // Toast.fail('货币不存在')
       } else if (response.error.code === 4000413) {
-        Toast.fail('提现地址长度有误，请输入正确的提现地址')
+        // Toast.fail('提现地址长度有误，请输入正确的提现地址')
       } else if (response.error.code === 4000414) {
-        Toast.fail('地址已存在')
+        // Toast.fail('地址已存在')
       } else if (response.error.code === 4000415) {
-        Toast.fail('仅支持BTC、ETH添加地址')
+        // Toast.fail('仅支持BTC、ETH添加地址')
       } else if (response.error.code === 4000416) {
-        Toast.fail('无效的提现地址')
+        // Toast.fail('无效的提现地址')
       } else if (response.error.code === 4000156) {
-        Toast.fail('授权验证失败')
+        // Toast.fail('授权验证失败')
       } else {
-        Toast.fail('添加失败')
+        // Toast.fail('添加失败')
       }
     }
   }
 }
-/* 获取用户提币地址 */
-export function* findAddress() {
-  while (true) {
-    const request = yield take(constants.FIND_ADDRESS_REQUEST)
-    const response = yield call(api.graphql, request.schema)
-    if (response.success) yield put({ type: constants.FIND_ADDRESS_SUCCEED, response })
-    else yield put({ type: constants.FIND_ADDRESS_FAILED, response })
+
+export function* fetchAddress(action) {
+  const { schema } = action
+  const response = yield call(api.graphql, schema)
+
+  if (response.success) {
+    yield put({ type: constants.FIND_ADDRESS_SUCCEED, response })
+  } else {
+    yield put({ type: constants.FIND_ADDRESS_FAILED, response })
   }
+}
+
+export function* findAddress() {
+  yield takeEvery(constants.FIND_ADDRESS_REQUEST, fetchAddress)
 }
