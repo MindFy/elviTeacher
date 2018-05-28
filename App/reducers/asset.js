@@ -13,6 +13,9 @@ const initialState = {
   }, {
     id: 5,
     name: 'ETH',
+  }, {
+    id: 6,
+    name: 'ETC',
   }],
   asset: [],
   amountVisible: undefined,

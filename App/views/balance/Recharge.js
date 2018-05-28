@@ -174,7 +174,9 @@ class Recharge extends Component {
     if ((selectedToken !== common.selectedTokenDefault
       && selectedToken.token.id === 2)
     || (selectedToken !== common.selectedTokenDefault
-      && selectedToken.token.id === 5)) {
+      && selectedToken.token.id === 5)
+    || (selectedToken !== common.selectedTokenDefault
+      && selectedToken.token.id === 6)) {
       return (
         <View>
           <View
