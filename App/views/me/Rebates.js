@@ -398,7 +398,7 @@ function mapStateToProps(store) {
     user: store.user.user,
 
     totalCount: store.rebates.totalCount,
-    totalCountET: store.rebates.totalCountET,
+    totalCountTK: store.rebates.totalCountTK,
     totalCountBTC: store.rebates.totalCountBTC,
 
     invitationTotalCount: store.invitation.totalCount,
