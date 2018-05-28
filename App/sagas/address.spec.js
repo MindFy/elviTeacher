@@ -11,7 +11,7 @@ it('findAddress watcher', () => {
   expect(it.next().done).toBe(true)
 })
 
-it('fetchAddress success', () => {
+it('fetchAddress succeed', () => {
   const action = {
     schema: schema(1),
   }
