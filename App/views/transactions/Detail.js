@@ -23,20 +23,6 @@ import { store } from '../../index'
 import LatestDealList from './LatestDealList'
 
 class Detail extends Component {
-  constructor(props) {
-    super(props)
-
-    this.shelvesBuyDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-    this.shelvesSellDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-    this.currentDelegateDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-  }
-
   componentDidMount() { }
 
   getUIData(goodsId, currencyId) {
