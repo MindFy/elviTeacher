@@ -30,6 +30,7 @@ const common = {
   payment: {
     charge: {
       BTC: 0.001,
+      ETH: 0.01,
     },
     limitRecharge: 10,
     limitWithdraw: 10,
@@ -64,6 +65,7 @@ const common = {
     CNYT: 'CNYT',
     CNY: 'CNY',
     ETH: 'ETH',
+    ETC: 'ETC',
   },
 
   legalDeal: {
@@ -257,8 +259,10 @@ const common = {
 
   // 币币交易小数精度规则
   precision(goodsName, currencyName, block) {
-    if (goodsName === common.token.ETH
-      && currencyName === common.token.BTC) {
+    if ((goodsName === common.token.ETH
+      && currencyName === common.token.BTC)
+      || (goodsName === common.token.ETC
+      && currencyName === common.token.BTC)) {
       // p:6 q:4 a:6
       block(6, 4, 6)
     } else if (goodsName === common.token.TK
@@ -269,10 +273,16 @@ const common = {
       && currencyName === common.token.BTC) {
       // p:8 q:0 a:8
       block(8, 0, 8)
+    } else if (goodsName === common.token.ETC
+      && currencyName === common.token.TK) {
+      // p:0 q:4 a:4
+      block(0, 4, 4)
       // } else if (
       //   ((goodsName === common.token.BTC
       //     && currencyName === common.token.CNYT))
-      //   || ((goodsName === common.token.ETH
+      //   || ((goodsName === common.token.ETC
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.ETC
       //     && currencyName === common.token.CNYT))
       //   || ((goodsName === common.token.ETH
       //     && currencyName === common.token.TK))

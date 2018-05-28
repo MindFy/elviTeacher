@@ -94,6 +94,9 @@ class HomeRoseList extends Component {
     })
 
     this.timer1 = setInterval(() => {
+      if (this.props.user) {
+        dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
+      }
       dispatch(actions.getValuation())
       dispatch(actions.getRose({
         homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
@@ -102,7 +105,7 @@ class HomeRoseList extends Component {
         this.getUIData(this.props.homeRoseSelected.goods.id,
           this.props.homeRoseSelected.currency.id)
       }
-    }, 5000)
+    }, 1000)
   }
 
   componentWillUnmount() {
@@ -110,10 +113,14 @@ class HomeRoseList extends Component {
   }
 
   getUIData(goodsId, currencyId) {
-    const { dispatch } = this.props
+    const { dispatch, user } = this.props
     dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
     dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
+    if (user) {
+      dispatch(actions.findDelegateSelfCurrentWithGoodsId(
+        schemas.findDelegateSelfCurrentWithGoodsId(user.id, goodsId, currencyId)))
+    }
   }
 
   homeRoseListCellPress(rd) {
@@ -333,7 +340,6 @@ class HomeRoseList extends Component {
 
 function mapStateToProps(store) {
   return {
-
     homeRose: store.dealstat.homeRose,
     homeRoseSelected: store.dealstat.homeRoseSelected,
     getRoseVisible: store.dealstat.getRoseVisible,

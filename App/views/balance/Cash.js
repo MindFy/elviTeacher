@@ -215,6 +215,8 @@ class Cash extends Component {
       }
     }
 
+    // ETC
+
     if (!currentAddress.length) {
       Toast.message('请输入提现地址')
       return
@@ -318,14 +320,20 @@ class Cash extends Component {
     const { selectedToken, cashAccount, currentAddress } = this.props
     if (selectedToken !== common.selectedTokenDefault) {
       let minAcount = 0
+      let charge = 0
       if (selectedToken.token.name === common.token.BTC) {
         minAcount = 0.01
+        charge = common.payment.charge.BTC
       } else if (selectedToken.token.name === common.token.ETH) {
         minAcount = 0.015
+        charge = common.payment.charge.ETH
+      } else if (selectedToken.token.name === common.token.ETC) {
+        minAcount = 0.5
+        charge = common.payment.charge.ETH
       }
       let actualAccount = new BigNumber(cashAccount)
       actualAccount = actualAccount.isNaN()
-        ? 0 : actualAccount.minus(common.payment.charge.BTC)
+        ? 0 : actualAccount.minus(charge)
       actualAccount = BigNumber(actualAccount).lt(0) ? 0 : actualAccount
       const amount = new BigNumber(selectedToken.amount).toFixed(8, 1)
       return (
@@ -349,7 +357,8 @@ class Cash extends Component {
           >{amount}</Text>
           {
             (selectedToken.token.name === common.token.BTC
-              || selectedToken.token.name === common.token.ETH)
+              || selectedToken.token.name === common.token.ETH
+              || selectedToken.token.name === common.token.ETC)
               ? <View>
                 <TextInput
                   style={{
@@ -386,7 +395,7 @@ class Cash extends Component {
                       fontSize: common.font12,
                       alignSelf: 'center',
                     }}
-                  >{`手续费：${common.payment.charge.BTC}${selectedToken.token.name}`}</Text>
+                  >{`手续费：${charge}${selectedToken.token.name}`}</Text>
                   <Text
                     style={{
                       marginRight: common.margin10,

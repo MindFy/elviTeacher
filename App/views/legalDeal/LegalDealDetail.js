@@ -169,7 +169,7 @@ class LegalDealDetail extends Component {
     let havedPayDisabled = true
     const dealPrice = new BigNumber(rd.dealPrice).toFixed(2)
     const quantity = new BigNumber(rd.quantity).toFixed(2)
-    const amount = new BigNumber(dealPrice).multipliedBy(quantity)
+    const amount = new BigNumber(dealPrice).multipliedBy(quantity).toFixed(2, 1)
     if (rd.direct === common.buy) {
       textColor = common.redColor
       direct = '买入'

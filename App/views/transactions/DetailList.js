@@ -237,10 +237,10 @@ class DetailList extends Component {
             }}
             activeOpacity={common.activeOpacity}
             onPress={() => {
-              const { delegateSelfCurrent } = this.props
-              const temp = delegateSelfCurrent.concat()
+              const { delegateCurrent } = this.props
+              const temp = delegateCurrent.concat()
               temp[rid].status = common.delegate.status.cancel
-              dispatch(actions.cancel({ id: rd.id }, temp))
+              dispatch(actions.cancel({ id: rd.id }, temp, true))
             }}
             disabled={cancelDisabled}
           >
@@ -299,14 +299,7 @@ class DetailList extends Component {
 
   render() {
     const { dispatch, navigation, user, selectionBarSelected, shelvesBuy, shelvesSell,
-      delegateSelfCurrent } = this.props
-    const delegateSelfCurrentTemp = []
-    if (delegateSelfCurrent.length === 1) {
-      delegateSelfCurrentTemp.push(delegateSelfCurrent[0])
-    } else if (delegateSelfCurrent.length > 1) {
-      delegateSelfCurrentTemp.push(delegateSelfCurrent[0])
-      delegateSelfCurrentTemp.push(delegateSelfCurrent[1])
-    }
+      delegateCurrent } = this.props
 
     return (
       <View>
@@ -348,7 +341,7 @@ class DetailList extends Component {
               />
             </View>
             : <ListView
-              dataSource={this.currentDelegateDS(delegateSelfCurrentTemp)}
+              dataSource={this.currentDelegateDS(delegateCurrent)}
               renderHeader={() => this.renderHeader('')}
               renderRow={(rd, sid, rid) => this.renderRow(rd, rid, '')}
               enableEmptySections
@@ -367,7 +360,7 @@ function mapStateToProps(store) {
     shelvesBuy: store.delegate.shelvesBuy,
     shelvesSell: store.delegate.shelvesSell,
 
-    delegateSelfCurrent: store.delegate.delegateSelfCurrent,
+    delegateCurrent: store.detailDeal.delegateCurrent,
 
     homeRoseSelected: store.dealstat.homeRoseSelected,
 

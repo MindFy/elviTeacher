@@ -7,11 +7,12 @@ export function allCancel(data) {
   }
 }
 
-export function cancel(data, delegateSelfCurrent) {
+export function cancel(data, delegateSelfCurrent, fromDetail) {
   return {
     type: constants.CANCEL_REQUEST,
     data,
     delegateSelfCurrent,
+    fromDetail,
   }
 }
 
@@ -48,6 +49,13 @@ export function findDelegateSelfCurrent(schema, refreshStateCurrent) {
     type: constants.FIND_DELEGATE_SELF_CURRENT_REQUEST,
     schema,
     refreshStateCurrent,
+  }
+}
+
+export function findDelegateSelfCurrentWithGoodsId(schema) {
+  return {
+    type: constants.FIND_DELEGATE_SELF_CURRENT_DEAL_REQUEST,
+    schema,
   }
 }
 

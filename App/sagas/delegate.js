@@ -35,11 +35,19 @@ export function* cancel() {
     const response = yield call(api.cancel, request.data)
     if (response.success) {
       Toast.success(response.result)
-      yield put({
-        type: constants.CANCEL_SUCCEED,
-        response,
-        delegateSelfCurrent: request.delegateSelfCurrent,
-      })
+      if (request.fromDetail) {
+        yield put({
+          type: constants.CANCEL_DELEGATE_SELF_CURRENT_DEAL_SUCCEED,
+          response,
+          delegateCurrent: request.delegateSelfCurrent,
+        })
+      } else {
+        yield put({
+          type: constants.CANCEL_SUCCEED,
+          response,
+          delegateSelfCurrent: request.delegateSelfCurrent,
+        })
+      }
     } else {
       yield put({ type: constants.CANCEL_FAILED, response })
       if (response.error.message === common.badNet) {
@@ -131,6 +139,17 @@ export function* findDelegateSelfCurrent() {
       yield put({ type: constants.FIND_DELEGATE_SELF_CURRENT_SUCCEED, findDelegate })
     } else {
       yield put({ type: constants.FIND_DELEGATE_SELF_CURRENT_FAILED, response })
+    }
+  }
+}
+/* 交易UI获取当前委托 */
+export function* findDelegateSelfCurrentWithGoodsId() {
+  while (true) {
+    const request = yield take(constants.FIND_DELEGATE_SELF_CURRENT_DEAL_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.success) {
+      const findDelegate = response.result.data.find_delegate
+      yield put({ type: constants.DETAIL_DEAL_UPDATEKV, k: 'delegateCurrent', v: findDelegate })
     }
   }
 }

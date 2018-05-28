@@ -25,13 +25,6 @@ import LatestDealList from './LatestDealList'
 class Detail extends Component {
   componentDidMount() { }
 
-  getUIData(goodsId, currencyId) {
-    const { dispatch } = this.props
-    dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
-    dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
-    dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
-  }
-
   menuPress() {
     const { dispatch, homeRose } = this.props
     const items = []
@@ -40,7 +33,6 @@ class Detail extends Component {
         title: `${element.goods.name}/${element.currency.name}`,
         onPress: () => {
           dispatch(actions.homeRoseSelectedUpdate(element))
-          this.getUIData(element.goods.id, element.currency.id)
         },
       })
     })
@@ -191,7 +183,7 @@ class Detail extends Component {
       rose = rose.multipliedBy(100).toFixed(2, 1)
       if (valuation && valuation.rates) {
         rmb = valuation.rates[currencyName][common.token.CNYT]
-        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
+        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(4, 1)
       }
     }
 
