@@ -47,6 +47,10 @@ class Detail extends Component {
     Menu.show({ x: common.sw / 2, y: 64 }, items)
   }
 
+  tapBuySellBtn = () => {
+    this.drawer.close()
+  }
+
   topBarPress(b) {
     const { dispatch, buyOrSell, user, navigation } = this.props
     if (!user) {
@@ -58,7 +62,7 @@ class Detail extends Component {
       dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
       const view = (
         <Provider store={store}>
-          <DelegateBuySellDrawer />
+          <DelegateBuySellDrawer BuySellBtnTapAction={this.tapBuySellBtn} />
         </Provider>
       )
       this.drawer = Drawer.open(view, 'bottom')
