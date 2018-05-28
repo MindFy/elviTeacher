@@ -65,6 +65,7 @@ class Detail extends Component {
     const { dispatch, buyOrSell, user, navigation } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
+      return
     }
     if (buyOrSell !== b) {
       dispatch(actions.buyOrSellUpdate(b))
