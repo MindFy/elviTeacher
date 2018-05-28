@@ -4,6 +4,8 @@ const initialState = {
   price: '0',
   quantity: '0',
   amount: '0',
+
+  delegateCurrent: [],
 }
 
 export default function detailDeal(state = initialState, action) {
@@ -21,6 +23,12 @@ export default function detailDeal(state = initialState, action) {
       nextState = {
         ...state,
         [action.k]: action.v,
+      }
+      break
+    case constants.CANCEL_DELEGATE_SELF_CURRENT_DEAL_SUCCEED:
+      nextState = {
+        ...state,
+        delegateCurrent: action.delegateCurrent,
       }
       break
     default:

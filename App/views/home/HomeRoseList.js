@@ -105,7 +105,7 @@ class HomeRoseList extends Component {
         this.getUIData(this.props.homeRoseSelected.goods.id,
           this.props.homeRoseSelected.currency.id)
       }
-    }, 5000)
+    }, 1000)
   }
 
   componentWillUnmount() {
@@ -113,10 +113,14 @@ class HomeRoseList extends Component {
   }
 
   getUIData(goodsId, currencyId) {
-    const { dispatch } = this.props
+    const { dispatch, user } = this.props
     dispatch(actions.getShelves({ goods_id: goodsId, currency_id: currencyId }))
     dispatch(actions.latestDeals({ goods_id: goodsId, currency_id: currencyId }))
     dispatch(actions.getDepthMap({ goods_id: goodsId, currency_id: currencyId }))
+    if (user) {
+      dispatch(actions.findDelegateSelfCurrentWithGoodsId(
+        schemas.findDelegateSelfCurrentWithGoodsId(user.id, goodsId, currencyId)))
+    }
   }
 
   homeRoseListCellPress(rd) {

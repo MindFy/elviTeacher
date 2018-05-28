@@ -54,6 +54,7 @@ export default function* rootSaga() {
     fork(delegate.getDepthMap),
     fork(delegate.getShelves),
     fork(delegate.findDelegateSelfCurrent),
+    fork(delegate.findDelegateSelfCurrentWithGoodsId),
     fork(delegate.findDelegateSelfHistory),
 
     fork(getRose),

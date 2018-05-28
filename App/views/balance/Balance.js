@@ -7,14 +7,11 @@ import {
   ListView,
   StatusBar,
   ScrollView,
-  RefreshControl,
   TouchableOpacity,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import BalanceCell from './BalanceCell'
-import actions from '../../actions/index'
-import schemas from '../../schemas/index'
 
 class Balance extends Component {
   static navigationOptions(props) {
@@ -69,7 +66,7 @@ class Balance extends Component {
   }
 
   render() {
-    const { asset, user, navigation, dispatch, findAssetListVisible, valuation } = this.props
+    const { asset, user, navigation, valuation } = this.props
     let amountBTC = new BigNumber(0)
     let amountRMB = new BigNumber(0)
     if (valuation && valuation.rates) {
@@ -95,23 +92,7 @@ class Balance extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => {
-                if (user) {
-                  dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-                  dispatch(actions.getValuation())
-                }
-              }}
-              refreshing={findAssetListVisible}
-              colors={[common.textColor]}
-              progressBackgroundColor={common.navBgColor}
-              progressViewOffset={0}
-              tintColor={common.textColor}
-            />
-          }
-        >
+        <ScrollView>
           <Text
             style={{
               marginTop: common.margin20,
