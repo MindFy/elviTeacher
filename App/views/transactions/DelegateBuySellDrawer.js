@@ -124,7 +124,16 @@ class DelegateBuySellDrawer extends Component {
   }
 
   buyOrSellPress() {
-    const { dispatch, navigation, user, buyOrSell, price, quantity, amount, homeRoseSelected,
+    const {
+      dispatch,
+      navigation,
+      user,
+      buyOrSell,
+      price,
+      quantity,
+      amount,
+      homeRoseSelected,
+      BuySellBtnTapAction,
     } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
@@ -151,6 +160,9 @@ class DelegateBuySellDrawer extends Component {
         quantity: q,
         total_money: a.toString(),
       }))
+      if (BuySellBtnTapAction) {
+        BuySellBtnTapAction()
+      }
     }
   }
 

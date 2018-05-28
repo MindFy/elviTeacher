@@ -168,6 +168,11 @@ class Cash extends Component {
     //   return
     // }
 
+    if (!valuation || Object.keys(valuation).length === 0) {
+      Toast.message('暂时无法提币，请稍后再试')
+      return
+    }
+
     const { count, rates } = valuation
     const { quotaCount, withdrawedCount } = count
     const bAmount = new BigNumber(cashAccount)

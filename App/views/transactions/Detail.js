@@ -23,20 +23,6 @@ import { store } from '../../index'
 import LatestDealList from './LatestDealList'
 
 class Detail extends Component {
-  constructor(props) {
-    super(props)
-
-    this.shelvesBuyDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-    this.shelvesSellDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-    this.currentDelegateDS = data => new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    }).cloneWithRows(data)
-  }
-
   componentDidMount() { }
 
   menuPress() {
@@ -53,17 +39,22 @@ class Detail extends Component {
     Menu.show({ x: common.sw / 2, y: 64 }, items)
   }
 
+  tapBuySellBtn = () => {
+    this.drawer.close()
+  }
+
   topBarPress(b) {
     const { dispatch, buyOrSell, user, navigation } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
+      return
     }
     if (buyOrSell !== b) {
       dispatch(actions.buyOrSellUpdate(b))
       dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
       const view = (
         <Provider store={store}>
-          <DelegateBuySellDrawer />
+          <DelegateBuySellDrawer BuySellBtnTapAction={this.tapBuySellBtn} />
         </Provider>
       )
       this.drawer = Drawer.open(view, 'bottom')
@@ -172,7 +163,6 @@ class Detail extends Component {
     let rose = 0
     let cpriceColor = common.redColor
     let dirImageSource
-    let symbol = ''
     let rmb = '0.00'
 
     if (homeRoseSelected) {
@@ -184,11 +174,9 @@ class Detail extends Component {
       if (rose.gt(0)) {
         cpriceColor = common.redColor
         dirImageSource = require('../../assets/箭头.png')
-        symbol = '+'
       } else if (rose.lt(0)) {
         cpriceColor = common.greenColor
         dirImageSource = require('../../assets/箭头copy.png')
-        symbol = '-'
       } else {
         cpriceColor = common.textColor
       }
@@ -249,12 +237,11 @@ class Detail extends Component {
               color: cpriceColor,
               alignSelf: 'flex-end',
             }}
-          >{`${symbol}${rose}%`}</Text>
+          >{`${rose}%`}</Text>
         </View>
 
         <View
           style={{
-            flex: 1,
             flexDirection: 'row',
           }}
         >
@@ -365,7 +352,10 @@ class Detail extends Component {
     )
   }
 
-  renderDetailList = () => <DetailList />
+  renderDetailList = () => {
+    const { navigation } = this.props
+    return <DetailList navigation={navigation} />
+  }
 
   renderOrderHistory = () => <LatestDealList />
 
