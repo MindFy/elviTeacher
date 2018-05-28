@@ -108,23 +108,17 @@ class DelegateBuySellDrawer extends Component {
       common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q, a) => {
         const temp = this.textInputLimit(price, quantity, amount, p, q, a, tag)
         if (temp) {
-          // dispatch(actions.textInputDelegateUpdate({
-          //   price: temp.p, quantity: temp.q, amount: temp.a,
-          // }))
-          dispatch(actions.detailupdateKV('price', temp.p))
-          dispatch(actions.detailupdateKV('quantity', temp.q))
-          dispatch(actions.detailupdateKV('amount', temp.a))
+          dispatch(actions.textInputDelegateUpdate({
+            price: temp.p, quantity: temp.q, amount: temp.a,
+          }))
         }
       })
     } else {
       const temp = this.textInputLimit(price, quantity, amount, 2, 4, 6, tag)
       if (temp) {
-        // dispatch(actions.textInputDelegateUpdate({
-        //   price: temp.p, quantity: temp.q, amount: temp.a,
-        // }))
-        dispatch(actions.detailupdateKV('price', temp.p))
-        dispatch(actions.detailupdateKV('quantity', temp.q))
-        dispatch(actions.detailupdateKV('amount', temp.a))
+        dispatch(actions.textInputDelegateUpdate({
+          price: temp.p, quantity: temp.q, amount: temp.a,
+        }))
       }
     }
   }
@@ -163,29 +157,37 @@ class DelegateBuySellDrawer extends Component {
   tapPlusBtn = (type) => {
     const { price, quantity, dispatch } = this.props
     if (type === 'price') {
+      if (price === '') {
+        return
+      }
       common.precision('BTC', 'TK', (p, q, amount) => {
         const plusNum = BigNumber(0.1).pow(p)
         let newPrice = BigNumber(price).plus(plusNum)
         if (newPrice.lt(0)) {
           newPrice = BigNumber(0)
         }
-        const newAmount = BigNumber(quantity).multipliedBy(newPrice)
-
         dispatch(actions.detailupdateKV('price', newPrice.toString()))
+        const newAmount = BigNumber(quantity).multipliedBy(newPrice)
+        if (newAmount.isNaN()) {
+          return
+        }
         dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
       })
     } else {
+      if (quantity === '') {
+        return
+      }
       common.precision('BTC', 'TK', (p, q, amount) => {
         const plusNum = BigNumber(0.1).pow(q)
         let newQuantity = BigNumber(quantity).plus(plusNum)
         if (newQuantity.lt(0)) {
           newQuantity = BigNumber(0)
         }
-        let newAmount = BigNumber(price).multipliedBy(newQuantity)
-        if (newAmount.lt(0)) {
-          newAmount = BigNumber(0)
-        }
         dispatch(actions.detailupdateKV('quantity', newQuantity.toString()))
+        const newAmount = BigNumber(price).multipliedBy(newQuantity)
+        if (newAmount.isNaN()) {
+          return
+        }
         dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
       })
     }
@@ -194,28 +196,37 @@ class DelegateBuySellDrawer extends Component {
   tapMinusBtn = (type) => {
     const { price, quantity, dispatch } = this.props
     if (type === 'price') {
+      if (price === '') {
+        return
+      }
       common.precision('BTC', 'TK', (p, q, amount) => {
         const minusNum = BigNumber(0.1).pow(p)
         let newPrice = BigNumber(price).minus(minusNum)
         if (newPrice.lt(0)) {
           newPrice = BigNumber(0)
         }
-        const newAmount = BigNumber(quantity).multipliedBy(newPrice)
         dispatch(actions.detailupdateKV('price', newPrice.toString()))
+        const newAmount = BigNumber(quantity).multipliedBy(newPrice)
+        if (newAmount.isNaN()) {
+          return
+        }
         dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
       })
     } else {
+      if (quantity === '') {
+        return
+      }
       common.precision('BTC', 'TK', (p, q, amount) => {
         const minusNum = BigNumber(0.1).pow(q)
         let newQuantity = BigNumber(quantity).minus(minusNum)
         if (newQuantity.lt(0)) {
           newQuantity = BigNumber(0)
         }
-        let newAmount = BigNumber(price).multipliedBy(newQuantity)
-        if (newAmount.lt(0)) {
-          newAmount = BigNumber(0)
-        }
         dispatch(actions.detailupdateKV('quantity', newQuantity.toString()))
+        const newAmount = BigNumber(price).multipliedBy(newQuantity)
+        if (newAmount.isNaN()) {
+          return
+        }
         dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
       })
     }
