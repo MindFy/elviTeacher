@@ -260,7 +260,6 @@ class Detail extends Component {
 
         <View
           style={{
-            flex: 1,
             flexDirection: 'row',
           }}
         >
@@ -371,7 +370,10 @@ class Detail extends Component {
     )
   }
 
-  renderDetailList = () => <DetailList />
+  renderDetailList = () => {
+    const { navigation } = this.props
+    return <DetailList navigation={navigation} />
+  }
 
   renderOrderHistory = () => <LatestDealList />
 
