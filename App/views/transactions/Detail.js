@@ -62,7 +62,10 @@ class Detail extends Component {
   }
 
   topBarPress(b) {
-    const { dispatch, buyOrSell } = this.props
+    const { dispatch, buyOrSell, user, navigation } = this.props
+    if (!user) {
+      navigation.navigate('LoginStack')
+    }
     if (buyOrSell !== b) {
       dispatch(actions.buyOrSellUpdate(b))
       dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
