@@ -1,12 +1,10 @@
 import {
-  take,
   call,
   put,
   takeEvery,
 } from 'redux-saga/effects'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
-import { common } from '../constants/common'
 
 /* 增加一个提币地址 */
 // export function* addAddress() {
