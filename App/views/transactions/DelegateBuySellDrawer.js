@@ -21,16 +21,16 @@ class DelegateBuySellDrawer extends Component {
   constructor() {
     super()
     this.state = {
-      KeyboardShown: false,
+      keyboardHeight: new Animated.Value(0),
     }
   }
 
   componentWillMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      this.setState({ KeyboardShown: true })
+      Animated.timing(this.state.keyboardHeight, { toValue: 216, duration: 100 }).start()
     })
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      this.setState({ KeyboardShown: false })
+      Animated.timing(this.state.keyboardHeight, { toValue: 0, duration: 100 }).start()
     })
   }
 
@@ -62,7 +62,6 @@ class DelegateBuySellDrawer extends Component {
     let p = new BigNumber(price)
     let q = new BigNumber(quantity)
     let a
-
     if (amount || amount === 0) {
       q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
       if (q.isNaN()) return undefined // 9.分子不能为0，非数字
@@ -109,17 +108,23 @@ class DelegateBuySellDrawer extends Component {
       common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q, a) => {
         const temp = this.textInputLimit(price, quantity, amount, p, q, a, tag)
         if (temp) {
-          dispatch(actions.textInputDelegateUpdate({
-            price: temp.p, quantity: temp.q, amount: temp.a,
-          }))
+          // dispatch(actions.textInputDelegateUpdate({
+          //   price: temp.p, quantity: temp.q, amount: temp.a,
+          // }))
+          dispatch(actions.detailupdateKV('price', temp.p))
+          dispatch(actions.detailupdateKV('quantity', temp.q))
+          dispatch(actions.detailupdateKV('amount', temp.a))
         }
       })
     } else {
       const temp = this.textInputLimit(price, quantity, amount, 2, 4, 6, tag)
       if (temp) {
-        dispatch(actions.textInputDelegateUpdate({
-          price: temp.p, quantity: temp.q, amount: temp.a,
-        }))
+        // dispatch(actions.textInputDelegateUpdate({
+        //   price: temp.p, quantity: temp.q, amount: temp.a,
+        // }))
+        dispatch(actions.detailupdateKV('price', temp.p))
+        dispatch(actions.detailupdateKV('quantity', temp.q))
+        dispatch(actions.detailupdateKV('amount', temp.a))
       }
     }
   }
@@ -152,6 +157,67 @@ class DelegateBuySellDrawer extends Component {
         quantity: q,
         total_money: a.toString(),
       }))
+    }
+  }
+
+  tapPlusBtn = (type) => {
+    const { price, quantity, dispatch } = this.props
+    if (type === 'price') {
+      common.precision('BTC', 'TK', (p, q, amount) => {
+        const plusNum = BigNumber(0.1).pow(p)
+        let newPrice = BigNumber(price).plus(plusNum)
+        if (newPrice.lt(0)) {
+          newPrice = BigNumber(0)
+        }
+        const newAmount = BigNumber(quantity).multipliedBy(newPrice)
+
+        dispatch(actions.detailupdateKV('price', newPrice.toString()))
+        dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
+      })
+    } else {
+      common.precision('BTC', 'TK', (p, q, amount) => {
+        const plusNum = BigNumber(0.1).pow(q)
+        let newQuantity = BigNumber(quantity).plus(plusNum)
+        if (newQuantity.lt(0)) {
+          newQuantity = BigNumber(0)
+        }
+        let newAmount = BigNumber(price).multipliedBy(newQuantity)
+        if (newAmount.lt(0)) {
+          newAmount = BigNumber(0)
+        }
+        dispatch(actions.detailupdateKV('quantity', newQuantity.toString()))
+        dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
+      })
+    }
+  }
+
+  tapMinusBtn = (type) => {
+    const { price, quantity, dispatch } = this.props
+    if (type === 'price') {
+      common.precision('BTC', 'TK', (p, q, amount) => {
+        const minusNum = BigNumber(0.1).pow(p)
+        let newPrice = BigNumber(price).minus(minusNum)
+        if (newPrice.lt(0)) {
+          newPrice = BigNumber(0)
+        }
+        const newAmount = BigNumber(quantity).multipliedBy(newPrice)
+        dispatch(actions.detailupdateKV('price', newPrice.toString()))
+        dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
+      })
+    } else {
+      common.precision('BTC', 'TK', (p, q, amount) => {
+        const minusNum = BigNumber(0.1).pow(q)
+        let newQuantity = BigNumber(quantity).minus(minusNum)
+        if (newQuantity.lt(0)) {
+          newQuantity = BigNumber(0)
+        }
+        let newAmount = BigNumber(price).multipliedBy(newQuantity)
+        if (newAmount.lt(0)) {
+          newAmount = BigNumber(0)
+        }
+        dispatch(actions.detailupdateKV('quantity', newQuantity.toString()))
+        dispatch(actions.detailupdateKV('amount', newAmount.toFixed(amount, 1)))
+      })
     }
   }
 
@@ -265,7 +331,7 @@ class DelegateBuySellDrawer extends Component {
                 justifyContent: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => { }}
+              onPress={() => { this.tapMinusBtn('price') }}
             >
               <Image
                 style={{
@@ -288,7 +354,7 @@ class DelegateBuySellDrawer extends Component {
                 justifyContent: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => { }}
+              onPress={() => { this.tapPlusBtn('price') }}
             >
               <Image
                 style={{
@@ -318,7 +384,7 @@ class DelegateBuySellDrawer extends Component {
                 justifyContent: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => { }}
+              onPress={() => { this.tapMinusBtn('quantity') }}
             >
               <Image
                 style={{
@@ -341,7 +407,7 @@ class DelegateBuySellDrawer extends Component {
                 justifyContent: 'center',
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => { }}
+              onPress={() => { this.tapPlusBtn('quantity') }}
             >
               <Image
                 style={{
@@ -421,7 +487,7 @@ class DelegateBuySellDrawer extends Component {
 
         <Animated.View
           style={{
-            height: this.state.KeyboardShown ? 216 : 0,
+            height: this.state.keyboardHeight,
           }}
         />
       </View>
@@ -439,9 +505,13 @@ function mapStateToProps(store) {
 
     buyOrSell: store.deal.buyOrSell,
 
-    price: store.delegate.price,
-    quantity: store.delegate.quantity,
-    amount: store.delegate.amount,
+    // price: store.delegate.price,
+    // quantity: store.delegate.quantity,
+
+    price: store.detailDeal.price,
+    quantity: store.detailDeal.quantity,
+    amount: store.detailDeal.amount,
+
     delegateCreateVisible: store.delegate.delegateCreateVisible,
   }
 }

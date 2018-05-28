@@ -17,51 +17,63 @@ export default class MarketList extends Component {
 
   renderHeader() {
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
-      >
-        <Text
+      <View>
+        <View
           style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
+            flexDirection: 'row',
+            marginHorizontal: common.w10,
           }}
-        >名称</Text>
-        <Text
+        >
+          <Text
+            style={{
+              flex: 1,
+              paddingTop: common.margin20,
+              paddingBottom: common.margin5,
+              fontSize: common.font14,
+              color: common.placeholderColor,
+              textAlign: 'left',
+            }}
+          >名称</Text>
+          <Text
+            style={{
+              flex: 3,
+              paddingTop: common.margin20,
+              paddingBottom: common.margin5,
+              fontSize: common.font14,
+              color: common.placeholderColor,
+              textAlign: 'right',
+            }}
+          >成交量</Text>
+          <Text
+            style={{
+              flex: 3,
+              paddingTop: common.margin20,
+              paddingBottom: common.margin5,
+              fontSize: common.font14,
+              color: common.placeholderColor,
+              textAlign: 'right',
+            }}
+          >最新价</Text>
+          <Text
+            style={{
+              flex: 3,
+              paddingTop: common.margin20,
+              paddingBottom: common.margin5,
+              fontSize: common.font14,
+              color: common.placeholderColor,
+              textAlign: 'right',
+            }}
+          >24h涨跌</Text>
+        </View>
+
+        <View
           style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
+            marginHorizontal: common.margin10,
+            height: 0.5,
+            backgroundColor: common.placeholderColor,
           }}
-        >成交量</Text>
-        <Text
-          style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
-          }}
-        >最新价</Text>
-        <Text
-          style={{
-            flex: 1,
-            paddingTop: common.margin20,
-            paddingBottom: common.margin5,
-            fontSize: common.font14,
-            color: common.placeholderColor,
-            textAlign: 'center',
-          }}
-        >24h涨跌</Text>
+        />
+
       </View>
     )
   }
@@ -89,6 +101,7 @@ export default class MarketList extends Component {
         <View
           style={{
             flexDirection: 'row',
+            marginHorizontal: common.w10,
           }}
         >
           <Text
@@ -98,40 +111,40 @@ export default class MarketList extends Component {
               paddingBottom: common.margin5,
               fontSize: common.font14,
               color: common.textColor,
-              textAlign: 'center',
+              textAlign: 'left',
               alignSelf: 'center',
             }}
           >{rd.name}</Text>
           <Text
             style={{
-              flex: 1,
+              flex: 3,
               paddingTop: common.margin5,
               paddingBottom: common.margin5,
               fontSize: common.font14,
               color: common.textColor,
-              textAlign: 'center',
+              textAlign: 'right',
               alignSelf: 'center',
             }}
           >{quantity}</Text>
           <Text
             style={{
-              flex: 1,
+              flex: 3,
               paddingTop: common.margin5,
               paddingBottom: common.margin5,
               fontSize: common.font14,
               color: typeColor,
-              textAlign: 'center',
+              textAlign: 'right',
               alignSelf: 'center',
             }}
           >{cprice}</Text>
           <Text
             style={{
-              flex: 1,
+              flex: 3,
               paddingTop: common.margin5,
               paddingBottom: common.margin5,
               fontSize: common.font14,
               color: typeColor,
-              textAlign: 'center',
+              textAlign: 'right',
               alignSelf: 'center',
             }}
           >{`${rose}%`}</Text>

@@ -98,6 +98,9 @@ import {
   codeAuthUpdate,
   bankTextInputUpdate,
 } from './ui'
+import {
+  detailupdateKV,
+} from './detailDeal'
 
 const actions = {
   add,
@@ -192,5 +195,7 @@ const actions = {
   delegateDrawerUpdate,
   codeAuthUpdate,
   bankTextInputUpdate,
+
+  detailupdateKV,
 }
 export default actions

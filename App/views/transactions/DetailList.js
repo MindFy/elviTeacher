@@ -9,7 +9,6 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
-import LatestDealList from './LatestDealList'
 import actions from '../../actions/index'
 
 class DetailList extends Component {
@@ -356,7 +355,6 @@ class DetailList extends Component {
               removeClippedSubviews={false}
             />
         }
-        <LatestDealList />
       </View>
     )
   }
@@ -368,6 +366,7 @@ function mapStateToProps(store) {
 
     shelvesBuy: store.delegate.shelvesBuy,
     shelvesSell: store.delegate.shelvesSell,
+
     delegateSelfCurrent: store.delegate.delegateSelfCurrent,
 
     homeRoseSelected: store.dealstat.homeRoseSelected,
