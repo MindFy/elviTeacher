@@ -70,7 +70,7 @@ export default function* rootSaga() {
 
     fork(findAnnouncement),
 
-    fork(address.add),
+    fork(address.addAddress),
     fork(address.findAddress),
   ]
 }
