@@ -283,11 +283,7 @@ class Detail extends Component {
               width={common.sw}
               height={common.h263}
             />
-            : <Depth
-              depthMap={depthMap}
-              width={common.sw}
-              height={common.h263}
-            />
+            : <Depth />
         }
         <TouchableOpacity
           style={{
