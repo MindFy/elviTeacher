@@ -268,7 +268,7 @@ class Detail extends Component {
   }
 
   renderDepthView = () => {
-    const { dispatch, kLineOrDepth, depthMap } = this.props
+    const { dispatch, kLineOrDepth } = this.props
     return (
       <View
         style={{

@@ -31,18 +31,6 @@ const styles = StyleSheet.create({
 })
 
 class TKButton extends PureComponent {
-  // props: {
-  //   theme:
-  //     | 'yellow'
-  //     | 'gray',
-  //   opacity: number,
-  //   icon?: number,
-  //   caption?: string,
-  //   style?: any,
-  //   fontSize?: number,
-  //   onPress: () => mixed,
-  // }
-
   getTheme() {
     const { theme } = this.props
     let containerTheme
