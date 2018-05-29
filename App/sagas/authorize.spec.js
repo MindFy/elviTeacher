@@ -66,7 +66,7 @@ describe('logout action should cancel login task', () => {
     expect(iterator.next(mockTask).value).toEqual(take([LOGOUT_REQUEST, LOGIN_FAILED]))
   })
 
-  it(`登录成功，进入下一次循环，继续监听${LOGOUT_REQUEST}`, () => {
+  it(`登录过程中触发${LOGOUT_REQUEST}取消登录请求`, () => {
     const mockAction = {
       type: LOGOUT_REQUEST,
     }
