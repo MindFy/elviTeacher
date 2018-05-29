@@ -3,10 +3,6 @@ import TKInputItem from './TKInputItem'
 import TKCheckCodeBtn from './TKCheckCodeBtn'
 
 class TKInputItemCheckCode extends Component {
-  state = {
-    checkCode: '验证码',
-  }
-
   onChangeText = (text) => {
     if (this.props.onTextChanged) {
       this.props.onChangeText(text)
@@ -46,7 +42,7 @@ class TKInputItemCheckCode extends Component {
         onChangeText={text => this.onChangeText(text)}
         editable={this.props.editable}
         title={this.props.title}
-        renderExtra={this.renderCheckCodeBtn}
+        extra={this.renderCheckCodeBtn}
       />
     )
   }

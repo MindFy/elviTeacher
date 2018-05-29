@@ -66,8 +66,8 @@ class TKInputItem extends Component {
 
   renderTitle = () => {
     let titleView = null
-    if (this.props.renderTitle) {
-      titleView = this.props.renderTitle()
+    if (typeof this.props.title === 'function') {
+      titleView = this.props.title()
     } else if (!this.props.title) {
       return null
     } else {
@@ -121,8 +121,8 @@ class TKInputItem extends Component {
 
   renderExtra = () => {
     let extraView = null
-    if (this.props.renderExtra) {
-      extraView = this.props.renderExtra()
+    if (typeof this.props.extra === 'function') {
+      extraView = this.props.extra()
     } else if (!this.props.extra) {
       return extraView
     } else {
