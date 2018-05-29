@@ -268,7 +268,7 @@ class Detail extends Component {
   }
 
   renderDepthView = () => {
-    const { dispatch, kLineOrDepth, depthMap } = this.props
+    const { dispatch, kLineOrDepth } = this.props
     return (
       <View
         style={{
@@ -283,11 +283,7 @@ class Detail extends Component {
               width={common.sw}
               height={common.h263}
             />
-            : <Depth
-              depthMap={depthMap}
-              width={common.sw}
-              height={common.h263}
-            />
+            : <Depth />
         }
         <TouchableOpacity
           style={{

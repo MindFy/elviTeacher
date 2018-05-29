@@ -8,6 +8,7 @@ import {
 } from './constants/common'
 
 import Home from './views/home/Home'
+import Buttons from './views/home/Buttons'
 import Banner from './views/home/Banner'
 import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
@@ -165,6 +166,7 @@ const TabBarStack = StackNavigator({
       // header: null,
     },
   },
+  Buttons,
 })
 
 const LoginStack = DismissableStackNavigator({
