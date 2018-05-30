@@ -10,8 +10,14 @@ class TKCheckCodeBtn extends Component {
     title: '验证码',
   }
 
+  componentWillUnmount() {
+    if (this.timerID) {
+      clearInterval(this.timerID)
+    }
+  }
+
   onPress = () => {
-    if (this.timer) {
+    if (this.timerID) {
       return
     }
     if (this.props.onPress) {
@@ -20,13 +26,13 @@ class TKCheckCodeBtn extends Component {
     this.setState({
       title: `${this.count}s`,
     })
-    this.timer = setInterval(() => {
+    this.timerID = setInterval(() => {
       if (this.count === 0) {
         this.setState({
           title: '验证码',
         })
-        clearImmediate(this.timer)
-        this.timer = null
+        clearImmediate(this.timerID)
+        this.timerID = null
         this.count = 60
       } else {
         this.count--
