@@ -40,6 +40,23 @@ describe('authorize reducer', () => {
     })
   })
 
+  it('LOGIN_REQUEST formState.mobile and formState.password cannot be null or undefined', () => {
+    const mockAction = {
+      type: LOGIN_REQUEST,
+      formState: {
+        mobile: '15895847445',
+        password: '123456',
+      },
+    }
+
+    expect(mockAction.formState).not.toBeNull()
+    expect(mockAction.formState).not.toBeUndefined()
+    expect(mockAction.formState.mobile).not.toBeNull()
+    expect(mockAction.formState.mobile).not.toBeUndefined()
+    expect(mockAction.formState.password).not.toBeNull()
+    expect(mockAction.formState.password).not.toBeUndefined()
+  })
+
   it('LOGIN_REQUEST should set loading to true', () => {
     const mockAction = {
       type: LOGIN_REQUEST,
