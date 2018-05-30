@@ -11,10 +11,10 @@ import {
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
-import TextInputLogin from './TextInputLogin'
-import TextInputCode from './TextInputCode'
-import BtnLogin from './BtnLogin'
 import actions from '../../actions/index'
+import TKInputItem from '../../components/TKInputItem'
+import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
+import TKButton from '../../components/TKButton'
 
 class Register extends Component {
   constructor() {
@@ -205,18 +205,114 @@ class Register extends Component {
     }
   }
 
+  renderAccount = () => {
+    const { mobile } = this.props
+    return (
+      <TKInputItem
+        title="账号"
+        placeholder="请输入11位手机号"
+        value={mobile}
+        maxLength={11}
+        onChange={e => this.onChange(e, 'mobile')}
+      />
+    )
+  }
+
+  renderCheckCode = () => {
+    const { code } = this.props
+    return (
+      <TKInputItemCheckCode
+        title="验证码"
+        placeholder="请输入验证码"
+        value={code}
+        maxLength={common.textInputMaxLenPwd}
+        onChange={e => this.onChange(e, 'code')}
+        onPressCheckCodeBtn={() => { this.codePress() }}
+      />
+    )
+  }
+
+  renderPassword = () => {
+    const { password } = this.props
+    return (
+      <TKInputItem
+        title="密码"
+        placeholder="请输入密码"
+        value={password}
+        maxLength={common.textInputMaxLenPwd}
+        secureTextEntry
+        onChange={e => this.onChange(e, 'password')}
+      />
+    )
+  }
+
+  renderConfirmPwd = () => {
+    const { passwordAgain } = this.props
+    return (
+      <TKInputItem
+        title="再次确认密码"
+        placeholder="请再次输入密码"
+        value={passwordAgain}
+        maxLength={common.textInputMaxLenPwd}
+        secureTextEntry
+        onChange={e => this.onChange(e, 'passwordAgain')}
+      />
+    )
+  }
+
+  renderRecommendNo = () => {
+    const { recommendNo } = this.props
+    return (
+      <TKInputItem
+        title="邀请码"
+        placeholder="选填"
+        value={recommendNo}
+        maxLength={common.textInputMaxLenPwd}
+        onChange={e => this.onChange(e, 'recommendNo')}
+      />
+    )
+  }
+
+  renderExtraBtns = () => {
+    const { navigation } = this.props
+
+    return (
+      <View
+        style={{
+          marginTop: common.margin10,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={{ flexDirection: 'row' }} >
+          <Text
+            style={{
+              alignSelf: 'center',
+              color: common.textColor,
+              fontSize: common.font12,
+            }}
+          >注册即同意</Text>
+          <TKButton
+            theme={'small'}
+            caption={'《用户协议》'}
+            onPress={() => navigation.navigate('Agreement')}
+          />
+        </View>
+        <TKButton
+          theme={'small'}
+          caption={'已有账号？去登录'}
+          onPress={() => navigation.goBack()}
+        />
+      </View>
+    )
+  }
+
   render() {
     this.handleGetVerificateCodeRequest()
     this.handleRegisterRequest()
 
     const {
-      navigation,
-      mobile,
-      code,
-      password,
-      passwordAgain,
       registerVisible,
-      recommendNo,
     } = this.props
 
     return (
@@ -228,125 +324,37 @@ class Register extends Component {
         behavior="padding"
       >
         <ScrollView >
-          <StatusBar
-            barStyle={'light-content'}
-          />
+          <View style={{ marginHorizontal: common.margin38, marginTop: common.margin110 }}>
+            {this.renderAccount()}
 
-          <TextInputLogin
-            viewStyle={{
-              marginTop: common.margin110,
-            }}
-            textStyle={{
-              width: common.w100,
-            }}
-            title="账号"
-            placeholder="请输入11位手机号"
-            value={mobile}
-            maxLength={11}
-            onChange={e => this.onChange(e, 'mobile')}
-          />
+            <View style={{ height: 40 }} />
 
-          <TextInputCode
-            keyboardType="number-pad"
-            value={code}
-            maxLength={6}
-            onPress={count => this.codePress(count)}
-            onChange={e => this.onChange(e, 'code')}
-          />
+            {this.renderCheckCode()}
 
-          <TextInputLogin
-            textStyle={{
-              width: common.w100,
-            }}
-            title="密码"
-            placeholder="请输入密码"
-            value={password}
-            password={password}
-            maxLength={common.textInputMaxLenPwd}
-            onChange={e => this.onChange(e, 'password')}
-            secureTextEntry
-          />
+            <View style={{ height: 40 }} />
 
-          <TextInputLogin
-            textStyle={{
-              width: common.w100,
-            }}
-            title="再次确认密码"
-            placeholder="请再次输入密码"
-            value={passwordAgain}
-            maxLength={common.textInputMaxLenPwd}
-            onChange={e => this.onChange(e, 'passwordAgain')}
-            passwordAgain={passwordAgain}
-            secureTextEntry
-          />
+            {this.renderPassword()}
 
-          <TextInputLogin
-            textStyle={{
-              width: common.w100,
-            }}
-            textInputStyle={{ marginRight: common.w10, flex: 1 }}
-            title="邀请码"
-            placeholder="选填"
-            value={recommendNo}
-            onChange={e => this.onChange(e, 'recommendNo')}
-          />
+            <View style={{ height: 40 }} />
 
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin38,
-              marginRight: common.margin38,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <View
-              style={{
-                flexDirection: 'row',
-              }}
-            >
-              <Text
-                style={{
-                  alignSelf: 'center',
-                  color: common.textColor,
-                  fontSize: common.font12,
-                }}
-              >注册即同意</Text>
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity}
-                onPress={() => {
-                  navigation.navigate('Agreement')
-                }}
-              >
-                <Text
-                  style={{
-                    color: common.btnTextColor,
-                    fontSize: common.font12,
-                  }}
-                >《用户协议》</Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => navigation.goBack()}
-            >
-              <Text
-                style={{
-                  color: common.btnTextColor,
-                  fontSize: common.font12,
-                }}
-              >已有账号？去登录</Text>
-            </TouchableOpacity>
+            {this.renderConfirmPwd()}
+
+            <View style={{ height: 40 }} />
+
+            {this.renderRecommendNo()}
+
+            {this.renderExtraBtns()}
+
+            <View style={{ height: 40 }} />
           </View>
 
-          <BtnLogin
-            viewStyle={{
-              marginTop: common.margin40,
-            }}
-            title="注册"
+          <TKButton
+            theme="yellow"
+            caption={'注册'}
             disabled={registerVisible}
             onPress={() => this.registerPress()}
           />
+
         </ScrollView>
 
         <Spinner
