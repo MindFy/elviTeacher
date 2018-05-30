@@ -74,20 +74,6 @@ export function isExist(data) {
   }
 }
 
-export function login(data) {
-  return {
-    type: constants.LOGIN_REQUEST,
-    data,
-  }
-}
-
-export function loginUpdate(data) {
-  return {
-    type: constants.LOGIN_UPDATE,
-    data,
-  }
-}
-
 export function logout() {
   return {
     type: constants.LOGOUT_REQUEST,

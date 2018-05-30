@@ -12,23 +12,23 @@ export function* authorize(data) {
     const response = yield call(api.login, data)
 
     if (response.success) {
-      yield put({ type: LOGIN_SUCCEED, response })
+      yield put({ type: LOGIN_SUCCEED, payload: response.result })
     } else {
-      yield put({ type: LOGIN_FAILED, response })
+      yield put({ type: LOGIN_FAILED, payload: response.error })
     }
   } catch (error) {
-    yield put({ type: LOGIN_FAILED, response: error })
+    yield put({ type: LOGIN_FAILED, payload: error })
   } finally {
     if (yield cancelled()) {
-      console.log('canceled')
+      // console.log('canceled')
     }
   }
 }
 
 export default function* loginFlow() {
   while (true) {
-    const { data } = yield take(LOGIN_REQUEST)
-    const task = yield fork(authorize, data)
+    const { payload } = yield take(LOGIN_REQUEST)
+    const task = yield fork(authorize, payload)
     const action = yield take([LOGOUT_REQUEST, LOGIN_FAILED])
 
     if (action.type === LOGOUT_REQUEST) {

@@ -88,19 +88,6 @@ export function* isExist() {
     else yield put({ type: constants.IS_EXIST_FAILED, response })
   }
 }
-/* 登录 */
-export function* login() {
-  while (true) {
-    const request = yield take(constants.LOGIN_REQUEST)
-    const response = yield call(api.login, request.data)
-    if (response.success) {
-      yield put({ type: constants.FIND_USER_UPDATE, user: response.result })
-      yield put({ type: constants.LOGIN_SUCCEED, response })
-    } else {
-      yield put({ type: constants.LOGIN_FAILED, response })
-    }
-  }
-}
 /* 注销用户 */
 export function* logout() {
   while (true) {

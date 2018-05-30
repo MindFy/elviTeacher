@@ -11,9 +11,12 @@ import findBanners from './banners'
 import * as asset from './asset'
 import findAnnouncement from './announcement'
 import * as address from './address'
+import loginFlow from './authorize'
 
 export default function* rootSaga() {
   yield [
+    loginFlow(),
+
     fork(user.checkVerificateCode),
     fork(user.getGoogleAuth),
     fork(user.getVerificateCode),
@@ -21,7 +24,6 @@ export default function* rootSaga() {
     fork(user.findUser),
     fork(user.idCardAuth),
     fork(user.isExist),
-    fork(user.login),
     fork(user.logout),
     fork(user.register),
     fork(user.resetPassword),
