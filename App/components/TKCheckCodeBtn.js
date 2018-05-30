@@ -3,7 +3,7 @@ import {
   Text,
 } from 'react-native'
 import NextTouchableOpacity from './NextTouchableOpacity'
-import common from '../constants/common'
+import { common } from '../constants/common'
 
 class TKCheckCodeBtn extends Component {
   state = {

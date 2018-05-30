@@ -90,9 +90,10 @@ class TKInputItem extends Component {
       defaultValue,
       placeholder,
       inputStyle,
-      maxLenth,
+      maxLength,
       keyboardType,
       editable,
+      secureTextEntry,
     } = this.props
     if (this.props.renderInput) {
       return this.props.renderInput()
@@ -108,7 +109,8 @@ class TKInputItem extends Component {
         placeholder={placeholder}
         placeholderTextColor={common.placeholderColor}
         keyboardType={keyboardType}
-        maxLength={maxLenth}
+        maxLength={maxLength}
+        secureTextEntry={secureTextEntry}
         onChange={e => this.onChange(e)}
         onChangeText={text => this.onChangeText(text)}
         editable={editable}
