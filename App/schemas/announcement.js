@@ -7,5 +7,5 @@ export default function findAnnouncement() {
           imghash,
           createdAt
     }
-}`
+  }`
 }

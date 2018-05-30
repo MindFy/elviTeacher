@@ -1,8 +1,12 @@
-export default function findAssetList(userId) {
-  return `{
+import findAssetList from '../asset'
+
+describe('asset schema', () => {
+  it('schema should pass', () => {
+    const uid = 123
+    expect(findAssetList(uid)).toEqual(`{
     find_asset(
     where:{
-      user_id: ${userId}
+      user_id: 123
     }){
         id,
         amount,
@@ -15,5 +19,6 @@ export default function findAssetList(userId) {
         }
         createdAt
     }
-  }`
-}
+  }`)
+  })
+})

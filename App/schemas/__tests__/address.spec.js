@@ -1,4 +1,4 @@
-import findAddress from './address'
+import findAddress from '../address'
 
 describe('address schema', () => {
   it('findAddress(1)', () => {
