@@ -1,7 +1,7 @@
 import findListSelf from '../deal'
 
 describe('find_deal schema', () => {
-  it('find_deal schema should right', () => {
+  it('find_deal schema should pass', () => {
     const uid = 123
     expect(findListSelf(uid)).toEqual(`{
     find_deal(

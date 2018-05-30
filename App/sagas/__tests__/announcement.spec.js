@@ -1,7 +1,7 @@
 import { takeEvery, call, put } from 'redux-saga/effects'
-import findAnnouncement, { fetchAnnouncement } from './announcement'
-import * as constants from '../constants/index'
-import * as api from '../services/api'
+import findAnnouncement, { fetchAnnouncement } from '../announcement'
+import * as constants from '../../constants'
+import * as api from '../../services/api'
 
 it('findAnnouncement watcher', () => {
   const it = findAnnouncement()

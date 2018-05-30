@@ -5,7 +5,7 @@ import {
 } from '../delegate'
 
 describe('delegate schemas', () => {
-  it('findDelegateSelfCurrent schema should right', () => {
+  it('findDelegateSelfCurrent schema should pass', () => {
     const id = 1
     const skip = 2
     const limit = 10
@@ -42,7 +42,7 @@ describe('delegate schemas', () => {
 }`)
   })
 
-  it('findDelegateSelfCurrentWithGoodsId schema should right', () => {
+  it('findDelegateSelfCurrentWithGoodsId schema should pass', () => {
     const id = 1
     const goodsId = 3
     const currencyId = 5
@@ -80,7 +80,7 @@ describe('delegate schemas', () => {
 }`)
   })
 
-  it('findDelegateSelfHistory schema should right', () => {
+  it('findDelegateSelfHistory schema should pass', () => {
     const id = 1
     const skip = 2
     const limit = 10
