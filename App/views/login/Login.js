@@ -4,11 +4,11 @@ import {
   View,
   Text,
   Image,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
+  StyleSheet,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
@@ -21,6 +21,34 @@ import BtnLogin from './BtnLogin'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import ws from '../../websocket/ws'
+import TKInputItem from '../../components/TKInputItem'
+import TKButton from '../../components/TKButton'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  back: {
+    position: 'absolute',
+    top: common.margin40,
+    left: common.margin20,
+    width: common.w40,
+    height: common.h20,
+    justifyContent: 'center',
+  },
+  input: {
+    marginTop: common.margin60,
+    marginHorizontal: '10%',
+  },
+  extraBtns: {
+    marginTop: common.margin10,
+    marginLeft: common.margin38,
+    marginRight: common.margin38,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+})
 
 class Login extends Component {
   constructor() {
@@ -39,7 +67,7 @@ class Login extends Component {
     }
   }
 
-  loginPress() {
+  loginPress = () => {
     Keyboard.dismiss()
 
     const { dispatch, mobile, password } = this.props
@@ -102,116 +130,111 @@ class Login extends Component {
     }
   }
 
+  renderBack = () => {
+    const { screenProps } = this.props
+    return (
+      <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => screenProps.dismiss()}
+      >
+        <View style={styles.back}>
+          <Text
+            style={{
+              color: 'white',
+              fontSize: common.font14,
+              alignSelf: 'center',
+            }}
+          >返回</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  renderLogo = () => (
+    <Image
+      style={{
+        marginTop: common.margin127,
+        width: common.w150,
+        height: common.h80,
+        alignSelf: 'center',
+      }}
+      source={require('../../assets/Logo11.png')}
+      resizeMode={'contain'}
+    />
+  )
+
+  renderInput = () => {
+    const { mobile, password } = this.props
+
+    return (
+      <View style={styles.input}>
+        <TKInputItem
+          title="账号"
+          placeholder="请输入11位手机号"
+          value={mobile}
+          maxLength={11}
+          onChange={e => this.onChange(e, 'mobile')}
+        />
+
+        <View style={{ height: 40 }} />
+
+        <TKInputItem
+          title="密码"
+          placeholder="请输入密码"
+          value={password}
+          maxLength={common.textInputMaxLenPwd}
+          secureTextEntry
+          onChange={e => this.onChange(e, 'password')}
+        />
+      </View>
+    )
+  }
+
+  renderExtraBtns = () => {
+    const { navigation } = this.props
+    return (
+      <View style={styles.extraBtns}>
+        <TKButton
+          theme="small"
+          caption="新用户注册"
+          onPress={() => navigation.navigate('Register')}
+        />
+        <TKButton
+          theme="small"
+          caption="忘记密码?"
+          onPress={() => navigation.navigate('ForgotPwd')}
+        />
+      </View>
+    )
+  }
+
   render() {
     this.handleLoginRequest()
 
-    const { loginVisible, navigation, mobile, password, screenProps } = this.props
+    const { loginVisible } = this.props
     return (
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={styles.container}
         behavior="padding"
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         >
-          <StatusBar
-            barStyle={'light-content'}
-          />
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              top: common.margin40,
-              left: common.margin20,
-              width: common.w40,
-              height: common.h20,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => screenProps.dismiss()}
-          >
-            <Text
-              style={{
-                color: 'white',
-                fontSize: common.font14,
-                alignSelf: 'center',
-              }}
-            >返回</Text>
-          </TouchableOpacity>
+          {this.renderBack()}
 
-          <Image
-            style={{
-              marginTop: common.margin127,
-              width: common.w150,
-              height: common.h80,
-              alignSelf: 'center',
-            }}
-            source={require('../../assets/Logo11.png')}
-            resizeMode={'contain'}
-          />
+          {this.renderLogo()}
 
-          <TextInputLogin
-            viewStyle={{
-              marginTop: common.margin60,
-            }}
-            title="账号"
-            placeholder="请输入11位手机号"
-            value={mobile}
-            maxLength={11}
-            onChange={e => this.onChange(e, 'mobile')}
-          />
+          {this.renderInput()}
 
-          <TextInputLogin
-            textInputStyle={{
-              width: '80%',
-            }}
-            title="密码"
-            placeholder={'请输入密码'}
-            secureTextEntry
-            value={password}
-            maxLength={common.textInputMaxLenPwd}
-            onChange={e => this.onChange(e, 'password')}
-          />
+          {this.renderExtraBtns()}
 
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin38,
-              marginRight: common.margin38,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('Register')}
-            >
-              <Text
-                style={{
-                  color: common.btnTextColor,
-                  fontSize: common.font12,
-                }}
-              >新用户注册</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => navigation.navigate('ForgotPwd')}
-            >
-              <Text
-                style={{
-                  color: common.btnTextColor,
-                  fontSize: common.font12,
-                }}
-              >忘记密码？</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={{ height: 40 }} />
 
-          <BtnLogin
-            title="登录"
-            onPress={() => this.loginPress()}
-            disabled={loginVisible}
+          <TKButton
+            theme="yellow"
+            caption="登录"
+            onPress={this.loginPress}
           />
         </ScrollView>
 
