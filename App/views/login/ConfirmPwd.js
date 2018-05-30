@@ -1,16 +1,34 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  StatusBar,
+  StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
-import TextInputLogin from './TextInputLogin'
-import BtnLogin from './BtnLogin'
+import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
+import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  inputView: {
+    marginTop: common.margin110,
+    marginLeft: common.margin38,
+    marginRight: common.margin38,
+  },
+  input: {
+    marginLeft: 0,
+  },
+  inputText: {
+    width: common.w100,
+  },
+})
 
 class ConfirmPwd extends Component {
   constructor() {
@@ -86,8 +104,6 @@ class ConfirmPwd extends Component {
         Toast.fail('验证码不能为空')
       } else if (resetPasswordResponse.error.code === 4000102) {
         Toast.fail('验证码错误')
-      } else if (resetPasswordResponse.error.code === 4000103) {
-        Toast.fail('验证码已过期，请重新获取')
       } else if (resetPasswordResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
@@ -102,37 +118,30 @@ class ConfirmPwd extends Component {
     const { password, passwordAgain, resetPasswordVisible } = this.props
     return (
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={styles.container}
         behavior="padding"
       >
-        <ScrollView>
-          <StatusBar
-            barStyle={'light-content'}
-          />
+        <ScrollView
+          keyboardDismissMode={'on-drag'}
+          keyboardShouldPersistTaps={'handled'}
+        >
 
-          <TextInputLogin
-            viewStyle={{
-              marginTop: common.margin110,
-            }}
-            textStyle={{
-              width: common.w100,
-            }}
+          <TKInputItem
+            viewStyle={styles.inputView}
+            inputStyle={styles.input}
+            titleStyle={styles.inputText}
             title="密码"
             placeholder="请输入密码"
             value={password}
-            password={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
             secureTextEntry
           />
 
-          <TextInputLogin
-            textStyle={{
-              width: common.w100,
-            }}
+          <TKInputItem
+            viewStyle={[styles.inputView, { marginTop: common.margin40 }]}
+            inputStyle={styles.input}
+            titleStyle={styles.inputText}
             title="再次输入新密码"
             placeholder="请再次输入新密码"
             value={passwordAgain}
@@ -141,26 +150,17 @@ class ConfirmPwd extends Component {
             secureTextEntry
           />
 
-          <BtnLogin
-            viewStyle={{
-              marginTop: common.margin210,
-            }}
-            title="确定"
+          <TKButton
+            style={{ marginTop: common.margin210 }}
+            theme={'yellow'}
+            caption="确定"
             onPress={() => this.confirmPress()}
             disabled={resetPasswordVisible}
           />
         </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
-          }}
+        <TKSpinner
           isVisible={resetPasswordVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </KeyboardAvoidingView>
     )

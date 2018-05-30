@@ -112,6 +112,8 @@ class ForgotPwd extends Component {
         Toast.fail('手机号码或服务类型错误')
       } else if (getVerificateCodeResponse.error.code === 4000102) {
         Toast.fail('一分钟内不能重复发送验证码')
+      } else if (getVerificateCodeResponse.error.code === 4000103) {
+        Toast.fail('验证码已过期，请重新获取')
       } else if (getVerificateCodeResponse.error.code === 4000104) {
         Toast.fail('手机号码未注册')
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
@@ -137,6 +139,8 @@ class ForgotPwd extends Component {
         Toast.fail('手机号码或服务类型错误')
       } else if (checkVerificateCodeResponse.error.code === 4000102) {
         Toast.fail('验证码错误')
+      } else if (checkVerificateCodeResponse.error.code === 4000103) {
+        Toast.fail('验证码已过期，请重新获取')
       } else if (checkVerificateCodeResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
@@ -155,7 +159,10 @@ class ForgotPwd extends Component {
         style={styles.container}
         behavior="padding"
       >
-        <ScrollView>
+        <ScrollView
+          keyboardDismissMode={'on-drag'}
+          keyboardShouldPersistTaps={'handled'}
+        >
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={styles.input}
