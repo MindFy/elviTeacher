@@ -1,8 +1,8 @@
 import { takeEvery, call, put } from 'redux-saga/effects'
-import { findAddress, addAddress, addAddress_, fetchAddress } from './address'
-import schema from '../schemas/address'
-import * as api from '../services/api'
-import * as constants from '../constants/index'
+import { findAddress, addAddress, addAddress_, fetchAddress } from '../address'
+import schema from '../../schemas/address'
+import * as api from '../../services/api'
+import * as constants from '../../constants/index'
 
 describe('findAddress', () => {
   it('findAddress watcher', () => {

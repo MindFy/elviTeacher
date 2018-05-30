@@ -1,13 +1,13 @@
 import { take, call, put, fork, cancel, cancelled } from 'redux-saga/effects'
 import { createMockTask } from 'redux-saga/utils'
-import loginFlow, { authorize } from './authorize'
+import loginFlow, { authorize } from '../authorize'
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCEED,
   LOGIN_FAILED,
   LOGOUT_REQUEST,
-} from '../constants/index'
-import * as api from '../services/api'
+} from '../../constants/index'
+import * as api from '../../services/api'
 
 describe('login successfully', () => {
   const iterator = loginFlow()
