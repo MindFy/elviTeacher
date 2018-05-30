@@ -103,6 +103,7 @@ class TKButton extends PureComponent {
 
     const content = (
       <NextTouchableOpacity
+        {...this.props}
         activeOpacity={0.5}
         onPress={onPress}
         style={[styles.button, buttonTheme, style]}
