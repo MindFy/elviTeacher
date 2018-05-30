@@ -13,8 +13,10 @@ import rebates from './rebates'
 import user from './user'
 import ui from './ui'
 import detailDeal from './detailDeal'
+import authorize from './authorize'
 
 const rootReducer = combineReducers({
+  authorize,
   address,
   announcement,
   asset,

@@ -1,17 +1,35 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  StatusBar,
+  StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
-import TextInputLogin from './TextInputLogin'
-import TextInputCode from './TextInputCode'
-import BtnLogin from './BtnLogin'
+import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
+import TKInputItem from '../../components/TKInputItem'
+import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import actions from '../../actions/index'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  inputView: {
+    marginTop: common.margin110,
+    marginLeft: common.margin38,
+    marginRight: common.margin38,
+  },
+  input: {
+    marginLeft: 0,
+  },
+  inputText: {
+    width: common.w100,
+  },
+})
 
 class ForgotPwd extends Component {
   constructor() {
@@ -46,13 +64,12 @@ class ForgotPwd extends Component {
     }
   }
 
-  codePress(count) {
+  codePress() {
     const { dispatch, mobile } = this.props
     if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
-    this.count = count
     dispatch(actions.getVerificateCode({
       mobile,
       service: 'reset',
@@ -91,7 +108,6 @@ class ForgotPwd extends Component {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
         Toast.success(getVerificateCodeResponse.result.message)
-        this.count()
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
       } else if (getVerificateCodeResponse.error.code === 4000102) {
@@ -136,24 +152,14 @@ class ForgotPwd extends Component {
     const { mobile, code, getVerificateCodeVisible, checkVerificateCodeVisible } = this.props
     return (
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={styles.container}
         behavior="padding"
       >
         <ScrollView>
-          <StatusBar
-            barStyle={'light-content'}
-          />
-
-          <TextInputLogin
-            viewStyle={{
-              marginTop: common.margin110,
-            }}
-            textStyle={{
-              width: common.w100,
-            }}
+          <TKInputItem
+            viewStyle={styles.inputView}
+            inputStyle={styles.input}
+            titleStyle={styles.inputText}
             title="账号"
             placeholder="请输入11位手机号"
             value={mobile}
@@ -161,33 +167,29 @@ class ForgotPwd extends Component {
             onChange={e => this.onChange(e, 'mobile')}
           />
 
-          <TextInputCode
+          <TKInputItemCheckCode
+            viewStyle={[styles.inputView, { marginTop: common.margin40 }]}
+            inputStyle={styles.input}
+            titleStyle={styles.inputText}
+            title="验证码"
+            placeholder="请输入短信验证码"
             value={code}
             maxLength={6}
-            onPress={count => this.codePress(count)}
+            onPressCheckCodeBtn={() => this.codePress()}
             onChange={e => this.onChange(e, 'code')}
           />
 
-          <BtnLogin
-            viewStyle={{
-              marginTop: common.margin210,
-            }}
-            title="下一步"
+          <TKButton
+            style={{ marginTop: common.margin210 }}
+            theme={'yellow'}
+            caption={'下一步'}
             disabled={getVerificateCodeVisible}
             onPress={() => this.nextPress()}
           />
         </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
-          }}
+        <TKSpinner
           isVisible={checkVerificateCodeVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </KeyboardAvoidingView>
     )

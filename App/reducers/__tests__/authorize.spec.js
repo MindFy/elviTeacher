@@ -18,6 +18,7 @@ describe('authorize reducer', () => {
     error: null,
     loading: false,
     loggedIn: false,
+    loggedInResult: null,
   }
 
   it('should return initialState', () => {
@@ -70,6 +71,12 @@ describe('authorize reducer', () => {
   it('LOGIN_SUCCEED should set loading to false and set loggedIn to true and clear formState and clear error', () => {
     const mockAction = {
       type: LOGIN_SUCCEED,
+      payload: {
+        id: 12,
+        mobile: '15913913913',
+        roles: ['role_user'],
+        recommendNo: '000130000352',
+      },
     }
     expect(authorize(initialState, mockAction)).toEqual({
       ...initialState,
@@ -77,6 +84,7 @@ describe('authorize reducer', () => {
       loggedIn: true,
       error: null,
       formState: {},
+      loggedInResult: mockAction.payload,
     })
   })
 

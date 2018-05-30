@@ -75,8 +75,6 @@ import {
   imgHashFailed,
   idCardAuthUpdate,
   isExist,
-  login,
-  loginUpdate,
   logout,
   register,
   registerUpdate,
@@ -102,6 +100,11 @@ import {
 import {
   detailupdateKV,
 } from './detailDeal'
+import {
+  login,
+  loginUpdate,
+} from './authorize'
+
 
 const actions = {
   add,
@@ -175,8 +178,6 @@ const actions = {
   imgHashFailed,
   idCardAuthUpdate,
   isExist,
-  login,
-  loginUpdate,
   logout,
   register,
   registerUpdate,
@@ -199,5 +200,8 @@ const actions = {
   bankTextInputUpdate,
 
   detailupdateKV,
+
+  login,
+  loginUpdate,
 }
 export default actions

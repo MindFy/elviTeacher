@@ -1,4 +1,4 @@
-import { take, call, put, fork, cancel, cancelled } from 'redux-saga/effects'
+import { take, fork, cancel } from 'redux-saga/effects'
 import { createMockTask } from 'redux-saga/utils'
 import loginFlow, { authorize } from '../authorize'
 import {
@@ -7,7 +7,6 @@ import {
   LOGIN_FAILED,
   LOGOUT_REQUEST,
 } from '../../constants/index'
-import * as api from '../../services/api'
 
 describe('login successfully', () => {
   const iterator = loginFlow()
@@ -19,14 +18,14 @@ describe('login successfully', () => {
 
   it('fork 登录进程', () => {
     const mockAction = {
-      data: {
+      payload: {
         mobile: '15895847445',
         password: '123456',
       },
       type: LOGIN_REQUEST,
     }
     const task = iterator.next(mockAction).value
-    expect(task).toEqual(fork(authorize, mockAction.data))
+    expect(task).toEqual(fork(authorize, mockAction.payload))
   })
 
   it(`监听 ${LOGOUT_REQUEST} 和 ${LOGIN_FAILED}`, () => {
@@ -52,14 +51,14 @@ describe('logout action should cancel login task', () => {
 
   it('fork 登录进程', () => {
     const mockAction = {
-      data: {
+      payload: {
         mobile: '15895847445',
         password: '123456',
       },
       type: LOGIN_REQUEST,
     }
     const task = iterator.next(mockAction).value
-    expect(task).toEqual(fork(authorize, mockAction.data))
+    expect(task).toEqual(fork(authorize, mockAction.payload))
   })
 
   it(`监听 ${LOGOUT_REQUEST} 和 ${LOGIN_FAILED}`, () => {

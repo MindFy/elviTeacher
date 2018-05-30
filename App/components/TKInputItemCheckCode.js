@@ -32,6 +32,9 @@ class TKInputItemCheckCode extends Component {
   render() {
     return (
       <TKInputItem
+        viewStyle={this.props.viewStyle}
+        inputStyle={this.props.inputStyle}
+        titleStyle={this.props.titleStyle}
         ref={(e) => { this.textInputCodeRef = e }}
         value={this.props.value}
         defaultValue={this.props.defaultValue}

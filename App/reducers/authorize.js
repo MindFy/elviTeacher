@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   loading: false,
   loggedIn: false,
+  loggedInResult: null, // 登录成功返回数据
 }
 
 export default function authorize(state = initialState, action) {
@@ -41,6 +42,7 @@ export default function authorize(state = initialState, action) {
         formState: {},
         loading: false,
         loggedIn: true,
+        loggedInResult: payload,
       }
       break
     case LOGIN_FAILED:
@@ -61,6 +63,7 @@ export default function authorize(state = initialState, action) {
         ...state,
         loading: false,
         loggedIn: false,
+        loggedInResult: null,
       }
       break
     case LOGOUT_FAILED:
