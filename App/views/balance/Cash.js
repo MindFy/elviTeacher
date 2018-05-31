@@ -24,6 +24,7 @@ import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
+import TKInputItem from '../../components/TKInputItem'
 
 class Cash extends Component {
   static navigationOptions(props) {
@@ -360,23 +361,17 @@ class Cash extends Component {
               || selectedToken.token.name === common.token.ETH
               || selectedToken.token.name === common.token.ETC)
               ? <View>
-                <TextInput
-                  style={{
+                <TKInputItem
+                  viewStyle={{
                     marginTop: common.margin35,
                     marginLeft: common.margin10,
                     marginRight: common.margin10,
                     height: common.h35,
-                    borderWidth: 1,
-                    borderRadius: 1,
-                    borderColor: common.borderColor,
-                    backgroundColor: common.navBgColor,
-                    justifyContent: 'center',
+                  }}
+                  inputStyle={{
                     textAlign: 'center',
-                    fontSize: common.font12,
-                    color: 'white',
                   }}
                   placeholder="提现金额"
-                  placeholderTextColor={common.placeholderColor}
                   value={cashAccount}
                   onChangeText={e => this.onChange(e, 'cashAccount')}
                 />
@@ -407,30 +402,20 @@ class Cash extends Component {
                   >{`实际到账：${actualAccount}${selectedToken.token.name}`}</Text>
                 </View>
 
-                <View
-                  style={{
+                <TKInputItem
+                  viewStyle={{
                     marginTop: common.margin30,
                     marginLeft: common.margin10,
                     marginRight: common.margin10,
-                    borderColor: common.borderColor,
-                    borderWidth: 1,
-                    borderRadius: 1,
-                    backgroundColor: common.navBgColor,
                     height: common.h35,
-                    justifyContent: 'center',
                   }}
+                  inputStyle={{
+                    textAlign: 'center',
+                  }}
+                  placeholder="地址"
+                  value={currentAddress}
+                  onChangeText={e => this.onChange(e, 'currentAddress')}
                 >
-                  <TextInput
-                    style={{
-                      fontSize: common.font12,
-                      textAlign: 'center',
-                      color: 'white',
-                    }}
-                    placeholder={'地址'}
-                    placeholderTextColor={common.placeholderColor}
-                    value={currentAddress}
-                    onChangeText={e => this.onChange(e, 'currentAddress')}
-                  />
                   <TouchableOpacity
                     style={{
                       position: 'absolute',
@@ -448,7 +433,7 @@ class Cash extends Component {
                       source={require('../../assets/二维码.png')}
                     />
                   </TouchableOpacity>
-                </View>
+                </TKInputItem>
 
                 <TKButton
                   style={{ marginTop: common.margin40 }}

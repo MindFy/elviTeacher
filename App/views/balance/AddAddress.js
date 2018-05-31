@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   DeviceEventEmitter,
@@ -18,6 +17,7 @@ import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
+import TKInputItem from '../../components/TKInputItem'
 import TKSpinner from '../../components/TKSpinner'
 
 class AddAddress extends Component {
@@ -32,32 +32,27 @@ class AddAddress extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <TouchableOpacity
+      headerLeft: (
+        <TouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-        ),
+            source={require('../../assets/下拉copy.png')}
+          />
+        </TouchableOpacity>
+      ),
     }
-  }
-  constructor() {
-    super()
-    this.showGetVerificateCodeResponse = false
   }
 
   componentDidMount() {
@@ -139,34 +134,31 @@ class AddAddress extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  handleGetVerificateCodeRequest() {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
+  errors = {
+    4000101: '手机号码或服务类型错误',
+    4000102: '一分钟内不能重复发送验证码',
+    4000104: '手机号码已注册',
+  }
 
-    if (getVerificateCodeVisible) {
-      this.showGetVerificateCodeResponse = true
-    } else {
-      this.showGetVerificateCodeResponse = false
+  handleGetVerificateCodeRequest(nextProps) {
+    const { getVerificateCodeVisible, getVerificateCodeResponse } = nextProps
+
+    if (getVerificateCodeVisible !== this.props.getVerificateCodeVisible) {
       if (getVerificateCodeResponse.success) {
         this.authCount()
         Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
-      } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
-      } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('一分钟内不能重复发送验证码')
-      } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail('手机号码已注册')
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.fail('获取验证码失败，请重试')
+        const msg = this.errors[getVerificateCodeResponse.error.code]
+        if (msg) Toast.fail(msg)
+        else Toast.fail('获取验证码失败，请重试')
       }
     }
   }
 
   render() {
     const { selectedToken, remark, withdrawaddr, addVisible } = this.props
-    this.handleGetVerificateCodeRequest()
     return (
       <View
         style={{
@@ -197,57 +189,34 @@ class AddAddress extends Component {
             >{selectedToken.token.name}</Text>
           </View>
 
-          <View
-            style={{
+          <TKInputItem
+            viewStyle={{
               marginTop: common.margin10,
               marginLeft: common.margin10,
               marginRight: common.margin10,
-              height: common.h40,
-              borderWidth: 1,
-              borderRadius: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.navBgColor,
-              justifyContent: 'center',
             }}
-          >
-            <TextInput
-              style={{
-                marginLeft: common.margin10,
-                fontSize: common.font14,
-                color: 'white',
-              }}
-              placeholder="地址"
-              placeholderTextColor={common.placeholderColor}
-              value={withdrawaddr}
-              onChange={e => this.onChange(e, 'withdrawaddr')}
-            />
-          </View>
+            inputStyle={{
+              fontSize: common.font14,
+            }}
+            placeholder="地址"
+            value={withdrawaddr}
+            onChange={e => this.onChange(e, 'withdrawaddr')}
+          />
 
-          <View
-            style={{
+          <TKInputItem
+            viewStyle={{
               marginTop: common.margin10,
               marginLeft: common.margin10,
               marginRight: common.margin10,
-              height: common.h40,
-              borderWidth: 1,
-              borderRadius: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.navBgColor,
-              justifyContent: 'center',
             }}
-          >
-            <TextInput
-              style={{
-                marginLeft: common.margin10,
-                fontSize: common.font14,
-                color: 'white',
-              }}
-              placeholder="备注"
-              placeholderTextColor={common.placeholderColor}
-              value={remark}
-              onChange={e => this.onChange(e, 'remark')}
-            />
-          </View>
+            inputStyle={{
+              fontSize: common.font14,
+            }}
+            placeholder="备注"
+            value={remark}
+            onChange={e => this.onChange(e, 'remark')}
+          />
+
           <TKButton
             style={{ marginTop: common.margin40 }}
             onPress={() => this.confirmPress()}
