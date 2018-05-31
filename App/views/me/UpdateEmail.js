@@ -15,7 +15,7 @@ import {
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TextInputPwd from './TextInputPwd'
-import BtnLogout from './BtnLogout'
+import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -195,18 +195,17 @@ class UpdateEmail extends Component {
               />
           }
 
-          <BtnLogout
-            viewStyle={{
+          <TKButton
+            style={{
               marginTop: user.emailStatus === common.user.status.bind
                 ? common.margin10 : common.margin40,
               backgroundColor: user.emailStatus === common.user.status.bind
                 ? 'transparent' : common.navBgColor,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
             }}
             onPress={() => this.confirmPress()}
             disabled={user.emailStatus === common.user.status.bind ? true : updateEmailVisible}
-            title={user.emailStatus === common.user.status.bind ? '邮箱已绑定' : '确定'}
+            caption={user.emailStatus === common.user.status.bind ? '邮箱已绑定' : '确定'}
+            theme={'gray'}
           />
         </ScrollView>
 

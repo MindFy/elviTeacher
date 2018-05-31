@@ -231,10 +231,6 @@ class Rebates extends Component {
         }}
       >
         <ScrollView>
-          <StatusBar
-            barStyle={'light-content'}
-          />
-
           <Image
             style={{
               height: common.h234,

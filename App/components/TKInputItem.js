@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 
 class TKInputItem extends Component {
   onChangeText = (text) => {
-    if (this.props.onTextChanged) {
+    if (this.props.onChangeText) {
       this.props.onChangeText(text)
     }
   }
