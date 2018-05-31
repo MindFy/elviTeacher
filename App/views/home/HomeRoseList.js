@@ -93,19 +93,19 @@ class HomeRoseList extends Component {
       }
     })
 
-    // this.timer1 = setInterval(() => {
-    //   if (this.props.user) {
-    //     dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
-    //   }
-    //   dispatch(actions.getValuation())
-    //   dispatch(actions.getRose({
-    //     homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
-    //   }))
-    //   if (this.props.homeRoseSelected) {
-    //     this.getUIData(this.props.homeRoseSelected.goods.id,
-    //       this.props.homeRoseSelected.currency.id)
-    //   }
-    // }, 1000)
+    this.timer1 = setInterval(() => {
+      if (this.props.user) {
+        dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
+      }
+      dispatch(actions.getValuation())
+      dispatch(actions.getRose({
+        homeRoseSelected: this.props.homeRoseSelected, user: this.props.user,
+      }))
+      if (this.props.homeRoseSelected) {
+        this.getUIData(this.props.homeRoseSelected.goods.id,
+          this.props.homeRoseSelected.currency.id)
+      }
+    }, 1500)
   }
 
   componentWillUnmount() {
