@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   Image,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
@@ -11,10 +10,10 @@ import {
 import {
   Toast,
 } from 'teaset'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TextInputPwd from './TextInputPwd'
 import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 
 class UpdatePassword extends Component {
@@ -168,10 +167,8 @@ class UpdatePassword extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode={'on-drag'}
         >
-          <StatusBar
-            barStyle={'light-content'}
-          />
 
           <TextInputPwd
             placeholder={'旧密码'}
@@ -208,16 +205,8 @@ class UpdatePassword extends Component {
           />
         </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
-          }}
+        <TKSpinner
           isVisible={updatePasswordVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </KeyboardAvoidingView>
     )

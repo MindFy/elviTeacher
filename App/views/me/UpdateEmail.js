@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   Image,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   DeviceEventEmitter,
@@ -12,10 +11,11 @@ import {
 import {
   Toast,
 } from 'teaset'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TextInputPwd from './TextInputPwd'
 import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
+import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -172,12 +172,14 @@ class UpdateEmail extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode={'on-drag'}
         >
-          <StatusBar
-            barStyle={'light-content'}
-          />
-
-          <TextInputPwd
+          <TKInputItem
+            viewStyle={{
+              marginTop: common.margin10,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+            }}
             placeholder={'请输入邮箱地址'}
             value={email}
             onChange={e => this.onChange(e, 'email')}
@@ -209,16 +211,8 @@ class UpdateEmail extends Component {
           />
         </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
-          }}
+        <TKSpinner
           isVisible={updateEmailVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </KeyboardAvoidingView>
     )
