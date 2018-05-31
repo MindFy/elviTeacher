@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 
 class TKInputItem extends Component {
   onChangeText = (text) => {
-    if (this.props.onTextChanged) {
+    if (this.props.onChangeText) {
       this.props.onChangeText(text)
     }
   }
@@ -145,9 +145,7 @@ class TKInputItem extends Component {
     return (
       <View style={[styles.container, this.props.viewStyle]}>
         {this.renderTitle()}
-
         {this.renderInput()}
-
         {this.renderExtra()}
       </View>
     )
