@@ -29,7 +29,7 @@ import * as api from '../services/api'
 //       } else if (response.error.code === 4000415) {
 //         // Toast.fail('仅支持BTC、ETH添加地址')
 //       } else if (response.error.code === 4000416) {
-//         // Toast.fail('无效的提现地址')
+//         // Toast.fail('提币地址格式错误')
 //       } else if (response.error.code === 4000156) {
 //         // Toast.fail('授权验证失败')
 //       } else {
