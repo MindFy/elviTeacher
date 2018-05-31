@@ -415,25 +415,25 @@ class Cash extends Component {
                   placeholder="地址"
                   value={currentAddress}
                   onChangeText={e => this.onChange(e, 'currentAddress')}
-                >
-                  <TouchableOpacity
-                    style={{
-                      position: 'absolute',
-                      right: common.margin10,
-                      alignSelf: 'center',
-                    }}
-                    activeOpacity={common.activeOpacity}
-                    onPress={() => this.showActionSheets()}
-                  >
-                    <Image
+                  extra={() => (
+                    <TouchableOpacity
                       style={{
-                        width: common.w20,
-                        height: common.w20,
+                        position: 'absolute',
+                        right: 0,
                       }}
-                      source={require('../../assets/二维码.png')}
-                    />
-                  </TouchableOpacity>
-                </TKInputItem>
+                      activeOpacity={common.activeOpacity}
+                      onPress={() => this.showActionSheets()}
+                    >
+                      <Image
+                        style={{
+                          width: common.w20,
+                          height: common.w20,
+                        }}
+                        source={require('../../assets/二维码.png')}
+                      />
+                    </TouchableOpacity>
+                  )}
+                />
 
                 <TKButton
                   style={{ marginTop: common.margin40 }}
