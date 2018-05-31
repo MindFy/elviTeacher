@@ -6,6 +6,7 @@ import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCEED,
   LOGOUT_FAILED,
+  LOGIN_FLOW_CLEAR_ERROR,
 } from '../constants'
 
 const initialState = {
@@ -71,6 +72,12 @@ export default function authorize(state = initialState, action) {
         ...state,
         loading: false,
         error: payload,
+      }
+      break
+    case LOGIN_FLOW_CLEAR_ERROR:
+      nextState = {
+        ...state,
+        error: null,
       }
       break
     default:

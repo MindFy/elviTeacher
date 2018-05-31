@@ -103,6 +103,7 @@ import {
 import {
   login,
   loginUpdate,
+  clearError,
 } from './authorize'
 
 
@@ -203,5 +204,6 @@ const actions = {
 
   login,
   loginUpdate,
+  clearError,
 }
 export default actions
