@@ -93,7 +93,7 @@ export default class Agreement extends Component {
         
         4 使用互联网形式的交易系统亦存有风险，包括但不限于软件，硬件和互联网链结的失败等。由于我们不能控制互联网的可靠性和可用性，我们不会对失真，延误和链结失败而承担任何责任。
         
-        5 https://www.huobi.pro/为本网站唯一官方对外信息公布平台；
+        5 https://www.tok.com/为本网站唯一官方对外信息公布平台；
         
         6 本网站任何服务均不接受信用卡支付；
         
