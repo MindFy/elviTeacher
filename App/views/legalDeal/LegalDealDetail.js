@@ -156,6 +156,8 @@ class LegalDealDetail extends Component {
     }
   }
 
+  keyExtractor = item => item.createdAt
+
   renderRow(rd, rid) {
     const { navigation, dispatch, legalDeal } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
@@ -414,6 +416,7 @@ class LegalDealDetail extends Component {
         }}
         data={!user ? [] : legalDeal}
         renderItem={({ item, index }) => this.renderRow(item, index)}
+        keyExtractor={this.keyExtractor}
         refreshState={refreshState}
         onHeaderRefresh={() => {
           if ((user && refreshState !== RefreshState.NoMoreData)

@@ -1,17 +1,9 @@
 import {
-  DeviceEventEmitter,
-} from 'react-native'
-import {
   take, call, put,
 } from 'redux-saga/effects'
-import {
-  Toast,
-} from 'teaset'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
-import {
-  common,
-} from '../constants/common'
+
 
 /* 取消法币交易单(只有waitpay状态的才可以取消) */
 export function* legalDealCancel() {
@@ -19,19 +11,10 @@ export function* legalDealCancel() {
     const request = yield take(constants.LEGAL_DEAL_CANCEL_REQUEST)
     const response = yield call(api.legalDealCancel, request.data)
     if (response.success) {
-      Toast.success(response.result)
       yield put({
         type: constants.LEGAL_DEAL_CANCEL_SUCCEED,
         legalDeal: request.legalDeal,
       })
-    } else if (response.error.message === common.badNet) {
-      Toast.fail('网络连接失败，请稍后重试')
-    } else if (response.error.code === 4001420) {
-      Toast.fail('法币交易单号为空')
-    } else if (response.error.code === 4001421) {
-      Toast.fail('法币交易单不存在')
-    } else {
-      Toast.fail('撤单失败，请重试')
     }
   }
 }
@@ -42,22 +25,9 @@ export function* confirmPay() {
     const request = yield take(constants.CONFIRM_PAY_REQUEST)
     const response = yield call(api.confirmPay, request.data)
     if (response.success) {
-      Toast.success(response.result)
-      DeviceEventEmitter.emit(common.noti.legalDealConfirmPay)
       yield put({ type: constants.CONFIRM_PAY_SUCCEED, legalDeal: request.legalDeal })
     } else {
       yield put({ type: constants.CONFIRM_PAY_FAILED, response })
-      if (response.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
-      } else if (response.error.code === 4001420) {
-        Toast.fail('法币交易单号为空')
-      } else if (response.error.code === 4001421) {
-        Toast.fail('法币交易单不存在')
-      } else if (response.error.code === 4000156) {
-        Toast.fail('授权验证失败')
-      } else {
-        Toast.fail('操作失败，请重试')
-      }
     }
   }
 }
@@ -89,19 +59,9 @@ export function* havedPay() {
     const request = yield take(constants.HAVED_PAY_REQUEST)
     const response = yield call(api.havedPay, request.data)
     if (response.success) {
-      Toast.success(response.result)
       yield put({ type: constants.HAVED_PAY_SUCCEED, legalDeal: request.legalDeal })
     } else {
       yield put({ type: constants.HAVED_PAY_FAILED, response })
-      if (response.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
-      } else if (response.error.code === 4001420) {
-        Toast.fail('法币交易单号为空')
-      } else if (response.error.code === 4001421) {
-        Toast.fail('法币交易单不存在')
-      } else {
-        Toast.fail('操作失败，请重试')
-      }
     }
   }
 }
