@@ -15,8 +15,9 @@ import {
 import {
   common,
 } from '../../constants/common'
-import TextInputUpdateBank from './TextInputUpdateBank'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
+import TKButton from '../../components/TKButton'
+import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 
 class UpdateBank extends Component {
@@ -231,6 +232,35 @@ class UpdateBank extends Component {
     }
   }
 
+  renderTip =() => (
+    <View
+      style={{
+        marginTop: common.margin5,
+        backgroundColor: common.navBgColor,
+      }}
+    >
+      <Text
+        style={{
+          marginTop: common.margin10,
+          marginLeft: common.margin10,
+          color: common.textColor,
+          fontSize: common.font12,
+        }}
+      >温馨提示</Text>
+      <Text
+        style={{
+          marginTop: common.margin5,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          marginBottom: common.margin10,
+          color: common.textColor,
+          fontSize: common.font10,
+          lineHeight: common.font12,
+        }}
+      >1、添加的银行卡必须用于法币交易买卖转账，若使用其他银行卡，可能导致交易失败，请谨慎添加！</Text>
+    </View>
+  )
+
   render() {
     const { bankName, subbankName, bankNo, navigation, user, clearTextInputBank } = this.props
 
@@ -249,9 +279,15 @@ class UpdateBank extends Component {
         }}
         keyboardShouldPersistTaps="handled"
       >
-        <TextInputUpdateBank
+        <TKInputItem
           viewStyle={{
             marginTop: common.margin10,
+            borderRadius: 0,
+            borderWidth: 0,
+          }}
+          titleStyle={{
+            width: common.h97,
+            fontSize: common.font14,
           }}
           title={'开户银行'}
           value={bankName}
@@ -261,7 +297,17 @@ class UpdateBank extends Component {
           maxLength={common.textInputMaxLenBankName}
           editable={editable}
         />
-        <TextInputUpdateBank
+
+        <TKInputItem
+          viewStyle={{
+            marginTop: common.margin5,
+            borderRadius: 0,
+            borderWidth: 0,
+          }}
+          titleStyle={{
+            width: common.h97,
+            fontSize: common.font14,
+          }}
           title={'开户支行'}
           value={subbankName}
           placeholder={'请输入正确的开户支行名称'}
@@ -269,7 +315,17 @@ class UpdateBank extends Component {
           maxLength={common.textInputMaxLenBankName}
           editable={editable}
         />
-        <TextInputUpdateBank
+
+        <TKInputItem
+          viewStyle={{
+            marginTop: common.margin5,
+            borderRadius: 0,
+            borderWidth: 0,
+          }}
+          titleStyle={{
+            width: common.h97,
+            fontSize: common.font14,
+          }}
           title={'银行卡号'}
           placeholder={'请输入正确的银行卡号'}
           value={bankNo}
@@ -279,56 +335,19 @@ class UpdateBank extends Component {
           editable={editable}
         />
 
-        <View
-          style={{
-            marginTop: common.margin5,
-            backgroundColor: common.navBgColor,
-          }}
-        >
-          <Text
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
-          >温馨提示</Text>
-          <Text
-            style={{
-              marginTop: common.margin5,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              marginBottom: common.margin10,
-              color: common.textColor,
-              fontSize: common.font10,
-              lineHeight: common.font12,
-            }}
-          >1、添加的银行卡必须用于法币交易买卖转账，若使用其他银行卡，可能导致交易失败，请谨慎添加！</Text>
-        </View>
+        {this.renderTip()}
 
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
+        <TKButton
+          theme={'gray'}
           style={{
             marginTop: common.margin20,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            backgroundColor: common.navBgColor,
-            height: common.h40,
-            justifyContent: 'center',
           }}
+          caption={editable ? '确认' : '重新添加'}
           onPress={() => {
             const title = editable ? '确认' : '重新添加'
             this.confirmPress(title)
           }}
-        >
-          <Text
-            style={{
-              color: common.btnTextColor,
-              fontSize: common.font14,
-              alignSelf: 'center',
-            }}
-          >{editable ? '确认' : '重新添加'}</Text>
-        </TouchableOpacity>
+        />
       </ScrollView>
     )
   }

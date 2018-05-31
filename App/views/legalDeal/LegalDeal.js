@@ -3,18 +3,19 @@ import { connect } from 'react-redux'
 import {
   Text,
   View,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
-import Spinner from 'react-native-spinkit'
 import { BigNumber } from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
+import TKInputItem from '../../components/TKInputItem'
+import TKSpinner from '../../components/TKSpinner'
+import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 
 class LegalDeal extends Component {
@@ -138,12 +139,102 @@ class LegalDeal extends Component {
     }
   }
 
-  render() {
-    const { direct, priceBuy, priceSell, quantity, legalDealCreateVisible } = this.props
+  renderSelectionBar = () => (
+    <TKSelectionBar
+      leftTitle={'买入'}
+      rightTitle={'卖出'}
+      leftBlock={() => this.selectionBarPress(common.buy)}
+      rightBlock={() => this.selectionBarPress(common.sell)}
+    />
+  )
+
+  renderPrice = () => {
+    const { direct, priceBuy, priceSell } = this.props
+    const price = direct === common.buy ? priceBuy : priceSell
+    return (
+      <TKInputItem
+        viewStyle={{ marginTop: common.margin20 }}
+        value={price.toString()}
+        extra="元"
+        editable={false}
+      />
+    )
+  }
+
+  renderQuantity = () => {
+    const { quantity, direct } = this.props
+    const placeholder = `${direct === common.buy ? '买入' : '卖出'}数量`
+    return (
+      <TKInputItem
+        viewStyle={{ marginTop: common.margin10 }}
+        placeholder={placeholder}
+        value={quantity}
+        extra="CNYT"
+        onChangeText={e => this.quantityOnChange(e)}
+        keyboardType="numeric"
+      />
+    )
+  }
+
+  renderAmount = () => {
+    const { direct, priceBuy, priceSell, quantity } = this.props
     const price = direct === common.buy ? priceBuy : priceSell
     const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).toFixed(2, 1)
-    this.handleLegalDealCreateRequest()
+    return (
+      <Text
+        style={{
+          marginTop: common.margin10,
+          marginLeft: common.margin10,
+          color: common.textColor,
+          fontSize: common.font14,
+        }}
+      >{`${
+          direct === common.buy ? '买入' : '卖出'
+        }总计:${amount}元`}</Text>
+    )
+  }
 
+  renderBuySell = () => {
+    const { direct } = this.props
+    const caption = direct === common.buy ? '买入' : '卖出'
+    return (
+      <TKButton
+        style={{ marginTop: common.margin10, marginLeft: 0, marginRight: 0 }}
+        theme="gray"
+        caption={caption}
+        onPress={() => this.createPress()}
+      />
+    )
+  }
+
+
+  renderTip = () => (
+    <View>
+      <Text
+        style={{
+          marginTop: common.margin15,
+          color: common.textColor,
+          fontSize: common.font12,
+        }}
+      >
+      温馨提示
+      </Text>
+      <Text
+        style={{
+          marginTop: common.margin10,
+          color: common.textColor,
+          fontSize: common.font10,
+          lineHeight: 14,
+        }}
+      >
+        {'1. 买卖商户均为实地考察认证商户，并提供100万CNYT保证金，您每次兑换会冻结商户资产，商户资产不够时，不能接单，可放心兑换；\n2. 买卖商户均为实名认证商户，可放心兑换；\n3. 请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会退款。（禁止微信和支付宝）'}
+      </Text>
+    </View>
+  )
+
+  render() {
+    const { legalDealCreateVisible } = this.props
+    this.handleLegalDealCreateRequest()
     return (
       <View
         style={{
@@ -153,143 +244,20 @@ class LegalDeal extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-        >
-          <TKSelectionBar
-            leftTitle={'买入'}
-            rightTitle={'卖出'}
-            leftBlock={() => this.selectionBarPress(common.buy)}
-            rightBlock={() => this.selectionBarPress(common.sell)}
-          />
-
-          <View
-            style={{
-              marginTop: common.margin20,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h40,
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.navBgColor,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                color: common.textColor,
-                fontSize: common.font14,
-                alignSelf: 'center',
-              }}
-            >{price}</Text>
-            <Text
-              style={{
-                marginRight: common.margin10,
-                color: common.textColor,
-                fontSize: common.font14,
-                alignSelf: 'center',
-              }}
-            >元</Text>
-          </View>
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h40,
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.navBgColor,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <TextInput
-              style={{
-                marginLeft: common.margin10,
-                color: common.textColor,
-                fontSize: common.font14,
-                width: '70%',
-                alignSelf: 'center',
-              }}
-              placeholder={`${direct === common.buy ? '买入' : '卖出'}数量`}
-              placeholderTextColor={common.placeholderColor}
-              value={quantity}
-              onChangeText={e => this.quantityOnChange(e)}
-              maxLength={7}
-            />
-            <Text
-              style={{
-                marginRight: common.margin10,
-                color: common.textColor,
-                fontSize: common.font14,
-                alignSelf: 'center',
-              }}
-            >CNYT</Text>
-          </View>
-
-          <Text
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font14,
-            }}
-          >{`${
-              direct === common.buy ? '买入' : '卖出'
-            }总计:${amount}元`}</Text>
-
-          <TouchableOpacity
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              backgroundColor: common.navBgColor,
-              height: common.h40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => this.createPress()}
-          >
-            <Text
-              style={{
-                color: common.btnTextColor,
-                fontSize: common.font14,
-                alignSelf: 'center',
-              }}
-            >{direct === common.buy ? '买入' : '卖出'}</Text>
-          </TouchableOpacity>
-
-          <Text
-            style={{
-              marginTop: common.margin15,
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
-          >温馨提示</Text>
-          <Text
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font10,
-              lineHeight: 14,
-            }}
-          >{'1. 买卖商户均为实地考察认证商户，并提供100万CNYT保证金，您每次兑换会冻结商户资产，商户资产不够时，不能接单，可放心兑换；\n2. 买卖商户均为实名认证商户，可放心兑换；\n3. 请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会退款。（禁止微信和支付宝）'}</Text>
-        </ScrollView>
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
+          keyboardDismissMode="on-drag"
+          contentContainerStyle={{
+            marginHorizontal: common.margin10,
           }}
-          isVisible={legalDealCreateVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
-        />
+        >
+          {this.renderSelectionBar()}
+          {this.renderPrice()}
+          {this.renderQuantity()}
+          {this.renderAmount()}
+          {this.renderBuySell()}
+          {this.renderTip()}
+        </ScrollView>
+
+        <TKSpinner isVisible={legalDealCreateVisible} />
       </View>
     )
   }

@@ -114,6 +114,7 @@ class TKInputItem extends Component {
         onChange={e => this.onChange(e)}
         onChangeText={text => this.onChangeText(text)}
         editable={editable}
+        autoFocus={this.props.autoFocus}
         enablesReturnKeyAutomatically
         underlineColorAndroid="transparent"
         {...this.props.textInputProps}
