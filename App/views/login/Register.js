@@ -88,13 +88,12 @@ class Register extends Component {
     }
   }
 
-  codePress(count) {
+  codePress() {
     const { dispatch, mobile } = this.props
     if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
     }
-    this.count = count
     dispatch(actions.getVerificateCode({
       mobile,
       service: 'register',
@@ -152,7 +151,6 @@ class Register extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        this.count()
         Toast.success(getVerificateCodeResponse.result.message)
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
@@ -209,6 +207,9 @@ class Register extends Component {
     const { mobile } = this.props
     return (
       <TKInputItem
+        titleStyle={{
+          width: common.h80,
+        }}
         title="账号"
         placeholder="请输入11位手机号"
         value={mobile}
@@ -219,23 +220,65 @@ class Register extends Component {
   }
 
   renderCheckCode = () => {
-    const { code } = this.props
+    const { code, mobile } = this.props
     return (
       <TKInputItemCheckCode
+        titleStyle={{
+          width: common.h80,
+        }}
         title="验证码"
-        placeholder="请输入验证码"
+        placeholder="获取验证码"
         value={code}
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'code')}
         onPressCheckCodeBtn={() => { this.codePress() }}
+        extraDisable={!mobile}
       />
     )
+  }
+
+  renderErrorTip = (tip) => {
+    const hasTip = (
+      (tip && !common.regPassword.test(tip)) ||
+      (tip && !common.regSpace.test(tip))
+    )
+    const tipView = hasTip && (
+      <Text
+        style={{
+          color: common.redColor,
+          fontSize: common.font12,
+        }}
+      >
+        {common.regPasswordMsg}
+      </Text>
+    )
+    return (
+      <View style={{
+        alignItems: 'flex-end',
+        height: common.w40,
+      }}
+      >
+        <View>
+          <Text style={{ paddingTop: common.margin5 }}>
+            {tipView}
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
+  renderPwdErrorTip = () => {
+    const { password } = this.props
+    return this.renderErrorTip(password)
   }
 
   renderPassword = () => {
     const { password } = this.props
     return (
       <TKInputItem
+        titleStyle={{
+          width: common.h80,
+        }}
         title="密码"
         placeholder="请输入密码"
         value={password}
@@ -250,6 +293,9 @@ class Register extends Component {
     const { passwordAgain } = this.props
     return (
       <TKInputItem
+        titleStyle={{
+          width: common.h80,
+        }}
         title="再次确认密码"
         placeholder="请再次输入密码"
         value={passwordAgain}
@@ -264,6 +310,9 @@ class Register extends Component {
     const { recommendNo } = this.props
     return (
       <TKInputItem
+        titleStyle={{
+          width: common.h80,
+        }}
         title="邀请码"
         placeholder="选填"
         value={recommendNo}
@@ -323,7 +372,10 @@ class Register extends Component {
         }}
         behavior="padding"
       >
-        <ScrollView >
+        <ScrollView
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={{ marginHorizontal: common.margin38, marginTop: common.margin110 }}>
             {this.renderAccount()}
 
@@ -335,7 +387,7 @@ class Register extends Component {
 
             {this.renderPassword()}
 
-            <View style={{ height: 40 }} />
+            {this.renderPwdErrorTip()}
 
             {this.renderConfirmPwd()}
 

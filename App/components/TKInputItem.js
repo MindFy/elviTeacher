@@ -145,9 +145,7 @@ class TKInputItem extends Component {
     return (
       <View style={[styles.container, this.props.viewStyle]}>
         {this.renderTitle()}
-
         {this.renderInput()}
-
         {this.renderExtra()}
       </View>
     )

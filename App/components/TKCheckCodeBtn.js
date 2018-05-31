@@ -17,6 +17,9 @@ class TKCheckCodeBtn extends Component {
   }
 
   onPress = () => {
+    if (this.props.extraDisable) {
+      return
+    }
     if (this.timerID) {
       return
     }
