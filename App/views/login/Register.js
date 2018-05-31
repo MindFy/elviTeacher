@@ -232,7 +232,7 @@ class Register extends Component {
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'code')}
         onPressCheckCodeBtn={() => { this.codePress() }}
-        extraDisable={!mobile}
+        extraDisable={!mobile || !common.regMobile.test(mobile)}
       />
     )
   }
