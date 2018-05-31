@@ -7,6 +7,7 @@ import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCEED,
   LOGOUT_FAILED,
+  LOGIN_FLOW_CLEAR_ERROR,
 } from '../../constants'
 
 describe('authorize reducer', () => {
@@ -160,6 +161,22 @@ describe('authorize reducer', () => {
       formState: {},
       error: mockAction.payload,
       loading: false,
+    })
+  })
+
+  it('LOGIN_FLOW_CLEAR_ERROR should clear error object', () => {
+    const mockAction = {
+      type: LOGIN_FLOW_CLEAR_ERROR,
+    }
+
+    const prevState = {
+      ...initialState,
+      error: { msg: 'some error message' },
+    }
+
+    expect(authorize(prevState, mockAction)).toEqual({
+      ...prevState,
+      error: null,
     })
   })
 })

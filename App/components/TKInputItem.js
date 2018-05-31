@@ -60,6 +60,12 @@ class TKInputItem extends Component {
     }
   }
 
+  onFocus = (e) => {
+    if (this.props.onFocus) {
+      this.props.onFocus(e)
+    }
+  }
+
   clear = () => {
     this.textInputRef.clear()
   }
@@ -112,6 +118,7 @@ class TKInputItem extends Component {
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
         onChange={e => this.onChange(e)}
+        onFocus={e => this.onFocus(e)}
         onChangeText={text => this.onChangeText(text)}
         editable={editable}
         autoFocus={this.props.autoFocus}

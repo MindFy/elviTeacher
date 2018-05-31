@@ -122,7 +122,8 @@ class Login extends PureComponent {
         }
       })
     }
-    if (error !== this.props.error) {
+
+    if (nextProps.error) {
       const msg = this.errs[error.code]
       if (msg) {
         Toast.fail(msg)
@@ -163,7 +164,7 @@ class Login extends PureComponent {
   )
 
   renderInput = () => {
-    const { formState } = this.props
+    const { formState, dispatch } = this.props
 
     return (
       <View style={styles.input}>
@@ -174,6 +175,7 @@ class Login extends PureComponent {
           value={formState.mobile}
           maxLength={11}
           onChange={e => this.onChange(e, 'mobile')}
+          onFocus={() => { dispatch(actions.clearError()) }}
         />
 
         <View style={{ height: common.h40 }} />
@@ -186,6 +188,7 @@ class Login extends PureComponent {
           maxLength={common.textInputMaxLenPwd}
           secureTextEntry
           onChange={e => this.onChange(e, 'password')}
+          onFocus={() => { dispatch(actions.clearError()) }}
         />
       </View>
     )
