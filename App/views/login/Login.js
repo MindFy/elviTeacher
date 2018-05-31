@@ -55,6 +55,10 @@ const styles = StyleSheet.create({
 })
 
 class Login extends PureComponent {
+  componentWillReceiveProps(nextProps) {
+    this.loginHandle(nextProps)
+  }
+
   onChange(event, tag) {
     const { text } = event.nativeEvent
     const { dispatch, formState } = this.props
@@ -100,10 +104,10 @@ class Login extends PureComponent {
     4000117: '账号或密码错误',
   }
 
-  loginHandle() {
-    const { dispatch, loggedIn, error, loggedInResult, screenProps, homeRoseSelected } = this.props
+  loginHandle(nextProps) {
+    const { dispatch, loggedIn, error, loggedInResult, screenProps, homeRoseSelected } = nextProps
 
-    if (loggedIn) {
+    if (loggedIn !== this.props.loggedIn) {
       Toast.success('登录成功')
       const user = loggedInResult
       storeSave(common.user.string, user, (e) => {
@@ -118,7 +122,7 @@ class Login extends PureComponent {
         }
       })
     }
-    if (error) {
+    if (error !== this.props.error) {
       const msg = this.errs[error.code]
       if (msg) {
         Toast.fail(msg)
@@ -206,8 +210,6 @@ class Login extends PureComponent {
   }
 
   render() {
-    this.loginHandle()
-
     const { loading } = this.props
     return (
       <KeyboardAvoidingView
