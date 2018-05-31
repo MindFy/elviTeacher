@@ -2,17 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
-  StatusBar,
   ScrollView,
 } from 'react-native'
-import Spinner from 'react-native-spinkit'
 import {
   common,
   storeRead,
   storeDelete,
 } from '../../constants/common'
 import MeCell from './MeCell'
-import BtnLogout from './BtnLogout'
+import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import ws from '../../websocket/ws'
@@ -110,10 +109,6 @@ class Me extends Component {
         }}
       >
         <ScrollView>
-          <StatusBar
-            barStyle={'light-content'}
-          />
-
           <MeCell
             onPress={() => {
               if (!user) {
@@ -174,25 +169,23 @@ class Me extends Component {
           />
 
           {
-            !user ? null :
-              (<BtnLogout
+            user
+              ? <TKButton
+                style={{
+                  marginTop: common.margin40,
+                  marginLeft: 0,
+                  marginRight: 0,
+                }}
                 onPress={() => this.logoutPress()}
                 disabled={logoutVisible}
-                title="退出登录"
-              />)
+                caption="退出登录"
+                theme={'gray'}
+              /> : null
           }
         </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
-          }}
+        <TKSpinner
           isVisible={logoutVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </View>
     )

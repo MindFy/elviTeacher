@@ -6,7 +6,6 @@ import {
   Image,
   ListView,
   TextInput,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   DeviceEventEmitter,
@@ -24,6 +23,7 @@ import SelectToken from './SelectToken'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
+import TKButton from '../../components/TKButton'
 
 class Cash extends Component {
   static navigationOptions(props) {
@@ -450,26 +450,12 @@ class Cash extends Component {
                   </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity
-                  style={{
-                    marginTop: common.margin40,
-                    marginLeft: common.margin10,
-                    marginRight: common.margin10,
-                    height: common.h40,
-                    backgroundColor: common.navBgColor,
-                    justifyContent: 'center',
-                  }}
-                  activeOpacity={common.activeOpacity}
+                <TKButton
+                  style={{ marginTop: common.margin40 }}
                   onPress={() => this.withdrawPress()}
-                >
-                  <Text
-                    style={{
-                      color: common.btnTextColor,
-                      fontSize: common.font14,
-                      alignSelf: 'center',
-                    }}
-                  >提现</Text>
-                </TouchableOpacity>
+                  theme={'gray'}
+                  caption={'提现'}
+                />
                 <Text
                   style={{
                     marginTop: common.margin10,
@@ -510,7 +496,6 @@ class Cash extends Component {
         }}
         behavior="padding"
       >
-        <StatusBar barStyle={'light-content'} />
         <ScrollView
           keyboardShouldPersistTaps="handled"
         >

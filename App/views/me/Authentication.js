@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   StatusBar,
+  StyleSheet,
   ScrollView,
   TouchableOpacity,
   DeviceEventEmitter,
@@ -13,13 +14,34 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import PutObject from 'rn-put-object'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
-import TextInputPwd from './TextInputPwd'
-import BtnLogout from './BtnLogout'
+import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
+import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+
+const styles = StyleSheet.create({
+  inputView: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+  },
+  imageSucceed: {
+    marginTop: common.margin127,
+    width: common.h80,
+    height: common.h80,
+    alignSelf: 'center',
+  },
+  titleSucceed: {
+    marginTop: common.margin20,
+    color: common.textColor,
+    fontSize: common.font16,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+})
 
 class Authentication extends Component {
   static navigationOptions(props) {
@@ -33,27 +55,26 @@ class Authentication extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <TouchableOpacity
+      headerLeft: (
+        <TouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-        ),
+            source={require('../../assets/下拉copy.png')}
+          />
+        </TouchableOpacity>
+      ),
     }
   }
 
@@ -235,13 +256,18 @@ class Authentication extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode={'on-drag'}
         >
-          <TextInputPwd
+          <TKInputItem
+            viewStyle={styles.inputView}
+            inputStyle={{ fontSize: common.font14 }}
             placeholder="姓名"
             value={name}
             onChange={e => this.onChange(e, 'name')}
           />
-          <TextInputPwd
+          <TKInputItem
+            viewStyle={styles.inputView}
+            inputStyle={{ fontSize: common.font14 }}
             placeholder="身份证号"
             value={idNo}
             maxLength={common.textInputMaxLenIdNo}
@@ -265,23 +291,71 @@ class Authentication extends Component {
             avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
           />
 
-          <BtnLogout
-            viewStyle={{
-              marginTop: common.margin40,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h44,
-            }}
+          <TKButton
+            style={{ marginTop: common.margin40 }}
             onPress={() => this.confirmPress()}
-            title="确认"
+            caption="确认"
+            theme={'gray'}
           />
         </ScrollView>
       </KeyboardAvoidingView>
     )
   }
 
+  renderSucceed() {
+    return (
+      <ScrollView>
+        <Image
+          style={styles.imageSucceed}
+          source={require('../../assets/成功.png')}
+        />
+        <Text style={styles.titleSucceed}>
+          恭喜！身份认证成功！
+        </Text>
+      </ScrollView>
+    )
+  }
+
+  renderFailed() {
+    const { dispatch } = this.props
+    return (
+      <ScrollView>
+        <Image
+          style={styles.imageSucceed}
+          source={require('../../assets/失败.png')}
+        />
+        <Text style={styles.titleSucceed}>
+          抱歉！您的身份认证未通过审核！
+        </Text>
+        <Text style={[styles.titleSucceed, { marginTop: common.margin10 }]}>
+          失败原因：照片不清晰
+        </Text>
+        <TouchableOpacity
+          activeOpacity={common.activeOpacity}
+          onPress={() => {
+            dispatch(actions.idCardAuthUpdate({
+              name: '',
+              idNo: '',
+              idCardImages: {},
+              authenticationAgain: true,
+            }))
+          }}
+        >
+          <Text
+            style={{
+              marginTop: common.margin10,
+              color: common.btnTextColor,
+              fontSize: common.font16,
+              alignSelf: 'center',
+            }}
+          >再次认证</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    )
+  }
+
   renderContentView() {
-    const { dispatch, user, authenticationAgain } = this.props
+    const { user, authenticationAgain } = this.props
     if (!user.idCardAuthStatus) return null
     if (authenticationAgain) return this.renderScrollView()
 
@@ -289,80 +363,9 @@ class Authentication extends Component {
       case common.user.status.never: case common.user.status.waiting:
         return this.renderScrollView()
       case common.user.status.pass:
-        return (
-          <ScrollView>
-            <Image
-              style={{
-                marginTop: common.margin127,
-                width: common.h80,
-                height: common.h80,
-                alignSelf: 'center',
-              }}
-              source={require('../../assets/成功.png')}
-            />
-            <Text
-              style={{
-                marginTop: common.margin20,
-                color: common.textColor,
-                fontSize: common.font16,
-                alignSelf: 'center',
-                textAlign: 'center',
-              }}
-            >恭喜！身份认证成功！</Text>
-          </ScrollView>
-        )
+        return this.renderSucceed()
       case common.user.status.refuse:
-        return (
-          <ScrollView>
-            <Image
-              style={{
-                marginTop: common.margin127,
-                width: common.h80,
-                height: common.h80,
-                alignSelf: 'center',
-              }}
-              source={require('../../assets/失败.png')}
-            />
-            <Text
-              style={{
-                marginTop: common.margin20,
-                color: common.textColor,
-                fontSize: common.font16,
-                alignSelf: 'center',
-                textAlign: 'center',
-              }}
-            >抱歉！您的身份认证未通过审核！</Text>
-            <Text
-              style={{
-                marginTop: common.margin10,
-                color: common.textColor,
-                fontSize: common.font16,
-                alignSelf: 'center',
-                textAlign: 'center',
-              }}
-            >失败原因：照片不清晰</Text>
-            <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => {
-                dispatch(actions.idCardAuthUpdate({
-                  name: '',
-                  idNo: '',
-                  idCardImages: {},
-                  authenticationAgain: true,
-                }))
-              }}
-            >
-              <Text
-                style={{
-                  marginTop: common.margin10,
-                  color: common.btnTextColor,
-                  fontSize: common.font16,
-                  alignSelf: 'center',
-                }}
-              >再次认证</Text>
-            </TouchableOpacity>
-          </ScrollView>
-        )
+        return this.renderFailed()
       default:
         return null
     }
@@ -378,7 +381,6 @@ class Authentication extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar barStyle={'light-content'} />
         {this.renderContentView()}
         {
           user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting ?
@@ -414,16 +416,8 @@ class Authentication extends Component {
               </View>
             </View> : null
         }
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
-          }}
+        <TKSpinner
           isVisible={idCardAuthVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </View>
     )

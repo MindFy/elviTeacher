@@ -75,12 +75,8 @@ class TKButton extends PureComponent {
         color: COLOR_YELLOW,
       }
     } else if (theme === 'balance') {
-      containerTheme = {
-        flex: 1,
-      }
       buttonTheme = {
         alignSelf: 'center',
-        width: 2 * BUTTON_HEIGHT,
       }
       captionTheme = {
         marginTop: 10,

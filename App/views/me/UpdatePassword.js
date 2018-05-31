@@ -14,7 +14,7 @@ import {
 import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import TextInputPwd from './TextInputPwd'
-import BtnLogout from './BtnLogout'
+import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 
 class UpdatePassword extends Component {
@@ -199,14 +199,12 @@ class UpdatePassword extends Component {
             secureTextEntry
           />
 
-          <BtnLogout
-            viewStyle={{
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-            }}
+          <TKButton
+            style={{ marginTop: common.margin10 }}
             onPress={() => this.confirmPress()}
             disabled={updatePasswordVisible}
-            title="确认"
+            caption="确认"
+            theme={'gray'}
           />
         </ScrollView>
 

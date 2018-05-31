@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   TextInput,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   DeviceEventEmitter,
@@ -14,11 +13,12 @@ import {
   Toast,
   Overlay,
 } from 'teaset'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
+import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
 
 class AddAddress extends Component {
   static navigationOptions(props) {
@@ -174,9 +174,6 @@ class AddAddress extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
         <ScrollView>
           <View
             style={{
@@ -251,45 +248,16 @@ class AddAddress extends Component {
               onChange={e => this.onChange(e, 'remark')}
             />
           </View>
-
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
+          <TKButton
+            style={{ marginTop: common.margin40 }}
             onPress={() => this.confirmPress()}
-          >
-            <View
-              style={{
-                marginTop: common.margin40,
-                marginLeft: common.margin10,
-                marginRight: common.margin10,
-                height: common.h40,
-                borderWidth: 1,
-                borderRadius: 1,
-                borderColor: common.borderColor,
-                backgroundColor: common.navBgColor,
-                justifyContent: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  color: common.btnTextColor,
-                  fontSize: common.font16,
-                  alignSelf: 'center',
-                }}
-              >确认</Text>
-            </View>
-          </TouchableOpacity>
+            caption={'添加'}
+            theme={'gray'}
+          />
         </ScrollView>
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
-          }}
+        <TKSpinner
           isVisible={addVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
         />
       </View>
     )

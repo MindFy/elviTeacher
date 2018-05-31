@@ -3,19 +3,19 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
-  Image,
   ListView,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
+import TKButton from '../../components/TKButton'
 import BalanceCell from './BalanceCell'
 
 class Balance extends Component {
   static navigationOptions(props) {
     const { navigation } = props
+    const params = navigation.state.params || {}
     return {
       headerTitle: '资产',
       headerStyle: {
@@ -26,23 +26,20 @@ class Balance extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerRight:
-        (
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => {
-              navigation.navigate('History')
+      headerRight: (
+        <TouchableOpacity
+          activeOpacity={common.activeOpacity}
+          onPress={params.historyPress}
+        >
+          <Text
+            style={{
+              marginRight: common.margin10,
+              fontSize: common.font16,
+              color: 'white',
             }}
-          >
-            <Text
-              style={{
-                marginRight: common.margin10,
-                fontSize: common.font16,
-                color: 'white',
-              }}
-            >历史记录</Text>
-          </TouchableOpacity>
-        ),
+          >历史记录</Text>
+        </TouchableOpacity>
+      ),
     }
   }
 
@@ -52,6 +49,16 @@ class Balance extends Component {
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+  }
+
+  componentWillMount() {
+    this.props.navigation.setParams({ historyPress: this._historyPress })
+  }
+
+  _historyPress = () => {
+    const { user, navigation } = this.props
+    if (user) navigation.navigate('History')
+    else navigation.navigate('LoginStack')
   }
 
   renderRow(rd) {
@@ -83,134 +90,86 @@ class Balance extends Component {
     amountRMB = amountRMB.toFixed(2, 1)
 
     return (
-      <View
+      <ScrollView
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
-        <ScrollView>
-          <Text
-            style={{
-              marginTop: common.margin20,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font30,
-              alignSelf: 'center',
-              textAlign: 'center',
-            }}
-          >{amountBTC}</Text>
-          <Text
-            style={{
-              marginTop: common.margin5,
-              fontSize: common.font12,
-              color: common.placeholderColor,
-              alignSelf: 'center',
-              textAlign: 'center',
-            }}
-          >{`(¥${amountRMB})`}</Text>
-          <Text
-            style={{
-              marginTop: common.margin10,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              alignSelf: 'center',
-            }}
-          >总资产(BTC)</Text>
+        <Text
+          style={{
+            marginTop: common.margin20,
+            marginLeft: common.margin10,
+            marginRight: common.margin10,
+            color: common.textColor,
+            fontSize: common.font30,
+            textAlign: 'center',
+          }}
+        >{amountBTC}</Text>
+        <Text
+          style={{
+            marginTop: common.margin5,
+            fontSize: common.font12,
+            color: common.placeholderColor,
+            textAlign: 'center',
+          }}
+        >{`(¥${amountRMB})`}</Text>
+        <Text
+          style={{
+            marginTop: common.margin10,
+            fontSize: common.font14,
+            color: common.placeholderColor,
+            textAlign: 'center',
+          }}
+        >总资产(BTC)</Text>
 
-          <View
-            style={{
-              marginLeft: common.sw / 4,
-              marginRight: common.sw / 4,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+        <View
+          style={{
+            marginTop: common.margin20,
+            marginLeft: common.sw / 4,
+            marginRight: common.sw / 4,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <TKButton
+            theme={'balance'}
+            caption={'充值'}
+            icon={require('../../assets/充值.png')}
+            onPress={() => {
+              if (user) navigation.navigate('Recharge')
+              else navigation.navigate('LoginStack')
             }}
-          >
-            <View>
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity}
-                onPress={() => {
-                  if (user) {
-                    navigation.navigate('Recharge')
-                  } else {
-                    navigation.navigate('LoginStack')
-                  }
-                }}
-              >
-                <Image
-                  style={{
-                    marginTop: common.margin20,
-                    height: common.w40,
-                    width: common.w40,
-                  }}
-                  source={require('../../assets/充值.png')}
-                />
-                <Text
-                  style={{
-                    marginTop: common.margin10,
-                    fontSize: common.font14,
-                    color: common.placeholderColor,
-                    alignSelf: 'center',
-                  }}
-                >充值</Text>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity}
-                onPress={() => {
-                  if (user) {
-                    navigation.navigate('Cash')
-                  } else {
-                    navigation.navigate('LoginStack')
-                  }
-                }}
-              >
-                <Image
-                  style={{
-                    marginTop: common.margin20,
-                    height: common.w40,
-                    width: common.w40,
-                  }}
-                  source={require('../../assets/充值copy.png')}
-                />
-                <Text
-                  style={{
-                    marginTop: common.margin10,
-                    fontSize: common.font14,
-                    color: common.placeholderColor,
-                    alignSelf: 'center',
-                  }}
-                >提现</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+          />
+          <TKButton
+            theme={'balance'}
+            caption={'提现'}
+            icon={require('../../assets/充值copy.png')}
+            onPress={() => {
+              if (user) navigation.navigate('Cash')
+              else navigation.navigate('LoginStack')
+            }}
+          />
+        </View>
 
-          {
-            user
-              ? <ListView
-                style={{
-                  marginTop: common.margin10,
-                }}
-                dataSource={this.dataSource(asset)}
-                renderRow={rd => this.renderRow(rd)}
-                enableEmptySections
-                removeClippedSubviews={false}
-              />
-              : <BalanceCell
-                leftImageSource={require('../../assets/111.png')}
-                title={common.token.BTC}
-                detail={0}
-              />
-
-          }
-
-        </ScrollView>
-      </View>
+        {
+          user
+            ? <ListView
+              style={{
+                marginTop: common.margin10,
+              }}
+              dataSource={this.dataSource(asset)}
+              renderRow={rd => this.renderRow(rd)}
+              enableEmptySections
+              removeClippedSubviews={false}
+            />
+            : <BalanceCell
+              leftImageSource={require('../../assets/111.png')}
+              title={common.token.BTC}
+              detail={0}
+            />
+        }
+      </ScrollView>
     )
   }
 }
@@ -221,7 +180,6 @@ function mapStateToProps(store) {
 
     asset: store.asset.asset,
     valuation: store.asset.valuation,
-    findAssetListVisible: store.asset.findAssetListVisible,
   }
 }
 
