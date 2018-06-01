@@ -110,17 +110,9 @@ class Login extends PureComponent {
     if (loggedIn !== this.props.loggedIn) {
       Toast.success('登录成功')
       const user = loggedInResult
-      storeSave(common.user.string, user, (e) => {
-        if (!e) {
-          dispatch(actions.findUser(schemas.findUser(user.id)))
-          dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-          if (homeRoseSelected) {
-            ws.onclose(homeRoseSelected.goods.id, homeRoseSelected.currency.id)
-            ws.onopen(homeRoseSelected.goods.id, homeRoseSelected.currency.id, user)
-          }
-          screenProps.dismiss()
-        }
-      })
+      dispatch(actions.findUser(schemas.findUser(user.id)))
+      dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+      screenProps.dismiss()
     }
 
     if (nextProps.error) {
@@ -214,6 +206,7 @@ class Login extends PureComponent {
 
   render() {
     const { loading } = this.props
+
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -255,8 +248,6 @@ function mapStateToProps(store) {
     loading: store.authorize.loading,
     loggedIn: store.authorize.loggedIn,
     loggedInResult: store.authorize.loggedInResult,
-
-    homeRoseSelected: store.dealstat.homeRoseSelected,
   }
 }
 
