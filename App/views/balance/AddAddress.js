@@ -6,19 +6,59 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  DeviceEventEmitter,
+  StyleSheet,
 } from 'react-native'
 import {
   Toast,
   Overlay,
 } from 'teaset'
 import { common } from '../../constants/common'
-import actions from '../../actions/index'
-import schemas from '../../schemas/index'
+import {
+  updateForm,
+  requestAddressAdd,
+  requestAddressClearError,
+} from '../../actions/addressAdd'
+import { getVerificateCode } from '../../actions/user'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import TKSpinner from '../../components/TKSpinner'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  titleContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    height: common.h40,
+    borderWidth: 1,
+    borderRadius: 1,
+    borderColor: common.borderColor,
+    backgroundColor: common.navBgColor,
+    justifyContent: 'center',
+  },
+  title: {
+    marginLeft: common.margin10,
+    fontSize: common.font14,
+    color: common.textColor,
+  },
+  addressContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+  },
+  remarkContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+  },
+  addContainer: {
+    marginTop: common.margin40,
+  },
+})
 
 class AddAddress extends Component {
   static navigationOptions(props) {
@@ -55,48 +95,49 @@ class AddAddress extends Component {
     }
   }
 
-  componentDidMount() {
-    const { navigation, dispatch, user } = this.props
-    this.listener = DeviceEventEmitter.addListener(common.noti.addAddress, () => {
-      navigation.goBack()
-      Overlay.hide(this.overlayViewKey)
-      dispatch(actions.addUpdate({ remark: '', withdrawaddr: '' }))
-      dispatch(actions.findAddress(schemas.findAddress(user.id)))
-    })
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error) {
+      Toast.fail('添加地址错误')
+      this.props.dispatch(requestAddressClearError())
+    }
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(actions.codeAuthUpdate({ codeAuth: '' }))
-    this.listener.remove()
+    dispatch(updateForm({}))
   }
 
-  onChange(event, tag) {
-    const { text } = event.nativeEvent
-    const { dispatch, remark, withdrawaddr } = this.props
+  handleChangeAddress = (address) => {
+    const { dispatch, formState } = this.props
+    dispatch(updateForm({
+      ...formState,
+      address,
+    }))
+  }
 
-    if (tag === 'remark') {
-      dispatch(actions.addUpdate({ remark: text, withdrawaddr }))
-    } else if (tag === 'withdrawaddr') {
-      dispatch(actions.addUpdate({ remark, withdrawaddr: text }))
-    } else if (tag === 'codeAuth') {
-      dispatch(actions.codeAuthUpdate({ codeAuth: text }))
-    }
+  handleRemarkAddress = (remark) => {
+    const { dispatch, formState } = this.props
+    dispatch(updateForm({
+      ...formState,
+      remark,
+    }))
+  }
+
+  handleAuthCode = (authCode) => {
+    const { dispatch, formState } = this.props
+    dispatch(updateForm({
+      ...formState,
+      authCode,
+    }))
   }
 
   confirmPress() {
-    const { remark, withdrawaddr } = this.props
-
-    if (!withdrawaddr.length) {
+    const { formState } = this.props
+    if (!formState.address.length) {
       Toast.message('请填写提币地址')
       return
     }
-    // if (!validate(withdrawaddr, SUPPORTED_CURRENCIES.ethereum)
-    //   && !validate(withdrawaddr, SUPPORTED_CURRENCIES.bitcoin)) {
-    //   Toast.message('请填写正确的提币地址')
-    //   return
-    // }
-    if (!remark.length) {
+    if (!formState.remark.length) {
       Toast.message('请填写备注')
       return
     }
@@ -104,9 +145,13 @@ class AddAddress extends Component {
   }
 
   addPress() {
-    const { dispatch, remark, withdrawaddr, selectedToken, codeAuth } = this.props
-    dispatch(
-      actions.add({ token_id: selectedToken.token.id, withdrawaddr, remark, code: codeAuth }))
+    const { dispatch, formState, navigation } = this.props
+    dispatch(requestAddressAdd({
+      token_id: navigation.state.params.tokenId,
+      withdrawaddr: formState.address,
+      remark: formState.remark,
+      code: formState.authCode,
+    }))
   }
 
   showOverlay() {
@@ -121,10 +166,10 @@ class AddAddress extends Component {
       >
         <TKViewCheckAuthorize
           mobile={user.mobile}
-          onChange={e => this.onChange(e, 'codeAuth')}
+          onChangeText={this.handleAuthCode}
           codePress={(count) => {
             this.authCount = count
-            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+            dispatch(getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}
           confirmPress={() => this.addPress()}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
@@ -134,91 +179,40 @@ class AddAddress extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  errors = {
-    4000101: '手机号码或服务类型错误',
-    4000102: '一分钟内不能重复发送验证码',
-    4000104: '手机号码已注册',
-  }
-
-  handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = nextProps
-
-    if (getVerificateCodeVisible !== this.props.getVerificateCodeVisible) {
-      if (getVerificateCodeResponse.success) {
-        this.authCount()
-        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
-      } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
-      } else {
-        const msg = this.errors[getVerificateCodeResponse.error.code]
-        if (msg) Toast.fail(msg)
-        else Toast.fail('获取验证码失败，请重试')
-      }
-    }
-  }
-
   render() {
-    const { selectedToken, remark, withdrawaddr, addVisible } = this.props
+    const { navigation, formState, loading } = this.props
+
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={styles.container}
       >
         <ScrollView>
-          <View
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: common.h40,
-              borderWidth: 1,
-              borderRadius: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.navBgColor,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                fontSize: common.font14,
-                color: common.textColor,
-              }}
-            >{selectedToken.token.name}</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              {navigation.state.params.title}
+            </Text>
           </View>
 
           <TKInputItem
-            viewStyle={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-            }}
+            viewStyle={styles.addressContainer}
             inputStyle={{
               fontSize: common.font14,
             }}
             placeholder="地址"
-            value={withdrawaddr}
-            onChange={e => this.onChange(e, 'withdrawaddr')}
+            value={formState.address}
+            onChangeText={this.handleChangeAddress}
           />
 
           <TKInputItem
-            viewStyle={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-            }}
-            inputStyle={{
-              fontSize: common.font14,
-            }}
+            viewStyle={styles.remarkContainer}
+            inputStyle={{ fontSize: common.font14 }}
             placeholder="备注"
-            value={remark}
-            onChange={e => this.onChange(e, 'remark')}
+            value={formState.remark}
+            onChangeText={this.handleRemarkAddress}
           />
 
           <TKButton
-            style={{ marginTop: common.margin40 }}
+            style={styles.addContainer}
             onPress={() => this.confirmPress()}
             caption={'添加'}
             theme={'gray'}
@@ -226,7 +220,7 @@ class AddAddress extends Component {
         </ScrollView>
 
         <TKSpinner
-          isVisible={addVisible}
+          isVisible={loading}
         />
       </View>
     )
@@ -235,16 +229,8 @@ class AddAddress extends Component {
 
 function mapStateToProps(store) {
   return {
+    ...store.addressAdd,
     user: store.user.user,
-    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
-
-    codeAuth: store.ui.codeAuth,
-
-    remark: store.address.remark,
-    addVisible: store.address.addVisible,
-    withdrawaddr: store.address.withdrawaddr,
-    selectedToken: store.address.selectedToken,
   }
 }
 

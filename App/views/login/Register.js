@@ -3,9 +3,7 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
-  StatusBar,
   ScrollView,
-  TouchableOpacity,
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'

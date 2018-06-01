@@ -109,7 +109,6 @@ class TKInputItem extends Component {
         ref={(e) => { this.textInputRef = e }}
         style={[styles.inputContainer, styles.input, inputStyle]}
         autoCapitalize="none"
-        clearButtonMode="while-editing"
         value={value}
         defaultValue={defaultValue}
         placeholder={placeholder}

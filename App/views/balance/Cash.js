@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   ListView,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   DeviceEventEmitter,
