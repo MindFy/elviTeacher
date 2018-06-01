@@ -38,6 +38,12 @@ export default function addressAdd(state = initialState, action) {
         error: payload,
       }
       break
+    case 'addressAdd/request_address_clear_error':
+      nextState = {
+        ...state,
+        error: null,
+      }
+      break
     default:
       nextState = state
       break

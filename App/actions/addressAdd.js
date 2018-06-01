@@ -25,3 +25,10 @@ export function requestAddressAddFailed(payload) {
     payload,
   }
 }
+
+export function requestAddressClearError(payload) {
+  return {
+    type: 'addressAdd/request_address_clear_error',
+    payload,
+  }
+}

@@ -16,6 +16,7 @@ import { common } from '../../constants/common'
 import {
   updateForm,
   requestAddressAdd,
+  requestAddressClearError,
 } from '../../actions/addressAdd'
 import { getVerificateCode } from '../../actions/user'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
@@ -91,6 +92,13 @@ class AddAddress extends Component {
           />
         </TouchableOpacity>
       ),
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.error) {
+      Toast.fail('添加地址错误')
+      this.props.dispatch(requestAddressClearError())
     }
   }
 
