@@ -46,8 +46,7 @@ class Me extends Component {
   }
 
   render() {
-    const { loggedIn, navigation, loading } = this.props
-    console.log('render me', this.props)
+    const { loggedIn, navigation, loading, loggedInResult } = this.props
 
     return (
       <View
@@ -75,7 +74,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!loggedIn ? '请登录' : loggedIn.mobile}
+            title={!loggedIn ? '请登录' : loggedInResult.mobile}
             rightImageHide
           />
           <MeCell
@@ -149,6 +148,7 @@ function mapStateToProps(state) {
   return {
     loggedIn: state.authorize.loggedIn,
     loading: state.authorize.loading,
+    loggedInResult: state.authorize.loggedInResult,
   }
 }
 
