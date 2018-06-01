@@ -111,7 +111,7 @@ class Login extends PureComponent {
       screenProps.dismiss()
     }
 
-    if (nextProps.error) {
+    if (nextProps.error && (error !== this.props.error)) {
       const msg = this.errs[error.code]
       if (msg) {
         Toast.fail(msg)
