@@ -233,26 +233,6 @@ export default function user(state = initialState, action) {
         passwordLogin: action.data.password,
       }
       break
-    case constants.LOGOUT_REQUEST:
-      nextState = {
-        ...state,
-        logoutVisible: true,
-      }
-      break
-    case constants.LOGOUT_SUCCEED:
-      nextState = {
-        ...state,
-        logoutVisible: false,
-        logoutResponse: action.response,
-      }
-      break
-    case constants.LOGOUT_FAILED:
-      nextState = {
-        ...state,
-        logoutVisible: false,
-        logoutResponse: action.response,
-      }
-      break
     case constants.REGISTER_REQUEST:
       nextState = {
         ...state,

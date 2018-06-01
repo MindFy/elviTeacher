@@ -46,7 +46,8 @@ class Me extends Component {
   }
 
   render() {
-    const { user, logoutVisible, navigation } = this.props
+    const { loggedIn, navigation, loading } = this.props
+    console.log('render me', this.props)
 
     return (
       <View
@@ -58,7 +59,7 @@ class Me extends Component {
         <ScrollView>
           <MeCell
             onPress={() => {
-              if (!user) {
+              if (!loggedIn) {
                 this.navigateLogin()
               }
             }}
@@ -74,7 +75,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!user ? '请登录' : user.mobile}
+            title={!loggedIn ? '请登录' : loggedIn.mobile}
             rightImageHide
           />
           <MeCell
@@ -82,7 +83,7 @@ class Me extends Component {
               marginTop: common.margin10,
             }}
             onPress={() => {
-              if (user) navigation.navigate('Authentication')
+              if (loggedIn) navigation.navigate('Authentication')
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/手机认证copy.png')}
@@ -90,7 +91,7 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              if (user) navigation.navigate('Rebates')
+              if (loggedIn) navigation.navigate('Rebates')
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/手机认证.png')}
@@ -98,7 +99,7 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              if (user) navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
+              if (loggedIn) navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/银行卡.png')}
@@ -106,7 +107,7 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              if (user) navigation.navigate('Rebates')
+              if (loggedIn) navigation.navigate('Rebates')
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/手机认证copy3.png')}
@@ -114,7 +115,7 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              if (user) navigation.navigate('Rebates')
+              if (loggedIn) navigation.navigate('Rebates')
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/手机认证copy4.png')}
@@ -122,14 +123,14 @@ class Me extends Component {
           />
 
           {
-            user ? (<TKButton
+            loggedIn ? (<TKButton
               style={{
                 marginTop: common.margin40,
                 marginLeft: 0,
                 marginRight: 0,
               }}
               onPress={() => this.logoutPress()}
-              disabled={logoutVisible}
+              disabled={!loggedIn}
               caption="退出登录"
               theme={'gray'}
             />) : null
@@ -137,17 +138,17 @@ class Me extends Component {
         </ScrollView>
 
         <TKSpinner
-          isVisible={logoutVisible}
+          isVisible={loading}
         />
       </View>
     )
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
-    logoutVisible: store.user.logoutVisible,
+    loggedIn: state.authorize.loggedIn,
+    loading: state.authorize.loading,
   }
 }
 

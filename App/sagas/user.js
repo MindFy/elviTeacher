@@ -88,15 +88,7 @@ export function* isExist() {
     else yield put({ type: constants.IS_EXIST_FAILED, response })
   }
 }
-/* 注销用户 */
-export function* logout() {
-  while (true) {
-    yield take(constants.LOGOUT_REQUEST)
-    const response = yield call(api.logout)
-    if (response.success) yield put({ type: constants.LOGOUT_SUCCEED, response })
-    else yield put({ type: constants.LOGOUT_FAILED, response })
-  }
-}
+
 /* 注册 */
 export function* register() {
   while (true) {

@@ -4,6 +4,8 @@ import {
   LOGIN_SUCCEED,
   LOGIN_FAILED,
   LOGOUT_REQUEST,
+  LOGOUT_SUCCEED,
+  LOGOUT_FAILED,
   SYNC_REQUEST,
 } from '../constants/index'
 import * as api from '../services/api'
@@ -48,6 +50,12 @@ export default function* loginFlow() {
 
     if (action.type === LOGOUT_REQUEST) {
       yield cancel(task)
+      const response = yield call(api.logout)
+      if (response.success) {
+        yield put({ type: LOGOUT_SUCCEED, payload: response.result })
+      } else {
+        yield put({ type: LOGOUT_FAILED, payload: response.error })
+      }
     }
   }
 }

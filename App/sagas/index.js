@@ -25,7 +25,6 @@ export default function* rootSaga() {
     fork(user.findUser),
     fork(user.idCardAuth),
     fork(user.isExist),
-    fork(user.logout),
     fork(user.register),
     fork(user.resetPassword),
     fork(user.updateBank),
