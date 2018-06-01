@@ -10,6 +10,7 @@ import {
 } from '../constants'
 
 const initialState = {
+  syncing: false,
   formState: {
     mobile: '',
     password: '',
@@ -78,6 +79,24 @@ export default function authorize(state = initialState, action) {
       nextState = {
         ...state,
         error: null,
+      }
+      break
+    case 'authorize/sync_request':
+      nextState = {
+        ...state,
+        syncing: true,
+      }
+      break
+    case 'authorize/sync_request_succeed':
+      nextState = {
+        ...state,
+        syncing: false,
+      }
+      break
+    case 'authorize/sync_request_failed':
+      nextState = {
+        ...state,
+        syncing: false,
       }
       break
     default:

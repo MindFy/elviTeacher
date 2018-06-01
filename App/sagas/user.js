@@ -115,18 +115,7 @@ export function* resetPassword() {
     else yield put({ type: constants.RESET_PASSWORD_FAILED, response })
   }
 }
-/* app、web状态同步 */
-export function* sync() {
-  while (true) {
-    yield take(constants.SYNC_REQUEST)
-    const response = yield call(api.sync)
-    if (response.success && response.result.mobile.length) {
-      // DeviceEventEmitter.emit(common.noti.home, constants.SYNC_SUCCEED)
-    } else if (response.success && !response.result.mobile.length) {
-      // DeviceEventEmitter.emit(common.noti.home, constants.SYNC_FAILED)
-    }
-  }
-}
+
 /* 用户自己修改密码 */
 export function* updatePassword() {
   while (true) {

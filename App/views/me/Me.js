@@ -148,7 +148,6 @@ function mapStateToProps(store) {
   return {
     user: store.user.user,
     logoutVisible: store.user.logoutVisible,
-    logoutResponse: store.user.logoutResponse,
   }
 }
 

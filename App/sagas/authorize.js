@@ -1,9 +1,10 @@
-import { take, call, put, fork, cancel, cancelled } from 'redux-saga/effects'
+import { take, takeEvery, call, put, fork, cancel, cancelled } from 'redux-saga/effects'
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCEED,
   LOGIN_FAILED,
   LOGOUT_REQUEST,
+  SYNC_REQUEST,
 } from '../constants/index'
 import * as api from '../services/api'
 
@@ -25,6 +26,20 @@ export function* authorize(data) {
   }
 }
 
+export function* sync(action) {
+  try {
+    const response = yield call(api.sync)
+
+    if (response.success && response.result.id > 0) {
+      yield put({ type: 'authorize/sync_request_succeed', payload: response.result })
+    } else {
+      yield put({ type: 'authorize/sync_request_failed', payload: response.error })
+    }
+  } catch (error) {
+    yield put({ type: 'authorize/sync_request_failed', payload: error })
+  }
+}
+
 export default function* loginFlow() {
   while (true) {
     const { payload } = yield take(LOGIN_REQUEST)
@@ -35,4 +50,8 @@ export default function* loginFlow() {
       yield cancel(task)
     }
   }
+}
+
+export function* syncWatcher() {
+  yield takeEvery(SYNC_REQUEST, sync)
 }
