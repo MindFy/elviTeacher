@@ -2,27 +2,20 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
-  Text,
-  Image,
   StatusBar,
   ScrollView,
   RefreshControl,
-  TouchableOpacity,
 } from 'react-native'
 import {
   common,
 } from '../../constants/common'
 import HomeRoseList from './HomeRoseList'
 import HomeSwiper from './HomeSwiper'
+import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
 class Home extends Component {
-  constructor() {
-    super()
-    this.showFindBannersResponse = false
-  }
-
   componentDidMount() {
     const { dispatch } = this.props
     dispatch(actions.sync())
@@ -30,17 +23,30 @@ class Home extends Component {
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
   }
 
-  componentWillUnmount() {
-    this.listener.remove()
+  homeBtnPress = (i) => {
+    const { navigation, user, dispatch } = this.props
+    const navigateKeys = ['Recharge', 'Withdraw', 'Delegate', 'Delegate']
+    if (!user) {
+      navigation.navigate('LoginStack')
+    } else {
+      if (i === 2) {
+        dispatch(actions.selectionBarUpdate(common.selectionBar.left))
+        dispatch(actions.currentOrHistoryUpdate({
+          currentOrHistory: common.delegate.current,
+        }))
+      } else if (i === 3) {
+        dispatch(actions.selectionBarUpdate(common.selectionBar.right))
+        dispatch(actions.currentOrHistoryUpdate({
+          currentOrHistory: common.delegate.history,
+        }))
+      }
+      navigation.navigate(navigateKeys[i])
+    }
   }
 
-  render() {
-    const { dispatch, announcement, imgHashApi, banners, navigation, user, announcementVisible,
-      findBannersVisible } = this.props
-
+  renderHomeBtns = () => {
     const btnTitles = ['充值', '提现', '当前委托', '历史委托']
-    const btns = []
-    const navigateKeys = ['Recharge', 'Withdraw', 'Delegate', 'Delegate']
+    const homeBtns = []
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {
@@ -56,55 +62,48 @@ class Home extends Component {
         default:
           break
       }
-      btns.push(
-        <TouchableOpacity
+      homeBtns.push(
+        <TKButton
           key={i}
-          style={{
-            flex: 1,
-            backgroundColor: common.navBgColor,
-            justifyContent: 'center',
-          }}
-          activeOpacity={common.activeOpacity}
-          onPress={() => {
-            if (!user) {
-              navigation.navigate('LoginStack')
-            } else {
-              if (i === 2) {
-                dispatch(actions.selectionBarUpdate(common.selectionBar.left))
-                dispatch(actions.currentOrHistoryUpdate({
-                  currentOrHistory: common.delegate.current,
-                }))
-              } else if (i === 3) {
-                dispatch(actions.selectionBarUpdate(common.selectionBar.right))
-                dispatch(actions.currentOrHistoryUpdate({
-                  currentOrHistory: common.delegate.history,
-                }))
-              }
-              navigation.navigate(navigateKeys[i])
-            }
-          }}
-        >
-          <Image
-            style={{
-              marginTop: common.margin10,
-              width: common.w40,
-              height: common.h40,
-              alignSelf: 'center',
-            }}
-            source={source}
-          />
-          <Text
-            style={{
-              marginTop: common.margin5,
-              marginBottom: common.margin10,
-              alignSelf: 'center',
-              color: common.textColor,
-              fontSize: common.font14,
-            }}
-          >{btnTitles[i]}</Text>
-        </TouchableOpacity>,
+          titleStyle={{ color: common.textColor }}
+          theme={'home-balance'}
+          caption={btnTitles[i]}
+          icon={source}
+          onPress={() => this.homeBtnPress(i)}
+        />,
       )
     }
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {homeBtns}
+      </View>
+    )
+  }
+
+  renderRefreshControl = () => {
+    const { dispatch, announcementVisible, findBannersVisible } = this.props
+    return (
+      <RefreshControl
+        onRefresh={() => {
+          dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+          dispatch(actions.findBanners(schemas.findBanners()))
+        }}
+        refreshing={
+          !!((findBannersVisible || announcementVisible))
+        }
+        colors={[common.textColor]}
+        progressBackgroundColor={common.navBgColor}
+        progressViewOffset={0}
+        tintColor={common.textColor}
+      />
+    )
+  }
+
+  render() {
+    const { announcement, imgHashApi, banners, navigation } = this.props
+
+    const homeBtns = this.renderHomeBtns()
+    const refreshControl = this.renderRefreshControl()
 
     return (
       <View
@@ -113,25 +112,9 @@ class Home extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
+        <StatusBar barStyle={'light-content'} />
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              onRefresh={() => {
-                dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-                dispatch(actions.findBanners(schemas.findBanners()))
-              }}
-              refreshing={
-                !!((findBannersVisible || announcementVisible))
-              }
-              colors={[common.textColor]}
-              progressBackgroundColor={common.navBgColor}
-              progressViewOffset={0}
-              tintColor={common.textColor}
-            />
-          }
+          refreshControl={refreshControl}
           showsVerticalScrollIndicator={false}
         >
           <HomeSwiper
@@ -146,16 +129,9 @@ class Home extends Component {
             }}
           />
 
-          <View
-            style={{
-              height: common.h80,
-              flexDirection: 'row',
-            }}
-          >{btns}</View>
+          {homeBtns}
 
-          <HomeRoseList
-            navigation={navigation}
-          />
+          <HomeRoseList navigation={navigation} />
         </ScrollView>
       </View>
     )
