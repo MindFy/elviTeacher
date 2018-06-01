@@ -39,3 +39,78 @@ export function updateForm(payload) {
     payload,
   }
 }
+
+export function requestBalance(payload) {
+  return {
+    type: 'withdraw/request_balance',
+    payload,
+  }
+}
+
+export function requestBalanceSucceed(payload) {
+  return {
+    type: 'withdraw/request_balance_succeed',
+    payload,
+  }
+}
+
+export function requestBalanceFailed(payload) {
+  return {
+    type: 'withdraw/request_balance_failed',
+    payload,
+  }
+}
+
+export function requestValuation() {
+  return {
+    type: 'withdraw/requset_valuation',
+  }
+}
+
+export function requestValuationSucceed(payload) {
+  return {
+    type: 'withdraw/requset_valuation_succeed',
+    payload,
+  }
+}
+
+export function requestValuationFailed(payload) {
+  return {
+    type: 'withdraw/requset_valuation_failed',
+    payload,
+  }
+}
+
+export function requestWithdraw(payload) {
+  return {
+    type: 'withdraw/request_withdraw',
+    payload,
+  }
+}
+
+export function requestWithdrawSuccess(payload) {
+  return {
+    type: 'withdraw/request_withdraw_succeed',
+    payload,
+  }
+}
+
+export function requestWithdrawFailed(payload) {
+  return {
+    type: 'withdraw/request_withdraw_failed',
+    payload,
+  }
+}
+
+export function requestWithdrawClearError() {
+  return {
+    type: 'withdraw/request_withdraw_clear_error',
+  }
+}
+
+export function withdrawClear() {
+  return {
+    type: 'withdraw/clear',
+  }
+}
+

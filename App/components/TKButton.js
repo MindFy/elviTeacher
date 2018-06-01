@@ -87,7 +87,7 @@ class TKButton extends PureComponent {
   }
 
   render() {
-    const { icon, onPress, caption, style } = this.props
+    const { icon, onPress, caption, style, titleStyle } = this.props
     const { containerTheme, buttonTheme, captionTheme } = this.getTheme()
 
     let iconImage
@@ -106,7 +106,7 @@ class TKButton extends PureComponent {
       >
         {iconImage}
         <Text
-          style={[styles.caption, captionTheme]}
+          style={[styles.caption, captionTheme, titleStyle]}
         >
           {caption}
         </Text>
