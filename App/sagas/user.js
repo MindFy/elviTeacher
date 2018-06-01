@@ -121,9 +121,9 @@ export function* sync() {
     yield take(constants.SYNC_REQUEST)
     const response = yield call(api.sync)
     if (response.success && response.result.mobile.length) {
-      DeviceEventEmitter.emit(common.noti.home, constants.SYNC_SUCCEED)
+      // DeviceEventEmitter.emit(common.noti.home, constants.SYNC_SUCCEED)
     } else if (response.success && !response.result.mobile.length) {
-      DeviceEventEmitter.emit(common.noti.home, constants.SYNC_FAILED)
+      // DeviceEventEmitter.emit(common.noti.home, constants.SYNC_FAILED)
     }
   }
 }

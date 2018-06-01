@@ -33,66 +33,6 @@ class HomeRoseList extends Component {
     dispatch(actions.getValuation())
     dispatch(actions.getRose({ homeRoseSelected, user }))
 
-    this.listener = DeviceEventEmitter.addListener(common.noti.home, (type, resp) => {
-      switch (type) {
-        case constants.SYNC_SUCCEED:
-          storeRead(common.user.string, (result) => {
-            const temp = JSON.parse(result)
-            dispatch(actions.findUserUpdate(temp))
-            dispatch(actions.findUser(schemas.findUser(temp.id)))
-            dispatch(actions.findAssetList(schemas.findAssetList(temp.id)))
-            if (this.props.homeRoseSelected) {
-              ws.onclose(this.props.homeRoseSelected.goods.id,
-                this.props.homeRoseSelected.currency.id)
-              ws.onopen(this.props.homeRoseSelected.goods.id,
-                this.props.homeRoseSelected.currency.id, temp)
-            }
-          })
-          break
-        case constants.SYNC_FAILED:
-          storeDelete(common.user.string, (error) => {
-            if (!error) {
-              dispatch(actions.findUserUpdate(undefined))
-              dispatch(actions.findAssetListUpdate({
-                asset: [],
-                amountVisible: undefined,
-              }))
-            }
-          })
-          break
-        case constants.GET_ROSE_SUCCEED:
-          dispatch(actions.getShelves({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          dispatch(actions.latestDeals({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          dispatch(actions.getDepthMap({ goods_id: resp.goods.id, currency_id: resp.currency.id }))
-          break
-
-        case common.ws.handicap:
-          if (this.props.user) {
-            dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))
-          }
-          dispatch(actions.wsGetShelvesUpdate(resp))
-          break
-        case common.ws.market:
-          dispatch(actions.getRose({
-            homeRoseSelected: this.props.homeRoseSelected,
-            user: this.props.user,
-          }))
-          dispatch(actions.getValuation())
-          break
-        case common.ws.deals:
-          dispatch(actions.wsDealsUpdate(resp))
-          break
-        case common.ws.delegates:
-          if (resp.userid) {
-            dispatch(actions.wsDelegatesCurrentUpdate(resp.delegates))
-          }
-          break
-
-        default:
-          break
-      }
-    })
-
     this.timer1 = setInterval(() => {
       if (this.props.user) {
         dispatch(actions.findAssetList(schemas.findAssetList(this.props.user.id)))

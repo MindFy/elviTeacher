@@ -6,15 +6,11 @@ import {
 } from 'react-native'
 import {
   common,
-  storeRead,
-  storeDelete,
 } from '../../constants/common'
 import MeCell from './MeCell'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
-import schemas from '../../schemas/index'
-import ws from '../../websocket/ws'
 
 class Me extends Component {
   static navigationOptions() {
@@ -38,19 +34,6 @@ class Me extends Component {
     this.showLogoutResponse = false
   }
 
-  /* 读取用户数据并展示 */
-  readAndDisplay() {
-    const { dispatch } = this.props
-    storeRead(common.user.string, (result) => {
-      const objectResult = JSON.parse(result)
-
-      dispatch(actions.findUserUpdate(objectResult))
-      /* 发送获取用户个人信息请求 */
-      dispatch(actions.findUser(schemas.findUser(objectResult.id)))
-      dispatch(actions.findAssetList(schemas.findAssetList(objectResult.id)))
-    })
-  }
-
   /* 跳转到登录页面 */
   navigateLogin() {
     const { navigation } = this.props
@@ -62,43 +45,7 @@ class Me extends Component {
     dispatch(actions.logout())
   }
 
-  handleLogoutRequest() {
-    const { dispatch, logoutVisible, logoutResponse } = this.props
-    if (!logoutVisible && !this.showLogoutResponse) return
-
-    if (logoutVisible) {
-      this.showLogoutResponse = true
-    } else {
-      this.showLogoutResponse = false
-      if (logoutResponse.success) {
-        storeDelete(common.user.string, (error) => {
-          if (!error) {
-            // 清除页面数据
-            dispatch(actions.findUserUpdate(undefined))
-            dispatch(actions.findAssetListUpdate({
-              asset: [],
-              amountVisible: undefined,
-            }))
-            if (this.props.homeRoseSelected) {
-              ws.onclose(this.props.homeRoseSelected.goods.id,
-                this.props.homeRoseSelected.currency.id)
-              ws.onopen(this.props.homeRoseSelected.goods.id,
-                this.props.homeRoseSelected.currency.id, undefined)
-            }
-            // 返回登录页
-            dispatch(actions.loginUpdate({ mobile: '', password: '' }))
-            this.navigateLogin()
-          }
-        })
-      } else {
-        // 登出失败
-      }
-    }
-  }
-
   render() {
-    this.handleLogoutRequest()
-
     const { user, logoutVisible, navigation } = this.props
 
     return (
@@ -195,11 +142,8 @@ class Me extends Component {
 function mapStateToProps(store) {
   return {
     user: store.user.user,
-
     logoutVisible: store.user.logoutVisible,
     logoutResponse: store.user.logoutResponse,
-
-    homeRoseSelected: store.dealstat.homeRoseSelected,
   }
 }
 

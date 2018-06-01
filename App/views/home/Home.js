@@ -25,6 +25,7 @@ class Home extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props
+    dispatch(actions.sync())
     dispatch(actions.findBanners(schemas.findBanners()))
     dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
   }
