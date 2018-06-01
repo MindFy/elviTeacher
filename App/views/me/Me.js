@@ -89,7 +89,10 @@ class Me extends Component {
             title="身份认证"
           />
           <MeCell
-            onPress={() => navigation.navigate('SecurityCenter')}
+            onPress={() => {
+              if (user) navigation.navigate('Rebates')
+              else navigation.navigate('LoginStack')
+            }}
             leftImageSource={require('../../assets/手机认证.png')}
             title="安全中心"
           />
@@ -110,24 +113,26 @@ class Me extends Component {
             title="超级返利"
           />
           <MeCell
-            onPress={() => navigation.navigate('Settings')}
+            onPress={() => {
+              if (user) navigation.navigate('Rebates')
+              else navigation.navigate('LoginStack')
+            }}
             leftImageSource={require('../../assets/手机认证copy4.png')}
             title="设置"
           />
 
           {
-            user
-              ? <TKButton
-                style={{
-                  marginTop: common.margin40,
-                  marginLeft: 0,
-                  marginRight: 0,
-                }}
-                onPress={() => this.logoutPress()}
-                disabled={logoutVisible}
-                caption="退出登录"
-                theme={'gray'}
-              /> : null
+            user ? (<TKButton
+              style={{
+                marginTop: common.margin40,
+                marginLeft: 0,
+                marginRight: 0,
+              }}
+              onPress={() => this.logoutPress()}
+              disabled={logoutVisible}
+              caption="退出登录"
+              theme={'gray'}
+            />) : null
           }
         </ScrollView>
 
