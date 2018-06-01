@@ -40,7 +40,7 @@ class Home extends Component {
 
     const btnTitles = ['充值', '提现', '当前委托', '历史委托']
     const btns = []
-    const navigateKeys = ['Recharge', 'Withdraw', 'Delegate', 'Delegate']
+    const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {

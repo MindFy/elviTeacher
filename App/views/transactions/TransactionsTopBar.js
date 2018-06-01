@@ -83,7 +83,7 @@ class TransactionsTopBar extends Component {
               if (!user) {
                 navigation.navigate('LoginStack')
               } else {
-                navigation.navigate('Delegate')
+                navigation.navigate('Orders')
               }
             }}
           >

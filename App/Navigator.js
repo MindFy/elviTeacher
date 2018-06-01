@@ -15,6 +15,7 @@ import Market from './views/market/Market'
 import Transactions from './views/transactions/Transactions'
 import Detail from './views/transactions/Detail'
 import Delegate from './views/transactions/Delegate'
+import Orders from './views/transactions/Orders'
 import Balance from './views/balance/Balance'
 import History from './views/balance/History'
 import Cash from './views/balance/Cash'
@@ -145,6 +146,7 @@ const TabBarStack = StackNavigator({
     },
   },
   Delegate,
+  Orders,
   History,
   Withdraw,
   Recharge,

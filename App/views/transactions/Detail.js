@@ -138,7 +138,7 @@ class Detail extends Component {
           }}
           activeOpacity={common.activeOpacity}
           onPress={() => {
-            if (user) navigation.navigate('Delegate')
+            if (user) navigation.navigate('Orders')
             else navigation.navigate('LoginStack')
           }}
         >

@@ -1,37 +1,51 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import {
   View,
   Text,
   TouchableOpacity,
 } from 'react-native'
-import {
-  common,
-} from '../constants/common'
-import actions from '../actions/index'
+import { common } from '../constants/common'
 
 class TKSelectionBar extends Component {
-  componentWillUnmount() {
-    const { dispatch } = this.props
-    dispatch(actions.selectionBarUpdate(common.selectionBar.left))
+  constructor() {
+    super()
+
+    this.state = {
+      selectedIdx: 0,
+    }
   }
 
-  onPress(type) {
-    const { dispatch, leftBlock, rightBlock, thirdBlock } = this.props
-    dispatch(actions.selectionBarUpdate(type))
-    if (type === common.selectionBar.left) {
+  onPress(selectedIdx) {
+    const {
+      leftBlock,
+      rightBlock,
+      thirdBlock,
+    } = this.props
+
+    this.setState({
+      selectedIdx,
+    })
+
+    if (selectedIdx === 0) {
       leftBlock()
-    } else if (type === common.selectionBar.right) {
+    } else if (selectedIdx === 1) {
       rightBlock()
-    } else if (type === common.selectionBar.third) {
+    } else if (selectedIdx === 2) {
       thirdBlock()
     }
   }
 
   render() {
-    const { selectionBarSelected, leftTitle, rightTitle, thirdTitle, rightViewStyle } = this.props
+    const {
+      leftTitle,
+      rightTitle,
+      thirdTitle,
+      rightViewStyle,
+    } = this.props
+
     const width = thirdTitle ? ((common.sw - common.margin15 * 2) / 3)
       : ((common.sw - common.margin10 * 2) / 2)
+
     return (
       <View
         style={{
@@ -43,13 +57,13 @@ class TKSelectionBar extends Component {
       >
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
-          onPress={() => this.onPress(common.selectionBar.left)}
+          onPress={() => this.onPress(0)}
         >
           <View
             style={{
               flex: 1,
               width,
-              backgroundColor: selectionBarSelected === common.selectionBar.left
+              backgroundColor: this.state.selectedIdx === 0
                 ? common.borderColor : common.navBgColor,
               justifyContent: 'center',
             }}
@@ -57,7 +71,7 @@ class TKSelectionBar extends Component {
             <Text
               style={{
                 fontSize: common.font14,
-                color: selectionBarSelected === common.selectionBar.left
+                color: this.state.selectedIdx === 0
                   ? common.btnTextColor : common.textColor,
                 alignSelf: 'center',
               }}
@@ -66,13 +80,13 @@ class TKSelectionBar extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
-          onPress={() => this.onPress(common.selectionBar.right)}
+          onPress={() => this.onPress(1)}
         >
           <View
             style={[{
               flex: 1,
               width,
-              backgroundColor: selectionBarSelected === common.selectionBar.right
+              backgroundColor: this.state.selectedIdx === 1
                 ? common.borderColor : common.navBgColor,
               justifyContent: 'center',
             }, rightViewStyle]}
@@ -80,7 +94,7 @@ class TKSelectionBar extends Component {
             <Text
               style={{
                 fontSize: common.font14,
-                color: selectionBarSelected === common.selectionBar.right
+                color: this.state.selectedIdx === 1
                   ? common.btnTextColor : common.textColor,
                 alignSelf: 'center',
               }}
@@ -91,13 +105,13 @@ class TKSelectionBar extends Component {
           thirdTitle
             ? <TouchableOpacity
               activeOpacity={common.activeOpacity}
-              onPress={() => this.onPress(common.selectionBar.third)}
+              onPress={() => this.onPress(2)}
             >
               <View
                 style={[{
                   flex: 1,
                   width,
-                  backgroundColor: selectionBarSelected === common.selectionBar.third
+                  backgroundColor: this.state.selectedIdx === 2
                     ? common.borderColor : common.navBgColor,
                   justifyContent: 'center',
                 }, rightViewStyle]}
@@ -105,7 +119,7 @@ class TKSelectionBar extends Component {
                 <Text
                   style={{
                     fontSize: common.font14,
-                    color: selectionBarSelected === common.selectionBar.third
+                    color: this.state.selectedIdx === 2
                       ? common.btnTextColor : common.textColor,
                     alignSelf: 'center',
                   }}
@@ -118,12 +132,4 @@ class TKSelectionBar extends Component {
   }
 }
 
-function mapStateToProps(store) {
-  return {
-    selectionBarSelected: store.ui.selectionBarSelected,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(TKSelectionBar)
+export default TKSelectionBar
