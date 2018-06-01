@@ -4,91 +4,102 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  StyleSheet,
 } from 'react-native'
 import { common } from '../constants/common'
-import TKButtonGetVerificateCode from './TKButtonGetVerificateCode'
+import TKCheckCodeBtn from '../components/TKCheckCodeBtn'
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    marginLeft: common.margin48,
+    marginRight: common.margin48,
+    height: common.h154,
+  },
+  phoneContainer: {
+    marginTop: common.margin20,
+    marginLeft: common.margin20,
+    marginRight: common.margin20,
+    flexDirection: 'row',
+  },
+  phoneTip: {
+    color: common.blackColor,
+    fontSize: common.font12,
+    width: '40%',
+  },
+  phone: {
+    color: common.blackColor,
+    fontSize: common.font12,
+    width: '50%',
+  },
+  inputContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin20,
+    marginRight: common.margin20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  codeTip: {
+    color: common.blackColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+    width: '40%',
+  },
+  inputInnerContainer: {
+    borderColor: common.placeholderColor,
+    borderWidth: 1,
+    height: common.h30,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '60%',
+  },
+  textInput: {
+    marginLeft: common.margin5,
+    color: common.blackColor,
+    fontSize: common.font12,
+    width: '50%',
+  },
+  codeContainer: {
+    marginRight: common.margin5,
+    alignSelf: 'center',
+  },
+})
 
 export default class TKViewCheckAuthorize extends Component {
   componentDidMount() { }
 
   render() {
-    const { mobile, code, onChange, codePress, confirmPress, cancelPress } = this.props
+    const {
+      mobile,
+      code,
+      onChangeText,
+      codePress,
+      confirmPress,
+      cancelPress,
+    } = this.props
     return (
-      <View
-        style={{
-          backgroundColor: '#fff',
-          marginLeft: common.margin48,
-          marginRight: common.margin48,
-          height: common.h154,
-        }}
-      >
-        <View
-          style={{
-            marginTop: common.margin20,
-            marginLeft: common.margin20,
-            marginRight: common.margin20,
-            flexDirection: 'row',
-          }}
-        >
-          <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font12,
-              width: '40%',
-            }}
-          >手机号</Text>
-          <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font12,
-              width: '50%',
-            }}
-          >{mobile}</Text>
+      <View style={styles.container}>
+        <View style={styles.phoneContainer}>
+          <Text style={styles.phoneTip}>手机号</Text>
+          <Text style={styles.phone}>{mobile}</Text>
         </View>
 
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin20,
-            marginRight: common.margin20,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-              width: '40%',
-            }}
-          >短信验证码</Text>
-          <View
-            style={{
-              borderColor: common.placeholderColor,
-              borderWidth: 1,
-              height: common.h30,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: '60%',
-            }}
-          >
+        <View style={styles.inputContainer}>
+          <Text style={styles.codeTip}>短信验证码</Text>
+          <View style={styles.inputInnerContainer}>
             <TextInput
-              style={{
-                marginLeft: common.margin5,
-                color: common.blackColor,
-                fontSize: common.font12,
-                width: '50%',
-              }}
+              style={styles.textInput}
               maxLength={6}
               value={code}
-              onChange={e => onChange(e)}
+              onChangeText={text => onChangeText(text)}
             />
-            <TKButtonGetVerificateCode
-              onPress={(count) => {
-                codePress(count)
-              }}
-            />
+            <View style={styles.codeContainer}>
+              <TKCheckCodeBtn
+                onPress={() => {
+                  codePress()
+                }}
+              />
+            </View>
           </View>
         </View>
 

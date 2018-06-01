@@ -12,8 +12,14 @@ import * as asset from './asset'
 import findAnnouncement from './announcement'
 import * as address from './address'
 import loginFlow, { syncWatcher } from './authorize'
-import { requestCoinList } from './withdraw'
 import { openOrderRequest, orderHistoryRequest } from './orders'
+import {
+  requestCoinList,
+  requestBalance,
+  requestValuation,
+  requestWithdraw,
+} from './withdraw'
+import { requestAddressAdd } from './addressAdd'
 
 export default function* rootSaga() {
   yield [
@@ -76,9 +82,12 @@ export default function* rootSaga() {
     fork(address.addAddress),
     fork(address.findAddress),
 
+    fork(requestAddressAdd),
     fork(requestCoinList),
-
     fork(orderHistoryRequest),
     fork(openOrderRequest),
+    fork(requestBalance),
+    fork(requestValuation),
+    fork(requestWithdraw),
   ]
 }
