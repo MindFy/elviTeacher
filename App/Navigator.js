@@ -18,6 +18,7 @@ import Delegate from './views/transactions/Delegate'
 import Balance from './views/balance/Balance'
 import History from './views/balance/History'
 import Cash from './views/balance/Cash'
+import Withdraw from './views/balance/Withdraw'
 import Recharge from './views/balance/Recharge'
 import AddAddress from './views/balance/AddAddress'
 import Me from './views/me/Me'
@@ -145,7 +146,7 @@ const TabBarStack = StackNavigator({
   },
   Delegate,
   History,
-  Cash,
+  Withdraw,
   Recharge,
   AddAddress,
   Authentication,

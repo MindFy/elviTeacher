@@ -14,6 +14,7 @@ import user from './user'
 import ui from './ui'
 import detailDeal from './detailDeal'
 import authorize from './authorize'
+import withdraw from './withdraw'
 
 const rootReducer = combineReducers({
   authorize,
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   user,
   ui,
   detailDeal,
+  withdraw,
 })
 
 export default rootReducer

@@ -12,6 +12,7 @@ import * as asset from './asset'
 import findAnnouncement from './announcement'
 import * as address from './address'
 import loginFlow from './authorize'
+import { requestCoinList } from './withdraw'
 
 export default function* rootSaga() {
   yield [
@@ -75,5 +76,7 @@ export default function* rootSaga() {
 
     fork(address.addAddress),
     fork(address.findAddress),
+
+    fork(requestCoinList),
   ]
 }
