@@ -25,7 +25,7 @@ class Home extends Component {
 
   homeBtnPress = (i) => {
     const { navigation, user, dispatch } = this.props
-    const navigateKeys = ['Recharge', 'Withdraw', 'Delegate', 'Delegate']
+    const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     if (!user) {
       navigation.navigate('LoginStack')
     } else {
