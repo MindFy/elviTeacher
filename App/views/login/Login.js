@@ -11,13 +11,9 @@ import {
   StyleSheet,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
-import {
-  common,
-  storeSave,
-} from '../../constants/common'
+import { common } from '../../constants/common'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
-import ws from '../../websocket/ws'
 import TKInputItem from '../../components/TKInputItem'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
@@ -105,7 +101,7 @@ class Login extends PureComponent {
   }
 
   loginHandle(nextProps) {
-    const { dispatch, loggedIn, error, loggedInResult, screenProps, homeRoseSelected } = nextProps
+    const { dispatch, loggedIn, error, loggedInResult, screenProps } = nextProps
 
     if (loggedIn !== this.props.loggedIn) {
       Toast.success('登录成功')
