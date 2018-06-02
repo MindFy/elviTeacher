@@ -12,7 +12,6 @@ import Buttons from './views/home/Buttons'
 import Banner from './views/home/Banner'
 import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
-import Transactions from './views/transactions/Transactions'
 import Detail from './views/transactions/Detail'
 import Delegate from './views/transactions/Delegate'
 import Orders from './views/transactions/Orders'
@@ -158,7 +157,6 @@ const TabBarStack = StackNavigator({
   LegalDealDetail,
   Payment,
   UpdateBank,
-  Transactions,
   Banner,
   Announcement,
   SecurityCenter,

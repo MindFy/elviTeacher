@@ -93,7 +93,6 @@ import {
   averagePriceOrPriceUpdate,
   dealledOrQuantityUpdate,
   cashAccountUpdate,
-  delegateDrawerUpdate,
   codeAuthUpdate,
   bankTextInputUpdate,
 } from './ui'
@@ -196,7 +195,6 @@ const actions = {
   averagePriceOrPriceUpdate,
   dealledOrQuantityUpdate,
   cashAccountUpdate,
-  delegateDrawerUpdate,
   codeAuthUpdate,
   bankTextInputUpdate,
 

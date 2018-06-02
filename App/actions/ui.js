@@ -35,13 +35,6 @@ export function cashAccountUpdate(data) {
   }
 }
 
-export function delegateDrawerUpdate(data) {
-  return {
-    type: constants.DELEGATE_DRAWER_UPDATE,
-    data,
-  }
-}
-
 export function codeAuthUpdate(data) {
   return {
     type: constants.CODE_AUTH_UPDATE,
