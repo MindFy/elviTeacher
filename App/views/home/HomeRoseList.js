@@ -68,7 +68,7 @@ class HomeRoseList extends Component {
     dispatch(actions.homeRoseSelectedUpdate(rd))
     ws.onopen(rd.goods.id, rd.currency.id, user)
     this.getUIData(rd.goods.id, rd.currency.id)
-    navigation.navigate('Detail')
+    navigation.navigate('Deal')
   }
 
   renderHeader() {

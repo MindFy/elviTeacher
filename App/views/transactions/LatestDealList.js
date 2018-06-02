@@ -1,149 +1,100 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import {
   View,
   Text,
   ListView,
+  StyleSheet,
 } from 'react-native'
-import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 
-class LatestDealList extends Component {
+const styles = StyleSheet.create({
+  rowView: {
+    marginTop: common.margin10 / 2,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  rowText: {
+    flex: 1,
+    color: 'white',
+    fontSize: common.font12,
+  },
+  headerView: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  headerText: {
+    color: common.placeholderColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+  },
+})
+
+export default class LatestDealList extends Component {
   constructor() {
     super()
 
-    this.latestDealsDS = data => new ListView.DataSource({
+    this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
   }
 
-  renderLatestDealsRow(rd) {
-    const { homeRoseSelected } = this.props
-    let textColor = null
-    let dealPrice
-    let quantity
-    if (rd.endDirect === 'buy') {
+  renderRow(rd) {
+    let textColor
+    if (rd.direct === 'buy') {
       textColor = common.redColor
-    } else if (rd.endDirect === 'sell') {
+    } else if (rd.direct === 'sell') {
       textColor = common.greenColor
     }
-    const createdAt = common.dfTime(rd.createdAt)
-    common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
-      dealPrice = new BigNumber(rd.dealPrice).toFixed(p, 1)
-      quantity = new BigNumber(rd.quantity).toFixed(q, 1)
-    })
     return (
-      <View
-        style={{
-          marginTop: common.margin10 / 2,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text style={{
-          flex: 1,
-          color: 'white',
-          fontSize: common.font12,
-          textAlign: 'left',
-        }}
-        >{createdAt}</Text>
-        <Text style={{
-          flex: 1,
+      <View style={styles.rowView}>
+        <Text style={styles.rowText}>
+          {rd.createdAt}
+        </Text>
+        <Text style={[styles.rowText, {
           color: textColor,
-          fontSize: common.font12,
           textAlign: 'center',
-        }}
-        >{dealPrice}</Text>
-        <Text style={{
-          flex: 1,
-          color: 'white',
-          fontSize: common.font12,
+        }]}
+        >{rd.price}</Text>
+        <Text style={[styles.rowText, {
           textAlign: 'right',
-        }}
-        >{quantity}</Text>
+        }]}
+        >{rd.quantity}</Text>
       </View>
     )
   }
 
-  renderLatestDealsHeader() {
+  renderHeader() {
     return (
-      <View>
-        <View style={{
-          height: common.h32,
-          backgroundColor: common.navBgColor,
-          flexDirection: 'row',
-        }}
-        >
-          <Text style={{
-            marginLeft: common.margin10,
-            color: common.textColor,
-            fontSize: common.font14,
-            alignSelf: 'center',
-          }}
-          >最新成交</Text>
-        </View>
-
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text style={{
-            color: common.placeholderColor,
-            fontSize: common.font12,
-            alignSelf: 'center',
-          }}
-          >时间</Text>
-          <Text style={{
-            color: common.placeholderColor,
-            fontSize: common.font12,
-            alignSelf: 'center',
-          }}
-          >价格</Text>
-          <Text style={{
-            color: common.placeholderColor,
-            fontSize: common.font12,
-            alignSelf: 'center',
-          }}
-          >数量</Text>
-        </View>
+      <View style={styles.headerView}>
+        <Text style={styles.headerText}>
+          时间
+        </Text>
+        <Text style={styles.headerText}>
+          价格
+        </Text>
+        <Text style={styles.headerText}>
+          数量
+        </Text>
       </View>
     )
   }
 
   render() {
-    const { latestDeals } = this.props
+    const { data } = this.props
 
     return (
       <ListView
-        style={{
-          marginTop: common.margin10,
-          marginBottom: common.margin10,
-        }}
-        dataSource={this.latestDealsDS(latestDeals)}
-        renderRow={(rd, sid, rid) => this.renderLatestDealsRow(rd, sid, rid)}
-        renderHeader={() => this.renderLatestDealsHeader()}
+        dataSource={this.dataSource(data)}
+        renderRow={(rd, sid, rid) => this.renderRow(rd, rid)}
+        renderHeader={() => this.renderHeader()}
         enableEmptySections
         removeClippedSubviews={false}
       />
     )
   }
 }
-
-function mapStateToProps(store) {
-  return {
-    latestDeals: store.deal.latestDeals,
-
-    homeRoseSelected: store.dealstat.homeRoseSelected,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(LatestDealList)
