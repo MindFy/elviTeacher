@@ -141,10 +141,14 @@ class LegalDeal extends Component {
 
   renderSelectionBar = () => (
     <TKSelectionBar
-      leftTitle={'买入'}
-      rightTitle={'卖出'}
-      leftBlock={() => this.selectionBarPress(common.buy)}
-      rightBlock={() => this.selectionBarPress(common.sell)}
+      titles={['买入', '卖出']}
+      onPress={(e) => {
+        if (e.title === '买入') {
+          this.selectionBarPress(common.buy)
+        } else {
+          this.selectionBarPress(common.sell)
+        }
+      }}
     />
   )
 
@@ -217,7 +221,7 @@ class LegalDeal extends Component {
           fontSize: common.font12,
         }}
       >
-      温馨提示
+        温馨提示
       </Text>
       <Text
         style={{
