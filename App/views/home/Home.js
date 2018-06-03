@@ -29,17 +29,17 @@ class Home extends Component {
     if (!user) {
       navigation.navigate('LoginStack')
     } else {
-      if (i === 2) {
-        dispatch(actions.selectionBarUpdate(common.selectionBar.left))
-        dispatch(actions.currentOrHistoryUpdate({
-          currentOrHistory: common.delegate.current,
-        }))
-      } else if (i === 3) {
-        dispatch(actions.selectionBarUpdate(common.selectionBar.right))
-        dispatch(actions.currentOrHistoryUpdate({
-          currentOrHistory: common.delegate.history,
-        }))
-      }
+      // if (i === 2) {
+      //   dispatch(actions.selectionBarUpdate(common.selectionBar.left))
+      //   dispatch(actions.currentOrHistoryUpdate({
+      //     currentOrHistory: common.delegate.current,
+      //   }))
+      // } else if (i === 3) {
+      //   dispatch(actions.selectionBarUpdate(common.selectionBar.right))
+      //   dispatch(actions.currentOrHistoryUpdate({
+      //     currentOrHistory: common.delegate.history,
+      //   }))
+      // }
       navigation.navigate(navigateKeys[i])
     }
   }
