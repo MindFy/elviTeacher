@@ -25,6 +25,9 @@ import {
   requestWithdraw,
 } from './withdraw'
 import { requestAddressAdd } from './addressAdd'
+import {
+  requestPairInfo,
+} from './market'
 
 
 export default function* rootSaga() {
@@ -98,5 +101,7 @@ export default function* rootSaga() {
     fork(openOrderRequest),
     fork(requestCancelOrder),
     fork(requestCancelAllOrder),
+
+    fork(requestPairInfo),
   ]
 }

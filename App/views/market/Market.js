@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
-  Text,
-  StatusBar,
-  ScrollView,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
 import MarketList from './MarketList'
-import actions from '../../actions/index'
+import {
+  requestPairInfo,
+  updateCurrentPair,
+} from '../../actions/market'
+import HeaderScrollView from './HeaderScrollView'
 
 class Market extends Component {
   static navigationOptions() {
@@ -27,47 +27,27 @@ class Market extends Component {
     }
   }
 
-  componentDidMount() { }
-
-  tabBarPress(selectedIndex) {
+  componentDidMount() {
     const { dispatch } = this.props
-    dispatch(actions.marketListUpdate({ selectedIndex }))
+    dispatch(requestPairInfo({}))
+  }
+
+  onClickItem = (item) => {
+    const { dispatch } = this.props
+    dispatch(updateCurrentPair({
+      title: item.title,
+    }))
   }
 
   render() {
-    const { rose, selectedIndex } = this.props
-    const tabViews = []
-    if (rose.length) {
-      for (let i = 0; i < rose.length; i++) {
-        const element = rose[i]
-        const textColor = selectedIndex === i ? common.btnTextColor : common.textColor
-        tabViews.push(
-          <View
-            style={{
-              width: common.sw / 4,
-              justifyContent: 'center',
-            }}
-            key={element.id}
-          >
-            <TouchableOpacity
-              style={{
-                alignSelf: 'center',
-              }}
-              activeOpacity={common.activeOpacity}
-              onPress={() => this.tabBarPress(i)}
-            >
-              <Text
-                style={{
-                  color: textColor,
-                  fontSize: common.font14,
-                }}
-              >{element.name}</Text>
-            </TouchableOpacity>
-          </View>,
-        )
-      }
-    }
+    const { currPair, pairs } = this.props
 
+    const items = ['CNYT', 'BTC', 'TK']
+    const marketData = []
+    if (pairs && pairs[currPair]) {
+      // marketData = pairs[currPair]
+    }
+    // todo 未完待续
     return (
       <View
         style={{
@@ -75,26 +55,13 @@ class Market extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <StatusBar
-          barStyle={'light-content'}
+        <HeaderScrollView
+          titles={items}
+          onClickItem={this.onClickItem}
         />
-
-        <View
-          style={{
-            backgroundColor: common.navBgColor,
-            height: common.h32,
-          }}
-        >
-          <ScrollView
-            horizontal
-            alwaysBounceHorizontal={false}
-          >
-            {tabViews}
-          </ScrollView>
-        </View>
         <MarketList
-          data={rose.length === 0 ? [] : rose[selectedIndex].sub}
-          currencyName={rose.length === 0 ? '' : rose[selectedIndex].name}
+          data={marketData}
+          currencyName={currPair}
         />
       </View>
     )
@@ -103,8 +70,8 @@ class Market extends Component {
 
 function mapStateToProps(store) {
   return {
-    rose: store.dealstat.rose,
-    selectedIndex: store.dealstat.selectedIndex,
+    currPair: store.market.currPair,
+    pairs: store.market.pairs,
   }
 }
 
