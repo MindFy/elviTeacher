@@ -6,6 +6,7 @@ import {
   Image,
   Animated,
   Keyboard,
+  StyleSheet,
   TouchableOpacity,
 } from 'react-native'
 import {
@@ -16,8 +17,74 @@ import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
+import TKButton from '../../components/TKButton'
 
-class DelegateBuySellDrawer extends Component {
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: common.navBgColor,
+    width: common.sw,
+  },
+  bottomBtn: {
+    marginTop: common.margin10,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
+    marginBottom: common.margin10,
+    height: common.h36,
+  },
+  inputView: {
+    marginTop: common.margin5,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  price: {
+    height: common.h30,
+    width: (common.sw - common.margin30 - 2 * common.margin22) / 2,
+    borderWidth: 1,
+    borderColor: common.borderColor,
+    backgroundColor: common.blackColor,
+    flexDirection: 'row',
+  },
+  plusBtn: {
+    width: common.h30,
+    justifyContent: 'center',
+  },
+  plusBtnImage: {
+    height: common.h15,
+    width: common.h15,
+    alignSelf: 'center',
+  },
+  slider: {
+    marginTop: common.margin10,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
+  },
+  amount: {
+    marginTop: common.margin10,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
+    height: common.h30,
+    borderWidth: 1,
+    borderColor: common.borderColor,
+    backgroundColor: common.blackColor,
+  },
+  amountVisible: {
+    color: common.textColor,
+    fontSize: common.font10,
+    width: '85%',
+    textAlign: 'right',
+    alignSelf: 'center',
+  },
+  amountVisibleTitle: {
+    color: common.textColor,
+    fontSize: common.font10,
+    width: '15%',
+    alignSelf: 'center',
+  },
+})
+
+class DealDrawer extends Component {
   constructor() {
     super()
     this.state = {
@@ -133,7 +200,7 @@ class DelegateBuySellDrawer extends Component {
       quantity,
       amount,
       homeRoseSelected,
-      BuySellBtnTapAction,
+      onPress,
     } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
@@ -160,8 +227,8 @@ class DelegateBuySellDrawer extends Component {
         quantity: q,
         total_money: a.toString(),
       }))
-      if (BuySellBtnTapAction) {
-        BuySellBtnTapAction()
+      if (onPress) {
+        onPress()
       }
     }
   }
@@ -250,7 +317,7 @@ class DelegateBuySellDrawer extends Component {
     } = this.props
     let goodsName = ''
     let currencyName = ''
-    let amountVisibleTitle = ''
+    let newAmountVisible = ''
     let maximumValueSlider = 0
     let currentVisible = new BigNumber(0)
     let percentSlider = 0
@@ -262,11 +329,11 @@ class DelegateBuySellDrawer extends Component {
           currentVisible = new BigNumber(amountVisible[currencyName]
             ? amountVisible[currencyName] : 0)
           maximumValueSlider = !price.length || Number(price) === 0 ? 0 : 1
-          amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${currencyName}`
+          newAmountVisible = `${new BigNumber(currentVisible).toFixed(8, 1)} ${currencyName}`
         } else {
           currentVisible = new BigNumber(amountVisible[goodsName] ? amountVisible[goodsName] : 0)
           maximumValueSlider = !price.length || currentVisible.eq(0) ? 0 : 1
-          amountVisibleTitle = `${new BigNumber(currentVisible).toFixed(8, 1)} ${goodsName}`
+          newAmountVisible = `${new BigNumber(currentVisible).toFixed(8, 1)} ${goodsName}`
         }
       }
     }
@@ -295,73 +362,27 @@ class DelegateBuySellDrawer extends Component {
 
     return (
       <View
-        style={{
-          backgroundColor: common.navBgColor,
-          width: common.sw,
-        }}
+        style={styles.container}
         behavior="padding"
       >
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin15,
-            marginRight: common.margin15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font10,
-              width: '15%',
-              alignSelf: 'center',
-            }}
-          >可用</Text>
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font10,
-              width: '85%',
-              textAlign: 'right',
-              alignSelf: 'center',
-            }}
-          >{amountVisibleTitle}</Text>
+        <View style={[styles.inputView, { marginTop: common.margin10 }]}>
+          <Text style={styles.amountVisibleTitle}>
+            可用
+          </Text>
+          <Text style={styles.amountVisible}>
+            {newAmountVisible}
+          </Text>
         </View>
 
-        <View
-          style={{
-            marginTop: common.margin5,
-            marginLeft: common.margin15,
-            marginRight: common.margin15,
-            flexDirection: 'row',
-          }}
-        >
-          <View
-            style={{
-              flex: 1,
-              marginRight: common.margin22,
-              height: common.h30,
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.blackColor,
-              flexDirection: 'row',
-            }}
-          >
+        <View style={styles.inputView}>
+          <View style={styles.price}>
             <TouchableOpacity
-              style={{
-                width: common.h30,
-                justifyContent: 'center',
-              }}
+              style={styles.plusBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => { this.tapMinusBtn('price') }}
             >
               <Image
-                style={{
-                  height: common.h15,
-                  width: common.h15,
-                  alignSelf: 'center',
-                }}
+                style={styles.plusBtnImage}
                 source={require('../../assets/减号.png')}
                 resizeMode={'contain'}
               />
@@ -372,49 +393,25 @@ class DelegateBuySellDrawer extends Component {
               onChange={e => this.onChange(e, 'price')}
             />
             <TouchableOpacity
-              style={{
-                width: common.h30,
-                justifyContent: 'center',
-              }}
+              style={styles.plusBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => { this.tapPlusBtn('price') }}
             >
               <Image
-                style={{
-                  height: common.h15,
-                  width: common.h15,
-                  alignSelf: 'center',
-                }}
+                style={styles.plusBtnImage}
                 source={require('../../assets/加号.png')}
                 resizeMode={'contain'}
               />
             </TouchableOpacity>
           </View>
-          <View
-            style={{
-              flex: 1,
-              marginLeft: common.margin22,
-              height: common.h30,
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              backgroundColor: common.blackColor,
-              flexDirection: 'row',
-            }}
-          >
+          <View style={styles.price}>
             <TouchableOpacity
-              style={{
-                width: common.h30,
-                justifyContent: 'center',
-              }}
+              style={styles.plusBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => { this.tapMinusBtn('quantity') }}
             >
               <Image
-                style={{
-                  height: common.h15,
-                  width: common.h15,
-                  alignSelf: 'center',
-                }}
+                style={styles.plusBtnImage}
                 source={require('../../assets/减号.png')}
                 resizeMode={'contain'}
               />
@@ -425,19 +422,12 @@ class DelegateBuySellDrawer extends Component {
               onChange={e => this.onChange(e, 'quantity')}
             />
             <TouchableOpacity
-              style={{
-                width: common.h30,
-                justifyContent: 'center',
-              }}
+              style={styles.plusBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => { this.tapPlusBtn('quantity') }}
             >
               <Image
-                style={{
-                  height: common.h15,
-                  width: common.h15,
-                  alignSelf: 'center',
-                }}
+                style={styles.plusBtnImage}
                 source={require('../../assets/加号.png')}
                 resizeMode={'contain'}
               />
@@ -445,21 +435,9 @@ class DelegateBuySellDrawer extends Component {
           </View>
         </View>
 
-        <View
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin15,
-            marginRight: common.margin15,
-            height: common.h30,
-            borderWidth: 1,
-            borderColor: common.borderColor,
-            backgroundColor: common.blackColor,
-          }}
-        >
+        <View style={styles.amount}>
           <TextInputTransactions
-            textInputStyle={{
-              width: '100%',
-            }}
+            textInputStyle={{ width: '100%' }}
             placeholder={`成交金额（${currencyName}）`}
             value={amount}
             editable={false}
@@ -467,11 +445,7 @@ class DelegateBuySellDrawer extends Component {
         </View>
 
         <TransactionsSlider
-          viewStyle={{
-            marginTop: common.margin10,
-            marginLeft: common.margin15,
-            marginRight: common.margin15,
-          }}
+          viewStyle={styles.slider}
           minimumValue={0}
           maximumValue={maximumValueSlider}
           percentSlider={percentSlider}
@@ -486,32 +460,19 @@ class DelegateBuySellDrawer extends Component {
           }}
         />
 
-        <TouchableOpacity
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin15,
-            marginRight: common.margin15,
-            marginBottom: common.margin10,
-            height: common.h36,
+        <TKButton
+          style={[styles.bottomBtn, {
             backgroundColor: buyOrSell ? common.redColor : common.greenColor,
-            justifyContent: 'center',
-          }}
-          activeOpacity={common.activeOpacity}
+          }]}
+          titleStyle={{ fontSize: common.font16 }}
+          theme={'gray'}
+          caption={buyOrSell ? '买入' : '卖出'}
           onPress={() => this.buyOrSellPress()}
           disabled={delegateCreateVisible}
-        >
-          <Text style={{
-            fontSize: common.font16,
-            color: 'white',
-            alignSelf: 'center',
-          }}
-          >{buyOrSell ? '买入' : '卖出'}</Text>
-        </TouchableOpacity>
+        />
 
         <Animated.View
-          style={{
-            height: this.state.keyboardHeight,
-          }}
+          style={{ height: this.state.keyboardHeight }}
         />
       </View>
     )
@@ -528,9 +489,6 @@ function mapStateToProps(store) {
 
     buyOrSell: store.deal.buyOrSell,
 
-    // price: store.delegate.price,
-    // quantity: store.delegate.quantity,
-
     price: store.detailDeal.price,
     quantity: store.detailDeal.quantity,
     amount: store.detailDeal.amount,
@@ -541,4 +499,4 @@ function mapStateToProps(store) {
 
 export default connect(
   mapStateToProps,
-)(DelegateBuySellDrawer)
+)(DealDrawer)

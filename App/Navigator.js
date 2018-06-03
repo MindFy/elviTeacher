@@ -12,13 +12,11 @@ import Buttons from './views/home/Buttons'
 import Banner from './views/home/Banner'
 import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
-import Transactions from './views/transactions/Transactions'
-import Detail from './views/transactions/Detail'
+import Deal from './views/transactions/Deal'
 import Delegate from './views/transactions/Delegate'
 import Orders from './views/transactions/Orders'
 import Balance from './views/balance/Balance'
 import History from './views/balance/History'
-import Cash from './views/balance/Cash'
 import Withdraw from './views/balance/Withdraw'
 import Recharge from './views/balance/Recharge'
 import AddAddress from './views/balance/AddAddress'
@@ -139,8 +137,8 @@ const TabBar = TabNavigator(
 
 const TabBarStack = StackNavigator({
   TabBar,
-  Detail: {
-    screen: Detail,
+  Deal: {
+    screen: Deal,
     navigationOptions: {
       header: null,
     },
@@ -158,7 +156,6 @@ const TabBarStack = StackNavigator({
   LegalDealDetail,
   Payment,
   UpdateBank,
-  Transactions,
   Banner,
   Announcement,
   SecurityCenter,
