@@ -16,6 +16,7 @@ import detailDeal from './detailDeal'
 import authorize from './authorize'
 import withdraw from './withdraw'
 import addressAdd from './addressAdd'
+import orders from './orders'
 
 const rootReducer = combineReducers({
   authorize,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   detailDeal,
   withdraw,
   addressAdd,
+  orders,
 })
 
 export default rootReducer

@@ -4,20 +4,186 @@ import {
   View,
   Image,
   Text,
-  TouchableOpacity,
+  Alert,
+  StyleSheet,
 } from 'react-native'
+import Toast from 'teaset/components/Toast/Toast'
 import { BigNumber } from 'bignumber.js'
-import RefreshListView from 'react-native-refresh-list-view'
+import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+// import TKSpinner from '../../components/TKSpinner'
 import {
   openOrderRequest,
   orderHistoryRequest,
+  updateSelectedTitle,
+  toggleIsShowTotalPrice,
+  requestCancelOrder,
+  requestCancelOrderClearError,
+  // requestCancelAllOrder,
 } from '../../actions/orders'
 import {
   findDelegateSelfCurrent,
   findDelegateSelfHistory,
 } from '../../schemas/delegate'
+
+const styles = StyleSheet.create({
+  container: {
+
+  },
+})
+
+// openOrderCellStyles
+const OOCStyles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  header: {
+    marginTop: common.margin10,
+    marginRight: common.margin10,
+    fontSize: common.font12,
+    color: common.btnTextColor,
+    textAlign: 'right',
+  },
+  cellContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    backgroundColor: common.navBgColor,
+    borderColor: common.borderColor,
+    borderWidth: 1,
+  },
+  cellContentContainer: {
+    flex: 1,
+    borderBottomColor: common.borderColor,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+  },
+  goodsCurrency: {
+    marginLeft: common.margin5,
+    marginTop: common.margin5,
+    marginBottom: common.margin5,
+    color: common.textColor,
+    fontSize: common.font12,
+    width: '20%',
+    alignSelf: 'center',
+    textAlign: 'left',
+  },
+  buySell: {
+    marginLeft: common.margin10,
+    fontSize: common.font12,
+    width: '10%',
+    alignSelf: 'center',
+    textAlign: 'left',
+  },
+  createTime: {
+    marginLeft: common.margin10,
+    color: common.textColor,
+    fontSize: common.font12,
+    width: '45%',
+    alignSelf: 'center',
+    textAlign: 'left',
+  },
+  cancelContainer: {
+    position: 'absolute',
+    right: common.margin5,
+    alignSelf: 'center',
+  },
+  cancel: {
+    fontSize: common.font12,
+    textAlign: 'right',
+  },
+  price: {
+    flex: 1,
+    marginTop: common.margin5,
+    marginLeft: common.margin5,
+    marginBottom: common.margin5,
+    color: common.textColor,
+    fontSize: common.font10,
+    alignSelf: 'center',
+    textAlign: 'left',
+  },
+  quantity: {
+    flex: 1,
+    marginLeft: common.margin5,
+    color: common.textColor,
+    fontSize: common.font10,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  dealled: {
+    flex: 1,
+    marginLeft: common.margin5,
+    marginRight: common.margin5,
+    color: common.textColor,
+    fontSize: common.font10,
+    alignSelf: 'center',
+    textAlign: 'right',
+  },
+})
+
+
+// orderHistoryCellStyles
+const OHCStyles = StyleSheet.create({
+  headerContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  headerMarket: {
+    flex: 1,
+    color: common.placeholderColor,
+    fontSize: common.font12,
+  },
+  headerSConatiner: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  headerLeft: {
+    fontSize: common.font12,
+    textAlign: 'right',
+  },
+  Slash: {
+    color: common.placeholderColor,
+    fontSize: common.font12,
+  },
+  headerRight: {
+    fontSize: common.font12,
+  },
+  cellContainer: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 600,
+  },
+  goodsCurrency: {
+    flex: 1,
+    fontSize: common.font10,
+    color: common.textColor,
+    alignSelf: 'center',
+    textAlign: 'left',
+  },
+  averagePriceOrPrice: {
+    flex: 1,
+    fontSize: common.font10,
+    color: common.textColor,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  dealledOrdealAmount: {
+    flex: 1,
+    fontSize: common.font10,
+    color: common.textColor,
+    alignSelf: 'center',
+    textAlign: 'right',
+  },
+})
 
 class Orders extends Component {
   static navigationOptions(props) {
@@ -33,7 +199,7 @@ class Orders extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -50,36 +216,66 @@ class Orders extends Component {
               }}
               source={require('../../assets/下拉copy.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }
 
   constructor(props) {
     super(props)
-
     this.page = 0
     this.limit = 10
   }
 
   componentDidMount() {
-    // const { navigation } = this.props
-    // if (navigation.state.parms.fromTitle === '当前委托') {
-    // } else {
-    // }
+  }
+
+  componentWillReceiveProps(nexProps) {
+    if (nexProps.cancelOrderError) {
+      Toast.fail('撤单失败')
+      this.props.dispatch(requestCancelOrderClearError())
+    }
+
+    if (nexProps.cancelOrderSuccess) {
+      Toast.success('撤单成功')
+    }
   }
 
   componentWillUnmount() {
 
   }
 
-  requestOpenOrder = () => {
-    const { dispatch, user } = this.props
-    dispatch(openOrderRequest(findDelegateSelfCurrent(
-      user.id,
-      this.limit * this.page,
-      this.limit,
-    )))
+  onHeaderRefresh = () => {
+    if (this.state.refreshState === RefreshState.HeaderRefreshing) {
+      return
+    }
+    const { titleSeleted } = this.props
+    this.page = 0
+
+    if (titleSeleted === '当前委托') {
+      this.requestOpenOrder()
+    } else {
+      this.requestOrderHistory()
+    }
+  }
+
+  onFooterRefresh = () => {
+    const { titleSeleted } = this.props
+
+    if (titleSeleted === '当前委托') {
+      this.requestOpenOrder()
+    } else {
+      this.requestOrderHistory()
+    }
+  }
+
+  getDataSource = () => {
+    const { titleSeleted } = this.props
+
+    if (titleSeleted === '当前委托') {
+      return this.props.openOrders || []
+    }
+    return this.props.orderHistory || []
   }
 
   requestOrderHistory = () => {
@@ -91,17 +287,122 @@ class Orders extends Component {
     )))
   }
 
+  requestOpenOrder = () => {
+    const { dispatch, user } = this.props
+    dispatch(openOrderRequest(findDelegateSelfCurrent(
+      user.id,
+      this.limit * this.page,
+      this.limit,
+    )))
+  }
+
+  cancelOrder = (id) => {
+    this.props.dispatch(requestCancelOrder({
+      id,
+    }))
+  }
+
+  cancelAllOrder = () => {
+    const { openOrders } = this.props
+    if (openOrders.length === 0) {
+      return
+    }
+    Alert.alert('需求未明确')
+    // dispatch(requestCancelAllOrder({
+    //   goods_id: 1,
+    //   currency_id: 2,
+    // }))
+  }
+
   topBarPress(e) {
+    const { dispatch } = this.props
     if (e.index === 0) {
       this.page = 0
       this.requestOpenOrder()
+      dispatch(updateSelectedTitle(e.title))
     } else if (e.index === 1) {
       this.page = 0
       this.requestOrderHistory()
+      dispatch(updateSelectedTitle(e.title))
     }
   }
 
-  renderOpenOrderCell = (item, index) => {
+  keyExtractor = (item, index) => index
+
+
+  handleClickShowTotalPrice = () => {
+    const { dispatch } = this.props
+    dispatch(toggleIsShowTotalPrice())
+  }
+
+  renderOpenOrderHeader = () => (
+    <View style={OOCStyles.headerStyle}>
+      <View />
+      <NextTouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={this.cancelAllOrder}
+      >
+        <Text style={OOCStyles.header}>
+          全部撤单
+        </Text>
+      </NextTouchableOpacity>
+    </View>
+  )
+
+
+  renderOrderHistoryHeader = () => {
+    const { isShowTotalPrice } = this.props
+
+    const rightColor =
+    isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
+    const leftColor =
+    !isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
+
+    return (
+      <View style={OHCStyles.headerContainer}>
+        <Text style={OHCStyles.headerMarket}>市场</Text>
+        <View style={OHCStyles.headerSConatiner}>
+          <NextTouchableOpacity
+            style={{ flex: 1 }}
+            disabled={!isShowTotalPrice}
+            activeOpacity={common.activeOpacity}
+            onPress={this.handleClickShowTotalPrice}
+          >
+            <Text style={[OHCStyles.headerLeft, leftColor]}>均价</Text>
+          </NextTouchableOpacity>
+          <Text style={OHCStyles.Slash}> / </Text>
+          <NextTouchableOpacity
+            style={{ flex: 1 }}
+            disabled={isShowTotalPrice}
+            activeOpacity={common.activeOpacity}
+            onPress={this.handleClickShowTotalPrice}
+          >
+            <Text style={[OHCStyles.headerRight, rightColor]}>价格</Text>
+          </NextTouchableOpacity>
+        </View>
+        <View style={OHCStyles.headerSConatiner}>
+          <NextTouchableOpacity
+            style={{ flex: 1 }}
+            disabled={!isShowTotalPrice}
+            activeOpacity={common.activeOpacity}
+            onPress={this.handleClickShowTotalPrice}
+          >
+            <Text style={[OHCStyles.headerLeft, leftColor]}>成交数量</Text>
+          </NextTouchableOpacity>
+          <Text style={OHCStyles.Slash}> / </Text>
+          <NextTouchableOpacity
+            disabled={isShowTotalPrice}
+            activeOpacity={common.activeOpacity}
+            onPress={this.handleClickShowTotalPrice}
+          >
+            <Text style={[OHCStyles.headerRight, rightColor]}>金额</Text>
+          </NextTouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  renderOpenOrderCell = (item) => {
     const createdAt = common.dfFullDate(item.createdAt)
     let cancelBtnTitle = ''
     let cancelDisabled = true
@@ -146,75 +447,35 @@ class Orders extends Component {
       dealled = new BigNumber(item.dealled).toFixed(q, 1)
     })
 
+    const goodsCurrency = `${goodsName}/${currencyName}`
+    const buySell = item.direct === 'buy' ? '买入' : '卖出'
+    const buySellColor =
+      item.direct === 'sell' ? { color: common.greenColo } : { color: common.redColor }
+    const cancelColor =
+      cancelDisabled ? { color: common.placeholderColor } : { color: common.btnTextColor }
+
     return (
-      <View
-        style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          backgroundColor: common.navBgColor,
-          borderColor: common.borderColor,
-          borderWidth: 1,
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            borderBottomColor: common.borderColor,
-            borderBottomWidth: 1,
-            flexDirection: 'row',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin5,
-              marginTop: common.margin5,
-              marginBottom: common.margin5,
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '20%',
-              alignSelf: 'center',
-              textAlign: 'left',
-            }}
-          >{`${goodsName}/${currencyName}`}</Text>
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              color: item.direct === 'sell' ? common.greenColor : common.redColor,
-              fontSize: common.font12,
-              width: '10%',
-              alignSelf: 'center',
-              textAlign: 'left',
-            }}
-          >{item.direct === 'buy' ? '买入' : '卖出'}</Text>
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '45%',
-              alignSelf: 'center',
-              textAlign: 'left',
-            }}
-          >{createdAt}</Text>
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              right: common.margin5,
-              alignSelf: 'center',
-            }}
+      <View style={OOCStyles.cellContainer}>
+        <View style={OOCStyles.cellContentContainer}>
+          <Text style={OOCStyles.goodsCurrency}>
+            {goodsCurrency}
+          </Text>
+          <Text style={[OOCStyles.buySell, buySellColor]}>
+            {buySell}
+          </Text>
+          <Text style={OOCStyles.createTime}>
+            {createdAt}
+          </Text>
+          <NextTouchableOpacity
+            style={OOCStyles.cancelContainer}
             activeOpacity={common.activeOpacity}
-            // onPress={() => cancelBlock(rd, rid)}
+            onPress={() => { this.cancelOrder(item.id) }}
             disabled={cancelDisabled}
           >
-            <Text
-              style={{
-                color: cancelDisabled ? common.placeholderColor : common.btnTextColor,
-                fontSize: common.font12,
-                textAlign: 'right',
-              }}
-            >{cancelBtnTitle}</Text>
-          </TouchableOpacity>
+            <Text style={[OOCStyles.cancel, cancelColor]}>
+              {cancelBtnTitle}
+            </Text>
+          </NextTouchableOpacity>
         </View>
         <View
           style={{
@@ -222,176 +483,90 @@ class Orders extends Component {
             flexDirection: 'row',
           }}
         >
-          <Text
-            style={{
-              flex: 1,
-              marginTop: common.margin5,
-              marginLeft: common.margin5,
-              marginBottom: common.margin5,
-              color: common.textColor,
-              fontSize: common.font10,
-              alignSelf: 'center',
-              textAlign: 'left',
-            }}
-          >{`价格: ${price}`}</Text>
-          <Text
-            style={{
-              flex: 1,
-              marginLeft: common.margin5,
-              color: common.textColor,
-              fontSize: common.font10,
-              alignSelf: 'center',
-              textAlign: 'center',
-            }}
-          >{`数量: ${quantity}`}</Text>
-          <Text
-            style={{
-              flex: 1,
-              marginLeft: common.margin5,
-              marginRight: common.margin5,
-              color: common.textColor,
-              fontSize: common.font10,
-              alignSelf: 'center',
-              textAlign: 'right',
-            }}
-          >{`已成交: ${dealled}`}</Text>
+          <Text style={OOCStyles.price}>{`价格: ${price}`}</Text>
+          <Text style={OOCStyles.quantity}>{`数量: ${quantity}`}</Text>
+          <Text style={OOCStyles.dealled}>{`已成交: ${dealled}`}</Text>
         </View>
       </View >
     )
   }
 
-  renderOrderHistoryHeader = () => (
-    <View
-      style={{
-        marginTop: common.margin10,
-        marginLeft: common.margin10,
-        marginRight: common.margin10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Text
-        style={{
-          flex: 1,
-          color: common.placeholderColor,
-          fontSize: common.font12,
-        }}
-      >市场</Text>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            flex: 1,
-          }}
-          activeOpacity={common.activeOpacity}
-          onPress={() => {
-            // dispatch(actions.averagePriceOrPriceUpdate(common.ui.averagePrice))
-          }}
-        >
-          <Text
-            style={{
-              color: common.btnTextColor,
-              fontSize: common.font12,
-              textAlign: 'right',
-            }}
-          >均价</Text>
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: common.placeholderColor,
-            fontSize: common.font12,
-          }}
-        > / </Text>
-        <TouchableOpacity
-          style={{
-            flex: 1,
-          }}
-          activeOpacity={common.activeOpacity}
-          onPress={() => {
-            // dispatch(actions.averagePriceOrPriceUpdate(common.ui.price))
-          }}
-        >
-          <Text
-            style={{
-              color: common.placeholderColor,
-              fontSize: common.font12,
-            }}
-          >价格</Text>
-        </TouchableOpacity>
+  renderOrderHistoryCell = (item) => {
+    const goodsCurrency = `${item.goods.name}/${item.currency.name}`
+    let averagePriceOrPrice
+    let dealledOrdealAmount
+
+    const { isShowTotalPrice } = this.props
+    if (isShowTotalPrice) {
+      let averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
+      if (averagePrice.isNaN()) {
+        averagePrice = 0
+      }
+      common.precision(item.goods.name, item.currency.name, (p, q) => {
+        averagePriceOrPrice = averagePrice.toFixed(p, 1)
+        dealledOrdealAmount = new BigNumber(item.dealled).toFixed(q, 1)
+      })
+    } else {
+      common.precision(item.goods.name, item.currency.name, (p, q, a) => {
+        averagePriceOrPrice = new BigNumber(item.price).toFixed(p, 1)
+        dealledOrdealAmount = new BigNumber(item.dealamount).toFixed(a, 1)
+      })
+    }
+    return (
+      <View style={OHCStyles.cellContainer}>
+        <Text style={OHCStyles.goodsCurrency}>
+          {goodsCurrency}
+        </Text>
+        <Text style={OHCStyles.averagePriceOrPrice}>
+          {averagePriceOrPrice}
+        </Text>
+        <Text style={OHCStyles.dealledOrdealAmount}>
+          {dealledOrdealAmount}
+        </Text>
       </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            flex: 1,
-          }}
-          activeOpacity={common.activeOpacity}
-          onPress={() => {
-            // dispatch(actions.dealledOrQuantityUpdate(common.ui.dealled))
-          }}
-        >
-          <Text
-            style={{
-              color: common.btnTextColor,
-              fontSize: common.font12,
-              textAlign: 'right',
-            }}
-          >成交数量</Text>
-        </TouchableOpacity>
-        <Text
-          style={{
-            color: common.placeholderColor,
-            fontSize: common.font12,
-          }}
-        > / </Text>
-        <TouchableOpacity
-          activeOpacity={common.activeOpacity}
-          onPress={() => {
-            // dispatch(actions.dealledOrQuantityUpdate(common.ui.quantity))
-          }}
-        >
-          <Text
-            style={{
-              color: common.placeholderColor,
-              fontSize: common.font12,
-              textAlign: 'right',
-            }}
-          >金额</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  )
-  renderOrderHistoryCell = ({ item, index }) => {
+    )
+  }
+
+  renderHeader = () => {
+    const { titleSeleted } = this.props
+
+    if (titleSeleted === '当前委托') {
+      return this.renderOpenOrderHeader()
+    }
+    return this.renderOrderHistoryHeader()
+  }
+
+  renderCell = ({ item, index }) => {
+    const { titleSeleted } = this.props
+
+    if (titleSeleted === '当前委托') {
+      return this.renderOpenOrderCell(item, index)
+    }
+    return this.renderOrderHistoryCell(item, index)
   }
 
   renderContent = () => {
-    const { orderHistory } = this.props
+    const datas = this.getDataSource()
+    const { refreshState } = this.state
+
     return (
       <RefreshListView
-        data={orderHistory}
-        renderItem={this.renderOrderHistoryCell}
-        ListHeaderComponent={() => this.renderOrderHistoryHeader()}
-        // refreshState={refreshState}
-        onHeaderRefresh={() => {}}
-        // onFooterRefresh={() => {}}
+        data={datas}
+        renderItem={this.renderCell}
+        keyExtractor={this.keyExtractor}
+        refreshState={refreshState}
+        ListHeaderComponent={this.renderHeader}
+        onHeaderRefresh={this.onHeaderRefresh}
+        onFooterRefresh={this.onFooterRefresh}
         footerTextStyle={{
           fontSize: common.font14,
-          color: common.textColor,
+          color: 'red',
         }}
       />
     )
   }
 
   render() {
-    const { dispatch } = this.props
     return (
       <View style={{
         flex: 1,
@@ -400,7 +575,7 @@ class Orders extends Component {
       >
         <TKSelectionBar
           titles={['当前委托', '历史委托']}
-          onPress={e => this.selectionBarPress(e)}
+          onPress={(e) => { this.topBarPress(e) }}
         />
         {this.renderContent()}
       </View>
