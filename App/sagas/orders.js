@@ -9,7 +9,7 @@ export function* openOrderRequestWorker(action) {
   const { payload } = action
   const response = yield call(api.graphql, payload)
 
-  if (response) {
+  if (response.success) {
     yield put({
       type: 'orders/open_order_request_succeed',
       payload: response.result,
@@ -26,7 +26,7 @@ export function* orderHistoryRequestWorker(action) {
   const { payload } = action
   const response = yield call(api.api.graphql, payload)
 
-  if (response) {
+  if (response.success) {
     yield put({
       type: 'orders/order_history_request_succeed',
       payload: response.result,
