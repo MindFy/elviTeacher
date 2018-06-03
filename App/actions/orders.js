@@ -39,3 +39,43 @@ export function orderHistoryRequestSucceed(payload) {
     payload,
   }
 }
+
+export function updateSelectedTitle(payload) {
+  return {
+    type: 'orders/update_selected_title',
+    payload,
+  }
+}
+
+export function toggleIsShowTotalPrice() {
+  return {
+    type: 'orders/toggle_is_show_totalPrice',
+  }
+}
+
+export function requestCancelOrder() {
+  return {
+    type: 'orders/request_cancel_order',
+  }
+}
+
+export function requestCancelAllOrder() {
+  return {
+    type: 'orders/request_cancel_all_order',
+  }
+}
+
+export function requestCancelOrderClearError(payload) {
+  return {
+    type: 'orders/request_cancel_order_clear_error',
+    payload,
+  }
+}
+
+export function updateRefreshState(payload) {
+  return {
+    type: 'orders/update_refreshState',
+    payload,
+  }
+}
+
