@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { BigNumber } from 'bignumber.js'
-import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
+import RefreshListView from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -160,7 +160,6 @@ const OHCStyles = StyleSheet.create({
     marginRight: common.margin10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 600,
   },
   goodsCurrency: {
     flex: 1,
@@ -246,9 +245,6 @@ class Orders extends Component {
   }
 
   onHeaderRefresh = () => {
-    if (this.state.refreshState === RefreshState.HeaderRefreshing) {
-      return
-    }
     const { titleSeleted } = this.props
     this.page = 0
 
@@ -547,14 +543,12 @@ class Orders extends Component {
 
   renderContent = () => {
     const datas = this.getDataSource()
-    const { refreshState } = this.state
 
     return (
       <RefreshListView
         data={datas}
         renderItem={this.renderCell}
         keyExtractor={this.keyExtractor}
-        refreshState={refreshState}
         ListHeaderComponent={this.renderHeader}
         onHeaderRefresh={this.onHeaderRefresh}
         onFooterRefresh={this.onFooterRefresh}
