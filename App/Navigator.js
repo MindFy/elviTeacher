@@ -13,7 +13,6 @@ import Banner from './views/home/Banner'
 import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
 import Deal from './views/transactions/Deal'
-import Delegate from './views/transactions/Delegate'
 import Orders from './views/transactions/Orders'
 import Balance from './views/balance/Balance'
 import History from './views/balance/History'
@@ -143,7 +142,6 @@ const TabBarStack = StackNavigator({
       header: null,
     },
   },
-  Delegate,
   Orders,
   History,
   Withdraw,

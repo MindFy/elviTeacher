@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Image,
-  StatusBar,
   Clipboard,
   ScrollView,
   TouchableOpacity,

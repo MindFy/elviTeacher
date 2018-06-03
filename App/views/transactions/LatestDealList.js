@@ -10,8 +10,8 @@ import { common } from '../../constants/common'
 const styles = StyleSheet.create({
   rowView: {
     marginTop: common.margin10 / 2,
-    marginLeft: common.margin10,
-    marginRight: common.margin10,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
   },
   headerView: {
     marginTop: common.margin10,
-    marginLeft: common.margin10,
-    marginRight: common.margin10,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },

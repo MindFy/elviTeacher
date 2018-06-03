@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native'
@@ -11,15 +10,15 @@ import { common } from '../../constants/common'
 const styles = StyleSheet.create({
   container: {
     height: common.h56,
-    paddingLeft: common.margin10,
-    paddingRight: common.margin10,
+    paddingLeft: common.margin15,
+    paddingRight: common.margin15,
     backgroundColor: common.navBgColor,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   barItem: {
     height: common.h35,
-    width: (common.sw - common.margin10 * 2 - common.margin15) / 2,
+    width: (common.sw - common.margin15 * 2 - common.margin15) / 2,
     borderRadius: 2,
     alignSelf: 'center',
     justifyContent: 'center',

@@ -10,7 +10,6 @@ import { BigNumber } from 'bignumber.js'
 import RefreshListView from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
-// import TKSpinner from '../../components/TKSpinner'
 import {
   openOrderRequest,
   orderHistoryRequest,
@@ -103,8 +102,6 @@ class Orders extends Component {
   }
 
   renderOpenOrderCell = (item, index) => {
-    const { dispatch } = this.props
-
     const createdAt = common.dfFullDate(item.createdAt)
     let cancelBtnTitle = ''
     let cancelDisabled = true
@@ -384,7 +381,7 @@ class Orders extends Component {
         ListHeaderComponent={() => this.renderOrderHistoryHeader()}
         // refreshState={refreshState}
         onHeaderRefresh={() => {}}
-        onFooterRefresh={() => {}}
+        // onFooterRefresh={() => {}}
         footerTextStyle={{
           fontSize: common.font14,
           color: common.textColor,
@@ -403,7 +400,7 @@ class Orders extends Component {
       >
         <TKSelectionBar
           titles={['当前委托', '历史委托']}
-          onPress={(e) => { this.topBarPress(e) }}
+          onPress={e => this.selectionBarPress(e)}
         />
         {this.renderContent()}
       </View>

@@ -101,26 +101,21 @@ class History extends Component {
         />
 
         <TKSelectionBar
-          leftTitle={'充值记录'}
-          rightTitle={'提现记录'}
-          thirdTitle={'法币交易记录'}
-          rightViewStyle={{
-            marginLeft: 1,
-          }}
-          leftBlock={() => {
-            dispatch(actions.rechargeOrWithdrawUpdate({
-              rechargeOrWithdraw: common.payment.recharge,
-            }))
-          }}
-          rightBlock={() => {
-            dispatch(actions.rechargeOrWithdrawUpdate({
-              rechargeOrWithdraw: common.payment.withdraw,
-            }))
-          }}
-          thirdBlock={() => {
-            dispatch(actions.rechargeOrWithdrawUpdate({
-              rechargeOrWithdraw: common.payment.legalDeal,
-            }))
+          titles={['充值记录', '提现记录', '法币交易记录']}
+          onPress={(e) => {
+            if (e.title === '充值记录') {
+              dispatch(actions.rechargeOrWithdrawUpdate({
+                rechargeOrWithdraw: common.payment.recharge,
+              }))
+            } else if (e.title === '提现记录') {
+              dispatch(actions.rechargeOrWithdrawUpdate({
+                rechargeOrWithdraw: common.payment.withdraw,
+              }))
+            } else if (e.title === '法币交易记录') {
+              dispatch(actions.rechargeOrWithdrawUpdate({
+                rechargeOrWithdraw: common.payment.legalDeal,
+              }))
+            }
           }}
         />
 
