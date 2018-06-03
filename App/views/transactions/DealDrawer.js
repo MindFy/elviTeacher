@@ -464,7 +464,10 @@ class DealDrawer extends Component {
           style={[styles.bottomBtn, {
             backgroundColor: buyOrSell ? common.redColor : common.greenColor,
           }]}
-          titleStyle={{ fontSize: common.font16 }}
+          titleStyle={{
+            fontSize: common.font16,
+            color: 'white',
+          }}
           theme={'gray'}
           caption={buyOrSell ? '买入' : '卖出'}
           onPress={() => this.buyOrSellPress()}

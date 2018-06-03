@@ -14,8 +14,8 @@ import actions from '../../actions/index'
 const styles = StyleSheet.create({
   shelvesList: {
     flexDirection: 'row',
-    marginLeft: common.margin10,
-    marginRight: common.margin10,
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
   },
   shelvesListHeaderView: {
     marginTop: common.margin10,
@@ -44,12 +44,11 @@ class ShelvesList extends Component {
     }).cloneWithRows(data)
   }
 
-  selectionBarPress(item) {
+  selectionBarPress = (e) => {
     const { dispatch, navigation, user } = this.props
-    const index = item.index
-    if (index === 0) {
+    if (e.title === '盘口五档') {
       dispatch(actions.selectionBarUpdate(common.selectionBar.left))
-    } else if (index === 1) {
+    } else if (e.title === '当前委托') {
       dispatch(actions.selectionBarUpdate(common.selectionBar.right))
       if (!user) navigation.navigate('LoginStack')
     }
@@ -144,7 +143,7 @@ class ShelvesList extends Component {
       <View>
         <TKSelectionBar
           titles={['盘口五档', '当前委托']}
-          onPress={item => this.selectionBarPress(item)}
+          onPress={e => this.selectionBarPress(e)}
         />
         {this.renderList()}
       </View>

@@ -3,14 +3,13 @@ import { connect } from 'react-redux'
 import {
   View,
   Image,
-  StatusBar,
   TouchableOpacity,
 } from 'react-native'
-import Spinner from 'react-native-spinkit'
 import { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import DelegateListView from './DelegateListView'
 import TKSelectionBar from '../../components/TKSelectionBar'
+import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
@@ -58,8 +57,19 @@ class Orders extends Component {
 
   }
 
-  topBarPress(e) {
-    const { dispatch } = this.props
+  selectionBarPress(e) {
+    const { dispatch, currentOrHistory } = this.props
+    let tag
+    if (e.title === '当前委托') {
+      tag = common.delegate.current
+    } else if (e.title === '历史委托') {
+      tag = common.delegate.history
+    }
+    if (currentOrHistory !== tag) {
+      dispatch(actions.currentOrHistoryUpdate({
+        currentOrHistory: tag,
+      }))
+    }
   }
 
   render() {
@@ -73,12 +83,9 @@ class Orders extends Component {
         backgroundColor: common.bgColor,
       }}
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
         <TKSelectionBar
           titles={['当前委托', '历史委托']}
-          onPress={(e) => { this.topBarPress(e) }}
+          onPress={e => this.selectionBarPress(e)}
         />
         {
           currentOrHistory === common.delegate.current
@@ -147,17 +154,7 @@ class Orders extends Component {
             />
         }
 
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2 - 64,
-          }}
-          isVisible={allCancelVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
-        />
+        <TKSpinner isVisible={allCancelVisible} />
       </View>
     )
   }

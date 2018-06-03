@@ -139,14 +139,22 @@ class LegalDeal extends Component {
     }
   }
 
-  renderSelectionBar = () => (
-    <TKSelectionBar
-      leftTitle={'买入'}
-      rightTitle={'卖出'}
-      leftBlock={() => this.selectionBarPress(common.buy)}
-      rightBlock={() => this.selectionBarPress(common.sell)}
-    />
-  )
+  renderSelectionBar = () => {
+    const titles = ['买入', '卖出']
+    const width = (common.sw - 2 * common.margin10) / titles.length
+    return (
+      <TKSelectionBar
+        titles={titles}
+        barItemStyle={{ width }}
+        onPress={(e) => {
+          if (e.title === '买入') {
+            this.selectionBarPress(common.buy)
+          } else if (e.title === '卖出') {
+            this.selectionBarPress(common.sell)
+          }
+        }}
+      />)
+  }
 
   renderPrice = () => {
     const { direct, priceBuy, priceSell } = this.props
@@ -188,9 +196,7 @@ class LegalDeal extends Component {
           color: common.textColor,
           fontSize: common.font14,
         }}
-      >{`${
-          direct === common.buy ? '买入' : '卖出'
-        }总计:${amount}元`}</Text>
+      >{`${direct === common.buy ? '买入' : '卖出'}总计:${amount}元`}</Text>
     )
   }
 
@@ -217,7 +223,7 @@ class LegalDeal extends Component {
           fontSize: common.font12,
         }}
       >
-      温馨提示
+        温馨提示
       </Text>
       <Text
         style={{

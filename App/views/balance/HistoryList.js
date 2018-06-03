@@ -256,6 +256,7 @@ export default class HistoryList extends Component {
     const { data, refreshState, onHeaderRefresh, onFooterRefresh } = this.props
     return (
       <RefreshListView
+        keyExtractor={item => item.id}
         data={data}
         renderItem={({ item, index }) => this.renderItem(item, index)}
         ListHeaderComponent={() => this.renderHeader()}
