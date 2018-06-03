@@ -4,7 +4,6 @@ import {
   findAddress,
   selectTokenUpdate,
 } from './address'
-import findAnnouncement from './announcement'
 import {
   createAddress,
   getAssets,
@@ -12,7 +11,6 @@ import {
   findAssetList,
   findAssetListUpdate,
 } from './asset'
-import findBanners from './banners'
 import {
   findListSelf,
   latestDeals,
@@ -21,7 +19,6 @@ import {
   homeRoseSelectedUpdate,
 } from './deal'
 import {
-  getRose,
   marketListUpdate,
 } from './dealstat'
 import {
@@ -104,15 +101,18 @@ import {
   loginUpdate,
   clearError,
 } from './authorize'
+import * as home from './home'
 
 
 const actions = {
+  requestBanners: home.requestBanners,
+  requestAnnouncements: home.requestAnnouncements,
+  requestMarket: home.requestMarket,
+
   add,
   addUpdate,
   findAddress,
   selectTokenUpdate,
-
-  findAnnouncement,
 
   createAddress,
   getAssets,
@@ -120,15 +120,12 @@ const actions = {
   findAssetList,
   findAssetListUpdate,
 
-  findBanners,
-
   findListSelf,
   latestDeals,
   wsDealsUpdate,
   buyOrSellUpdate,
   homeRoseSelectedUpdate,
 
-  getRose,
   marketListUpdate,
 
   allCancel,

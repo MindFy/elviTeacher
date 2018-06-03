@@ -8,22 +8,27 @@ import {
 } from 'react-native'
 import Swiper from 'react-native-swiper'
 import { common } from '../../constants/common'
+import { imgHashApi } from '../../services/api'
 
 const styles = StyleSheet.create({
-  swiper: {
+  banners: {
+    height: common.h234,
+  },
+  bannersImage: {
+    width: common.sw,
     height: common.h234,
   },
   dot: {
     marginBottom: common.margin15,
   },
-  noticeView: {
+  announcements: {
     position: 'absolute',
     width: '100%',
     bottom: 0,
     height: common.h32,
     backgroundColor: common.borderColor05,
   },
-  noticeTitle: {
+  announcementsTitle: {
     marginTop: common.margin10,
     marginLeft: common.margin10,
     marginRight: common.margin10,
@@ -35,90 +40,82 @@ const styles = StyleSheet.create({
 export default class HomeSwiper extends Component {
   constructor() {
     super()
-    this.bannerIndex = 0
-    this.titleIndex = 0
+    this.bannersIndex = 0
+    this.announcementsIndex = 0
   }
 
   render() {
-    const images = []
-    const titles = []
-    const { banners, announcement, imgHashApi, bannerBlock, announcementBlock } = this.props
-    for (let i = 0; i < banners.length; i++) {
-      const element = banners[i]
-      images.push(
+    const { banners, announcements, onPress } = this.props
+
+    const renderBannersSwiper = () => {
+      if (!banners.length) return null
+      const items = banners.map(element => (
         <TouchableOpacity
           key={element.id}
           activeOpacity={1}
-          onPress={() => bannerBlock(element)}
+          onPress={() => onPress({
+            type: 'Banner',
+            element,
+          })}
         >
           <Image
-            style={{
-              width: common.sw,
-              height: common.h234,
-            }}
-            resizeMode="contain" // "cover" | "contain" | "stretch" | "cover" | "center";
-            // resizeMethod="resize" // "auto" | "resize" | "scale"
+            style={styles.bannersImage}
+            resizeMode="contain"
             source={{ uri: `${imgHashApi}${element.imghash}` }}
           />
-        </TouchableOpacity>,
-      )
+        </TouchableOpacity>
+      ))
+      return (<Swiper
+        index={this.bannersIndex}
+        showsButtons={false}
+        autoplay
+        dotStyle={styles.dot}
+        onIndexChanged={(i) => { this.bannersIndex = i }}
+        activeDotStyle={styles.dot}
+        dotColor={common.borderColor}
+        activeDotColor={common.placeholderColor}
+      >
+        {items}
+      </Swiper>)
     }
-    for (let i = 0; i < announcement.length; i++) {
-      const element = announcement[i]
-      titles.push(
+    const renderAnnouncementsSwiper = () => {
+      if (!announcements.length) return null
+      const items = announcements.map(element => (
         <TouchableOpacity
           key={element.id}
           activeOpacity={1}
-          onPress={() => announcementBlock(element)}
+          onPress={() => onPress({
+            type: 'Announcement',
+            element,
+          })}
         >
           <Text
-            style={styles.noticeTitle}
+            style={styles.announcementsTitle}
             numberOfLines={1}
           >{element.title}</Text>
-        </TouchableOpacity>,
-      )
+        </TouchableOpacity>
+      ))
+      return (<View
+        style={styles.announcements}
+      >
+        <Swiper
+          index={this.announcementsIndex}
+          showsButtons={false}
+          autoplay
+          scrollEnabled={false}
+          onIndexChanged={(i) => { this.announcementsIndex = i }}
+          dotColor={'transparent'}
+          activeDotColor={'transparent'}
+        >
+          {items}
+        </Swiper>
+      </View>)
     }
 
     return (
-      <View style={styles.swiper}>
-        {
-          images.length ?
-            <Swiper
-              style={styles.swiper}
-              index={this.bannerIndex}
-              showsButtons={false}
-              autoplay
-              dotStyle={styles.dot}
-              onIndexChanged={(i) => {
-                this.bannerIndex = i
-              }}
-              activeDotStyle={styles.dot}
-              dotColor={common.borderColor}
-              activeDotColor={common.placeholderColor}
-            >
-              {images}
-            </Swiper> : null
-        }
-        {
-          titles.length ?
-            <View
-              style={styles.noticeView}
-            >
-              <Swiper
-                index={this.titleIndex}
-                showsButtons={false}
-                autoplay
-                scrollEnabled={false}
-                onIndexChanged={(i) => {
-                  this.titleIndex = i
-                }}
-                dotColor={'transparent'}
-                activeDotColor={'transparent'}
-              >
-                {titles}
-              </Swiper>
-            </View> : null
-        }
+      <View style={styles.banners}>
+        {renderBannersSwiper()}
+        {renderAnnouncementsSwiper()}
       </View>
     )
   }
