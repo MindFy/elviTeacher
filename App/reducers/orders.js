@@ -127,6 +127,7 @@ export default function orders(state = initialState, action) {
       nextState = {
         ...state,
         cancelOrderLoading: false,
+        // openOrders: newOpenOrders,
       }
       break
     case 'orders/request_cancel_order_failed':
@@ -162,6 +163,11 @@ export default function orders(state = initialState, action) {
       nextState = {
         ...state,
         refreshState: payload.state,
+      }
+      break
+    case 'orders/reset_nexus':
+      nextState = {
+        ...initialState,
       }
       break
     default:
