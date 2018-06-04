@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  ListView,
 } from 'react-native'
 import {
   Menu,
@@ -23,6 +24,7 @@ import LatestDealList from './LatestDealList'
 import DealNavigator from './DealNavigator'
 import DealTabBar from './DealTabBar'
 import DealMarket from './DealMarket'
+import * as exchange from '../../actions/exchange'
 
 const styles = StyleSheet.create({
   container: {
@@ -39,21 +41,59 @@ const styles = StyleSheet.create({
     fontSize: common.font14,
     textAlign: 'left',
   },
+  shelvesList: {
+    flexDirection: 'row',
+    marginLeft: common.margin15,
+    marginRight: common.margin15,
+  },
+  shelvesListHeaderView: {
+    marginTop: common.margin10,
+    borderBottomColor: common.placeholderColor,
+    borderBottomWidth: 1,
+  },
+  shelvesListHeaderTitle: {
+    color: common.placeholderColor,
+    fontSize: common.font12,
+    paddingBottom: common.margin5,
+  },
+  shelvesListRowView: {
+    marginTop: common.margin5,
+    marginLeft: 1,
+    marginRight: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 })
 
 class Deal extends Component {
+  constructor(props) {
+    super(props)
+    this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+  }
+
+  componentDidMount() {
+    const { dispatch, selectedPair } = this.props
+    const { currency, goods } = selectedPair
+    const params = {
+      goods_id: goods.id,
+      currency_id: currency.id,
+    }
+    dispatch(exchange.requestLastpriceList(params))
+    dispatch(exchange.requestOrderhistoryList(params))
+  }
+
   menuPress() {
-    const { dispatch, homeRose } = this.props
-    const items = []
-    homeRose.forEach((element) => {
-      items.push({
-        title: `${element.goods.name}/${element.currency.name}`,
-        onPress: () => {
-          dispatch(actions.homeRoseSelectedUpdate(element))
-        },
-      })
-    })
-    Menu.show({ x: common.sw / 2, y: 64 }, items)
+    // const { dispatch, homeRose } = this.props
+    // const items = []
+    // homeRose.forEach((element) => {
+    //   items.push({
+    //     title: `${element.goods.name}/${element.currency.name}`,
+    //     onPress: () => {
+    //       dispatch(actions.selectedPairUpdate(element))
+    //     },
+    //   })
+    // })
+    // Menu.show({ x: common.sw / 2, y: 64 }, items)
   }
 
   tapBuySellBtn = () => {
@@ -61,32 +101,28 @@ class Deal extends Component {
   }
 
   tabBarPress(index) {
-    const { dispatch, buyOrSell, user, navigation } = this.props
+    const { dispatch, selectedPair, user, navigation, formData, amountVisible } = this.props
     if (!user) {
       navigation.navigate('LoginStack')
       return
     }
-    let temp = true
-    if (index === 1) temp = false
-    if (buyOrSell !== temp) {
-      dispatch(actions.buyOrSellUpdate(temp))
-      dispatch(actions.textInputDelegateUpdate({ price: '', quantity: '', amount: '' }))
-      const view = (
-        <Provider store={store}>
-          <DealDrawer
-            onPress={() => this.tapBuySellBtn()}
-          />
-        </Provider>
-      )
-      this.drawer = Drawer.open(view, 'bottom')
-    }
+    const view = (
+      <DealDrawer
+        index={index}
+        formData={formData}
+        amountVisible={amountVisible}
+        selectedPair={selectedPair}
+        onPress={() => this.tapBuySellBtn()}
+      />
+    )
+    this.drawer = Drawer.open(view, 'bottom')
   }
 
   renderNavigationBar = () => {
-    const { navigation, homeRoseSelected, user } = this.props
+    const { navigation, selectedPair, user } = this.props
 
-    const goodsName = homeRoseSelected.goods.name
-    const currencyName = homeRoseSelected.currency.name
+    const goodsName = selectedPair.goods.name
+    const currencyName = selectedPair.currency.name
 
     return (
       <DealNavigator
@@ -106,17 +142,17 @@ class Deal extends Component {
   }
 
   renderMarketView = () => {
-    const { homeRoseSelected, valuation } = this.props
-    const currencyName = homeRoseSelected.currency.name
+    const { selectedPair, valuation } = this.props
+    const currencyName = selectedPair.currency.name
     let quantity = ''
     let cprice = ''
-    const rose = homeRoseSelected.rose
+    const rose = selectedPair.rose
     let rmb = '0.00'
 
-    if (homeRoseSelected) {
-      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
-        cprice = new BigNumber(homeRoseSelected.cprice).toFixed(p, 1)
-        quantity = new BigNumber(homeRoseSelected.quantity).toFixed(q, 1)
+    if (selectedPair) {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q) => {
+        cprice = new BigNumber(selectedPair.cprice).toFixed(p, 1)
+        quantity = new BigNumber(selectedPair.quantity).toFixed(q, 1)
       })
       if (valuation && valuation.rates) {
         rmb = valuation.rates[currencyName][common.token.CNYT]
@@ -182,29 +218,124 @@ class Deal extends Component {
     )
   }
 
+  renderShelvesRow(rd, rid, type) {
+    const { selectedPair } = this.props
+    let price
+    let sumQuantity
+    let title
+    let titleColor
+    let detail
+    let detailColor
+    common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q) => {
+      price = new BigNumber(rd.price).toFixed(p, 1)
+      sumQuantity = new BigNumber(rd.sum_quantity).toFixed(q, 1)
+    })
+    if (type === common.buy) {
+      title = sumQuantity
+      titleColor = common.textColor
+      detail = price
+      detailColor = common.redColor
+    } else if (type === common.sell) {
+      title = price
+      titleColor = common.greenColor
+      detail = sumQuantity
+      detailColor = common.textColor
+    }
+    return (
+      <View style={styles.shelvesListRowView}>
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: titleColor,
+          }}
+        >{title}</Text>
+        <Text
+          style={{
+            fontSize: common.font12,
+            color: detailColor,
+          }}
+        >{detail}</Text>
+      </View>
+    )
+  }
+
+  renderHeader(type) {
+    let text = ''
+    if (type === common.buy) {
+      text = '买'
+    } else if (type === common.sell) {
+      text = '卖'
+    }
+    return (
+      <View style={styles.shelvesListHeaderView}>
+        <Text style={styles.shelvesListHeaderTitle}>
+          {text}
+        </Text>
+      </View>
+    )
+  }
+
+  renderShelvesListChildren(index) {
+    if (index === 0) {
+      const { lastPrice } = this.props
+      return (
+        <View style={styles.shelvesList}>
+          <ListView
+            style={{ width: '50%' }}
+            dataSource={this.dataSource.cloneWithRows(lastPrice.buy)}
+            renderHeader={() => this.renderHeader(common.buy)}
+            renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.buy)}
+            enableEmptySections
+            removeClippedSubviews={false}
+          />
+          <ListView
+            style={{ width: '50%' }}
+            dataSource={this.dataSource.cloneWithRows(lastPrice.sell)}
+            renderHeader={() => this.renderHeader(common.sell)}
+            renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.sell)}
+            enableEmptySections
+            removeClippedSubviews={false}
+          />
+        </View>
+      )
+    }
+    return null
+  }
+
   renderDetailList = () => {
-    const { navigation } = this.props
-    return <ShelvesList navigation={navigation} />
+    const { navigation, segmentIndex, dispatch } = this.props
+    return (
+      <ShelvesList
+        titles={['盘口五档', '当前委托']}
+        segmentIndex={segmentIndex}
+        segmentValueChanged={(e) => {
+          if (segmentIndex !== e) {
+            dispatch(exchange.updateSegmentIndex(e))
+          }
+        }}
+        renderChildComponent={index => this.renderShelvesListChildren(index)}
+        navigation={navigation}
+      />
+    )
   }
 
   renderOrderHistory = () => {
-    const { latestDeals, homeRoseSelected } = this.props
-    const data = []
-    latestDeals.map((item) => {
+    const { orderHistory, selectedPair } = this.props
+    const data = orderHistory.map((item) => {
       let price
       let quantity
       const direct = item.endDirect
       const createdAt = common.dfTime(item.createdAt)
-      common.precision(homeRoseSelected.goods.name, homeRoseSelected.currency.name, (p, q) => {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q) => {
         price = new BigNumber(item.dealPrice).toFixed(p, 1)
         quantity = new BigNumber(item.quantity).toFixed(q, 1)
       })
-      return data.push({
+      return {
         price,
         quantity,
         direct,
         createdAt,
-      })
+      }
     })
     return <LatestDealList data={data} />
   }
@@ -246,14 +377,14 @@ class Deal extends Component {
 function mapStateToProps(state) {
   return {
     user: state.user.user,
+    selectedPair: state.exchange.selectedPair,
+    segmentIndex: state.exchange.segmentIndex,
+    orderHistory: state.exchange.orderHistory,
+    lastPrice: state.exchange.lastPrice,
+    formData: state.exchange.formData,
+    amountVisible: state.asset.amountVisible,
 
     valuation: state.asset.valuation,
-
-    homeRose: state.dealstat.homeRose,
-    homeRoseSelected: state.dealstat.homeRoseSelected,
-
-    latestDeals: state.deal.latestDeals,
-
     kLineOrDepth: state.ui.kLineOrDepth,
   }
 }

@@ -44,15 +44,15 @@ class ShelvesList extends Component {
     }).cloneWithRows(data)
   }
 
-  selectionBarPress = (e) => {
-    const { dispatch, navigation, user } = this.props
-    if (e.title === '盘口五档') {
-      dispatch(actions.selectionBarUpdate(common.selectionBar.left))
-    } else if (e.title === '当前委托') {
-      dispatch(actions.selectionBarUpdate(common.selectionBar.right))
-      if (!user) navigation.navigate('LoginStack')
-    }
-  }
+  // selectionBarPress = (e) => {
+  //   const { dispatch, navigation, user } = this.props
+  //   if (e.title === '盘口五档') {
+  //     dispatch(actions.selectionBarUpdate(common.selectionBar.left))
+  //   } else if (e.title === '当前委托') {
+  //     dispatch(actions.selectionBarUpdate(common.selectionBar.right))
+  //     if (!user) navigation.navigate('LoginStack')
+  //   }
+  // }
 
   renderHeader(type) {
     let text = ''
@@ -139,13 +139,19 @@ class ShelvesList extends Component {
   }
 
   render() {
+    const { titles, segmentIndex, segmentValueChanged, renderChildComponent } = this.props
     return (
       <View>
         <TKSelectionBar
-          titles={['盘口五档', '当前委托']}
-          onPress={e => this.selectionBarPress(e)}
+          initialIndexSelected={segmentIndex}
+          titles={titles}
+          onPress={(e) => {
+            if (segmentValueChanged) {
+              segmentValueChanged(e.index)
+            }
+          }}
         />
-        {this.renderList()}
+        {renderChildComponent(segmentIndex)}
       </View>
     )
   }

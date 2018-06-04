@@ -18,6 +18,7 @@ import home from './home'
 import orders from './orders'
 import market from './market'
 import otc from './otc'
+import exchange from './exchange'
 
 const rootReducer = combineReducers({
   authorize,
@@ -39,6 +40,7 @@ const rootReducer = combineReducers({
   orders,
   market,
   otc,
+  exchange,
 })
 
 export default rootReducer

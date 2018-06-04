@@ -12,8 +12,8 @@ import {
 const initialState = {
   syncing: false,
   formState: {
-    mobile: '',
-    password: '',
+    mobile: '15913913919',
+    password: '123456',
   },
   error: null,
   loading: false,

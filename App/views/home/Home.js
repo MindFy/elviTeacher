@@ -15,6 +15,7 @@ import HomeSwiper from './HomeSwiper'
 import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import * as exchange from '../../actions/exchange'
 
 const styles = StyleSheet.create({
   container: {
@@ -37,7 +38,7 @@ class Home extends Component {
 
   marketPress(rd) {
     const { navigation, dispatch } = this.props
-    dispatch(actions.homeRoseSelectedUpdate(rd))
+    dispatch(exchange.updatePair(rd))
     navigation.navigate('Deal')
   }
 

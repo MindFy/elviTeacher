@@ -26,6 +26,7 @@ import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
 import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
+import { requestLastpriceList, requestOpenordersList, requestOrderhistoryList } from './exchange'
 
 export default function* rootSaga() {
   yield [
@@ -101,5 +102,9 @@ export default function* rootSaga() {
 
     fork(requestPairInfo),
     fork(submitRequest),
+
+    fork(requestLastpriceList),
+    fork(requestOpenordersList),
+    fork(requestOrderhistoryList),
   ]
 }
