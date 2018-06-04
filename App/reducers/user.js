@@ -23,10 +23,6 @@ const initialState = {
   newPassword: '',
   newPasswordAgain: '',
 
-  bankName: '',
-  subbankName: '',
-  bankNo: '',
-
   email: '',
   codeEmail: '',
 
@@ -312,14 +308,6 @@ export default function user(state = initialState, action) {
       }
       break
 
-    case constants.UPDATE_BANK_UPDATE:
-      nextState = {
-        ...state,
-        bankName: action.data.bankName,
-        subbankName: action.data.subbankName,
-        bankNo: action.data.bankNo,
-      }
-      break
     case constants.UPDATE_EMAIL_REQUEST:
       nextState = {
         ...state,
@@ -344,27 +332,6 @@ export default function user(state = initialState, action) {
         ...state,
         email: action.data.email,
         codeEmail: action.data.codeEmail,
-      }
-      break
-    case constants.UPDATE_BANK_REQUEST:
-      nextState = {
-        ...state,
-        updateBankVisible: true,
-      }
-      break
-    case constants.UPDATE_BANK_SUCCEED:
-      nextState = {
-        ...state,
-        updateBankVisible: false,
-        updateBankResponse: action.response,
-        user: action.user,
-      }
-      break
-    case constants.UPDATE_BANK_FAILED:
-      nextState = {
-        ...state,
-        updateBankVisible: false,
-        updateBankResponse: action.response,
       }
       break
     default:

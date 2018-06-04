@@ -79,8 +79,6 @@ import {
   sync,
   updatePassword,
   updatePasswordUpdate,
-  updateBankUpdate,
-  updateBank,
   updateEmail,
   updateEmailUpdate,
 } from './user'
@@ -102,7 +100,6 @@ import {
   clearError,
 } from './authorize'
 import * as home from './home'
-
 
 const actions = {
   requestBanners: home.requestBanners,
@@ -182,8 +179,6 @@ const actions = {
   sync,
   updatePassword,
   updatePasswordUpdate,
-  updateBankUpdate,
-  updateBank,
   updateEmail,
   updateEmailUpdate,
 

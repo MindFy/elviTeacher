@@ -4,21 +4,44 @@ import {
   Text,
   View,
   Image,
+  StyleSheet,
   ScrollView,
   TouchableOpacity,
   Keyboard,
 } from 'react-native'
-import {
-  Toast,
-  Overlay,
-} from 'teaset'
-import {
-  common,
-} from '../../constants/common'
+import { Toast, Overlay } from 'teaset'
+import { common } from '../../constants/common'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
-import actions from '../../actions/index'
+import * as actions from '../../actions/updateBank'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.blackColor,
+  },
+  tipView: {
+    marginTop: common.margin5,
+    backgroundColor: common.navBgColor,
+  },
+  tipTitle: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  tipDetail: {
+    marginTop: common.margin5,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    marginBottom: common.margin10,
+    color: common.textColor,
+    fontSize: common.font10,
+    lineHeight: common.font12,
+  },
+})
 
 class UpdateBank extends Component {
   static navigationOptions(props) {
@@ -32,91 +55,82 @@ class UpdateBank extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <TouchableOpacity
+      headerLeft: (
+        <TouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-        ),
+            source={require('../../assets/下拉copy.png')}
+          />
+        </TouchableOpacity>
+      ),
     }
-  }
-  constructor() {
-    super()
-    this.showUpdateBankResponse = false
-    this.showGetVerificateCodeResponse = false
   }
 
   componentDidMount() {
     const { dispatch, user } = this.props
-    dispatch(actions.updateBankUpdate({
+    dispatch(actions.updateForm({
       bankName: user.bankName,
       subbankName: user.subbankName,
       bankNo: user.bankNo,
+      code: '',
     }))
   }
 
-  componentWillUnmount() {
-    const { dispatch, mobile, password, passwordAgain } = this.props
-    dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
-    dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
-    dispatch(actions.bankTextInputUpdate({ clearTextInputBank: false }))
+  componentWillReceiveProps(nextProps) {
+    this.handleRequestGetCode(nextProps)
+    this.handleRequestUpdateBank(nextProps)
   }
 
-  onChange(event, tag) {
-    const { text } = event.nativeEvent
-    const { dispatch, bankName, subbankName, bankNo,
-      mobile, password, passwordAgain } = this.props
-    switch (tag) {
-      case 'bankName':
-        dispatch(actions.updateBankUpdate({ bankName: text, subbankName, bankNo }))
-        break
-      case 'subbankName':
-        dispatch(actions.updateBankUpdate({ bankName, subbankName: text, bankNo }))
-        break
-      case 'bankNo':
-        dispatch(actions.updateBankUpdate({ bankName, subbankName, bankNo: text }))
-        break
-      case 'code':
-        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
-        break
-      default:
-        break
+  componentWillUnmount() {
+    const { dispatch } = this.props
+    dispatch(actions.updateForm({ bankName: '', subbankName: '', bankNo: '', code: '' }))
+  }
+
+  onChangeText(text, tag) {
+    const { dispatch, formState } = this.props
+    if (tag === 'bankName') {
+      dispatch(actions.updateForm({ ...formState, bankName: text }))
+    } else if (tag === 'subbankName') {
+      dispatch(actions.updateForm({ ...formState, subbankName: text }))
+    } else if (tag === 'bankNo') {
+      dispatch(actions.updateForm({ ...formState, bankNo: text }))
+    } else if (tag === 'code') {
+      dispatch(actions.updateForm({ ...formState, code: text }))
     }
   }
 
   confirmPress(title) {
     Keyboard.dismiss()
 
-    const { dispatch, bankName, subbankName, bankNo, clearTextInputBank } = this.props
+    const { dispatch, formState } = this.props
     if (title === '重新添加') {
-      dispatch(actions.updateBankUpdate({ bankName: '', subbankName: '', bankNo: '' }))
-      dispatch(actions.bankTextInputUpdate({ clearTextInputBank: !clearTextInputBank }))
+      this.editable = true
+      dispatch(actions.updateForm({ bankName: '', subbankName: '', bankNo: '', code: '' }))
       return
     }
-    if (!bankName.length || bankName.length < 4) {
+    if (!formState.bankName.length || formState.bankName.length < 4) {
       Toast.message('请输入开户银行, 至少四位')
       return
     }
-    if (!subbankName.length || subbankName.length < 4) {
+    if (!formState.subbankName.length || formState.subbankName.length < 4) {
       Toast.message('请输入开户支行名称, 至少四位')
       return
     }
-    if (!bankNo.length || !common.regBankNo.test(bankNo) || !common.regSpace.test(bankNo)) {
+    if (!formState.bankNo.length
+      || !common.regBankNo.test(formState.bankNo)
+      || !common.regSpace.test(formState.bankNo)) {
       Toast.message('请输入银行卡号, 16-19位数字')
       return
     }
@@ -124,39 +138,26 @@ class UpdateBank extends Component {
   }
 
   updateBank() {
-    const { dispatch, bankName, subbankName, bankNo, code, user } = this.props
-    const newUser = JSON.parse(JSON.stringify(user))
-    newUser.bankName = bankName
-    newUser.subbankName = subbankName
-    newUser.bankNo = bankNo
-    dispatch(actions.updateBank({
-      bankName,
-      subbankName,
-      bankNo,
-      code,
-    }, newUser))
+    const { dispatch, formState } = this.props
+
+    dispatch(actions.requestUpdateBank(formState))
   }
 
   showOverlay() {
     const { dispatch, user } = this.props
     const overlayView = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={{ justifyContent: 'center' }}
         modal={false}
         overlayOpacity={0}
       >
         <TKViewCheckAuthorize
           mobile={user.mobile}
-          onChange={e => this.onChange(e, 'code')}
-          codePress={(count) => {
-            this.count = count
-            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+          onChangeText={e => this.onChangeText(e, 'code')}
+          codePress={() => {
+            dispatch(actions.requestGetCode({ mobile: this.props.user.mobile, service: 'auth' }))
           }}
-          confirmPress={() => {
-            dispatch(actions.checkVerificateCode({ mobile: this.props.user.mobile, service: 'auth', code: this.props.code }))
-          }}
+          confirmPress={() => this.updateBank()}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
         />
       </Overlay.View>
@@ -164,119 +165,70 @@ class UpdateBank extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  handleCheckVerificateCodeRequest() {
-    const { checkVerificateCodeVisible, checkVerificateCodeResponse } = this.props
-    if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
+  errors = {
+    4000101: '验证码不能为空',
+    4000102: '一分钟内不能重复发送验证码',
+    4000104: '手机号码已注册',
+    4000156: '授权验证失败',
+  }
 
-    if (checkVerificateCodeVisible) {
-      this.showCheckVerificateCodeResponse = true
-    } else {
-      this.showCheckVerificateCodeResponse = false
-      if (checkVerificateCodeResponse.success) {
-        this.updateBank()
-      } else if (checkVerificateCodeResponse.error.message === common.badNet) {
+  handleRequestGetCode(nextProps) {
+    const { getCodeResult, getCodeError } = nextProps
+    if (getCodeResult && (getCodeResult !== this.props.getCodeResult)) {
+      Toast.success(getCodeResult.message, 2000, 'top')
+      return
+    }
+    if (getCodeError && (getCodeError !== this.props.getCodeError)) {
+      if (getCodeError.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
-      } else if (checkVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
-      } else if (checkVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('验证码错误')
-      } else {
-        Toast.fail('验证失败，请重试')
+        return
       }
+      const msg = this.errors[getCodeError.code]
+      if (msg) Toast.fail(msg)
+      else Toast.fail('获取验证码失败，请重试')
     }
   }
 
-  handleGetVerificateCodeRequest() {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
-
-    if (getVerificateCodeVisible) {
-      this.showGetVerificateCodeResponse = true
-    } else {
-      this.showGetVerificateCodeResponse = false
-      if (getVerificateCodeResponse.success) {
-        this.count()
-        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
-      } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('验证码不能为空')
-      } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('一分钟内不能重复发送验证码')
-      } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail('手机号码已注册')
-      } else if (getVerificateCodeResponse.error.message === common.badNet) {
+  handleRequestUpdateBank(nextProps) {
+    const { updateBankResult, updateBankError, navigation } = nextProps
+    if (updateBankResult && (updateBankResult !== this.props.updateBankResult)) {
+      Toast.success(updateBankResult)
+      Overlay.hide(this.overlayViewKey)
+      navigation.goBack()
+      return
+    }
+    if (updateBankError && (updateBankError !== this.props.updateBankError)) {
+      if (updateBankError.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
-      } else {
-        Toast.fail('获取验证码失败，请重试')
+        return
       }
+      const msg = this.errors[updateBankError.code]
+      if (msg) Toast.fail(msg)
+      else Toast.fail('银行卡绑定失败，请稍后重试')
     }
   }
 
-  handleUpdateBankRequest() {
-    const { navigation, updateBankVisible, updateBankResponse } = this.props
-    if (!updateBankVisible && !this.showUpdateBankResponse) return
-
-    if (updateBankVisible) {
-      this.showUpdateBankResponse = true
-    } else {
-      this.showUpdateBankResponse = false
-      if (updateBankResponse.success) {
-        Toast.success(updateBankResponse.result)
-        Overlay.hide(this.overlayViewKey)
-        navigation.goBack()
-      } else {
-        Toast.fail(updateBankResponse.error.message)
-        if (updateBankResponse.error.code === 4000156) {
-          this.showOverlay()
-        }
-      }
-    }
-  }
-
-  renderTip =() => (
-    <View
-      style={{
-        marginTop: common.margin5,
-        backgroundColor: common.navBgColor,
-      }}
-    >
-      <Text
-        style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin10,
-          color: common.textColor,
-          fontSize: common.font12,
-        }}
-      >温馨提示</Text>
-      <Text
-        style={{
-          marginTop: common.margin5,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          marginBottom: common.margin10,
-          color: common.textColor,
-          fontSize: common.font10,
-          lineHeight: common.font12,
-        }}
-      >1、添加的银行卡必须用于法币交易买卖转账，若使用其他银行卡，可能导致交易失败，请谨慎添加！</Text>
+  renderTip = () => (
+    <View style={styles.tipView}>
+      <Text style={styles.tipTitle}>
+        温馨提示
+      </Text>
+      <Text style={styles.tipDetail}>
+        1、添加的银行卡必须用于法币交易买卖转账，若使用其他银行卡，可能导致交易失败，请谨慎添加！
+      </Text>
     </View>
   )
 
   render() {
-    const { bankName, subbankName, bankNo, navigation, user, clearTextInputBank } = this.props
-
+    const { loading, formState, navigation, user } = this.props
     const editable = !(navigation.state.params
       && navigation.state.params.fromMe === 'fromMe'
-      && user.bankName.length && !clearTextInputBank)
-    this.handleUpdateBankRequest()
-    this.handleGetVerificateCodeRequest()
-    this.handleCheckVerificateCodeRequest()
+      && user.bankName.length && !this.editable)
 
     return (
       <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: common.blackColor,
-        }}
+        style={styles.container}
+        keyboardDismissMode={'on-drag'}
         keyboardShouldPersistTaps="handled"
       >
         <TKInputItem
@@ -290,10 +242,9 @@ class UpdateBank extends Component {
             fontSize: common.font14,
           }}
           title={'开户银行'}
-          value={bankName}
-          autoFocus={clearTextInputBank}
+          value={formState.bankName}
           placeholder={'请输入开户银行'}
-          onChange={e => this.onChange(e, 'bankName')}
+          onChangeText={e => this.onChangeText(e, 'bankName')}
           maxLength={common.textInputMaxLenBankName}
           editable={editable}
         />
@@ -309,9 +260,9 @@ class UpdateBank extends Component {
             fontSize: common.font14,
           }}
           title={'开户支行'}
-          value={subbankName}
+          value={formState.subbankName}
           placeholder={'请输入正确的开户支行名称'}
-          onChange={e => this.onChange(e, 'subbankName')}
+          onChangeText={e => this.onChangeText(e, 'subbankName')}
           maxLength={common.textInputMaxLenBankName}
           editable={editable}
         />
@@ -328,8 +279,8 @@ class UpdateBank extends Component {
           }}
           title={'银行卡号'}
           placeholder={'请输入正确的银行卡号'}
-          value={bankNo}
-          onChange={e => this.onChange(e, 'bankNo')}
+          value={formState.bankNo}
+          onChangeText={e => this.onChangeText(e, 'bankNo')}
           keyboardType={'numbers-and-punctuation'}
           maxLength={common.textInputMaxLenBankNo}
           editable={editable}
@@ -339,15 +290,15 @@ class UpdateBank extends Component {
 
         <TKButton
           theme={'gray'}
-          style={{
-            marginTop: common.margin20,
-          }}
+          style={{ marginTop: common.margin20 }}
           caption={editable ? '确认' : '重新添加'}
           onPress={() => {
             const title = editable ? '确认' : '重新添加'
             this.confirmPress(title)
           }}
         />
+
+        <TKSpinner isVisible={loading} />
       </ScrollView>
     )
   }
@@ -355,25 +306,8 @@ class UpdateBank extends Component {
 
 function mapStateToProps(store) {
   return {
-    bankName: store.user.bankName,
-    subbankName: store.user.subbankName,
-    bankNo: store.user.bankNo,
+    ...store.updateBank,
     user: store.user.user,
-    mobile: store.user.mobileRegister,
-    code: store.user.codeRegister,
-    password: store.user.passwordRegister,
-    passwordAgain: store.user.passwordAgainRegister,
-
-    updateBankVisible: store.user.updateBankVisible,
-    updateBankResponse: store.user.updateBankResponse,
-
-    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
-
-    checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
-    checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
-
-    clearTextInputBank: store.ui.clearTextInputBank,
   }
 }
 
