@@ -41,7 +41,7 @@ class HeaderScrollView extends Component {
             })
             if (onClickItem) {
               onClickItem({
-                titles: item,
+                title: item,
                 index,
               })
             }

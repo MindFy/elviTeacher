@@ -32,6 +32,15 @@ class Market extends Component {
     dispatch(requestPairInfo({}))
   }
 
+  componentWillReceiveProps(nextProp) {
+    const { pairs, dispatch } = this.props
+    if (!Object.keys(pairs).length && Object.keys(nextProp.pairs).length) {
+      dispatch(updateCurrentPair({
+        title: 'CNYT',
+      }))
+    }
+  }
+
   onClickItem = (item) => {
     const { dispatch } = this.props
     dispatch(updateCurrentPair({
@@ -43,11 +52,10 @@ class Market extends Component {
     const { currPair, pairs } = this.props
 
     const items = ['CNYT', 'BTC', 'TK']
-    const marketData = []
+    let marketData = []
     if (pairs && pairs[currPair]) {
-      // marketData = pairs[currPair]
+      marketData = pairs[currPair].sub
     }
-    // todo 未完待续
     return (
       <View
         style={{
