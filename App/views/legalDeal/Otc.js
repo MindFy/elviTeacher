@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
 })
 
-class LegalDeal extends Component {
+class Otc extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '法币',
@@ -281,4 +281,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(LegalDeal)
+export default connect(mapStateToProps)(Otc)

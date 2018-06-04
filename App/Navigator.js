@@ -26,7 +26,7 @@ import Rebates from './views/me/Rebates'
 import UpdateEmail from './views/me/UpdateEmail'
 import Settings from './views/me/Settings'
 import UpdatePassword from './views/me/UpdatePassword'
-import LegalDeal from './views/legalDeal/LegalDeal'
+import Otc from './views/legalDeal/Otc'
 import LegalDealDetail from './views/legalDeal/LegalDealDetail'
 import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
@@ -71,8 +71,8 @@ const TabBar = TabNavigator(
         ),
       },
     },
-    LegalDeal: {
-      screen: LegalDeal,
+    Otc: {
+      screen: Otc,
       navigationOptions: {
         tabBarLabel: '法币交易',
         tabBarIcon: ({ focused }) => (
@@ -150,7 +150,7 @@ const TabBarStack = StackNavigator({
   Authentication,
   Settings,
   UpdatePassword,
-  LegalDeal,
+  Otc,
   LegalDealDetail,
   Payment,
   UpdateBank,
