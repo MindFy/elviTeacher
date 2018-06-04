@@ -24,10 +24,8 @@ import {
 } from './withdraw'
 import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
-import {
-  requestPairInfo,
-} from './market'
-
+import { requestPairInfo } from './market'
+import { submitRequest } from './otc'
 
 export default function* rootSaga() {
   yield [
@@ -102,5 +100,6 @@ export default function* rootSaga() {
     fork(requestCancelAllOrder),
 
     fork(requestPairInfo),
+    fork(submitRequest),
   ]
 }
