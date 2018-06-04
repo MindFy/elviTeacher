@@ -106,6 +106,10 @@ class Authentication extends Component {
     })
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.handleIdCardAuthRequest(nextProps)
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(actions.idCardAuthUpdate({
@@ -223,17 +227,9 @@ class Authentication extends Component {
     }))
   }
 
-  handleIdCardAuthRequest() {
-    const { idCardAuthVisible, idCardAuthResponse } = this.props
-    if (!idCardAuthVisible && !this.showIdCardAuthResponse) return
-    if (this.imgHash) {
-      return
-    }
-
-    if (idCardAuthVisible) {
-      this.showIdCardAuthResponse = true
-    } else {
-      this.showIdCardAuthResponse = false
+  handleIdCardAuthRequest(nextProps) {
+    const { idCardAuthResponse } = nextProps
+    if (idCardAuthResponse && idCardAuthResponse !== this.props.idCardAuthResponse) {
       if (idCardAuthResponse.success) {
         Toast.success(idCardAuthResponse.result)
       } else if (idCardAuthResponse.error.code === 4000150) {
@@ -372,7 +368,6 @@ class Authentication extends Component {
   }
 
   render() {
-    this.handleIdCardAuthRequest()
     const { idCardAuthVisible, user } = this.props
     return (
       <View
