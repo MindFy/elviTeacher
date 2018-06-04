@@ -9,30 +9,28 @@ import {
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { BigNumber } from 'bignumber.js'
-import RefreshListView from 'react-native-refresh-list-view'
+import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 // import TKSpinner from '../../components/TKSpinner'
 import {
   openOrderRequest,
+  openOrderSetError,
   orderHistoryRequest,
+  orderHistrorySetError,
   updateSelectedTitle,
   toggleIsShowTotalPrice,
   requestCancelOrder,
-  requestCancelOrderClearError,
+  requestCancelOrderSetError,
+  updateOpenOrderPage,
+  updateOrderHistoryPage,
   // requestCancelAllOrder,
 } from '../../actions/orders'
 import {
   findDelegateSelfCurrent,
   findDelegateSelfHistory,
 } from '../../schemas/delegate'
-
-const styles = StyleSheet.create({
-  container: {
-
-  },
-})
 
 // openOrderCellStyles
 const OOCStyles = StyleSheet.create({
@@ -222,21 +220,57 @@ class Orders extends Component {
 
   constructor(props) {
     super(props)
-    this.page = 0
+    this.orderHistoryPage = 0
+    this.openOrderPage = 0
+
     this.limit = 10
+
+    this.state = {
+      openOrderReState: RefreshState.Idle,
+      orderHistoryReState: RefreshState.Idle,
+    }
   }
 
   componentDidMount() {
   }
 
   componentWillReceiveProps(nexProps) {
-    if (nexProps.cancelOrderError) {
-      Toast.fail('撤单失败')
-      this.props.dispatch(requestCancelOrderClearError())
+    if (this.props.openOrderLoading && !nexProps.openOrderLoading) {
+      this.isRefresh = false
+      const openOrderLength = (nexProps.openOrders.length / this.limit) > this.openOrderPage
+      this.setState({
+        openOrderReState: openOrderLength ? RefreshState.Idle : RefreshState.NoMoreData,
+      })
     }
 
-    if (nexProps.cancelOrderSuccess) {
-      Toast.success('撤单成功')
+    if (nexProps.openOrderError) {
+      this.setState({
+        openOrderReState: RefreshState.Idle,
+      })
+      this.props.dispatch(openOrderSetError(null))
+    }
+
+    if (this.props.orderHistoryLoading && !nexProps.orderHistoryLoading) {
+      this.isRefresh = false
+      const orderHistoryLength = (nexProps.orderHistory.length / this.limit) > this.orderHistoryPage
+      this.setState({
+        orderHistoryReState: orderHistoryLength ? RefreshState.Idle : RefreshState.NoMoreData,
+      })
+    }
+
+    if (nexProps.orderHistoryError) {
+      this.setState({
+        orderHistoryReState: RefreshState.Idle,
+      })
+      this.props.dispatch(orderHistrorySetError(null))
+    }
+
+    if (this.props.cancelOrderLoading && !nexProps.cancelOrderLoading) {
+      Toast.fail('撤单成功')
+    }
+    if (nexProps.cancelOrderError) {
+      Toast.fail('撤单失败')
+      this.props.dispatch(requestCancelOrderSetError(null))
     }
   }
 
@@ -245,22 +279,37 @@ class Orders extends Component {
   }
 
   onHeaderRefresh = () => {
-    const { titleSeleted } = this.props
-    this.page = 0
+    if (this.isRefresh) {
+      return
+    }
+    this.isRefresh = true
 
+    const { titleSeleted } = this.props
     if (titleSeleted === '当前委托') {
+      this.openOrderPage = 0
+      this.props.dispatch(updateOpenOrderPage(this.openOrderPage))
       this.requestOpenOrder()
     } else {
+      this.orderHistoryPage = 0
+      this.props.dispatch(updateOrderHistoryPage(this.orderHistoryPage))
       this.requestOrderHistory()
     }
   }
 
   onFooterRefresh = () => {
+    if (this.isRefresh) {
+      return
+    }
+    this.isRefresh = true
     const { titleSeleted } = this.props
 
     if (titleSeleted === '当前委托') {
+      this.openOrderPage++
+      this.props.dispatch(updateOrderHistoryPage(this.orderHistoryPage))
       this.requestOpenOrder()
     } else {
+      this.orderHistoryPage++
+      this.props.dispatch(updateOrderHistoryPage(this.orderHistoryPage))
       this.requestOrderHistory()
     }
   }
@@ -274,11 +323,20 @@ class Orders extends Component {
     return this.props.orderHistory || []
   }
 
+  getRefreshState = () => {
+    const { titleSeleted } = this.props
+
+    if (titleSeleted === '当前委托') {
+      return this.state.openOrderReState
+    }
+    return this.state.orderHistoryReState
+  }
+
   requestOrderHistory = () => {
     const { dispatch, user } = this.props
     dispatch(orderHistoryRequest(findDelegateSelfHistory(
       user.id,
-      this.limit * this.page,
+      this.limit * this.orderHistoryPage,
       this.limit,
     )))
   }
@@ -287,7 +345,7 @@ class Orders extends Component {
     const { dispatch, user } = this.props
     dispatch(openOrderRequest(findDelegateSelfCurrent(
       user.id,
-      this.limit * this.page,
+      this.limit * this.orderHistoryPage,
       this.limit,
     )))
   }
@@ -313,11 +371,11 @@ class Orders extends Component {
   topBarPress(e) {
     const { dispatch } = this.props
     if (e.index === 0) {
-      this.page = 0
+      this.isRefresh = false
       this.requestOpenOrder()
       dispatch(updateSelectedTitle(e.title))
     } else if (e.index === 1) {
-      this.page = 0
+      this.isRefresh = false
       this.requestOrderHistory()
       dispatch(updateSelectedTitle(e.title))
     }
@@ -543,10 +601,12 @@ class Orders extends Component {
 
   renderContent = () => {
     const datas = this.getDataSource()
+    const refreshState = this.getRefreshState()
 
     return (
       <RefreshListView
         data={datas}
+        refreshState={refreshState}
         renderItem={this.renderCell}
         keyExtractor={this.keyExtractor}
         ListHeaderComponent={this.renderHeader}
@@ -554,7 +614,7 @@ class Orders extends Component {
         onFooterRefresh={this.onFooterRefresh}
         footerTextStyle={{
           fontSize: common.font14,
-          color: 'red',
+          color: common.textColor,
         }}
       />
     )

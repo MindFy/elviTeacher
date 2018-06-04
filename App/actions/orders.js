@@ -53,9 +53,10 @@ export function toggleIsShowTotalPrice() {
   }
 }
 
-export function requestCancelOrder() {
+export function requestCancelOrder(payload) {
   return {
     type: 'orders/request_cancel_order',
+    payload,
   }
 }
 
@@ -65,9 +66,9 @@ export function requestCancelAllOrder() {
   }
 }
 
-export function requestCancelOrderClearError(payload) {
+export function requestCancelOrderSetError(payload) {
   return {
-    type: 'orders/request_cancel_order_clear_error',
+    type: 'orders/request_cancel_order_set_error',
     payload,
   }
 }
@@ -75,6 +76,20 @@ export function requestCancelOrderClearError(payload) {
 export function updateRefreshState(payload) {
   return {
     type: 'orders/update_refreshState',
+    payload,
+  }
+}
+
+export function updateOrderHistoryPage(payload) {
+  return {
+    type: 'orders/update_order_histroy_page',
+    payload,
+  }
+}
+
+export function updateOpenOrderPage(payload) {
+  return {
+    type: 'orders/update_open_order_page',
     payload,
   }
 }
