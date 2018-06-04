@@ -10,3 +10,5 @@ App/Utils/codeHtML.js
 App/Utils/emoji.js
 App/Utils/htmlEncoding.js
 App/Utils/base.js
+App/views/home/build
+App/views/transactions/Depth.js
