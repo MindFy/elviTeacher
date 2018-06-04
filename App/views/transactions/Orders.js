@@ -25,6 +25,7 @@ import {
   requestCancelOrderSetError,
   updateOpenOrderPage,
   updateOrderHistoryPage,
+  resetNexus,
   // requestCancelAllOrder,
 } from '../../actions/orders'
 import {
@@ -223,6 +224,9 @@ class Orders extends Component {
     this.orderHistoryPage = 0
     this.openOrderPage = 0
 
+    this.openOrderFistLoad = props.navigation.state.params.title !== '当前委托' && true
+    this.orderHistoryFistLoad = props.navigation.state.params.title !== '历史委托' && true
+
     this.limit = 10
 
     this.state = {
@@ -232,6 +236,14 @@ class Orders extends Component {
   }
 
   componentDidMount() {
+    const { navigation, dispatch } = this.props
+    const { title } = navigation.state.params
+    dispatch(updateSelectedTitle(title))
+    if (title === '当前委托') {
+      this.requestOpenOrder()
+    } else {
+      this.requestOrderHistory()
+    }
   }
 
   componentWillReceiveProps(nexProps) {
@@ -275,7 +287,7 @@ class Orders extends Component {
   }
 
   componentWillUnmount() {
-
+    this.props.dispatch(resetNexus())
   }
 
   onHeaderRefresh = () => {
@@ -305,7 +317,7 @@ class Orders extends Component {
 
     if (titleSeleted === '当前委托') {
       this.openOrderPage++
-      this.props.dispatch(updateOrderHistoryPage(this.orderHistoryPage))
+      this.props.dispatch(updateOpenOrderPage(this.openOrderPage))
       this.requestOpenOrder()
     } else {
       this.orderHistoryPage++
@@ -345,7 +357,7 @@ class Orders extends Component {
     const { dispatch, user } = this.props
     dispatch(openOrderRequest(findDelegateSelfCurrent(
       user.id,
-      this.limit * this.orderHistoryPage,
+      this.limit * this.openOrderPage,
       this.limit,
     )))
   }
@@ -372,12 +384,18 @@ class Orders extends Component {
     const { dispatch } = this.props
     if (e.index === 0) {
       this.isRefresh = false
-      this.requestOpenOrder()
       dispatch(updateSelectedTitle(e.title))
+      if (this.openOrderFistLoad) {
+        this.requestOpenOrder()
+        this.openOrderFistLoad = false
+      }
     } else if (e.index === 1) {
       this.isRefresh = false
-      this.requestOrderHistory()
       dispatch(updateSelectedTitle(e.title))
+      if (this.orderHistoryFistLoad) {
+        this.requestOrderHistory()
+        this.orderHistoryFistLoad = false
+      }
     }
   }
 
@@ -468,30 +486,10 @@ class Orders extends Component {
       cancelBtnTitle = '已取消'
       cancelDisabled = true
     }
-    let goodsName = item.goods ? item.goods.name : ''
-    if (item.goods_id) {
-      if (item.goods_id === 1) {
-        goodsName = common.token.TK
-      } else if (item.goods_id === 2) {
-        goodsName = common.token.BTC
-      } else if (item.goods_id === 3) {
-        goodsName = common.token.CNYT
-      } else if (item.goods_id === 4) {
-        goodsName = common.token.CNY
-      }
-    }
-    let currencyName = item.currency ? item.currency.name : ''
-    if (item.currency_id) {
-      if (item.currency_id === 1) {
-        currencyName = common.token.TK
-      } else if (item.currency_id === 2) {
-        currencyName = common.token.BTC
-      } else if (item.currency_id === 3) {
-        currencyName = common.token.CNYT
-      } else if (item.currency_id === 4) {
-        currencyName = common.token.CNY
-      }
-    }
+
+    const goodsName = item.goods ? item.goods.name : ''
+    const currencyName = item.currency ? item.currency.name : ''
+
     let price
     let quantity
     let dealled
@@ -621,6 +619,12 @@ class Orders extends Component {
   }
 
   render() {
+    const { navigation } = this.props
+    const { title } = navigation.state.params
+
+    const titles = ['当前委托', '历史委托']
+    const indexSelected = titles.indexOf(title) === -1 ? 0 : titles.indexOf(title)
+
     return (
       <View style={{
         flex: 1,
@@ -628,7 +632,8 @@ class Orders extends Component {
       }}
       >
         <TKSelectionBar
-          titles={['当前委托', '历史委托']}
+          initialIndexSelected={indexSelected}
+          titles={titles}
           onPress={(e) => { this.topBarPress(e) }}
         />
         {this.renderContent()}
