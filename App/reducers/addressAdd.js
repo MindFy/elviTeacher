@@ -34,7 +34,6 @@ export default function addressAdd(state = initialState, action) {
     case 'addressAdd/request_address_add_failed':
       nextState = {
         ...state,
-        loading: false,
         error: payload,
       }
       break

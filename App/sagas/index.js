@@ -21,6 +21,7 @@ import {
   requestBalance,
   requestValuation,
   requestWithdraw,
+  requestWithdrawAddress,
 } from './withdraw'
 import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
@@ -93,6 +94,7 @@ export default function* rootSaga() {
     fork(requestBalance),
     fork(requestValuation),
     fork(requestWithdraw),
+    fork(requestWithdrawAddress),
 
     fork(orderHistoryRequest),
     fork(openOrderRequest),
