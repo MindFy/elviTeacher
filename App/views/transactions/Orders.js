@@ -486,30 +486,10 @@ class Orders extends Component {
       cancelBtnTitle = '已取消'
       cancelDisabled = true
     }
-    let goodsName = item.goods ? item.goods.name : ''
-    if (item.goods_id) {
-      if (item.goods_id === 1) {
-        goodsName = common.token.TK
-      } else if (item.goods_id === 2) {
-        goodsName = common.token.BTC
-      } else if (item.goods_id === 3) {
-        goodsName = common.token.CNYT
-      } else if (item.goods_id === 4) {
-        goodsName = common.token.CNY
-      }
-    }
-    let currencyName = item.currency ? item.currency.name : ''
-    if (item.currency_id) {
-      if (item.currency_id === 1) {
-        currencyName = common.token.TK
-      } else if (item.currency_id === 2) {
-        currencyName = common.token.BTC
-      } else if (item.currency_id === 3) {
-        currencyName = common.token.CNYT
-      } else if (item.currency_id === 4) {
-        currencyName = common.token.CNY
-      }
-    }
+
+    const goodsName = item.goods ? item.goods.name : ''
+    const currencyName = item.currency ? item.currency.name : ''
+
     let price
     let quantity
     let dealled
