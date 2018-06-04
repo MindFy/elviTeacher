@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  StatusBar,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -21,6 +20,7 @@ import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import { imgHashApi } from '../../services/api'
 
 const styles = StyleSheet.create({
   inputView: {
@@ -85,7 +85,7 @@ class Authentication extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, imgHashApi, authenticationAgain } = this.props
+    const { dispatch, user, authenticationAgain } = this.props
 
     dispatch(actions.idCardAuthUpdate({
       name: user.name,
@@ -136,7 +136,7 @@ class Authentication extends Component {
   confirmPress() {
     Keyboard.dismiss()
 
-    const { dispatch, name, idNo, idCardImages, imgHashApi } = this.props
+    const { dispatch, name, idNo, idCardImages } = this.props
     if (!name.length) {
       Toast.message('请输入姓名')
       return
@@ -433,8 +433,6 @@ function mapStateToProps(store) {
     authenticationAgain: store.user.authenticationAgain,
     idCardAuthVisible: store.user.idCardAuthVisible,
     idCardAuthResponse: store.user.idCardAuthResponse,
-
-    imgHashApi: store.banners.imgHashApi,
   }
 }
 
