@@ -64,28 +64,21 @@ class Home extends Component {
   renderMenuBtns = () => {
     const btnTitles = ['充值', '提现', '当前委托', '历史委托']
     const menuBtns = []
+    const icons = [
+      require('../../assets/充值.png'),
+      require('../../assets/充值copy.png'),
+      require('../../assets/当前委托.png'),
+      require('../../assets/法币交易.png'),
+    ]
+
     for (let i = 0; i < btnTitles.length; i++) {
-      let source = require('../../assets/充值.png')
-      switch (i) {
-        case 1:
-          source = require('../../assets/充值copy.png')
-          break
-        case 2:
-          source = require('../../assets/当前委托.png')
-          break
-        case 3:
-          source = require('../../assets/法币交易.png')
-          break
-        default:
-          break
-      }
       menuBtns.push(
         <TKButton
           key={i}
           titleStyle={{ color: common.textColor }}
           theme={'home-balance'}
           caption={btnTitles[i]}
-          icon={source}
+          icon={icons[i]}
           onPress={() => this.menuBtnPress(i)}
         />,
       )
@@ -148,17 +141,7 @@ class Home extends Component {
 
 function mapStateToProps(store) {
   return {
-    banners: store.home.banners,
-    bannersError: store.home.bannersError,
-    bannersLoading: store.home.bannersLoading,
-
-    announcements: store.home.announcements,
-    announcementsError: store.home.announcementsError,
-    announcementsLoading: store.home.announcementsLoading,
-
-    market: store.home.market,
-
-    // homeRoseSelected: store.dealstat.homeRoseSelected,
+    ...store.home,
     user: store.user.user,
   }
 }
