@@ -26,6 +26,7 @@ import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
 import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
+import * as updateBank from './updateBank'
 
 export default function* rootSaga() {
   yield [
@@ -44,7 +45,6 @@ export default function* rootSaga() {
     fork(user.isExist),
     fork(user.register),
     fork(user.resetPassword),
-    fork(user.updateBank),
     fork(user.updateEmail),
     fork(user.updatePassword),
 
@@ -101,5 +101,8 @@ export default function* rootSaga() {
 
     fork(requestPairInfo),
     fork(submitRequest),
+
+    updateBank.requestUpdateBank(),
+    updateBank.requestGetCode(),
   ]
 }
