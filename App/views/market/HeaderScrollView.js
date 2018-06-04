@@ -6,16 +6,17 @@ import { common } from '../../constants/common'
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     height: common.h32,
     backgroundColor: common.navBgColor,
   },
   itemContainer: {
-    width: common.sw / 4,
+    width: common.sw / 6,
     justifyContent: 'center',
   },
   item: {
     fontSize: common.font14,
+    textAlign: 'center',
   },
 })
 
