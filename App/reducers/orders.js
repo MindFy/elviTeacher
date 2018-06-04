@@ -5,11 +5,16 @@ const initialState = {
   isShowTotalPrice: false,
   refreshState: 0,
 
-  orderHistorySuccess: false,
+  openOrderPage: 0,
+  openOrderLoading: false,
+  openOrderError: null,
+
+  orderHistoryPage: 0,
+  orderHistoryLoading: false,
   orderHistoryError: null,
 
-  cancelOrderSuccess: false,
-  cancelOrderError: false,
+  cancelOrderLoading: false,
+  cancelOrderError: null,
 
   cancelAllOrderSuccess: false,
   cancelAllOrderError: false,
@@ -23,23 +28,63 @@ export default function orders(state = initialState, action) {
     case 'orders/open_order_request':
       nextState = {
         ...state,
+        openOrderLoading: true,
       }
       break
     case 'orders/open_order_request_succeed':
+      if (state.openOrderPage === 0) {
+        nextState = {
+          ...state,
+          openOrderLoading: false,
+          openOrders: payload,
+        }
+        break
+      }
       nextState = {
         ...state,
-        openOrders: payload,
+        openOrderLoading: false,
+        openOrders: state.openOrders.concat(payload),
       }
       break
     case 'orders/open_order_request_failed':
       nextState = {
         ...state,
+        openOrderError: payload,
       }
       break
+    case 'orders/open_order_set_error':
+      nextState = {
+        ...state,
+        openOrderError: payload,
+      }
+      break
+    case 'orders/update_open_order_page':
+      nextState = {
+        ...state,
+        openOrderPage: payload,
+      }
+      break
+    /** order history  ================================================================ */
+
     case 'orders/order_history_request':
       nextState = {
         ...state,
-        orderHistorySuccess: false,
+        orderHistoryLoading: true,
+      }
+      break
+    case 'orders/order_history_request_succeed':
+      if (state.orderHistoryPage === 0) {
+        nextState = {
+          ...state,
+          orderHistoryLoading: false,
+          orderHistory: payload,
+        }
+        break
+      }
+      nextState = {
+        ...state,
+        orderHistoryLoading: false,
+        orderHistory: state.orderHistory.concat(payload),
       }
       break
     case 'orders/order_history_request_failed':
@@ -48,11 +93,16 @@ export default function orders(state = initialState, action) {
         orderHistoryError: payload,
       }
       break
-    case 'orders/order_history_request_succeed':
+    case 'orders/order_history_set_error':
       nextState = {
         ...state,
-        orderHistorySuccess: true,
-        orderHistory: payload,
+        orderHistoryError: payload,
+      }
+      break
+    case 'orders/update_order_histroy_page':
+      nextState = {
+        ...state,
+        orderHistoryPage: payload,
       }
       break
     case 'orders/update_selected_title':
@@ -70,18 +120,25 @@ export default function orders(state = initialState, action) {
     case 'orders/request_cancel_order':
       nextState = {
         ...state,
+        cancelOrderLoading: true,
       }
       break
     case 'orders/request_cancel_order_succeed':
       nextState = {
         ...state,
-        cancelOrderSuccess: true,
+        cancelOrderLoading: false,
       }
       break
     case 'orders/request_cancel_order_failed':
       nextState = {
         ...state,
-        cancelOrderError: true,
+        cancelOrderError: payload,
+      }
+      break
+    case 'orders/request_cancel_order_set_error':
+      nextState = {
+        ...state,
+        cancelOrderError: payload,
       }
       break
     case 'orders/request_cancel_all_order':
@@ -98,13 +155,7 @@ export default function orders(state = initialState, action) {
     case 'orders/request_cancel_all_order_failed':
       nextState = {
         ...state,
-        cancelAllOrderError: true,
-      }
-      break
-    case 'orders/request_cancel_order_clear_error':
-      nextState = {
-        ...state,
-        cancelAllOrderError: false,
+        cancelAllOrderError: payload,
       }
       break
     case 'orders/update_refreshState':
