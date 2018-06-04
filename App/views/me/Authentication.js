@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  StatusBar,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -21,6 +20,7 @@ import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import { imgHashApi } from '../../services/api'
 
 const styles = StyleSheet.create({
   inputView: {
@@ -85,7 +85,7 @@ class Authentication extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, imgHashApi, authenticationAgain } = this.props
+    const { dispatch, user, authenticationAgain } = this.props
 
     dispatch(actions.idCardAuthUpdate({
       name: user.name,
@@ -104,6 +104,10 @@ class Authentication extends Component {
       dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
       dispatch(actions.findUser(schemas.findUser(user.id)))
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.handleIdCardAuthRequest(nextProps)
   }
 
   componentWillUnmount() {
@@ -136,7 +140,7 @@ class Authentication extends Component {
   confirmPress() {
     Keyboard.dismiss()
 
-    const { dispatch, name, idNo, idCardImages, imgHashApi } = this.props
+    const { dispatch, name, idNo, idCardImages } = this.props
     if (!name.length) {
       Toast.message('请输入姓名')
       return
@@ -223,17 +227,9 @@ class Authentication extends Component {
     }))
   }
 
-  handleIdCardAuthRequest() {
-    const { idCardAuthVisible, idCardAuthResponse } = this.props
-    if (!idCardAuthVisible && !this.showIdCardAuthResponse) return
-    if (this.imgHash) {
-      return
-    }
-
-    if (idCardAuthVisible) {
-      this.showIdCardAuthResponse = true
-    } else {
-      this.showIdCardAuthResponse = false
+  handleIdCardAuthRequest(nextProps) {
+    const { idCardAuthResponse } = nextProps
+    if (idCardAuthResponse && idCardAuthResponse !== this.props.idCardAuthResponse) {
       if (idCardAuthResponse.success) {
         Toast.success(idCardAuthResponse.result)
       } else if (idCardAuthResponse.error.code === 4000150) {
@@ -372,7 +368,6 @@ class Authentication extends Component {
   }
 
   render() {
-    this.handleIdCardAuthRequest()
     const { idCardAuthVisible, user } = this.props
     return (
       <View
@@ -433,8 +428,6 @@ function mapStateToProps(store) {
     authenticationAgain: store.user.authenticationAgain,
     idCardAuthVisible: store.user.idCardAuthVisible,
     idCardAuthResponse: store.user.idCardAuthResponse,
-
-    imgHashApi: store.banners.imgHashApi,
   }
 }
 
