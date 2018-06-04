@@ -108,6 +108,13 @@ export function requestWithdrawClearError() {
   }
 }
 
+export function requestWithdrawAddress(payload) {
+  return {
+    type: 'withdraw/request_withdraw_address',
+    payload,
+  }
+}
+
 export function withdrawClear() {
   return {
     type: 'withdraw/clear',

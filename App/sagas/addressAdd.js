@@ -6,7 +6,7 @@ import {
 import * as api from '../services/api'
 
 export function* requestAddressAddWorker(action) {
-  const response = yield call(api.createAddress, action.payload)
+  const response = yield call(api.add, action.payload)
   if (response.success) {
     yield put({
       type: 'addressAdd/request_address_add_succeed',

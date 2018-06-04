@@ -62,6 +62,22 @@ export function* requestWithdrawWorker(action) {
   }
 }
 
+export function* requestWithdrawAddressWorker(action) {
+  const { payload } = action
+  const response = yield call(api.graphql, payload)
+  if (response.success) {
+    yield put({
+      type: 'withdraw/request_withdraw_address_succeed',
+      payload: response.result.data.find_address,
+    })
+  } else {
+    yield put({
+      type: 'withdraw/request_withdraw_address_failed',
+      payload: response.error,
+    })
+  }
+}
+
 export function* requestCoinList() {
   yield takeEvery('withdraw/request_coin_list', requestCoinListWorker)
 }
@@ -76,4 +92,8 @@ export function* requestValuation() {
 
 export function* requestWithdraw() {
   yield takeEvery('withdraw/request_withdraw', requestWithdrawWorker)
+}
+
+export function* requestWithdrawAddress() {
+  yield takeEvery('withdraw/request_withdraw_address', requestWithdrawAddressWorker)
 }
