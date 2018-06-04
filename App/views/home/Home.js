@@ -36,7 +36,8 @@ class Home extends Component {
   }
 
   marketPress(rd) {
-    const { navigation } = this.props
+    const { navigation, dispatch } = this.props
+    dispatch(actions.homeRoseSelectedUpdate(rd))
     navigation.navigate('Deal')
   }
 
