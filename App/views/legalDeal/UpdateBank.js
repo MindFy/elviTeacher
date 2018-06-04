@@ -16,6 +16,7 @@ import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import * as actions from '../../actions/updateBank'
+import { findUserUpdate } from '../../actions/user'
 
 const styles = StyleSheet.create({
   container: {
@@ -189,9 +190,21 @@ class UpdateBank extends Component {
     }
   }
 
+  userUpdate(nextProps) {
+    const { user, formState, dispatch } = nextProps
+    const newUser = {
+      ...user,
+      bankName: formState.bankName,
+      subbankName: formState.subbankName,
+      bankNo: formState.bankNo,
+    }
+    dispatch(findUserUpdate(newUser))
+  }
+
   handleRequestUpdateBank(nextProps) {
     const { updateBankResult, updateBankError, navigation } = nextProps
     if (updateBankResult && (updateBankResult !== this.props.updateBankResult)) {
+      this.userUpdate(nextProps)
       Toast.success(updateBankResult)
       Overlay.hide(this.overlayViewKey)
       navigation.goBack()
@@ -245,7 +258,6 @@ class UpdateBank extends Component {
           value={formState.bankName}
           placeholder={'请输入开户银行'}
           onChangeText={e => this.onChangeText(e, 'bankName')}
-          maxLength={common.textInputMaxLenBankName}
           editable={editable}
         />
 
@@ -263,7 +275,6 @@ class UpdateBank extends Component {
           value={formState.subbankName}
           placeholder={'请输入正确的开户支行名称'}
           onChangeText={e => this.onChangeText(e, 'subbankName')}
-          maxLength={common.textInputMaxLenBankName}
           editable={editable}
         />
 
