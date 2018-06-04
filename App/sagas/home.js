@@ -43,9 +43,7 @@ function* requestMarketWorker() {
 
   if (response.success) {
     const market = response.result
-    console.log('~~~~~~~~~>', market)
     const homeMarket = getHomeMarket(market)
-    console.log('--------->', homeMarket)
 
     yield put({
       type: 'home/request_market_succeed',
