@@ -47,8 +47,6 @@
 	<string>tok想要保存图片到您的相册</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>tok想要访问您的相册</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
