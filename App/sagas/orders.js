@@ -2,6 +2,7 @@ import {
   call,
   put,
   takeEvery,
+  select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
@@ -44,9 +45,20 @@ export function* requestCancelOrderWorker(action) {
   const response = yield call(api.cancel, payload)
 
   if (response.success) {
+    const openOrders = yield select(state => state.orders.openOrders)
+
+    const length = openOrders.length
+    for (let i = 0; i < length; i++) {
+      const one = openOrders[i]
+      if (one.id === payload.id) {
+        openOrders.splice(i, 1)
+        break
+      }
+    }
+
     yield put({
       type: 'orders/request_cancel_order_succeed',
-      payload: response.result,
+      payload: openOrders,
     })
   } else {
     yield put({

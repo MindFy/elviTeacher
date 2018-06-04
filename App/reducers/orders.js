@@ -127,7 +127,7 @@ export default function orders(state = initialState, action) {
       nextState = {
         ...state,
         cancelOrderLoading: false,
-        // openOrders: newOpenOrders,
+        openOrders: payload,
       }
       break
     case 'orders/request_cancel_order_failed':
