@@ -5,44 +5,36 @@ export function updateForm(payload) {
   }
 }
 
-export function sellRequest(payload) {
+export function changeType(payload) {
   return {
-    type: 'otc/sell_request',
+    type: 'otc/change_type',
     payload,
   }
 }
 
-export function sellRequestSucceed(payload) {
+export function submitRequest(payload) {
   return {
-    type: 'otc/sell_request_succeed',
+    type: 'otc/submit_request',
     payload,
   }
 }
 
-export function sellRequestFailed(payload) {
+export function submitRequestSucceed(payload) {
   return {
-    type: 'otc/sell_request_failed',
+    type: 'otc/submit_request_succeed',
     payload,
   }
 }
 
-export function buyRequest(payload) {
+export function submitRequestFailed(payload) {
   return {
-    type: 'otc/buy_request',
+    type: 'otc/submit_request_failed',
     payload,
   }
 }
 
-export function buyRequestSucceed(payload) {
+export function clearResponse() {
   return {
-    type: 'otc/buy_request_succeed',
-    payload,
-  }
-}
-
-export function buyRequestFailed(payload) {
-  return {
-    type: 'otc/buy_request_failed',
-    payload,
+    type: 'otc/clear_response',
   }
 }

@@ -10,9 +10,8 @@ import {
   findPaymentListWithdraw,
 } from './payment'
 import findListSelf from './deal'
-import findBanners from './banners'
+import * as home from './home'
 import findAssetList from './asset'
-import findAnnouncement from './announcement'
 import findAddress from './address'
 
 const schemas = {
@@ -24,9 +23,9 @@ const schemas = {
   findDelegateSelfHistory,
   findLegalDeal,
   findListSelf,
-  findBanners,
   findAssetList,
-  findAnnouncement,
+  findBanners: home.findBanners,
+  findAnnouncement: home.findAnnouncement,
   findAddress,
 }
 export default schemas

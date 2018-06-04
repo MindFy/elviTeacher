@@ -6,17 +6,50 @@ import {
   ScrollView,
   TouchableOpacity,
   Keyboard,
+  StyleSheet,
 } from 'react-native'
-import Toast from 'teaset/components/Toast/Toast'
 import { BigNumber } from 'bignumber.js'
-import {
-  common,
-} from '../../constants/common'
+import Toast from 'teaset/components/Toast/Toast'
 import TKSelectionBar from '../../components/TKSelectionBar'
 import TKInputItem from '../../components/TKInputItem'
 import TKSpinner from '../../components/TKSpinner'
 import TKButton from '../../components/TKButton'
-import actions from '../../actions/index'
+import { common } from '../../constants/common'
+import {
+  updateForm,
+  changeType,
+  submitRequest,
+  clearResponse,
+} from '../../actions/otc'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  scrollviewContentContainer: {
+    marginHorizontal: common.margin10,
+  },
+  priceInput: { marginTop: common.margin20 },
+  quantityInput: { marginTop: common.margin10 },
+  total: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    color: common.textColor,
+    fontSize: common.font14,
+  },
+  tipsContainer: {
+    marginTop: common.margin15,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  tipsContent: {
+    marginTop: common.margin10,
+    color: common.textColor,
+    fontSize: common.font10,
+    lineHeight: 14,
+  },
+})
 
 class LegalDeal extends Component {
   static navigationOptions(props) {
@@ -49,119 +82,104 @@ class LegalDeal extends Component {
         ),
     }
   }
-  constructor() {
-    super()
 
-    this.showLegalDealCreateResponse = false
-  }
+  componentWillReceiveProps(nextProps) {
+    const { response } = nextProps
+    const { navigation, dispatch, type } = this.props
 
-  componentWillUnmount() {
-    const { dispatch } = this.props
-    dispatch(actions.legalDealUpdate({ direct: common.buy, quantity: '' }))
-  }
+    if (!response) return
 
-  selectionBarPress(newDirect) {
-    const { dispatch, direct } = this.props
-    if (direct !== newDirect) {
-      dispatch(actions.legalDealUpdate({
-        direct: newDirect,
-        quantity: '',
-      }))
+    if (response.error) {
+      const { error } = response
+      if (error.code === 4001414) {
+        Toast.fail('余额不足')
+      } else if (error.code === 4001415) {
+        Toast.fail('银行卡信息未绑定')
+        navigation.navigate('UpdateBank')
+      } else if (error.code === 4001416) {
+        Toast.fail('系统未提供可交易的商家')
+      } else if (error.code === 4001417) {
+        Toast.fail('商家未提供银行卡信息')
+      } else if (error.code === 4001418) {
+        Toast.fail('未实名认证')
+      } else if (error.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else if (error.code === 4031601) {
+        Toast.fail('请登录后进行操作')
+      } else {
+        Toast.fail('挂单失败，请重试')
+      }
+    } else {
+      Toast.success(`${type === 'buy' ? '买入' : '卖出'}成功`)
     }
+    dispatch(clearResponse())
   }
 
-  createPress() {
+  onSubmit() {
     Keyboard.dismiss()
 
-    const { dispatch, direct, quantity, user, navigation } = this.props
+    const {
+      dispatch,
+      loggedIn,
+      formState: { quantity },
+      type,
+      navigation,
+    } = this.props
+
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
-      Toast.message(`请输入${direct === common.buy ? '买入' : '卖出'}数量`)
+      Toast.message(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
       return
     }
+
     if (q.lt(common.minQuantityLegalDeal)) {
-      Toast.message(`${direct === common.buy ? '买入' : '卖出'}数量最少为${
+      Toast.message(`${type === common.buy ? '买入' : '卖出'}数量最少为${
         common.minQuantityLegalDeal}`)
       return
     }
-    if (user) {
-      dispatch(actions.legalDealCreate({
-        direct,
-        quantity: q.toNumber(),
+
+    if (loggedIn) {
+      dispatch(submitRequest({
+        type,
+        quantity,
       }))
     } else {
       navigation.navigate('LoginStack')
     }
   }
 
-  quantityOnChange(text) {
-    const { dispatch, direct } = this.props
-    const a = new BigNumber(text)
-    if (a.isNaN() && text.length) return // 1.限制只能输入数字、小数点
-    if (!a.isNaN() && a.gt(common.maxQuantityLegalDeal)) {
-      dispatch(actions.legalDealUpdate({ direct, quantity: `${common.maxQuantityLegalDeal}` }))
-      return // 2.限制最大输入数量
-    }
-    const aArr = text.split('.')
-    if (aArr.length > 1 && aArr[1].length > 2) return // 4.小数长度限制
-
-    dispatch(actions.legalDealUpdate({ direct, quantity: text }))
-  }
-
-  handleLegalDealCreateRequest() {
-    const { navigation, legalDealCreateVisible, legalDealCreateResponse } = this.props
-    if (!legalDealCreateVisible && !this.showLegalDealCreateResponse) return
-
-    if (legalDealCreateVisible) {
-      this.showLegalDealCreateResponse = true
-    } else {
-      this.showLegalDealCreateResponse = false
-      if (legalDealCreateResponse.success) {
-        Toast.success(legalDealCreateResponse.result.message)
-      } else if (legalDealCreateResponse.error.code === 4001414) {
-        Toast.fail('余额不足')
-      } else if (legalDealCreateResponse.error.code === 4001415) {
-        Toast.fail('银行卡信息未绑定')
-        navigation.navigate('UpdateBank')
-      } else if (legalDealCreateResponse.error.code === 4001416) {
-        Toast.fail('系统未提供可交易的商家')
-      } else if (legalDealCreateResponse.error.code === 4001417) {
-        Toast.fail('商家未提供银行卡信息')
-      } else if (legalDealCreateResponse.error.code === 4001418) {
-        Toast.fail('未实名认证')
-      } else if (legalDealCreateResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
-      } else if (legalDealCreateResponse.error.code === 4031601) {
-        Toast.fail('请登录后进行操作')
-      } else {
-        Toast.fail('挂单失败，请重试')
-      }
-    }
+  onQuantityChange(text) {
+    const { dispatch } = this.props
+    dispatch(updateForm(text))
   }
 
   renderSelectionBar = () => {
     const titles = ['买入', '卖出']
+    const { dispatch } = this.props
     const width = (common.sw - 2 * common.margin10) / titles.length
+
     return (
       <TKSelectionBar
         titles={titles}
         barItemStyle={{ width }}
         onPress={(e) => {
-          if (e.title === '买入') {
-            this.selectionBarPress(common.buy)
-          } else if (e.title === '卖出') {
-            this.selectionBarPress(common.sell)
-          }
+          const types = ['buy', 'sell']
+          dispatch(changeType(types[e.index]))
         }}
       />)
   }
 
   renderPrice = () => {
-    const { direct, priceBuy, priceSell } = this.props
-    const price = direct === common.buy ? priceBuy : priceSell
+    const { type } = this.props
+    const prices = {
+      buy: '1',
+      sell: '0.99',
+    }
+    const price = prices[type]
+
     return (
       <TKInputItem
-        viewStyle={{ marginTop: common.margin20 }}
+        viewStyle={styles.priceInput}
         value={price.toString()}
         extra="元"
         editable={false}
@@ -170,68 +188,60 @@ class LegalDeal extends Component {
   }
 
   renderQuantity = () => {
-    const { quantity, direct } = this.props
-    const placeholder = `${direct === common.buy ? '买入' : '卖出'}数量`
+    const { formState: { quantity }, buy } = this.props
+    const placeholder = `${buy === common.buy ? '买入' : '卖出'}数量`
+
     return (
       <TKInputItem
-        viewStyle={{ marginTop: common.margin10 }}
+        viewStyle={styles.quantityInput}
         placeholder={placeholder}
         value={quantity}
         extra="CNYT"
-        onChangeText={e => this.quantityOnChange(e)}
+        onChangeText={e => this.onQuantityChange(e)}
         keyboardType="numeric"
       />
     )
   }
 
-  renderAmount = () => {
-    const { direct, priceBuy, priceSell, quantity } = this.props
-    const price = direct === common.buy ? priceBuy : priceSell
-    const amount = !quantity.length ? 0 : new BigNumber(price).multipliedBy(quantity).toFixed(2, 1)
+  renderTotal = () => {
+    const { type } = this.props
+    let { formState: { quantity } } = this.props
+    if (quantity.length === 0) quantity = 0
+
+    const showTotal = type === common.buy ?
+      `买入总计:${new BigNumber('1').times(new BigNumber(quantity)).toFixed()}元` :
+      `卖出总计:${new BigNumber('0.99').times(new BigNumber(quantity)).toFixed()}元`
+
     return (
       <Text
-        style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin10,
-          color: common.textColor,
-          fontSize: common.font14,
-        }}
-      >{`${direct === common.buy ? '买入' : '卖出'}总计:${amount}元`}</Text>
+        style={styles.total}
+      >{showTotal}</Text>
     )
   }
 
-  renderBuySell = () => {
-    const { direct } = this.props
-    const caption = direct === common.buy ? '买入' : '卖出'
+  renderSubmit = () => {
+    const { type } = this.props
+    const caption = type === common.buy ? '买入' : '卖出'
+
     return (
       <TKButton
         style={{ marginTop: common.margin10, marginLeft: 0, marginRight: 0 }}
         theme="gray"
         caption={caption}
-        onPress={() => this.createPress()}
+        onPress={() => this.onSubmit()}
       />
     )
   }
 
-
   renderTip = () => (
     <View>
       <Text
-        style={{
-          marginTop: common.margin15,
-          color: common.textColor,
-          fontSize: common.font12,
-        }}
+        style={styles.tipsContainer}
       >
         温馨提示
       </Text>
       <Text
-        style={{
-          marginTop: common.margin10,
-          color: common.textColor,
-          fontSize: common.font10,
-          lineHeight: 14,
-        }}
+        style={styles.tipsContent}
       >
         {'1. 买卖商户均为实地考察认证商户，并提供100万CNYT保证金，您每次兑换会冻结商户资产，商户资产不够时，不能接单，可放心兑换；\n2. 买卖商户均为实名认证商户，可放心兑换；\n3. 请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会退款。（禁止微信和支付宝）'}
       </Text>
@@ -239,50 +249,36 @@ class LegalDeal extends Component {
   )
 
   render() {
-    const { legalDealCreateVisible } = this.props
-    this.handleLegalDealCreateRequest()
+    const { loading } = this.props
+
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={styles.container}
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
-          contentContainerStyle={{
-            marginHorizontal: common.margin10,
-          }}
+          contentContainerStyle={styles.scrollviewContentContainer}
         >
           {this.renderSelectionBar()}
           {this.renderPrice()}
           {this.renderQuantity()}
-          {this.renderAmount()}
-          {this.renderBuySell()}
+          {this.renderTotal()}
+          {this.renderSubmit()}
           {this.renderTip()}
         </ScrollView>
 
-        <TKSpinner isVisible={legalDealCreateVisible} />
+        <TKSpinner isVisible={loading} />
       </View>
     )
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
-
-    direct: store.legalDeal.direct,
-    priceBuy: store.legalDeal.priceBuy,
-    priceSell: store.legalDeal.priceSell,
-    quantity: store.legalDeal.quantity,
-
-    legalDealCreateVisible: store.legalDeal.legalDealCreateVisible,
-    legalDealCreateResponse: store.legalDeal.legalDealCreateResponse,
+    ...state.otc,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 
-export default connect(
-  mapStateToProps,
-)(LegalDeal)
+export default connect(mapStateToProps)(LegalDeal)

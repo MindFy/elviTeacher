@@ -115,7 +115,7 @@ const common = {
   blackColor: 'rgb(24,27,42)',
 
   navBgColor: 'rgb(38,43,65)', // 导航栏背景色
-  borderColor: 'rgb(52,60,92)',
+  borderColor: 'rgb(53,61,92)',
   borderColor05: 'rgba(52,60,92,0.5)',
   textColor: 'rgb(223,228,255)', // 单元格内文字颜色
   btnTextColor: 'rgb(255,213,2)',

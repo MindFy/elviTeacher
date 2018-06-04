@@ -1,7 +1,9 @@
 const initialState = {
+  loading: false,
+  response: null,
+  type: 'buy',
   formState: {
     quantity: '',
-    type: '',
   },
 }
 
@@ -13,36 +15,42 @@ export default function otc(state = initialState, action) {
     case 'otc/update_form':
       nextState = {
         ...state,
+        formState: {
+          quantity: payload,
+        },
       }
       break
-    case 'otc/sell_request':
+    case 'otc/change_type':
       nextState = {
         ...state,
+        type: payload,
       }
       break
-    case 'otc/sell_request_succeed':
+    case 'otc/submit_request':
       nextState = {
         ...state,
+        loading: true,
       }
       break
-    case 'otc/sell_request_failed':
+    case 'otc/submit_request_succeed':
       nextState = {
         ...state,
+        formState: { quantity: '' },
+        loading: false,
+        response: payload,
       }
       break
-    case 'otc/buy_request':
+    case 'otc/submit_request_failed':
       nextState = {
         ...state,
+        loading: false,
+        response: payload,
       }
       break
-    case 'otc/buy_request_succeed':
+    case 'otc/clear_response':
       nextState = {
         ...state,
-      }
-      break
-    case 'otc/buy_request_failed':
-      nextState = {
-        ...state,
+        response: null,
       }
       break
     default:

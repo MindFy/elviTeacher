@@ -7,9 +7,7 @@ import invitationTotalCount from './invitation'
 import * as delegate from './delegate'
 import getRose from './dealstat'
 import * as deal from './deal'
-import findBanners from './banners'
 import * as asset from './asset'
-import findAnnouncement from './announcement'
 import * as address from './address'
 import loginFlow, { syncWatcher } from './authorize'
 import {
@@ -25,13 +23,16 @@ import {
   requestWithdraw,
 } from './withdraw'
 import { requestAddressAdd } from './addressAdd'
-import {
-  requestPairInfo,
-} from './market'
-
+import * as home from './home'
+import { requestPairInfo } from './market'
+import { submitRequest } from './otc'
 
 export default function* rootSaga() {
   yield [
+    home.requestBanners(),
+    home.requestAnnouncements(),
+    home.requestMarket(),
+
     loginFlow(),
     syncWatcher(),
     fork(user.checkVerificateCode),
@@ -79,14 +80,10 @@ export default function* rootSaga() {
     fork(deal.findListSelf),
     fork(deal.latestDeals),
 
-    fork(findBanners),
-
     fork(asset.createAddress),
     fork(asset.getAssets),
     fork(asset.getValuation),
     fork(asset.findAssetList),
-
-    fork(findAnnouncement),
 
     fork(address.addAddress),
     fork(address.findAddress),
@@ -103,5 +100,6 @@ export default function* rootSaga() {
     fork(requestCancelAllOrder),
 
     fork(requestPairInfo),
+    fork(submitRequest),
   ]
 }

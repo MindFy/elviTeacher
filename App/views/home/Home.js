@@ -4,27 +4,44 @@ import {
   View,
   StatusBar,
   ScrollView,
+  StyleSheet,
   RefreshControl,
 } from 'react-native'
 import {
   common,
 } from '../../constants/common'
-import HomeRoseList from './HomeRoseList'
+import HomeMarket from './HomeMarket'
 import HomeSwiper from './HomeSwiper'
 import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+})
+
 class Home extends Component {
   componentDidMount() {
     const { dispatch } = this.props
-    dispatch(actions.sync())
-    dispatch(actions.findBanners(schemas.findBanners()))
-    dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
+
+    dispatch(actions.requestBanners(schemas.findBanners()))
+    dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
+    dispatch(actions.requestMarket())
+
+    // dispatch(actions.sync())
+    // dispatch(actions.getValuation())
   }
 
-  homeBtnPress = (i) => {
-    const { navigation, user, dispatch } = this.props
+  marketPress(rd) {
+    const { navigation } = this.props
+    navigation.navigate('Deal')
+  }
+
+  menuBtnPress = (i) => {
+    const { navigation, user } = this.props
     const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     if (!user) {
       navigation.navigate('LoginStack')
@@ -44,9 +61,9 @@ class Home extends Component {
     }
   }
 
-  renderHomeBtns = () => {
+  renderMenuBtns = () => {
     const btnTitles = ['充值', '提现', '当前委托', '历史委托']
-    const homeBtns = []
+    const menuBtns = []
     for (let i = 0; i < btnTitles.length; i++) {
       let source = require('../../assets/充值.png')
       switch (i) {
@@ -62,34 +79,34 @@ class Home extends Component {
         default:
           break
       }
-      homeBtns.push(
+      menuBtns.push(
         <TKButton
           key={i}
           titleStyle={{ color: common.textColor }}
           theme={'home-balance'}
           caption={btnTitles[i]}
           icon={source}
-          onPress={() => this.homeBtnPress(i)}
+          onPress={() => this.menuBtnPress(i)}
         />,
       )
     }
     return (
       <View style={{ flexDirection: 'row' }}>
-        {homeBtns}
+        {menuBtns}
       </View>
     )
   }
 
   renderRefreshControl = () => {
-    const { dispatch, announcementVisible, findBannersVisible } = this.props
+    const { dispatch, announcementsLoading, bannersLoading } = this.props
     return (
       <RefreshControl
         onRefresh={() => {
-          dispatch(actions.findAnnouncement(schemas.findAnnouncement()))
-          dispatch(actions.findBanners(schemas.findBanners()))
+          dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
+          dispatch(actions.requestBanners(schemas.findBanners()))
         }}
         refreshing={
-          !!((findBannersVisible || announcementVisible))
+          !!((bannersLoading || announcementsLoading))
         }
         colors={[common.textColor]}
         progressBackgroundColor={common.navBgColor}
@@ -100,38 +117,29 @@ class Home extends Component {
   }
 
   render() {
-    const { announcement, imgHashApi, banners, navigation } = this.props
-
-    const homeBtns = this.renderHomeBtns()
-    const refreshControl = this.renderRefreshControl()
+    const { announcements, banners, market, navigation } = this.props
 
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-      >
+      <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
         <ScrollView
-          refreshControl={refreshControl}
+          refreshControl={this.renderRefreshControl()}
           showsVerticalScrollIndicator={false}
         >
           <HomeSwiper
-            announcement={announcement}
             banners={banners}
-            imgHashApi={imgHashApi}
-            bannerBlock={(element) => {
-              navigation.navigate('Banner', { element })
-            }}
-            announcementBlock={(element) => {
-              navigation.navigate('Announcement', { element })
+            announcements={announcements}
+            onPress={(e) => {
+              navigation.navigate(e.type, { element: e.element })
             }}
           />
 
-          {homeBtns}
+          {this.renderMenuBtns()}
 
-          <HomeRoseList navigation={navigation} />
+          <HomeMarket
+            data={market}
+            onPress={rd => this.marketPress(rd)}
+          />
         </ScrollView>
       </View>
     )
@@ -140,13 +148,17 @@ class Home extends Component {
 
 function mapStateToProps(store) {
   return {
-    announcement: store.announcement.announcement,
-    announcementVisible: store.announcement.announcementVisible,
+    banners: store.home.banners,
+    bannersError: store.home.bannersError,
+    bannersLoading: store.home.bannersLoading,
 
-    banners: store.banners.banners,
-    imgHashApi: store.banners.imgHashApi,
-    findBannersVisible: store.banners.findBannersVisible,
+    announcements: store.home.announcements,
+    announcementsError: store.home.announcementsError,
+    announcementsLoading: store.home.announcementsLoading,
 
+    market: store.home.market,
+
+    // homeRoseSelected: store.dealstat.homeRoseSelected,
     user: store.user.user,
   }
 }
