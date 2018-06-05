@@ -148,6 +148,12 @@ export default function otcDetail(state = initialState, action) {
         formState: payload,
       }
       break
+    case 'otcDetail/update_otc_list':
+      nextState = {
+        ...state,
+        otcList: payload,
+      }
+      break
     default:
       nextState = state
       break

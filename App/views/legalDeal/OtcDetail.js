@@ -12,7 +12,7 @@ import {
   Overlay,
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
-import RefreshListView from 'react-native-refresh-list-view'
+import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import {
   common,
@@ -24,6 +24,7 @@ import {
   requestCancel,
   requestHavedPay,
   updateForm,
+  updateOtcList,
 } from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
 
@@ -129,17 +130,20 @@ class OtcDetail extends Component {
 
   constructor() {
     super()
-    this.skip = 0
     this.limit = 10
+    this.state = {
+      refreshState: RefreshState.Idle,
+      skip: 0,
+    }
   }
 
   componentDidMount() {
     const { loggedInResult } = this.props
     this.refreshOtcList({
       id: loggedInResult.id,
-      skip: this.skip,
+      skip: 0,
       limit: this.limit,
-    })
+    }, RefreshState.HeaderRefreshing)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -147,6 +151,7 @@ class OtcDetail extends Component {
     this.handleRequestCancel(nextProps)
     this.handleRequestConfirmPay(nextProps)
     this.handleRequestHavedPay(nextProps)
+    this.handleRequestOtcList(nextProps)
   }
 
   onChangeText(text, tag) {
@@ -188,9 +193,12 @@ class OtcDetail extends Component {
     }
   }
 
-  refreshOtcList(data) {
+  refreshOtcList(data, refreshState) {
     const { dispatch } = this.props
     dispatch(requestOtcList(schemas.findOtcList(data)))
+    this.setState({
+      refreshState,
+    })
   }
 
   showOverlay(id) {
@@ -245,7 +253,7 @@ class OtcDetail extends Component {
       Toast.success('撤销成功')
       this.refreshOtcList({
         id: loggedInResult.id,
-        skip: this.skip,
+        skip: 0,
         limit: this.limit,
       })
     }
@@ -267,7 +275,7 @@ class OtcDetail extends Component {
       Toast.success('确认成功')
       this.refreshOtcList({
         id: loggedInResult.id,
-        skip: this.skip,
+        skip: 0,
         limit: this.limit,
       })
     }
@@ -289,7 +297,7 @@ class OtcDetail extends Component {
       Toast.success('确认成功')
       this.refreshOtcList({
         id: loggedInResult.id,
-        skip: this.skip,
+        skip: 0,
         limit: this.limit,
       })
     }
@@ -301,6 +309,30 @@ class OtcDetail extends Component {
         if (msg) Toast.fail(msg)
         else Toast.fail('操作失败，请稍后重试')
       }
+    }
+  }
+
+  handleRequestOtcList(nextProps) {
+    const { dispatch, otcList } = nextProps
+    const { refreshState, skip } = this.state
+    if (otcList.length && refreshState === RefreshState.HeaderRefreshing) {
+      this.setState({
+        refreshState: RefreshState.Idle,
+      })
+    }
+    if (!otcList.length && refreshState === RefreshState.FooterRefreshing) {
+      this.setState({
+        skip: 0,
+        refreshState: RefreshState.NoMoreData,
+      })
+      dispatch(updateOtcList(this.props.otcList))
+    } else if (otcList.length && refreshState === RefreshState.FooterRefreshing) {
+      this.setState({
+        skip: skip + 1,
+        refreshState: RefreshState.Idle,
+      })
+      const nextOtcList = this.props.otcList.concat(otcList)
+      dispatch(updateOtcList(nextOtcList))
     }
   }
 
@@ -434,7 +466,8 @@ class OtcDetail extends Component {
   }
 
   render() {
-    const { refreshState, loggedInResult, otcList } = this.props
+    const { loggedInResult, otcList } = this.props
+    const { refreshState, skip } = this.state
 
     return (
       <RefreshListView
@@ -444,18 +477,24 @@ class OtcDetail extends Component {
         keyExtractor={this.keyExtractor}
         refreshState={refreshState}
         onHeaderRefresh={() => {
-          this.refreshOtcList({
-            id: loggedInResult.id,
-            skip: 0,
-            limit: this.limit,
-          })
+          if ((refreshState !== RefreshState.NoMoreData)
+            || (refreshState !== RefreshState.FooterRefreshing)) {
+            this.refreshOtcList({
+              id: loggedInResult.id,
+              skip: 0,
+              limit: this.limit,
+            }, RefreshState.HeaderRefreshing)
+          }
         }}
         onFooterRefresh={() => {
-          this.refreshOtcList({
-            id: loggedInResult.id,
-            skip: 0,
-            limit: this.limit,
-          })
+          if ((refreshState !== RefreshState.NoMoreData)
+            || (refreshState !== RefreshState.HeaderRefreshing)) {
+            this.refreshOtcList({
+              id: loggedInResult.id,
+              skip: skip + 1,
+              limit: this.limit,
+            }, RefreshState.FooterRefreshing)
+          }
         }}
         footerTextStyle={{
           color: common.textColor,

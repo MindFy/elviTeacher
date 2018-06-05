@@ -67,3 +67,10 @@ export function updateForm(payload) {
     payload,
   }
 }
+
+export function updateOtcList(payload) {
+  return {
+    type: 'otcDetail/update_otc_list',
+    payload,
+  }
+}
