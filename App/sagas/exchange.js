@@ -11,14 +11,21 @@ export function* requestLastpriceListWorker(action) {
   const response = yield call(api.getShelves, payload)
 
   if (response.success) {
+    const result = response.result
     yield put({
       type: 'exchange/request_lastprice_list_succeed',
-      payload: response.result,
+      payload: {
+        buy: result.buy.slice(0, 5),
+        sell: result.sell.slice(0, 5),
+      },
     })
   } else {
     yield put({
       type: 'exchange/request_lastprice_list_failed',
-      payload: response.error,
+      payload: {
+        buy: [],
+        sell: [],
+      },
     })
   }
 }
@@ -47,7 +54,7 @@ export function* requestOrderhistoryListWorker(action) {
   if (response.success) {
     yield put({
       type: 'exchange/request_orderhistory_list_succeed',
-      payload: response.result,
+      payload: (response.result || []).slice(0, 5),
     })
   } else {
     yield put({
