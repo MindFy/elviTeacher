@@ -20,7 +20,7 @@ import {
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 
-class LegalDealDetail extends Component {
+class OtcDetail extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '交易订单',
@@ -462,4 +462,4 @@ function mapStateToProps(store) {
 
 export default connect(
   mapStateToProps,
-)(LegalDealDetail)
+)(OtcDetail)

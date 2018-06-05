@@ -68,7 +68,7 @@ class Otc extends Component {
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => {
-              props.navigation.navigate('LegalDealDetail')
+              props.navigation.navigate('OtcDetail')
             }}
           >
             <Text
