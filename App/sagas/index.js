@@ -30,6 +30,10 @@ import { submitRequest } from './otc'
 import * as exchanges from './exchange'
 
 import * as updateBank from './updateBank'
+import {
+  requestBalanceList,
+  requestBalanceValuation,
+} from './balance'
 
 export default function* rootSaga() {
   yield [
@@ -111,6 +115,8 @@ export default function* rootSaga() {
     fork(exchanges.requestOrderhistoryList),
     fork(exchanges.createOrder),
     fork(exchanges.requestCancelOrder),
+    fork(requestBalanceList),
+    fork(requestBalanceValuation),
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
