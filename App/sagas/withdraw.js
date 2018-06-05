@@ -18,9 +18,16 @@ export function* requestBalanceWorker(action) {
   const response = yield call(api.getAssets, action.payload)
 
   if (response.success) {
+    const respData = response.result
+    let one
+    if (Object.keys(respData).length === 0) {
+      one = 0
+    } else {
+      one = respData[(action.payload.token_ids)[0]].amount
+    }
     yield put({
       type: 'withdraw/request_balance_succeed',
-      payload: response.result[(action.payload.token_ids)[0]].amount,
+      payload: one,
     })
   } else {
     yield put({
