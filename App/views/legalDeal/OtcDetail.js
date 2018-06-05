@@ -152,7 +152,7 @@ class OtcDetail extends Component {
   keyExtractor = item => item.createdAt
 
   renderRow(rd, rid) {
-    const { navigation, dispatch, legalDeal } = this.props
+    const { navigation } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
     let status = ''
