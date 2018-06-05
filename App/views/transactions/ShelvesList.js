@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react'
 import { View } from 'react-native'
-import TKSelectionBar from '../../components/TKSelectionBar'
+import TKSelectionBar2 from '../../components/tkselectionbar2'
 
 class ShelvesList extends PureComponent {
   render() {
     const { titles, segmentIndex, segmentValueChanged, renderChildComponent } = this.props
     return (
       <View>
-        <TKSelectionBar
+        <TKSelectionBar2
           initialIndexSelected={segmentIndex}
           titles={titles}
           onPress={(e) => {

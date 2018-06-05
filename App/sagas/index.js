@@ -27,7 +27,8 @@ import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
 import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
-import { requestLastpriceList, requestOpenordersList, requestOrderhistoryList } from './exchange'
+import * as exchanges from './exchange'
+
 import * as updateBank from './updateBank'
 
 export default function* rootSaga() {
@@ -105,9 +106,11 @@ export default function* rootSaga() {
     fork(requestPairInfo),
     fork(submitRequest),
 
-    fork(requestLastpriceList),
-    fork(requestOpenordersList),
-    fork(requestOrderhistoryList),
+    fork(exchanges.requestLastpriceList),
+    fork(exchanges.requestOpenordersList),
+    fork(exchanges.requestOrderhistoryList),
+    fork(exchanges.createOrder),
+    fork(exchanges.requestCancelOrder),
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),

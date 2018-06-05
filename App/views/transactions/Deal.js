@@ -8,10 +8,7 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native'
-import {
-  Menu,
-  Drawer,
-} from 'teaset'
+import { Toast, Menu } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import KLine from './KLineWeb'
@@ -26,6 +23,7 @@ import DealMarket from './DealMarket'
 import * as exchange from '../../actions/exchange'
 import findOpenOrders from '../../schemas/exchange'
 import LastPriceList from './component/LastPriceList'
+import OpenOrders from './component/OpenOrders'
 import { caculateExchangeFormData, slideAction } from '../../utils/caculateExchangeFormData'
 
 const styles = StyleSheet.create({
@@ -52,6 +50,37 @@ class Deal extends Component {
   }
 
   componentDidMount() {
+    this.loadNecessaryData()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch } = this.props
+    const { createResponse, createOrderIndex } = nextProps
+
+    if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
+      Toast.success('撤单成功')
+    }
+    if (nextProps.cancelOrderError) {
+      Toast.fail('撤单失败')
+      dispatch(exchange.requestCancelOrderSetError(null))
+    }
+
+    if (!createResponse) return
+    if (createResponse.id) {
+      Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}成功`)
+      this.loadNecessaryData()
+    } else {
+      Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
+    }
+    dispatch(exchange.clearResponse())
+  }
+
+  cancelOrder(id) {
+    const { dispatch } = this.props
+    dispatch(exchange.requestCancelOrder(id))
+  }
+
+  loadNecessaryData() {
     const { dispatch, selectedPair } = this.props
     const { currency, goods } = selectedPair
     const params = {
@@ -60,6 +89,39 @@ class Deal extends Component {
     }
     dispatch(exchange.requestLastpriceList(params))
     dispatch(exchange.requestOrderhistoryList(params))
+  }
+
+  tapBuySellBtn(idx) {
+    const { dispatch, navigation, formData, loggedIn, selectedPair } = this.props
+    const { price, quantity, amount } = formData
+    if (!loggedIn) {
+      navigation.navigate('LoginStack')
+      return
+    }
+    const p = new BigNumber(price)
+    const q = new BigNumber(quantity)
+    const a = new BigNumber(amount)
+    if (!price.length || p === 0) {
+      Toast.message(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
+      return
+    }
+    if (!quantity.length || q === 0) {
+      Toast.message(`请输入正确的${!idx ? '买入' : '卖出'}数量`)
+      return
+    }
+    if (this.drawer) {
+      this.drawer.hide()
+    }
+    if (selectedPair) {
+      dispatch(exchange.createOrder({
+        goods_id: selectedPair.goods.id,
+        currency_id: selectedPair.currency.id,
+        direct: !idx ? 'buy' : 'sell',
+        price: p,
+        quantity: q,
+        total_money: a.toString(),
+      }))
+    }
   }
 
   changeAction(selectedPair, formData, value) {
@@ -107,20 +169,28 @@ class Deal extends Component {
   }
 
   menuPress() {
-
-  }
-
-  tapBuySellBtn() {
-
+    const { dispatch, market } = this.props
+    const items = []
+    market.forEach((element) => {
+      items.push({
+        title: `${element.goods.name}/${element.currency.name}`,
+        onPress: () => {
+          dispatch(exchange.updatePair(element))
+          this.loadNecessaryData()
+        },
+      })
+    })
+    Menu.show({ x: common.sw / 2, y: 64 }, items)
   }
 
   tabBarPress(index) {
-    const { loggedIn, navigation } = this.props
+    const { loggedIn, navigation, dispatch } = this.props
     if (!loggedIn) {
       navigation.navigate('LoginStack')
       return
     }
     if (this.drawer) {
+      dispatch(exchange.updateCreateOrderIndex(index))
       this.drawer.showAtIndex(index)
     }
   }
@@ -233,7 +303,13 @@ class Deal extends Component {
         />
       )
     }
-    return null
+    const { openOrders } = this.props
+    return (
+      <OpenOrders
+        dataSource={openOrders}
+        cancelOrder={id => this.cancelOrder({ id })}
+      />
+    )
   }
 
   renderDetailList = () => {
@@ -302,7 +378,7 @@ class Deal extends Component {
           selectedPair={selectedPair}
           changeAction={value => this.changeAction(selectedPair, formData, value)}
           slideAction={value => this.slideAction(selectedPair, formData, value)}
-          buttonAction={() => this.tapBuySellBtn()}
+          buttonAction={idx => this.tapBuySellBtn(idx)}
           unmountAction={() => this.resetFormData()}
         />
       </View>
@@ -316,10 +392,14 @@ function mapStateToProps(state) {
     segmentIndex: state.exchange.segmentIndex,
     orderHistory: state.exchange.orderHistory,
     lastPrice: state.exchange.lastPrice,
+    openOrders: state.exchange.openOrders,
     formData: state.exchange.formData,
+    createResponse: state.exchange.createResponse,
+    createOrder_index: state.exchange.createOrder_index,
     amountVisible: state.asset.amountVisible,
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,
+    market: state.home.market,
 
     valuation: state.asset.valuation,
     kLineOrDepth: state.ui.kLineOrDepth,

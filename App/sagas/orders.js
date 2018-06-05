@@ -45,8 +45,8 @@ export function* requestCancelOrderWorker(action) {
   const response = yield call(api.cancel, payload)
 
   if (response.success) {
-    const openOrders = yield select(state => state.orders.openOrders)
-
+    const o = yield select(state => state.orders.openOrders)
+    const openOrders = [...o]
     const length = openOrders.length
     for (let i = 0; i < length; i++) {
       const one = openOrders[i]

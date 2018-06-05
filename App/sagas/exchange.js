@@ -2,6 +2,7 @@ import {
   call,
   put,
   takeEvery,
+  select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
@@ -56,6 +57,51 @@ export function* requestOrderhistoryListWorker(action) {
   }
 }
 
+export function* createOrderWorker(action) {
+  const { payload } = action
+  const response = yield call(api.create, payload)
+
+  if (response.success) {
+    yield put({
+      type: 'exchange/create_order_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'exchange/create_order_failed',
+      payload: response.error,
+    })
+  }
+}
+
+export function* requestCancelOrderWorker(action) {
+  const { payload } = action
+  const response = yield call(api.cancel, payload)
+
+  if (response.success) {
+    const o = yield select(state => state.exchange.openOrders)
+    const openOrders = [...o]
+    const length = openOrders.length
+    for (let i = 0; i < length; i++) {
+      const one = openOrders[i]
+      if (one.id === payload.id) {
+        openOrders.splice(i, 1)
+        break
+      }
+    }
+
+    yield put({
+      type: 'exchange/request_cancel_order_succeed',
+      payload: openOrders,
+    })
+  } else {
+    yield put({
+      type: 'exchange/request_cancel_order_failed',
+      payload: response.error,
+    })
+  }
+}
+
 export function* requestLastpriceList() {
   yield takeEvery('exchange/request_lastprice_list', requestLastpriceListWorker)
 }
@@ -66,4 +112,12 @@ export function* requestOpenordersList() {
 
 export function* requestOrderhistoryList() {
   yield takeEvery('exchange/request_orderhistory_list', requestOrderhistoryListWorker)
+}
+
+export function* createOrder() {
+  yield takeEvery('exchange/create_order', createOrderWorker)
+}
+
+export function* requestCancelOrder() {
+  yield takeEvery('exchange/request_cancel_order', requestCancelOrderWorker)
 }

@@ -194,7 +194,7 @@ class DealDrawer extends Component {
 
   render() {
     const caculatedData = this.caculateNecessaryData()
-    const { formData, changeAction, slideAction, buttonAction, unmountAction } = this.props
+    const { formData, changeAction, slideAction, buttonAction } = this.props
     const { price, quantity, amount } = formData
     const { index } = this.state
     if (this.state.visible === false) {

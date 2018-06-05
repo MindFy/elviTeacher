@@ -22,15 +22,26 @@ const initialState = {
     rose: '',
   },
   segmentIndex: 0,
-  lastprice_requesting: false,
-  openorders_requesting: false,
-  orderhistory_requesting: false,
+  lastpriceRequesting: false,
+  openordersRequesting: false,
+  orderhistoryRequesting: false,
   formData: {
     price: '',
     quantity: '',
     amount: '',
     ratio: 0,
   },
+  createOrderIndex: 0,
+  createOrderRequesting: false,
+  createResponse: undefined,
+  depthMapRequesting: false,
+  depthMap: {
+    buy: [],
+    lastprice: 0,
+    sell: [],
+  },
+  cancelOrderLoading: false,
+  cancelOrderError: null,
 }
 
 export default function exchange(state = initialState, action) {
@@ -47,60 +58,60 @@ export default function exchange(state = initialState, action) {
     case 'exchange/request_lastprice_list':
       nextState = {
         ...state,
-        lastprice_requesting: true,
+        lastpriceRequesting: true,
       }
       break
     case 'exchange/request_lastprice_list_succeed':
       nextState = {
         ...state,
-        lastprice_requesting: false,
+        lastpriceRequesting: false,
         lastPrice: payload,
       }
       break
     case 'exchange/request_lastprice_list_failed':
       nextState = {
         ...state,
-        lastprice_requesting: false,
+        lastpriceRequesting: false,
         lastPrice: payload,
       }
       break
     case 'exchange/request_openorders_list':
       nextState = {
         ...state,
-        openorders_requesting: true,
+        openordersRequesting: true,
       }
       break
     case 'exchange/request_openorders_list_succeed':
       nextState = {
         ...state,
-        openorders_requesting: false,
+        openordersRequesting: false,
         openOrders: payload,
       }
       break
     case 'exchange/request_openorders_list_failed':
       nextState = {
         ...state,
-        openorders_requesting: false,
+        openordersRequesting: false,
         openOrders: payload,
       }
       break
     case 'exchange/request_orderhistory_list':
       nextState = {
         ...state,
-        orderhistory_requesting: true,
+        orderhistoryRequesting: true,
       }
       break
     case 'exchange/request_orderhistory_list_succeed':
       nextState = {
         ...state,
-        orderhistory_requesting: false,
+        orderhistoryRequesting: false,
         orderHistory: payload,
       }
       break
     case 'exchange/request_orderhistory_list_failed':
       nextState = {
         ...state,
-        orderhistory_requesting: false,
+        orderhistoryRequesting: false,
         orderHistory: payload,
       }
       break
@@ -110,10 +121,68 @@ export default function exchange(state = initialState, action) {
         formData: payload,
       }
       break
-    case 'exchange/update_segmentIndex':
+    case 'exchange/update_segment_index':
       nextState = {
         ...state,
         segmentIndex: payload,
+      }
+      break
+    case 'exchange/create_order':
+      nextState = {
+        ...state,
+        createOrderRequesting: true,
+      }
+      break
+    case 'exchange/create_order_succeed':
+      nextState = {
+        ...state,
+        createOrderRequesting: false,
+        createResponse: payload,
+      }
+      break
+    case 'exchange/create_order_failed':
+      nextState = {
+        ...state,
+        createOrderRequesting: false,
+        createResponse: payload,
+      }
+      break
+    case 'exchange/clear_response':
+      nextState = {
+        ...state,
+        createResponse: undefined,
+      }
+      break
+    case 'exchange/update_order_index':
+      nextState = {
+        ...state,
+        createOrderIndex: payload,
+      }
+      break
+    case 'exchange/request_cancel_order':
+      nextState = {
+        ...state,
+        cancelOrderLoading: true,
+      }
+      break
+    case 'exchange/request_cancel_order_succeed':
+      nextState = {
+        ...state,
+        cancelOrderLoading: false,
+        openOrders: payload,
+      }
+      break
+    case 'exchange/request_cancel_order_failed':
+      nextState = {
+        ...state,
+        cancelOrderLoading: false,
+        cancelOrderError: payload,
+      }
+      break
+    case 'exchange/request_cancel_order_set_error':
+      nextState = {
+        ...state,
+        cancelOrderError: payload,
       }
       break
     default:

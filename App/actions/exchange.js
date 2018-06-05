@@ -77,7 +77,41 @@ export function updateForm(payload) {
 
 export function updateSegmentIndex(payload) {
   return {
-    type: 'exchange/update_segmentIndex',
+    type: 'exchange/update_segment_index',
+    payload,
+  }
+}
+
+export function createOrder(payload) {
+  return {
+    type: 'exchange/create_order',
+    payload,
+  }
+}
+
+export function clearResponse() {
+  return {
+    type: 'exchange/clear_response',
+  }
+}
+
+export function updateCreateOrderIndex(payload) {
+  return {
+    type: 'exchange/update_order_index',
+    payload,
+  }
+}
+
+export function requestCancelOrder(payload) {
+  return {
+    type: 'exchange/request_cancel_order',
+    payload,
+  }
+}
+
+export function requestCancelOrderSetError(payload) {
+  return {
+    type: 'exchange/request_cancel_order_set_error',
     payload,
   }
 }
