@@ -45,6 +45,13 @@ class Me extends Component {
     dispatch(actions.logout())
   }
 
+  maskPhone(phone) {
+    if (!phone) return undefined
+
+    const str = String(phone)
+    return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  }
+
   render() {
     const { loggedIn, navigation, loading, loggedInResult } = this.props
 
@@ -74,7 +81,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!loggedIn ? '请登录' : loggedInResult.mobile}
+            title={!loggedIn ? '请登录' : this.maskPhone(loggedInResult.mobile)}
             rightImageHide
           />
           <MeCell
