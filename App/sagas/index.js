@@ -119,5 +119,6 @@ export default function* rootSaga() {
     otcDetail.requestGetCode(),
     otcDetail.requestConfirmPay(),
     otcDetail.requestHavedPay(),
+    otcDetail.requestCancel(),
   ]
 }

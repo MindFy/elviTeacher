@@ -40,6 +40,13 @@ export function requestHavedPay(payload) {
   }
 }
 
+export function requestCancel(payload) {
+  return {
+    type: 'otcDetail/request_cancel',
+    payload,
+  }
+}
+
 export function requestGetCodeSucceed(payload) {
   return {
     type: 'otcDetail/request_get_code_succeed',

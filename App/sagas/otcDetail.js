@@ -73,6 +73,23 @@ export function* requestHavedPayWorker(action) {
   }
 }
 
+export function* requestCancelWorker(action) {
+  const { payload } = action
+  const response = yield call(api.legalDealCancel, payload)
+
+  if (response.success) {
+    yield put({
+      type: 'otcDetail/request_haved_pay_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'otcDetail/request_haved_pay_failed',
+      payload: response.error,
+    })
+  }
+}
+
 export function* requestOtcList() {
   yield takeEvery('otcDetail/request_otc_list', requestOtcListWorker)
 }
@@ -87,4 +104,8 @@ export function* requestConfirmPay() {
 
 export function* requestHavedPay() {
   yield takeEvery('otcDetail/request_haved_pay', requestHavedPayWorker)
+}
+
+export function* requestCancel() {
+  yield takeEvery('otcDetail/request_cancel', requestCancelWorker)
 }

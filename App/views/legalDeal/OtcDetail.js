@@ -4,6 +4,7 @@ import {
   Text,
   View,
   Image,
+  StyleSheet,
   TouchableOpacity,
 } from 'react-native'
 import {
@@ -20,9 +21,76 @@ import {
   requestOtcList,
   requestGetCode,
   requestConfirmPay,
+  requestCancel,
+  requestHavedPay,
   updateForm,
 } from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
+
+const styles = StyleSheet.create({
+  row: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    backgroundColor: common.navBgColor,
+  },
+  statusView: {
+    height: common.h30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: common.borderColor,
+    borderBottomWidth: 0,
+  },
+  coin: {
+    marginLeft: common.margin5,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  direct: {
+    marginLeft: common.margin20,
+    fontSize: common.font12,
+  },
+  createdAt: {
+    marginLeft: common.margin20,
+    color: common.textColor,
+    fontSize: common.font10,
+  },
+  status: {
+    position: 'absolute',
+    right: common.margin5,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  rowBorderView: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+  },
+  priceView: {
+    width: '20%',
+    borderWidth: 1,
+    borderColor: common.borderColor,
+    justifyContent: 'center',
+  },
+  price: {
+    color: common.textColor,
+    fontSize: common.font10,
+    textAlign: 'center',
+  },
+  paymentBtn: {
+    marginTop: common.margin10,
+    alignSelf: 'center',
+  },
+  paymentTitle: {
+    color: common.btnTextColor,
+    fontSize: common.font10,
+  },
+  havedPayBtn: {
+    marginTop: common.margin8,
+    alignSelf: 'center',
+    marginBottom: common.margin10,
+  },
+})
 
 class OtcDetail extends Component {
   static navigationOptions(props) {
@@ -89,7 +157,7 @@ class OtcDetail extends Component {
     }
   }
 
-  confirmPress(id) {
+  confirmPayPress(id) {
     const { dispatch, formState } = this.props
     const { code } = formState
     if (!code.length) {
@@ -99,12 +167,30 @@ class OtcDetail extends Component {
     dispatch(requestConfirmPay({ id, code }))
   }
 
+  cancelPress(title, id) {
+    const { dispatch } = this.props
+    if (title === '撤单') {
+      dispatch(requestCancel({ id }))
+    } else if (title === '投诉') {
+      // 投诉
+    }
+  }
+
+  havedPayPress(title, id) {
+    const { dispatch } = this.props
+    if (title === '我已付款') {
+      dispatch(requestHavedPay({ id }))
+    } else if (title === '确认收款') {
+      this.showOverlay(id)
+    }
+  }
+
   refreshOtcList(data) {
     const { dispatch } = this.props
     dispatch(requestOtcList(schemas.findOtcList(data)))
   }
 
-  showOverlay(id, rid) {
+  showOverlay(id) {
     const { dispatch, loggedInResult } = this.props
     const overlayView = (
       <Overlay.View
@@ -118,7 +204,7 @@ class OtcDetail extends Component {
           codePress={() => {
             dispatch(requestGetCode({ mobile: loggedInResult.mobile, service: 'auth' }))
           }}
-          confirmPress={() => this.confirmPress(id, rid)}
+          confirmPress={() => this.confirmPayPress(id)}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
         />
       </Overlay.View>
@@ -149,33 +235,89 @@ class OtcDetail extends Component {
     }
   }
 
+  handleRequestCancel(nextProps) {
+    const { cancelResult, cancelError, loggedInResult } = nextProps
+
+    if (cancelResult && cancelResult !== this.props.cancelResult) {
+      Toast.success(cancelResult.message)
+      this.refreshOtcList({
+        id: loggedInResult.id,
+        skip: this.skip,
+        limit: this.limit,
+      })
+    }
+    if (cancelError && cancelError !== this.props.cancelError) {
+      if (cancelError.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else {
+        const msg = this.errors[cancelError.code]
+        if (msg) Toast.fail(msg)
+        else Toast.fail('撤单失败，请稍后重试')
+      }
+    }
+  }
+
+  handleRequestConfirmPay(nextProps) {
+    const { confirmPayResult, confirmPayError, loggedInResult } = nextProps
+
+    if (confirmPayResult && confirmPayResult !== this.props.confirmPayResult) {
+      Toast.success(confirmPayResult.message)
+      this.refreshOtcList({
+        id: loggedInResult.id,
+        skip: this.skip,
+        limit: this.limit,
+      })
+    }
+    if (confirmPayError && confirmPayError !== this.props.confirmPayError) {
+      if (confirmPayError.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else {
+        const msg = this.errors[confirmPayError.code]
+        if (msg) Toast.fail(msg)
+        else Toast.fail('确认失败，请稍后重试')
+      }
+    }
+  }
+
+  handleRequestHavedPay(nextProps) {
+    const { havedPayResult, havedPayError, loggedInResult } = nextProps
+
+    if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
+      Toast.success(havedPayResult.message)
+      this.refreshOtcList({
+        id: loggedInResult.id,
+        skip: this.skip,
+        limit: this.limit,
+      })
+    }
+    if (havedPayError && havedPayError !== this.props.havedPayError) {
+      if (havedPayError.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else {
+        const msg = this.errors[havedPayError.code]
+        if (msg) Toast.fail(msg)
+        else Toast.fail('操作失败，请稍后重试')
+      }
+    }
+  }
+
   keyExtractor = item => item.createdAt
 
-  renderRow(rd, rid) {
+  renderRow(rd) {
     const { navigation } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
     let status = ''
     let direct = ''
     let paymentBtnTitle = ''
-    let secBtnTitle = ''
+    let havedPayTitle = ''
     let cancelBtnDisabled = true
     let confirmPayDisabled = true
     let havedPayDisabled = true
+    let cancelBtnTitle
     const dealPrice = new BigNumber(rd.dealPrice).toFixed(2)
     const quantity = new BigNumber(rd.quantity).toFixed(2)
     const amount = new BigNumber(dealPrice).multipliedBy(quantity).toFixed(2, 1)
-    if (rd.direct === common.buy) {
-      textColor = common.redColor
-      direct = '买入'
-      paymentBtnTitle = '收款信息'
-      secBtnTitle = '确认付款'
-    } else if (rd.direct === common.sell) {
-      textColor = common.greenColor
-      direct = '卖出'
-      paymentBtnTitle = '付款信息'
-      secBtnTitle = '我已收款'
-    }
     switch (rd.status) {
       case common.legalDeal.status.waitpay:
         status = rd.direct === common.buy ? '待付款' : '待收款'
@@ -195,203 +337,93 @@ class OtcDetail extends Component {
       default:
         break
     }
+    if (rd.direct === common.buy) {
+      textColor = common.redColor
+      direct = '买入'
+      paymentBtnTitle = '收款方信息'
+      havedPayTitle = '我已付款'
+      cancelBtnTitle = '撤单'
+    } else if (rd.direct === common.sell) {
+      textColor = common.greenColor
+      direct = '卖出'
+      paymentBtnTitle = '付款方信息'
+      havedPayTitle = '确认收款'
+      cancelBtnTitle = '投诉'
+      havedPayDisabled = confirmPayDisabled
+    }
+    const coin = common.legalDeal.token
+    let cancelTitleColor = common.placeholderColor
+    if (!cancelBtnDisabled) {
+      cancelTitleColor = common.btnTextColor
+    }
+    let havedPayTitleColor = common.placeholderColor
+    if (!havedPayDisabled) {
+      havedPayTitleColor = common.btnTextColor
+    }
     return (
-      <View
-        style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          backgroundColor: common.navBgColor,
-        }}
-      >
-        <View
-          style={{
-            height: common.h30,
-            flexDirection: 'row',
-            alignItems: 'center',
-            borderWidth: 1,
-            borderColor: common.borderColor,
-            borderBottomWidth: 0,
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin5,
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
-          >{common.legalDeal.token}</Text>
-          <TouchableOpacity
-            style={{
-              marginLeft: common.margin20,
-            }}
-            activeOpacity={common.activeOpacity}
-          >
-            <Text
-              style={{
-                color: textColor,
-                fontSize: common.font12,
-              }}
-            >{direct}</Text>
-          </TouchableOpacity>
-          <Text
-            style={{
-              marginLeft: common.margin20,
-              color: common.textColor,
-              fontSize: common.font10,
-            }}
-          >{createdAt}</Text>
-          <Text
-            style={{
-              position: 'absolute',
-              right: common.margin5,
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
-          >{status}</Text>
+      <View style={styles.row}>
+        <View style={styles.statusView}>
+          <Text style={styles.coin}>
+            {coin}</Text>
+          <Text style={[styles.direct, { color: textColor }]}>
+            {direct}</Text>
+          <Text style={styles.createdAt}>
+            {createdAt}</Text>
+          <Text style={styles.status}>
+            {status}</Text>
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'stretch',
-          }}
-        >
-          <View
-            style={{
-              width: '20%',
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                color: common.textColor,
-                fontSize: common.font10,
-                textAlign: 'center',
-              }}
-            >{`价格:¥${dealPrice}`}</Text>
+        <View style={styles.rowBorderView}>
+          <View style={styles.priceView}>
+            <Text style={styles.price}>
+              {`单价:¥${dealPrice}`}</Text>
           </View>
-          <View
-            style={{
-              width: '30%',
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                color: common.textColor,
-                fontSize: common.font10,
-                textAlign: 'center',
-              }}
-            >{`数量:${quantity} ${common.legalDeal.token}`}</Text>
+          <View style={[styles.priceView, { width: '30%' }]}>
+            <Text style={styles.price}>
+              {`数量:${quantity} ${common.legalDeal.token}`}</Text>
           </View>
-          <View
-            style={{
-              width: '30%',
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              justifyContent: 'center',
-            }}
-          >
-            <Text
-              style={{
-                color: common.textColor,
-                fontSize: common.font10,
-                textAlign: 'center',
-              }}
-            >{`总价:¥${amount}`}</Text>
+          <View style={[styles.priceView, { width: '30%' }]}>
+            <Text style={styles.price}>
+              {`总价:¥${amount}`}</Text>
           </View>
-          <View
-            style={{
-              width: '20%',
-              borderWidth: 1,
-              borderColor: common.borderColor,
-              justifyContent: 'center',
-            }}
-          >
+          <View style={styles.priceView}>
             <TouchableOpacity
-              style={{
-                marginTop: common.margin10,
-                alignSelf: 'center',
-              }}
+              style={styles.paymentBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => {
-                navigation.navigate('Payment', {
-                  data: rd,
-                })
+                navigation.navigate('Payment', { data: rd })
               }}
             >
-              <Text
-                style={{
-                  color: common.btnTextColor,
-                  fontSize: common.font10,
-                }}
-              >{paymentBtnTitle}</Text>
+              <Text style={styles.paymentTitle}>
+                {paymentBtnTitle}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              activeOpacity={common.activeOpacity}
-              style={{
+              style={[styles.paymentBtn, {
                 marginTop: common.margin8,
-                alignSelf: 'center',
-              }}
+              }]}
+              activeOpacity={common.activeOpacity}
               disabled={cancelBtnDisabled}
-              onPress={() => {
-                // legalDeal[rid].status = common.legalDeal.status.cancel
-                // dispatch(actions.legalDealCancel({ id: rd.id }, legalDeal.concat()))
-              }}
+              onPress={() => this.cancelPress(cancelBtnTitle, rd.id)}
             >
               <Text
                 style={{
-                  color: cancelBtnDisabled ? common.placeholderColor : common.btnTextColor,
+                  color: cancelTitleColor,
                   fontSize: common.font10,
                 }}
-              >撤单</Text>
+              >{cancelBtnTitle}</Text>
             </TouchableOpacity>
-            {
-              rd.direct === common.buy
-                ? <TouchableOpacity
-                  activeOpacity={common.activeOpacity}
-                  style={{
-                    marginTop: common.margin8,
-                    alignSelf: 'center',
-                    marginBottom: common.margin10,
-                  }}
-                  disabled={havedPayDisabled}
-                  onPress={() => {
-                    // legalDeal[rid].status = common.legalDeal.status.waitconfirm
-                    // dispatch(actions.havedPay({ id: rd.id }, legalDeal.concat()))
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: havedPayDisabled ? common.placeholderColor : common.btnTextColor,
-                      fontSize: common.font10,
-                    }}
-                  >{secBtnTitle}</Text>
-                </TouchableOpacity>
-                : <TouchableOpacity
-                  activeOpacity={common.activeOpacity}
-                  style={{
-                    marginTop: common.margin8,
-                    alignSelf: 'center',
-                    marginBottom: common.margin10,
-                  }}
-                  disabled={confirmPayDisabled}
-                  onPress={() => {
-                    this.showOverlay(rd.id, rid)
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: confirmPayDisabled ? common.placeholderColor : common.btnTextColor,
-                      fontSize: common.font10,
-                    }}
-                  >{secBtnTitle}</Text>
-                </TouchableOpacity>
-            }
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              style={styles.havedPayBtn}
+              disabled={havedPayDisabled}
+              onPress={() => this.havedPayPress(havedPayTitle, rd.id)}
+            >
+              <Text
+                style={{
+                  color: havedPayTitleColor,
+                  fontSize: common.font10,
+                }}
+              >{havedPayTitle}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -403,9 +435,7 @@ class OtcDetail extends Component {
 
     return (
       <RefreshListView
-        style={{
-          backgroundColor: common.blackColor,
-        }}
+        style={{ backgroundColor: common.blackColor }}
         data={otcList}
         renderItem={({ item, index }) => this.renderRow(item, index)}
         keyExtractor={this.keyExtractor}

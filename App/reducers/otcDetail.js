@@ -12,6 +12,9 @@ const initialState = {
   havedPayLoading: false,
   havedPayResult: null,
   havedPayError: null,
+  cancelLoading: false,
+  cancelResult: null,
+  cancelError: null,
   otcListLoading: false,
   otcListError: null,
 }
@@ -99,6 +102,26 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         havedPayLoading: false,
         havedPayError: payload,
+      }
+      break
+    case 'otcDetail/request_cancel':
+      nextState = {
+        ...state,
+        cancelLoading: true,
+      }
+      break
+    case 'otcDetail/request_cancel_succeed':
+      nextState = {
+        ...state,
+        cancelLoading: false,
+        cancelResult: payload,
+      }
+      break
+    case 'otcDetail/request_cancel_failed':
+      nextState = {
+        ...state,
+        cancelLoading: false,
+        cancelError: payload,
       }
       break
     case 'otcDetail/update_form':
