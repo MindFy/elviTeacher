@@ -29,6 +29,10 @@ import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
 import * as updateBank from './updateBank'
 import * as otcDetail from './otcDetail'
+import {
+  requestBalanceList,
+  requestBalanceValuation,
+} from './balance'
 
 export default function* rootSaga() {
   yield [
@@ -104,6 +108,9 @@ export default function* rootSaga() {
 
     fork(requestPairInfo),
     fork(submitRequest),
+
+    fork(requestBalanceList),
+    fork(requestBalanceValuation),
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),

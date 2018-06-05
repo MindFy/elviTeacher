@@ -20,6 +20,7 @@ import market from './market'
 import otc from './otc'
 import updateBank from './updateBank'
 import otcDetail from './otcDetail'
+import balance from './balance'
 
 const rootReducer = combineReducers({
   authorize,
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   otc,
   updateBank,
   otcDetail,
+  balance,
 })
 
 export default rootReducer

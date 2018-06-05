@@ -71,12 +71,9 @@ class Rebates extends Component {
           />
         </TouchableOpacity>
       ),
+      headerTransparent: true,
       headerStyle: {
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
+        // backgroundColor: 'transparent',
         borderBottomWidth: 0,
       },
       headerTintColor: '#fff',
@@ -229,7 +226,9 @@ class Rebates extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        <ScrollView>
+        <ScrollView
+          automaticallyAdjustContentInsets={false}
+        >
           <Image
             style={{
               height: common.h234,
