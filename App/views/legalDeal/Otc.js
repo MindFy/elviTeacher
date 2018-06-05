@@ -112,8 +112,10 @@ class Otc extends Component {
       } else {
         Toast.fail('挂单失败，请重试')
       }
+    } else if (type === 'buy') {
+      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!')
     } else {
-      Toast.success(`${type === 'buy' ? '买入' : '卖出'}成功`)
+      Toast.success('卖出成功')
     }
     dispatch(clearResponse())
   }

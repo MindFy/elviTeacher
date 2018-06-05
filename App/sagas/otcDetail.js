@@ -90,6 +90,23 @@ export function* requestCancelWorker(action) {
   }
 }
 
+export function* requestAllegeWorker(action) {
+  const { payload } = action
+  const response = yield call(api.createAllege, payload)
+
+  if (response.success) {
+    yield put({
+      type: 'otcDetail/request_allege_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'otcDetail/request_allege_failed',
+      payload: response.error,
+    })
+  }
+}
+
 export function* requestOtcList() {
   yield takeEvery('otcDetail/request_otc_list', requestOtcListWorker)
 }
@@ -108,4 +125,8 @@ export function* requestHavedPay() {
 
 export function* requestCancel() {
   yield takeEvery('otcDetail/request_cancel', requestCancelWorker)
+}
+
+export function* requestAllege() {
+  yield takeEvery('otcDetail/request_allege', requestAllegeWorker)
 }
