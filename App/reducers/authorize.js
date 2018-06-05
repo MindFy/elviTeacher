@@ -41,7 +41,10 @@ export default function authorize(state = initialState, action) {
     case LOGIN_SUCCEED:
       nextState = {
         ...state,
-        formState: {},
+        formState: {
+          mobile: '',
+          password: '',
+        },
         loading: false,
         loggedIn: true,
         loggedInResult: payload,
