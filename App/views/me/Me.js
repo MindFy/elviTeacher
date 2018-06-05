@@ -90,7 +90,7 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              if (loggedIn) navigation.navigate('Rebates')
+              if (loggedIn) navigation.navigate('SecurityCenter')
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/手机认证.png')}
