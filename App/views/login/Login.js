@@ -125,21 +125,19 @@ class Login extends PureComponent {
 
   renderBack = () => {
     const { screenProps } = this.props
+
     return (
-      <TouchableOpacity
-        activeOpacity={common.activeOpacity}
+      <TKButton
+        style={styles.back}
+        theme="small"
+        caption="返回"
+        titleStyle={{
+          color: 'white',
+          fontSize: common.font14,
+          alignSelf: 'center',
+        }}
         onPress={() => screenProps.dismiss()}
-      >
-        <View style={styles.back}>
-          <Text
-            style={{
-              color: 'white',
-              fontSize: common.font14,
-              alignSelf: 'center',
-            }}
-          >返回</Text>
-        </View>
-      </TouchableOpacity>
+      />
     )
   }
 
