@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   StyleSheet,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -182,6 +183,7 @@ class WithDraw extends Component {
         ...formState,
         withdrawAmount: bMaxBalace.toString(),
       }))
+      return
     }
     const splitArr = withdrawAmount.split('.')
     if (splitArr[0].length > common.maxLenDelegate) { // 整数长度限制
@@ -351,6 +353,8 @@ class WithDraw extends Component {
   }
 
    tapAddAddress = () => {
+     Keyboard.dismiss()
+
      const { address = [], currCoin } = this.props
      const items = []
      for (let i = 0; i < address.length; i++) {
@@ -630,6 +634,7 @@ class WithDraw extends Component {
        >
          <ScrollView
            keyboardShouldPersistTaps="handled"
+           keyboardDismissMode="on-drag"
          >
            {coinSelector}
            {coinList}

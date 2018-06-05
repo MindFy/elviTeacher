@@ -160,12 +160,12 @@ const TabBarStack = StackNavigator({
   UpdateEmail,
   Rebates: {
     screen: Rebates,
-    navigationOptions: {
-      // header: null,
-    },
   },
   Buttons,
-})
+}, {
+  headerMode: 'screen',
+},
+)
 
 const LoginStack = DismissableStackNavigator({
   Login: {
