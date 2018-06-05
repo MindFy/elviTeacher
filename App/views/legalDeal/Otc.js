@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
 
 class Otc extends Component {
   static navigationOptions(props) {
+    const params = props.navigation.state.params || {}
     return {
       headerTitle: '法币',
       headerStyle: {
@@ -67,9 +68,7 @@ class Otc extends Component {
         (
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => {
-              props.navigation.navigate('LegalDealDetail')
-            }}
+            onPress={params.detailPress}
           >
             <Text
               style={{
@@ -81,6 +80,10 @@ class Otc extends Component {
           </TouchableOpacity>
         ),
     }
+  }
+
+  componentWillMount() {
+    this.props.navigation.setParams({ detailPress: this._detailPress })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -151,6 +154,12 @@ class Otc extends Component {
   onQuantityChange(text) {
     const { dispatch } = this.props
     dispatch(updateForm(text))
+  }
+
+  _detailPress = () => {
+    const { loggedIn, navigation } = this.props
+    if (loggedIn) navigation.navigate('OtcDetail')
+    else navigation.navigate('LoginStack')
   }
 
   renderSelectionBar = () => {

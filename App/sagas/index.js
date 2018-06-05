@@ -30,6 +30,7 @@ import { submitRequest } from './otc'
 import * as exchanges from './exchange'
 
 import * as updateBank from './updateBank'
+import * as otcDetail from './otcDetail'
 import {
   requestBalanceList,
   requestBalanceValuation,
@@ -120,5 +121,11 @@ export default function* rootSaga() {
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
+
+    otcDetail.requestOtcList(),
+    otcDetail.requestGetCode(),
+    otcDetail.requestConfirmPay(),
+    otcDetail.requestHavedPay(),
+    otcDetail.requestCancel(),
   ]
 }
