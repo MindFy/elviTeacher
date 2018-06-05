@@ -1,0 +1,62 @@
+export function requestOtcList(payload) {
+  return {
+    type: 'otcDetail/request_otc_list',
+    payload,
+  }
+}
+
+export function requestOtcListSucceed(payload) {
+  return {
+    type: 'otcDetail/request_otc_list_succeed',
+    payload,
+  }
+}
+
+export function requestOtcListFailed(payload) {
+  return {
+    type: 'otcDetail/request_otc_list_failed',
+    payload,
+  }
+}
+
+export function requestGetCode(payload) {
+  return {
+    type: 'otcDetail/request_get_code',
+    payload,
+  }
+}
+
+export function requestConfirmPay(payload) {
+  return {
+    type: 'otcDetail/request_confirm_pay',
+    payload,
+  }
+}
+
+export function requestHavedPay(payload) {
+  return {
+    type: 'otcDetail/request_haved_pay',
+    payload,
+  }
+}
+
+export function requestGetCodeSucceed(payload) {
+  return {
+    type: 'otcDetail/request_get_code_succeed',
+    payload,
+  }
+}
+
+export function requestGetCodeFailed(payload) {
+  return {
+    type: 'otcDetail/request_get_code_failed',
+    payload,
+  }
+}
+
+export function updateForm(payload) {
+  return {
+    type: 'otcDetail/update_form',
+    payload,
+  }
+}

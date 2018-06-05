@@ -28,6 +28,7 @@ import * as home from './home'
 import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
 import * as updateBank from './updateBank'
+import * as otcDetail from './otcDetail'
 
 export default function* rootSaga() {
   yield [
@@ -106,5 +107,10 @@ export default function* rootSaga() {
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
+
+    otcDetail.requestOtcList(),
+    otcDetail.requestGetCode(),
+    otcDetail.requestConfirmPay(),
+    otcDetail.requestHavedPay(),
   ]
 }

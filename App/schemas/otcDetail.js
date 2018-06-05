@@ -1,7 +1,7 @@
-export default function findLegalDeal(id, skip, limit) {
+export default function findOtcList({ id, skip, limit }) {
   return `{
       find_legalDeal(
-          skip: ${skip},
+          skip: ${skip * limit},
           limit: ${limit},
           where: {
             creater_id: ${id}

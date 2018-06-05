@@ -5,19 +5,23 @@ import {
   View,
   Image,
   TouchableOpacity,
-  DeviceEventEmitter,
 } from 'react-native'
 import {
   Toast,
   Overlay,
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
-import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
+import RefreshListView from 'react-native-refresh-list-view'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import {
   common,
 } from '../../constants/common'
-import actions from '../../actions/index'
+import {
+  requestOtcList,
+  requestGetCode,
+  requestConfirmPay,
+  updateForm,
+} from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
 
 class OtcDetail extends Component {
@@ -32,98 +36,89 @@ class OtcDetail extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <TouchableOpacity
+      headerLeft: (
+        <TouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/下拉copy.png')}
-            />
-          </TouchableOpacity>
-        ),
+            source={require('../../assets/下拉copy.png')}
+          />
+        </TouchableOpacity>
+      ),
     }
   }
 
   constructor() {
     super()
-    this.showGetVerificateCodeResponse = false
+    this.skip = 0
+    this.limit = 10
   }
 
   componentDidMount() {
-    this.onHeaderRefresh()
-    this.listener = DeviceEventEmitter.addListener(common.noti.legalDealConfirmPay, () => {
-      Overlay.hide(this.overlayViewKey)
+    const { loggedInResult } = this.props
+    this.refreshOtcList({
+      id: loggedInResult.id,
+      skip: this.skip,
+      limit: this.limit,
     })
   }
 
-  componentWillUnmount() {
-    const { dispatch, mobile, password, passwordAgain } = this.props
-    dispatch(actions.registerUpdate({ mobile, code: '', password, passwordAgain }))
-    dispatch(actions.skipLegalDealUpdate({
-      skip: 0,
-      refreshState: RefreshState.Idle,
-    }))
-    this.listener.remove()
+  componentWillReceiveProps(nextProps) {
+    this.handleRequestGetCode(nextProps)
   }
 
-  onHeaderRefresh() {
-    const { dispatch, user } = this.props
-    if (user) {
-      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0, common.legalDeal.limit),
-        RefreshState.HeaderRefreshing))
-    }
-  }
-
-  onChange(event, tag) {
-    const { text } = event.nativeEvent
-    const { dispatch, mobile, password, passwordAgain } = this.props
+  onChangeText(text, tag) {
+    const { dispatch, formState } = this.props
     switch (tag) {
       case 'code':
-        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
+        dispatch(updateForm({ ...formState, code: text }))
         break
       default:
         break
     }
   }
 
+  confirmPress(id) {
+    const { dispatch, formState } = this.props
+    const { code } = formState
+    if (!code.length) {
+      Toast.message('请输入验证码')
+      return
+    }
+    dispatch(requestConfirmPay({ id, code }))
+  }
+
+  refreshOtcList(data) {
+    const { dispatch } = this.props
+    dispatch(requestOtcList(schemas.findOtcList(data)))
+  }
+
   showOverlay(id, rid) {
-    const { dispatch, user, legalDeal } = this.props
+    const { dispatch, loggedInResult } = this.props
     const overlayView = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={{ justifyContent: 'center' }}
         modal={false}
         overlayOpacity={0}
       >
         <TKViewCheckAuthorize
-          mobile={user.mobile}
-          onChange={e => this.onChange(e, 'code')}
-          codePress={(count) => {
-            this.count = count
-            dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+          mobile={loggedInResult.mobile}
+          onChangeText={e => this.onChangeText(e, 'code')}
+          codePress={() => {
+            dispatch(requestGetCode({ mobile: loggedInResult.mobile, service: 'auth' }))
           }}
-          confirmPress={() => {
-            if (!this.props.code.length) {
-              Toast.message('请输入验证码')
-              return
-            }
-            const temp = legalDeal.concat()
-            temp[rid].status = common.legalDeal.status.complete
-            dispatch(actions.confirmPay({ id, code: this.props.code }, temp))
-          }}
+          confirmPress={() => this.confirmPress(id, rid)}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
         />
       </Overlay.View>
@@ -131,27 +126,25 @@ class OtcDetail extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  handleGetVerificateCodeRequest() {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
+  errors = {
+    4000101: '手机号码或服务类型错误',
+    4000102: '一分钟内不能重复发送验证码',
+    4000104: '手机号码已注册',
+  }
 
-    if (getVerificateCodeVisible) {
-      this.showGetVerificateCodeResponse = true
-    } else {
-      this.showGetVerificateCodeResponse = false
-      if (getVerificateCodeResponse.success) {
-        this.count()
-        Toast.success(getVerificateCodeResponse.result.message, 2000, 'top')
-      } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
-      } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('一分钟内不能重复发送验证码')
-      } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail('手机号码已注册')
-      } else if (getVerificateCodeResponse.error.message === common.badNet) {
+  handleRequestGetCode(nextProps) {
+    const { getCodeResult, getCodeError } = nextProps
+
+    if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
+      Toast.success(getCodeResult.message, 2000, 'top')
+    }
+    if (getCodeError && getCodeError !== this.props.getCodeError) {
+      if (getCodeError.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else {
-        Toast.fail('获取验证码失败，请重试')
+        const msg = this.errors[getCodeError.code]
+        if (msg) Toast.fail(msg)
+        else Toast.fail('获取验证码失败，请重试')
       }
     }
   }
@@ -346,8 +339,8 @@ class OtcDetail extends Component {
               }}
               disabled={cancelBtnDisabled}
               onPress={() => {
-                legalDeal[rid].status = common.legalDeal.status.cancel
-                dispatch(actions.legalDealCancel({ id: rd.id }, legalDeal.concat()))
+                // legalDeal[rid].status = common.legalDeal.status.cancel
+                // dispatch(actions.legalDealCancel({ id: rd.id }, legalDeal.concat()))
               }}
             >
               <Text
@@ -368,8 +361,8 @@ class OtcDetail extends Component {
                   }}
                   disabled={havedPayDisabled}
                   onPress={() => {
-                    legalDeal[rid].status = common.legalDeal.status.waitconfirm
-                    dispatch(actions.havedPay({ id: rd.id }, legalDeal.concat()))
+                    // legalDeal[rid].status = common.legalDeal.status.waitconfirm
+                    // dispatch(actions.havedPay({ id: rd.id }, legalDeal.concat()))
                   }}
                 >
                   <Text
@@ -406,33 +399,30 @@ class OtcDetail extends Component {
   }
 
   render() {
-    const { dispatch, user, legalDeal, refreshState, skip } = this.props
-    this.handleGetVerificateCodeRequest()
+    const { refreshState, loggedInResult, otcList } = this.props
 
     return (
       <RefreshListView
         style={{
           backgroundColor: common.blackColor,
         }}
-        data={!user ? [] : legalDeal}
+        data={otcList}
         renderItem={({ item, index }) => this.renderRow(item, index)}
         keyExtractor={this.keyExtractor}
         refreshState={refreshState}
         onHeaderRefresh={() => {
-          if ((user && refreshState !== RefreshState.NoMoreData)
-            || (user && refreshState !== RefreshState.FooterRefreshing)) {
-            dispatch(actions.findLegalDeal(
-              schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
-              , RefreshState.HeaderRefreshing))
-          }
+          this.refreshOtcList({
+            id: loggedInResult.id,
+            skip: 0,
+            limit: this.limit,
+          })
         }}
         onFooterRefresh={() => {
-          if ((user && refreshState !== RefreshState.NoMoreData)
-            || (refreshState !== RefreshState.HeaderRefreshing)) {
-            dispatch(actions.findLegalDeal(
-              schemas.findLegalDeal(user.id, common.legalDeal.limit * skip, common.legalDeal.limit)
-              , RefreshState.FooterRefreshing))
-          }
+          this.refreshOtcList({
+            id: loggedInResult.id,
+            skip: 0,
+            limit: this.limit,
+          })
         }}
         footerTextStyle={{
           color: common.textColor,
@@ -443,20 +433,10 @@ class OtcDetail extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    skip: store.legalDeal.skip,
-    legalDeal: store.legalDeal.legalDeal,
-    refreshState: store.legalDeal.refreshState,
-
-    user: store.user.user,
-
-    mobile: store.user.mobileRegister,
-    code: store.user.codeRegister,
-    password: store.user.passwordRegister,
-    passwordAgain: store.user.passwordAgainRegister,
-    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
+    ...state.otcDetail,
+    loggedInResult: state.authorize.loggedInResult,
   }
 }
 
