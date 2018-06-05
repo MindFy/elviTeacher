@@ -71,8 +71,9 @@ class Settings extends Component {
         />
         <MeCell
           leftImageHide
+          rightImageHide
           onPress={() => { }}
-          title="版本显示"
+          title="V 1.0.0"
         />
 
       </ScrollView>
