@@ -278,7 +278,7 @@ class Orders extends Component {
     }
 
     if (this.props.cancelOrderLoading && !nexProps.cancelOrderLoading) {
-      Toast.fail('撤单成功')
+      Toast.success('撤单成功')
     }
     if (nexProps.cancelOrderError) {
       Toast.fail('撤单失败')
