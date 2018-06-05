@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect, Provider } from 'react-redux'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -19,12 +19,14 @@ import DealDrawer from './DealDrawer'
 import Depth from '../transactions/Depth'
 import ShelvesList from './ShelvesList'
 import actions from '../../actions/index'
-import { store } from '../../index'
 import LatestDealList from './LatestDealList'
 import DealNavigator from './DealNavigator'
 import DealTabBar from './DealTabBar'
 import DealMarket from './DealMarket'
 import * as exchange from '../../actions/exchange'
+import findOpenOrders from '../../schemas/exchange'
+import LastPriceList from './component/LastPriceList'
+import { caculateExchangeFormData, slideAction } from '../../utils/caculateExchangeFormData'
 
 const styles = StyleSheet.create({
   container: {
@@ -40,28 +42,6 @@ const styles = StyleSheet.create({
     color: common.textColor,
     fontSize: common.font14,
     textAlign: 'left',
-  },
-  shelvesList: {
-    flexDirection: 'row',
-    marginLeft: common.margin15,
-    marginRight: common.margin15,
-  },
-  shelvesListHeaderView: {
-    marginTop: common.margin10,
-    borderBottomColor: common.placeholderColor,
-    borderBottomWidth: 1,
-  },
-  shelvesListHeaderTitle: {
-    color: common.placeholderColor,
-    fontSize: common.font12,
-    paddingBottom: common.margin5,
-  },
-  shelvesListRowView: {
-    marginTop: common.margin5,
-    marginLeft: 1,
-    marginRight: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
 })
 
@@ -82,48 +62,73 @@ class Deal extends Component {
     dispatch(exchange.requestOrderhistoryList(params))
   }
 
-  menuPress() {
-    // const { dispatch, homeRose } = this.props
-    // const items = []
-    // homeRose.forEach((element) => {
-    //   items.push({
-    //     title: `${element.goods.name}/${element.currency.name}`,
-    //     onPress: () => {
-    //       dispatch(actions.selectedPairUpdate(element))
-    //     },
-    //   })
-    // })
-    // Menu.show({ x: common.sw / 2, y: 64 }, items)
+  changeAction(selectedPair, formData, value) {
+    const nextValue = caculateExchangeFormData({ selectedPair, formData, actions: value })
+    if (nextValue) {
+      const { dispatch } = this.props
+      dispatch(exchange.updateForm(nextValue))
+    }
   }
 
-  tapBuySellBtn = () => {
-    this.drawer.close()
+  resetFormData() {
+    const { dispatch } = this.props
+    dispatch(exchange.updateForm({
+      price: '',
+      quantity: '',
+      amount: '',
+      ratio: 0,
+    }))
+  }
+
+  segmentDidClick(e) {
+    const { dispatch, loggedIn, loggedInResult, selectedPair, navigation } = this.props
+    if (e === 1) {
+      if (!loggedIn) {
+        navigation.navigate('LoginStack')
+      } else {
+        dispatch(exchange.updateSegmentIndex(e))
+        dispatch(exchange.requestOpenordersList(findOpenOrders({
+          id: loggedInResult.id,
+          goodId: selectedPair.goods.id,
+          currencyId: selectedPair.currency.id,
+        })))
+      }
+    } else {
+      dispatch(exchange.updateSegmentIndex(e))
+    }
+  }
+
+  slideAction(selectedPair, formData, value) {
+    const nextValue = slideAction({ selectedPair, formData, actions: value })
+    if (nextValue) {
+      const { dispatch } = this.props
+      dispatch(exchange.updateForm(nextValue))
+    }
+  }
+
+  menuPress() {
+
+  }
+
+  tapBuySellBtn() {
+
   }
 
   tabBarPress(index) {
-    const { dispatch, selectedPair, user, navigation, formData, amountVisible } = this.props
-    if (!user) {
+    const { loggedIn, navigation } = this.props
+    if (!loggedIn) {
       navigation.navigate('LoginStack')
       return
     }
-    const view = (
-      <DealDrawer
-        index={index}
-        formData={formData}
-        amountVisible={amountVisible}
-        selectedPair={selectedPair}
-        onPress={() => this.tapBuySellBtn()}
-      />
-    )
-    this.drawer = Drawer.open(view, 'bottom')
+    if (this.drawer) {
+      this.drawer.showAtIndex(index)
+    }
   }
 
   renderNavigationBar = () => {
-    const { navigation, selectedPair, user } = this.props
-
+    const { navigation, selectedPair, loggedIn } = this.props
     const goodsName = selectedPair.goods.name
     const currencyName = selectedPair.currency.name
-
     return (
       <DealNavigator
         titles={[`${goodsName}/${currencyName}`, '我的委托']}
@@ -133,7 +138,7 @@ class Deal extends Component {
           } else if (type === 'title') {
             this.menuPress()
           } else if (type === 'rightBtn') {
-            if (user) navigation.navigate('Orders')
+            if (loggedIn) navigation.navigate('Orders')
             else navigation.navigate('LoginStack')
           }
         }}
@@ -218,99 +223,28 @@ class Deal extends Component {
     )
   }
 
-  renderShelvesRow(rd, rid, type) {
-    const { selectedPair } = this.props
-    let price
-    let sumQuantity
-    let title
-    let titleColor
-    let detail
-    let detailColor
-    common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q) => {
-      price = new BigNumber(rd.price).toFixed(p, 1)
-      sumQuantity = new BigNumber(rd.sum_quantity).toFixed(q, 1)
-    })
-    if (type === common.buy) {
-      title = sumQuantity
-      titleColor = common.textColor
-      detail = price
-      detailColor = common.redColor
-    } else if (type === common.sell) {
-      title = price
-      titleColor = common.greenColor
-      detail = sumQuantity
-      detailColor = common.textColor
-    }
-    return (
-      <View style={styles.shelvesListRowView}>
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: titleColor,
-          }}
-        >{title}</Text>
-        <Text
-          style={{
-            fontSize: common.font12,
-            color: detailColor,
-          }}
-        >{detail}</Text>
-      </View>
-    )
-  }
-
-  renderHeader(type) {
-    let text = ''
-    if (type === common.buy) {
-      text = '买'
-    } else if (type === common.sell) {
-      text = '卖'
-    }
-    return (
-      <View style={styles.shelvesListHeaderView}>
-        <Text style={styles.shelvesListHeaderTitle}>
-          {text}
-        </Text>
-      </View>
-    )
-  }
-
   renderShelvesListChildren(index) {
     if (index === 0) {
-      const { lastPrice } = this.props
+      const { lastPrice, selectedPair } = this.props
       return (
-        <View style={styles.shelvesList}>
-          <ListView
-            style={{ width: '50%' }}
-            dataSource={this.dataSource.cloneWithRows(lastPrice.buy)}
-            renderHeader={() => this.renderHeader(common.buy)}
-            renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.buy)}
-            enableEmptySections
-            removeClippedSubviews={false}
-          />
-          <ListView
-            style={{ width: '50%' }}
-            dataSource={this.dataSource.cloneWithRows(lastPrice.sell)}
-            renderHeader={() => this.renderHeader(common.sell)}
-            renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.sell)}
-            enableEmptySections
-            removeClippedSubviews={false}
-          />
-        </View>
+        <LastPriceList
+          selectedPair={selectedPair}
+          dataSource={lastPrice}
+        />
       )
     }
     return null
   }
 
   renderDetailList = () => {
-    const { navigation, segmentIndex, dispatch } = this.props
+    const { navigation, segmentIndex } = this.props
     return (
       <ShelvesList
         titles={['盘口五档', '当前委托']}
         segmentIndex={segmentIndex}
         segmentValueChanged={(e) => {
           if (segmentIndex !== e) {
-            dispatch(exchange.updateSegmentIndex(e))
+            this.segmentDidClick(e)
           }
         }}
         renderChildComponent={index => this.renderShelvesListChildren(index)}
@@ -348,27 +282,29 @@ class Deal extends Component {
   )
 
   render() {
+    const { selectedPair, formData, amountVisible } = this.props
     return (
       <View style={styles.container}>
         {this.renderNavigationBar()}
-
         <ScrollView>
-
           {this.renderMarketView()}
-
           {this.renderDepthView()}
-
           {this.renderDetailList()}
-
-          <Text style={styles.latestDealHeader}>
-            最新成交
-          </Text>
-
+          <Text style={styles.latestDealHeader}>最新成交</Text>
           {this.renderOrderHistory()}
-
         </ScrollView>
-
         {this.renderToolBar()}
+        <DealDrawer
+          ref={(e) => { this.drawer = e }}
+          index={0}
+          formData={formData}
+          amountVisible={amountVisible}
+          selectedPair={selectedPair}
+          changeAction={value => this.changeAction(selectedPair, formData, value)}
+          slideAction={value => this.slideAction(selectedPair, formData, value)}
+          buttonAction={() => this.tapBuySellBtn()}
+          unmountAction={() => this.resetFormData()}
+        />
       </View>
     )
   }
@@ -376,13 +312,14 @@ class Deal extends Component {
 
 function mapStateToProps(state) {
   return {
-    user: state.user.user,
     selectedPair: state.exchange.selectedPair,
     segmentIndex: state.exchange.segmentIndex,
     orderHistory: state.exchange.orderHistory,
     lastPrice: state.exchange.lastPrice,
     formData: state.exchange.formData,
     amountVisible: state.asset.amountVisible,
+    loggedIn: state.authorize.loggedIn,
+    loggedInResult: state.authorize.loggedInResult,
 
     valuation: state.asset.valuation,
     kLineOrDepth: state.ui.kLineOrDepth,

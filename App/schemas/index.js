@@ -13,6 +13,7 @@ import findListSelf from './deal'
 import * as home from './home'
 import findAssetList from './asset'
 import findAddress from './address'
+import findOpenOrders from './exchange'
 
 const schemas = {
   findUser,
@@ -27,5 +28,6 @@ const schemas = {
   findBanners: home.findBanners,
   findAnnouncement: home.findAnnouncement,
   findAddress,
+  findOpenOrders,
 }
 export default schemas

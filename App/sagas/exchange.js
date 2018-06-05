@@ -29,7 +29,7 @@ export function* requestOpenordersListWorker(action) {
   if (response.success) {
     yield put({
       type: 'exchange/request_openorders_list_succeed',
-      payload: response.result,
+      payload: response.result.data.find_delegate,
     })
   } else {
     yield put({
