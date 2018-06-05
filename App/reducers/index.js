@@ -18,6 +18,7 @@ import home from './home'
 import orders from './orders'
 import market from './market'
 import otc from './otc'
+import exchange from './exchange'
 import updateBank from './updateBank'
 import balance from './balance'
 
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   orders,
   market,
   otc,
+  exchange,
   updateBank,
   balance,
 })
