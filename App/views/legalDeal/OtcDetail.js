@@ -144,6 +144,9 @@ class OtcDetail extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.handleRequestGetCode(nextProps)
+    this.handleRequestCancel(nextProps)
+    this.handleRequestConfirmPay(nextProps)
+    this.handleRequestHavedPay(nextProps)
   }
 
   onChangeText(text, tag) {
@@ -239,7 +242,7 @@ class OtcDetail extends Component {
     const { cancelResult, cancelError, loggedInResult } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
-      Toast.success(cancelResult.message)
+      Toast.success('撤销成功')
       this.refreshOtcList({
         id: loggedInResult.id,
         skip: this.skip,
@@ -261,7 +264,7 @@ class OtcDetail extends Component {
     const { confirmPayResult, confirmPayError, loggedInResult } = nextProps
 
     if (confirmPayResult && confirmPayResult !== this.props.confirmPayResult) {
-      Toast.success(confirmPayResult.message)
+      Toast.success('确认成功')
       this.refreshOtcList({
         id: loggedInResult.id,
         skip: this.skip,
@@ -283,7 +286,7 @@ class OtcDetail extends Component {
     const { havedPayResult, havedPayError, loggedInResult } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
-      Toast.success(havedPayResult.message)
+      Toast.success('确认成功')
       this.refreshOtcList({
         id: loggedInResult.id,
         skip: this.skip,

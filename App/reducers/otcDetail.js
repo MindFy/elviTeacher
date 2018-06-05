@@ -28,6 +28,7 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         otcListLoading: true,
+        otcListError: null,
       }
       break
     case 'otcDetail/request_otc_list_succeed':
@@ -35,6 +36,7 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         otcListLoading: false,
         otcList: payload,
+        otcListError: null,
       }
       break
     case 'otcDetail/request_otc_list_failed':
@@ -48,6 +50,8 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         getCodeLoading: true,
+        getCodeResult: null,
+        getCodeError: null,
       }
       break
     case 'otcDetail/request_get_code_succeed':
@@ -55,12 +59,14 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         getCodeLoading: false,
         getCodeResult: payload,
+        getCodeError: null,
       }
       break
     case 'otcDetail/request_get_code_failed':
       nextState = {
         ...state,
         getCodeLoading: false,
+        getCodeResult: null,
         getCodeError: payload,
       }
       break
@@ -68,6 +74,8 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         confirmPayLoading: true,
+        confirmPayResult: null,
+        confirmPayError: null,
       }
       break
     case 'otcDetail/request_confirm_pay_succeed':
@@ -75,12 +83,14 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         confirmPayLoading: false,
         confirmPayResult: payload,
+        confirmPayError: null,
       }
       break
     case 'otcDetail/request_confirm_pay_failed':
       nextState = {
         ...state,
         confirmPayLoading: false,
+        confirmPayResult: null,
         confirmPayError: payload,
       }
       break
@@ -88,6 +98,8 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         havedPayLoading: true,
+        havedPayResult: null,
+        havedPayError: null,
       }
       break
     case 'otcDetail/request_haved_pay_succeed':
@@ -95,12 +107,14 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         havedPayLoading: false,
         havedPayResult: payload,
+        havedPayError: null,
       }
       break
     case 'otcDetail/request_haved_pay_failed':
       nextState = {
         ...state,
         havedPayLoading: false,
+        havedPayResult: null,
         havedPayError: payload,
       }
       break
@@ -108,6 +122,8 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         cancelLoading: true,
+        cancelResult: null,
+        cancelError: null,
       }
       break
     case 'otcDetail/request_cancel_succeed':
@@ -115,12 +131,14 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         cancelLoading: false,
         cancelResult: payload,
+        cancelError: null,
       }
       break
     case 'otcDetail/request_cancel_failed':
       nextState = {
         ...state,
         cancelLoading: false,
+        cancelResult: null,
         cancelError: payload,
       }
       break

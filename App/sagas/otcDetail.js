@@ -79,12 +79,12 @@ export function* requestCancelWorker(action) {
 
   if (response.success) {
     yield put({
-      type: 'otcDetail/request_haved_pay_succeed',
+      type: 'otcDetail/request_cancel_succeed',
       payload: response.result,
     })
   } else {
     yield put({
-      type: 'otcDetail/request_haved_pay_failed',
+      type: 'otcDetail/request_cancel_failed',
       payload: response.error,
     })
   }
