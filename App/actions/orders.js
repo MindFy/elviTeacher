@@ -19,6 +19,13 @@ export function openOrderRequestFailed(payload) {
   }
 }
 
+export function openOrderSetError(payload) {
+  return {
+    type: 'orders/open_order_set_error',
+    payload,
+  }
+}
+
 export function orderHistoryRequest(payload) {
   return {
     type: 'orders/order_history_request',
@@ -29,6 +36,13 @@ export function orderHistoryRequest(payload) {
 export function orderHistoryRequestFailed(payload) {
   return {
     type: 'orders/order_history_request_failed',
+    payload,
+  }
+}
+
+export function orderHistrorySetError(payload) {
+  return {
+    type: 'orders/order_history_set_error',
     payload,
   }
 }
@@ -91,6 +105,12 @@ export function updateOpenOrderPage(payload) {
   return {
     type: 'orders/update_open_order_page',
     payload,
+  }
+}
+
+export function resetNexus() {
+  return {
+    type: 'orders/reset_nexus',
   }
 }
 

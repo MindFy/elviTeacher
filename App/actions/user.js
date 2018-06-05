@@ -121,21 +121,6 @@ export function updatePasswordUpdate(data) {
   }
 }
 
-export function updateBankUpdate(data) {
-  return {
-    type: constants.UPDATE_BANK_UPDATE,
-    data,
-  }
-}
-
-export function updateBank(data, user) {
-  return {
-    type: constants.UPDATE_BANK_REQUEST,
-    data,
-    user,
-  }
-}
-
 export function updateEmail(data) {
   return {
     type: constants.UPDATE_EMAIL_REQUEST,

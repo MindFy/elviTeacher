@@ -146,7 +146,7 @@ class Balance extends Component {
             caption={'提现'}
             icon={require('../../assets/充值copy.png')}
             onPress={() => {
-              if (user) navigation.navigate('withdraw')
+              if (user) navigation.navigate('Withdraw')
               else navigation.navigate('LoginStack')
             }}
           />

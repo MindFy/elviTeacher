@@ -17,11 +17,12 @@ const styles = StyleSheet.create({
 })
 
 class TKSelectionBar extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+
 
     this.state = {
-      selectedIdx: 0,
+      selectedIdx: props.initialIndexSelected || 0,
     }
   }
 

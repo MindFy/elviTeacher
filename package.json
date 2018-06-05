@@ -31,8 +31,8 @@
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
-    "rn-image-picker-d3j": "^0.2.1",
-    "rn-put-object": "^0.2.3",
+    "rn-image-picker-d3j": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-image-picker-d3j.git#0.2.1",
+    "rn-put-object": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-put-object.git#0.2.3",
     "teaset": "0.5.6"
   },
   "devDependencies": {

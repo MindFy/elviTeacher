@@ -16,6 +16,7 @@ const initialState = {
   withdrawSuccess: false,
   withdrawError: null,
   error: null,
+  address: [],
 }
 
 export default function withdraw(state = initialState, action) {
@@ -107,6 +108,12 @@ export default function withdraw(state = initialState, action) {
         loading: true,
         withdrawError: null,
         withdrawSuccess: false,
+      }
+      break
+    case 'withdraw/request_withdraw_address_succeed':
+      nextState = {
+        ...state,
+        address: payload,
       }
       break
     case 'withdraw/request_withdraw_succeed':

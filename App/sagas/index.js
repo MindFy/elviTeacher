@@ -21,12 +21,14 @@ import {
   requestBalance,
   requestValuation,
   requestWithdraw,
+  requestWithdrawAddress,
 } from './withdraw'
 import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
 import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
 import { requestLastpriceList, requestOpenordersList, requestOrderhistoryList } from './exchange'
+import * as updateBank from './updateBank'
 
 export default function* rootSaga() {
   yield [
@@ -45,7 +47,6 @@ export default function* rootSaga() {
     fork(user.isExist),
     fork(user.register),
     fork(user.resetPassword),
-    fork(user.updateBank),
     fork(user.updateEmail),
     fork(user.updatePassword),
 
@@ -94,6 +95,7 @@ export default function* rootSaga() {
     fork(requestBalance),
     fork(requestValuation),
     fork(requestWithdraw),
+    fork(requestWithdrawAddress),
 
     fork(orderHistoryRequest),
     fork(openOrderRequest),
@@ -106,5 +108,8 @@ export default function* rootSaga() {
     fork(requestLastpriceList),
     fork(requestOpenordersList),
     fork(requestOrderhistoryList),
+
+    updateBank.requestUpdateBank(),
+    updateBank.requestGetCode(),
   ]
 }

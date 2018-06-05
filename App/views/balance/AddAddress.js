@@ -100,6 +100,12 @@ class AddAddress extends Component {
       Toast.fail('添加地址错误')
       this.props.dispatch(requestAddressClearError())
     }
+
+    if (this.props.loading && !nextProps.loading) {
+      Toast.fail('添加地址成功')
+      Overlay.hide(this.overlayViewKey)
+      this.props.navigation.goBack()
+    }
   }
 
   componentWillUnmount() {

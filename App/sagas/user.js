@@ -117,18 +117,6 @@ export function* updatePassword() {
     else yield put({ type: constants.UPDATE_PASSWORD_FAILED, response })
   }
 }
-/* 用户绑定银行卡信息 */
-export function* updateBank() {
-  while (true) {
-    const request = yield take(constants.UPDATE_BANK_REQUEST)
-    const response = yield call(api.updateBank, request.data)
-    if (response.success) {
-      yield put({ type: constants.UPDATE_BANK_SUCCEED, response, user: request.user })
-    } else {
-      yield put({ type: constants.UPDATE_BANK_FAILED, response })
-    }
-  }
-}
 /* 用户绑定邮箱 */
 export function* updateEmail() {
   while (true) {

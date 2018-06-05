@@ -26,6 +26,7 @@ import {
   requestValuation,
   withdrawClear,
   requestWithdrawClearError,
+  requestWithdrawAddress,
 } from '../../actions/withdraw'
 import {
   getVerificateCode,
@@ -33,6 +34,7 @@ import {
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
+import findAddress from '../../schemas/address'
 
 const styles = StyleSheet.create({
   coinSelector: {
@@ -117,6 +119,7 @@ class WithDraw extends Component {
       4000415: '仅支持BTC、ETH添加地址',
       4000416: '提币地址格式错误',
       4000156: '授权验证失败',
+      4000606: '提币地址格式错误',
     }
     this.verificationCodeErrorDic = {
       4000101: '手机号码或服务类型错误',
@@ -126,8 +129,9 @@ class WithDraw extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
+    const { dispatch, user } = this.props
     dispatch(requestValuation())
+    dispatch(requestWithdrawAddress(findAddress(user.id)))
   }
 
   componentWillReceiveProps(nextProps) {
@@ -183,6 +187,7 @@ class WithDraw extends Component {
     if (splitArr[0].length > common.maxLenDelegate) { // 整数长度限制
       return
     }
+
     if (splitArr.length > 1 && splitArr[1].length > 8) { // 小数长度限制
       return
     }
@@ -227,6 +232,7 @@ class WithDraw extends Component {
     BTC: {
       id: 2,
       fee: 0.001,
+      minAmount: 0.015,
     },
     CNYT: {
       id: 3,
@@ -234,6 +240,7 @@ class WithDraw extends Component {
     ETH: {
       id: 5,
       fee: 0.01,
+      minAmount: 0.015,
     },
     ETC: {
       id: 6,
@@ -326,6 +333,14 @@ class WithDraw extends Component {
     this.overlayViewKeyID = Overlay.show(overlayView)
   }
 
+  selectAddress = (withdrawAddress) => {
+    const { dispatch, formState } = this.props
+    dispatch(updateForm({
+      ...formState,
+      withdrawAddress,
+    }))
+  }
+
   addAddressPress = () => {
     const { currCoin } = this.props
     const tokenId = this.coinsIdDic[currCoin].id
@@ -336,14 +351,16 @@ class WithDraw extends Component {
   }
 
    tapAddAddress = () => {
-     const { address = [] } = this.props
+     const { address = [], currCoin } = this.props
      const items = []
      for (let i = 0; i < address.length; i++) {
        const element = address[i]
-       items.push({
-         title: element.withdrawaddr,
-         onPress: () => this.selectAddress(element),
-       })
+       if (element.token.name === currCoin) {
+         items.push({
+           title: element.withdrawaddr,
+           onPress: () => this.selectAddress(element.withdrawaddr),
+         })
+       }
      }
      items.push({
        title: '+添加新地址',
@@ -439,7 +456,7 @@ class WithDraw extends Component {
            textAlign: 'center',
          }}
          placeholder="提现金额"
-         value={formState.withDrawAmount}
+         value={formState.withdrawAmount}
          onChangeText={this.onChangeWithdrawAmount}
        />
      )
@@ -484,6 +501,7 @@ class WithDraw extends Component {
 
    renderFormWithdrawAddress = () => {
      const { dispatch, formState } = this.props
+
      return (
        <TKInputItem
          viewStyle={{
@@ -496,7 +514,7 @@ class WithDraw extends Component {
            textAlign: 'center',
          }}
          placeholder="地址"
-         value={formState.withDrawAddress}
+         value={formState.withdrawAddress}
          onChangeText={withdrawAddress => dispatch(updateForm({
            ...formState,
            withdrawAddress,
@@ -533,7 +551,8 @@ class WithDraw extends Component {
    )
 
    renderFormTip = () => {
-     const { minAmount, currCoin } = this.props
+     const { currCoin } = this.props
+     const minAmount = this.coinsIdDic[currCoin].minAmount
      return (
        <View>
          <Text
@@ -601,7 +620,6 @@ class WithDraw extends Component {
      const coinSelector = this.renderCoinSelector()
      const coinList = this.renderCoinList()
      const form = this.renderForm()
-
      return (
        <KeyboardAvoidingView
          style={{

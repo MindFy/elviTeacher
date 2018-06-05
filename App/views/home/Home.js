@@ -47,18 +47,15 @@ class Home extends Component {
     const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     if (!user) {
       navigation.navigate('LoginStack')
+    } else if (i === 2) {
+      navigation.navigate('Orders', {
+        title: '当前委托',
+      })
+    } else if (i === 3) {
+      navigation.navigate('Orders', {
+        title: '历史委托',
+      })
     } else {
-      // if (i === 2) {
-      //   dispatch(actions.selectionBarUpdate(common.selectionBar.left))
-      //   dispatch(actions.currentOrHistoryUpdate({
-      //     currentOrHistory: common.delegate.current,
-      //   }))
-      // } else if (i === 3) {
-      //   dispatch(actions.selectionBarUpdate(common.selectionBar.right))
-      //   dispatch(actions.currentOrHistoryUpdate({
-      //     currentOrHistory: common.delegate.history,
-      //   }))
-      // }
       navigation.navigate(navigateKeys[i])
     }
   }
