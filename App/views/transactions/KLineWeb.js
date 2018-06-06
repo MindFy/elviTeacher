@@ -7,7 +7,6 @@ import { common } from '../../constants/common'
 export default class KLine extends Component {
   componentDidMount() { }
   render() {
-    const { width, height } = this.props
     return (
       <WebView
         style={{
