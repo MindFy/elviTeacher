@@ -47,6 +47,13 @@ export function requestCancel(payload) {
   }
 }
 
+export function requestAllege(payload) {
+  return {
+    type: 'otcDetail/request_allege',
+    payload,
+  }
+}
+
 export function requestGetCodeSucceed(payload) {
   return {
     type: 'otcDetail/request_get_code_succeed',

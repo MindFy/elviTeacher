@@ -2,6 +2,7 @@ const initialState = {
   otcList: [],
   formState: {
     code: '',
+    allegeText: '',
   },
   getCodeLoading: false,
   getCodeResult: null,
@@ -15,6 +16,9 @@ const initialState = {
   cancelLoading: false,
   cancelResult: null,
   cancelError: null,
+  allegeLoading: false,
+  allegeResult: null,
+  allegeError: null,
   otcListLoading: false,
   otcListError: null,
 }
@@ -140,6 +144,30 @@ export default function otcDetail(state = initialState, action) {
         cancelLoading: false,
         cancelResult: null,
         cancelError: payload,
+      }
+      break
+    case 'otcDetail/request_allege':
+      nextState = {
+        ...state,
+        allegeLoading: true,
+        allegeResult: null,
+        allegeError: null,
+      }
+      break
+    case 'otcDetail/request_allege_succeed':
+      nextState = {
+        ...state,
+        allegeLoading: false,
+        allegeResult: payload,
+        allegeError: null,
+      }
+      break
+    case 'otcDetail/request_allege_failed':
+      nextState = {
+        ...state,
+        allegeLoading: false,
+        allegeResult: null,
+        allegeError: payload,
       }
       break
     case 'otcDetail/update_form':

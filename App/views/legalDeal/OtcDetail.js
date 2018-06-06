@@ -23,10 +23,12 @@ import {
   requestConfirmPay,
   requestCancel,
   requestHavedPay,
+  requestAllege,
   updateForm,
   updateOtcList,
 } from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
+import AllegeView from './AllegeView'
 
 const styles = StyleSheet.create({
   row: {
@@ -134,6 +136,7 @@ class OtcDetail extends Component {
     this.state = {
       refreshState: RefreshState.Idle,
       skip: 0,
+      showAllegeView: false,
     }
   }
 
@@ -152,16 +155,21 @@ class OtcDetail extends Component {
     this.handleRequestConfirmPay(nextProps)
     this.handleRequestHavedPay(nextProps)
     this.handleRequestOtcList(nextProps)
+    this.handleRequestAllege(nextProps)
+  }
+
+  componentWillUnmount() {
+    const { dispatch, formState } = this.props
+    dispatch(updateForm({ ...formState, code: '', allegeText: '' }))
   }
 
   onChangeText(text, tag) {
     const { dispatch, formState } = this.props
-    switch (tag) {
-      case 'code':
-        dispatch(updateForm({ ...formState, code: text }))
-        break
-      default:
-        break
+    if (tag === 'code') {
+      dispatch(updateForm({ ...formState, code: text }))
+    } else if (tag === 'allege') {
+      if (text.length > 50) return
+      dispatch(updateForm({ ...formState, allegeText: text }))
     }
   }
 
@@ -180,7 +188,10 @@ class OtcDetail extends Component {
     if (title === '撤单') {
       dispatch(requestCancel({ id }))
     } else if (title === '投诉') {
-      // 投诉
+      this.setState({
+        showAllegeView: true,
+        allegeId: id,
+      })
     }
   }
 
@@ -191,6 +202,12 @@ class OtcDetail extends Component {
     } else if (title === '确认收款') {
       this.showOverlay(id)
     }
+  }
+
+  allegeConfirmPress(data) {
+    const { dispatch } = this.props
+    dispatch(requestAllege(data))
+    this.setState({ showAllegeView: false })
   }
 
   refreshOtcList(data, refreshState) {
@@ -227,6 +244,7 @@ class OtcDetail extends Component {
     4000101: '手机号码或服务类型错误',
     4000102: '一分钟内不能重复发送验证码',
     4000104: '手机号码已注册',
+    4000156: '授权验证失败',
   }
 
   handleRequestGetCode(nextProps) {
@@ -247,15 +265,13 @@ class OtcDetail extends Component {
   }
 
   handleRequestCancel(nextProps) {
-    const { cancelResult, cancelError, loggedInResult } = nextProps
+    const { dispatch, cancelResult, cancelError, otcList } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
       Toast.success('撤销成功')
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: this.limit,
-      })
+      const nextOtcList = otcList.concat()
+      nextOtcList[this.operateIndex].status = 'cancel'
+      dispatch(updateOtcList(nextOtcList))
     }
     if (cancelError && cancelError !== this.props.cancelError) {
       if (cancelError.message === common.badNet) {
@@ -269,15 +285,14 @@ class OtcDetail extends Component {
   }
 
   handleRequestConfirmPay(nextProps) {
-    const { confirmPayResult, confirmPayError, loggedInResult } = nextProps
+    const { dispatch, confirmPayResult, confirmPayError, otcList } = nextProps
 
     if (confirmPayResult && confirmPayResult !== this.props.confirmPayResult) {
       Toast.success('确认成功')
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: this.limit,
-      })
+      Overlay.hide(this.overlayViewKey)
+      const nextOtcList = otcList.concat()
+      nextOtcList[this.operateIndex].status = 'complete'
+      dispatch(updateOtcList(nextOtcList))
     }
     if (confirmPayError && confirmPayError !== this.props.confirmPayError) {
       if (confirmPayError.message === common.badNet) {
@@ -291,15 +306,13 @@ class OtcDetail extends Component {
   }
 
   handleRequestHavedPay(nextProps) {
-    const { havedPayResult, havedPayError, loggedInResult } = nextProps
+    const { dispatch, havedPayResult, havedPayError, otcList } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
       Toast.success('确认成功')
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: this.limit,
-      })
+      const nextOtcList = otcList.concat()
+      nextOtcList[this.operateIndex].status = 'waitconfirm'
+      dispatch(updateOtcList(nextOtcList))
     }
     if (havedPayError && havedPayError !== this.props.havedPayError) {
       if (havedPayError.message === common.badNet) {
@@ -308,6 +321,26 @@ class OtcDetail extends Component {
         const msg = this.errors[havedPayError.code]
         if (msg) Toast.fail(msg)
         else Toast.fail('操作失败，请稍后重试')
+      }
+    }
+  }
+
+  handleRequestAllege(nextProps) {
+    const { dispatch, allegeResult, allegeError, otcList } = nextProps
+
+    if (allegeResult && allegeResult !== this.props.allegeResult) {
+      Toast.success('申诉成功')
+      const nextOtcList = otcList.concat()
+      nextOtcList[this.operateIndex].isAllege = 'yes'
+      dispatch(updateOtcList(nextOtcList))
+    }
+    if (allegeError && allegeError !== this.props.allegeError) {
+      if (allegeError.message === common.badNet) {
+        Toast.fail('网络连接失败，请稍后重试')
+      } else {
+        const msg = this.errors[allegeError.code]
+        if (msg) Toast.fail(msg)
+        else Toast.fail('申诉失败，请稍后重试')
       }
     }
   }
@@ -338,7 +371,7 @@ class OtcDetail extends Component {
 
   keyExtractor = item => item.createdAt
 
-  renderRow(rd) {
+  renderRow(rd, rid) {
     const { navigation } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
@@ -388,12 +421,19 @@ class OtcDetail extends Component {
     }
     const coin = common.legalDeal.token
     let cancelTitleColor = common.placeholderColor
-    if (!cancelBtnDisabled) {
-      cancelTitleColor = common.btnTextColor
-    }
     let havedPayTitleColor = common.placeholderColor
     if (!havedPayDisabled) {
       havedPayTitleColor = common.btnTextColor
+    }
+    if (cancelBtnTitle === '投诉') {
+      if (!havedPayDisabled && rd.isAllege === 'no') {
+        cancelBtnDisabled = false
+      } else {
+        cancelBtnDisabled = true
+      }
+    }
+    if (!cancelBtnDisabled) {
+      cancelTitleColor = common.btnTextColor
     }
     return (
       <View style={styles.row}>
@@ -437,7 +477,10 @@ class OtcDetail extends Component {
               }]}
               activeOpacity={common.activeOpacity}
               disabled={cancelBtnDisabled}
-              onPress={() => this.cancelPress(cancelBtnTitle, rd.id)}
+              onPress={() => {
+                this.operateIndex = rid
+                this.cancelPress(cancelBtnTitle, rd.id)
+              }}
             >
               <Text
                 style={{
@@ -450,7 +493,10 @@ class OtcDetail extends Component {
               activeOpacity={common.activeOpacity}
               style={styles.havedPayBtn}
               disabled={havedPayDisabled}
-              onPress={() => this.havedPayPress(havedPayTitle, rd.id)}
+              onPress={() => {
+                this.operateIndex = rid
+                this.havedPayPress(havedPayTitle, rd.id)
+              }}
             >
               <Text
                 style={{
@@ -465,42 +511,79 @@ class OtcDetail extends Component {
     )
   }
 
+  renderAllegeView() {
+    const { formState } = this.props
+    const { showAllegeView, allegeId } = this.state
+    const { allegeText } = formState
+
+    if (showAllegeView) {
+      return (
+        <AllegeView
+          style={{
+            position: 'absolute',
+            height: '100%',
+            width: '100%',
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            justifyContent: 'center',
+          }}
+          onPress={() => this.setState({ showAllegeView: false })}
+          inputValue={allegeText}
+          onChangeText={e => this.onChangeText(e, 'allege')}
+          placeholder={'请填写投诉理由，不得多于50个字'}
+          cancelPress={() => this.setState({ showAllegeView: false })}
+          confirmPress={() => {
+            if (!formState.allegeText) {
+              Toast.message('请输入申诉理由, 不超过50个字')
+              return
+            }
+            const data = { legaldeal_id: allegeId, reason: formState.allegeText }
+            this.allegeConfirmPress(data)
+          }}
+        />
+      )
+    }
+    return null
+  }
+
   render() {
     const { loggedInResult, otcList } = this.props
     const { refreshState, skip } = this.state
 
     return (
-      <RefreshListView
-        style={{ backgroundColor: common.blackColor }}
-        data={otcList}
-        renderItem={({ item, index }) => this.renderRow(item, index)}
-        keyExtractor={this.keyExtractor}
-        refreshState={refreshState}
-        onHeaderRefresh={() => {
-          if ((refreshState !== RefreshState.NoMoreData)
-            || (refreshState !== RefreshState.FooterRefreshing)) {
-            this.refreshOtcList({
-              id: loggedInResult.id,
-              skip: 0,
-              limit: this.limit,
-            }, RefreshState.HeaderRefreshing)
-          }
-        }}
-        onFooterRefresh={() => {
-          if ((refreshState !== RefreshState.NoMoreData)
-            || (refreshState !== RefreshState.HeaderRefreshing)) {
-            this.refreshOtcList({
-              id: loggedInResult.id,
-              skip: skip + 1,
-              limit: this.limit,
-            }, RefreshState.FooterRefreshing)
-          }
-        }}
-        footerTextStyle={{
-          color: common.textColor,
-          fontSize: common.font14,
-        }}
-      />
+      <View>
+        <RefreshListView
+          style={{ backgroundColor: common.blackColor }}
+          data={otcList}
+          renderItem={({ item, index }) => this.renderRow(item, index)}
+          keyExtractor={this.keyExtractor}
+          refreshState={refreshState}
+          onHeaderRefresh={() => {
+            if ((refreshState !== RefreshState.NoMoreData)
+              || (refreshState !== RefreshState.FooterRefreshing)) {
+              this.refreshOtcList({
+                id: loggedInResult.id,
+                skip: 0,
+                limit: this.limit,
+              }, RefreshState.HeaderRefreshing)
+            }
+          }}
+          onFooterRefresh={() => {
+            if ((refreshState !== RefreshState.NoMoreData)
+              || (refreshState !== RefreshState.HeaderRefreshing)) {
+              this.refreshOtcList({
+                id: loggedInResult.id,
+                skip: skip + 1,
+                limit: this.limit,
+              }, RefreshState.FooterRefreshing)
+            }
+          }}
+          footerTextStyle={{
+            color: common.textColor,
+            fontSize: common.font14,
+          }}
+        />
+        {this.renderAllegeView()}
+      </View>
     )
   }
 }
