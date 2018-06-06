@@ -299,8 +299,8 @@ export default class Depth extends Component {
   }
 
   render() {
-    const { data } = this.props
-    const opts = this.caculateOptions(data)
+    const { depthMap } = this.props
+    const opts = this.caculateOptions(depthMap)
     return (
       <Echarts
         option={opts}

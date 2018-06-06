@@ -261,7 +261,7 @@ class Deal extends Component {
         {
           kLineOrDepth === common.ui.kLine
             ? <KLine />
-            : <Depth data={depthMap} />
+            : <Depth depthMap={depthMap} />
         }
         <TouchableOpacity
           style={{
