@@ -60,8 +60,11 @@ class History extends Component {
       dispatch(actions.findPaymentListWithdraw(
         schemas.findPaymentListWithdraw(user.id, 0, common.payment.limitWithdraw)
         , RefreshState.HeaderRefreshing))
-      dispatch(actions.findLegalDeal(schemas.findLegalDeal(user.id, 0, common.legalDeal.limit)
-        , RefreshState.HeaderRefreshing))
+      dispatch(actions.findLegalDeal(schemas.findOtcList({
+        id: user.id,
+        skip: 0,
+        limit: common.legalDeal.limit,
+      }), RefreshState.HeaderRefreshing))
     }
   }
 
@@ -198,9 +201,11 @@ class History extends Component {
                 if (refreshStateLegalDeal !== RefreshState.NoMoreData
                   || refreshStateLegalDeal !== RefreshState.FooterRefreshing) {
                   if (user) {
-                    dispatch(actions.findLegalDeal(
-                      schemas.findLegalDeal(user.id, 0, common.legalDeal.limit),
-                      RefreshState.HeaderRefreshing))
+                    dispatch(actions.findLegalDeal(schemas.findOtcList({
+                      id: user.id,
+                      skip: 0,
+                      limit: common.legalDeal.limit,
+                    }), RefreshState.HeaderRefreshing))
                   }
                 }
               }}
@@ -208,11 +213,11 @@ class History extends Component {
                 if (user && refreshStateLegalDeal !== RefreshState.NoMoreData
                   || refreshStateLegalDeal !== RefreshState.HeaderRefreshing) {
                   if (user) {
-                    dispatch(actions.findLegalDeal(schemas.findLegalDeal(
-                      user.id,
-                      common.legalDeal.limit * skipLegalDeal,
-                      common.legalDeal.limit,
-                    ), RefreshState.FooterRefreshing))
+                    dispatch(actions.findLegalDeal(schemas.findOtcList({
+                      id: user.id,
+                      skip: skipLegalDeal,
+                      limit: common.legalDeal.limit,
+                    }), RefreshState.FooterRefreshing))
                   }
                 }
               }}
