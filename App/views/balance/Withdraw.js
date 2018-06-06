@@ -136,6 +136,7 @@ class WithDraw extends Component {
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码']
+    this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC']
   }
 
   componentDidMount() {
@@ -260,6 +261,7 @@ class WithDraw extends Component {
 
 
     dispatch(updateForm({
+      ...formState,
       withdrawAmount: '',
       withdrawAddress: '',
       verificationCode: '',
@@ -278,7 +280,7 @@ class WithDraw extends Component {
     BTC: {
       id: 2,
       fee: 0.001,
-      minAmount: 0.015,
+      minAmount: 0.01,
     },
     CNYT: {
       id: 3,
@@ -293,16 +295,41 @@ class WithDraw extends Component {
       fee: 0.01,
       minAmount: 0.5,
     },
+    LTC: {
+      id: 7,
+      fee: 0.01,
+      minAmount: 0.1,
+    },
+  }
+
+  checkValuationIsEmpty = () => {
+    const { valuation } = this.props
+
+    if (!valuation) {
+      return true
+    }
+
+    const { count, rates } = valuation
+    if (!count || Object.keys(count).length === 0) {
+      return true
+    }
+
+    if (!rates || Object.keys(rates).length === 0) {
+      return true
+    }
+
+    return false
   }
 
   withdrawPress() {
-    const { formState, currCoin, valuation } = this.props
-
-    if (!formState.withdrawAddress.length) {
-      Toast.message('请输入提现地址')
+    if (this.checkValuationIsEmpty()) {
+      const { dispatch } = this.props
+      dispatch(requestValuation())
       return
     }
 
+    const { formState, currCoin } = this.props
+    const { valuation } = this.props
     const { count, rates } = valuation
     const { quotaCount, withdrawedCount } = count
     const bAmount = new BigNumber(formState.withdrawAmount)
@@ -311,29 +338,19 @@ class WithDraw extends Component {
     const bToBTC = new BigNumber(rates[currCoin].BTC)
 
     const limitNumber = bQuotaCount.minus(bWithdrawedCount).toFixed(8, 1)
-    if (currCoin === 'BTC') {
-      if (bAmount.gt(limitNumber)) {
-        Toast.message('提现金额已超过当日限额！')
-        return
-      }
 
-      if (bAmount.isLessThan('0.01')) {
-        Toast.message('最小提币金额为0.01！')
-        return
-      }
+    const minAmount = this.coinsIdDic[currCoin].minAmount
+    const minAmountMsg = `最小提币金额为${minAmount}`
+    if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
+      Toast.message('提现金额已超过当日限额！')
+      return
     }
 
-    if (currCoin === 'ETC') {
-      if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
-        Toast.message('提现金额已超过当日限额！')
-        return
-      }
-
-      if (bAmount.isLessThan('0.015')) {
-        Toast.message('最小提币金额为0.015！')
-        return
-      }
+    if (bAmount.lt(minAmount)) {
+      Toast.message(minAmountMsg)
+      return
     }
+
     this.showVerificationCode()
   }
 
@@ -398,7 +415,7 @@ class WithDraw extends Component {
     }, 2000)
   }
 
-  segmentValueChanged= (e) => {
+  segmentValueChanged = (e) => {
     this.props.dispatch(updateAuthCodeType(e.title))
     const { dispatch, formState } = this.props
     if (e.title === '谷歌验证码') {
@@ -730,7 +747,7 @@ class WithDraw extends Component {
           <Text style={styles.balanceTip}>可用</Text>
           <Text style={styles.balance}>{balanceString}</Text>
           {
-            (['ETC', 'BTC', 'ETH'].includes(currCoin)) &&
+            (this.canWithdrawCoins.includes(currCoin)) &&
             <View>
               {this.renderFormWithdrawAmount()}
               {this.renderFormFeeOrBalanceReceived()}
