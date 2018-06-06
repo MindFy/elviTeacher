@@ -255,8 +255,16 @@ class WithDraw extends Component {
   tapCoinListCell = (ele) => {
     const {
       dispatch,
+      formState,
     } = this.props
 
+
+    dispatch(updateForm({
+      withdrawAmount: '',
+      withdrawAddress: '',
+      verificationCode: '',
+      googleCode: '',
+    }))
     dispatch(coinSelected(ele))
     dispatch(requestBalance({
       token_ids: [this.coinsIdDic[ele].id],
