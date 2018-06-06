@@ -28,11 +28,14 @@ import {
   withdrawClear,
   requestWithdrawClearError,
   requestWithdrawAddress,
+  updateAuthCodeType,
+  check2GoogleAuthSetError,
+  check2GoogleAuth,
 } from '../../actions/withdraw'
 import {
   getVerificateCode,
 } from '../../actions/user'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
+import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
@@ -131,6 +134,8 @@ class WithDraw extends Component {
       4000102: '一分钟内不能重复发送验证码',
       4000104: '手机号码已注册',
     }
+
+    this.codeTitles = ['短信验证码', '谷歌验证码']
   }
 
   componentDidMount() {
@@ -141,7 +146,6 @@ class WithDraw extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { dispatch, loading } = this.props
-
     if (nextProps.loading !== loading && nextProps.withdrawSuccess) {
       Toast.success('提现成功')
     }
@@ -155,6 +159,28 @@ class WithDraw extends Component {
       }
       dispatch(requestWithdrawClearError())
     }
+
+    if (!nextProps.googleCodeCheckLoading && this.props.googleCodeCheckLoading) {
+      const { currCoin, formState } = this.props
+      const tokenId = this.coinsIdDic[currCoin].id
+      Overlay.hide(this.overlayViewKeyID)
+      dispatch(requestWithdraw({
+        token_id: tokenId,
+        amount: formState.withdrawAmount,
+        toaddr: formState.withdrawAddress,
+        googleCode: formState.googleCode,
+      }))
+    }
+
+    if (nextProps.googleCodeCheckError) {
+      const errorCode = nextProps.googleCodeCheckError.code
+      if (errorCode === 4000171) {
+        Toast.fail('请先绑定谷歌验证码!')
+      } else {
+        Toast.fail('谷歌验证码错误!')
+      }
+      dispatch(check2GoogleAuthSetError(null))
+    }
   }
 
   componentWillUnmount() {
@@ -162,13 +188,19 @@ class WithDraw extends Component {
     dispatch(withdrawClear())
   }
 
-  onChangeVerificationCode = (verificationCode) => {
-    const { dispatch, formState } = this.props
-
-    dispatch(updateForm({
-      ...formState,
-      verificationCode,
-    }))
+  onChangeAuthCode = (e, code) => {
+    const { dispatch, formState, authCodeType } = this.props
+    if (authCodeType === '短信验证码') {
+      dispatch(updateForm({
+        ...formState,
+        verificationCode: code,
+      }))
+    } else {
+      dispatch(updateForm({
+        ...formState,
+        googleCode: code,
+      }))
+    }
   }
 
   onChangeWithdrawAmount = (withdrawAmount) => {
@@ -251,6 +283,7 @@ class WithDraw extends Component {
     ETC: {
       id: 6,
       fee: 0.01,
+      minAmount: 0.5,
     },
   }
 
@@ -297,7 +330,14 @@ class WithDraw extends Component {
   }
 
   confirmPress = () => {
-    const { dispatch, currCoin, formState } = this.props
+    const { dispatch, currCoin, formState, authCodeType } = this.props
+
+    if (authCodeType === '谷歌验证码') {
+      dispatch(check2GoogleAuth({
+        googleCode: formState.googleCode,
+      }))
+      return
+    }
     const tokenId = this.coinsIdDic[currCoin].id
     if (!formState.verificationCode.length) {
       Toast.message('请输入验证码')
@@ -314,6 +354,58 @@ class WithDraw extends Component {
     }))
   }
 
+  alertBindingGoogleCode = () => {
+    const googleCodeAlert = (
+      <Overlay.View
+        style={{
+          justifyContent: 'center',
+        }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <View
+          style={{
+            marginTop: -common.margin127 * 2,
+            borderRadius: common.radius6,
+            height: common.h60,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            width: '50%',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: common.font16,
+              color: common.blackColor,
+              alignSelf: 'center',
+            }}
+          >{'请前去官网完成绑定'}</Text>
+        </View>
+      </Overlay.View>
+    )
+    this.googleCodeAlertId = Overlay.show(googleCodeAlert)
+    setTimeout(() => {
+      Overlay.hide(this.googleCodeAlertId)
+    }, 2000)
+  }
+
+  segmentValueChanged= (e) => {
+    this.props.dispatch(updateAuthCodeType(e.title))
+    const { dispatch, formState } = this.props
+    if (e.title === '谷歌验证码') {
+      dispatch(updateForm({
+        ...formState,
+        verificationCode: '',
+      }))
+    } else {
+      dispatch(updateForm({
+        ...formState,
+        googleCode: '',
+      }))
+    }
+  }
+
   showVerificationCode = () => {
     const { dispatch, user } = this.props
     const overlayView = (
@@ -324,10 +416,12 @@ class WithDraw extends Component {
         modal={false}
         overlayOpacity={0}
       >
-        <TKViewCheckAuthorize
+        <WithdrawAuthorizeCode
+          titles={this.codeTitles}
           mobile={user.mobile}
-          onChangeText={this.onChangeVerificationCode}
-          codePress={(count) => {
+          onChangeText={this.onChangeAuthCode}
+          segmentValueChanged={this.segmentValueChanged}
+          smsCodePress={(count) => {
             this.count = count
             dispatch(getVerificateCode({ mobile: user.mobile, service: 'auth' }))
           }}

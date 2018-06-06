@@ -121,3 +121,24 @@ export function withdrawClear() {
   }
 }
 
+export function updateAuthCodeType(payload) {
+  return {
+    type: 'withdraw/update_auth_code_type',
+    payload,
+  }
+}
+
+export function check2GoogleAuth(payload) {
+  return {
+    type: 'withdraw/check2_google_auth',
+    payload,
+  }
+}
+
+export function check2GoogleAuthSetError(payload) {
+  return {
+    type: 'withdraw/check2_google_auth_set_error',
+    payload,
+  }
+}
+
