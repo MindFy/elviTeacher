@@ -130,6 +130,11 @@ class Otc extends Component {
       navigation,
     } = this.props
 
+    if (!loggedIn) {
+      navigation.navigate('LoginStack')
+      return
+    }
+
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
       Toast.message(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
@@ -140,15 +145,10 @@ class Otc extends Component {
         common.minQuantityLegalDeal}`)
       return
     }
-
-    if (loggedIn) {
-      dispatch(submitRequest({
-        type,
-        quantity,
-      }))
-    } else {
-      navigation.navigate('LoginStack')
-    }
+    dispatch(submitRequest({
+      type,
+      quantity,
+    }))
   }
 
   onQuantityChange(text) {
