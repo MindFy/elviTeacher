@@ -66,6 +66,7 @@ const common = {
     CNY: 'CNY',
     ETH: 'ETH',
     ETC: 'ETC',
+    LTC: 'LTC',
   },
 
   legalDeal: {
@@ -258,6 +259,8 @@ const common = {
     if ((goodsName === common.token.ETH
       && currencyName === common.token.BTC)
       || (goodsName === common.token.ETC
+      && currencyName === common.token.BTC)
+      || (goodsName === common.token.LTC
       && currencyName === common.token.BTC)) {
       // p:6 q:4 a:6
       block(6, 4, 6)
@@ -269,8 +272,10 @@ const common = {
       && currencyName === common.token.BTC) {
       // p:8 q:0 a:8
       block(8, 0, 8)
-    } else if (goodsName === common.token.ETC
-      && currencyName === common.token.TK) {
+    } else if ((goodsName === common.token.ETC
+      && currencyName === common.token.TK)
+      || (goodsName === common.token.LTC
+        && currencyName === common.token.TK)) {
       // p:0 q:4 a:4
       block(0, 4, 4)
       // } else if (
@@ -279,6 +284,8 @@ const common = {
       //   || ((goodsName === common.token.ETC
       //     && currencyName === common.token.CNYT))
       //   || ((goodsName === common.token.ETC
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.LTC
       //     && currencyName === common.token.CNYT))
       //   || ((goodsName === common.token.ETH
       //     && currencyName === common.token.TK))
