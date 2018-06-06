@@ -22,7 +22,6 @@ import { getVerificateCode } from '../../actions/user'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
-import TKSpinner from '../../components/TKSpinner'
 
 const styles = StyleSheet.create({
   container: {
@@ -110,7 +109,11 @@ class AddAddress extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(updateForm({}))
+    dispatch(updateForm({
+      address: '',
+      remark: '',
+      authCode: '',
+    }))
   }
 
   handleChangeAddress = (address) => {
@@ -224,10 +227,6 @@ class AddAddress extends Component {
             theme={'gray'}
           />
         </ScrollView>
-
-        <TKSpinner
-          isVisible={loading}
-        />
       </View>
     )
   }
