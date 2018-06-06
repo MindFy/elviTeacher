@@ -311,7 +311,7 @@ class Deal extends Component {
       })
       if (valuation && valuation.rates) {
         rmb = valuation.rates[currencyName][common.token.CNYT]
-        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(4, 1)
+        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
       }
     }
     return (
