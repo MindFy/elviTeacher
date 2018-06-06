@@ -76,9 +76,10 @@ export default class TKViewCheckAuthorize extends Component {
       codePress,
       confirmPress,
       cancelPress,
+      containerStyle,
     } = this.props
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, containerStyle]}>
         <View style={styles.phoneContainer}>
           <Text style={styles.phoneTip}>手机号</Text>
           <Text style={styles.phone}>{mobile}</Text>
