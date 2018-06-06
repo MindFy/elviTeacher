@@ -21,6 +21,7 @@ import {
   requestValuation,
   requestWithdraw,
   requestWithdrawAddress,
+  requsetCheck2GoogleAuth,
 } from './withdraw'
 import { requestAddressAdd } from './addressAdd'
 import * as home from './home'
@@ -92,6 +93,7 @@ export default function* rootSaga() {
     fork(requestValuation),
     fork(requestWithdraw),
     fork(requestWithdrawAddress),
+    fork(requsetCheck2GoogleAuth),
 
     fork(orderHistoryRequest),
     fork(openOrderRequest),
