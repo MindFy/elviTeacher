@@ -183,7 +183,7 @@ class Otc extends Component {
   renderPrice = () => {
     const { type } = this.props
     const prices = {
-      buy: '1',
+      buy: '1.00',
       sell: '0.99',
     }
     const price = prices[type]
