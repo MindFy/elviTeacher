@@ -153,6 +153,7 @@ class UpdateBank extends Component {
         overlayOpacity={0}
       >
         <TKViewCheckAuthorize
+          containerStyle={{ marginTop: -70 }}
           mobile={user.mobile}
           onChangeText={e => this.onChangeText(e, 'code')}
           codePress={() => {
@@ -292,7 +293,7 @@ class UpdateBank extends Component {
           placeholder={'请输入正确的银行卡号'}
           value={formState.bankNo}
           onChangeText={e => this.onChangeText(e, 'bankNo')}
-          keyboardType={'numbers-and-punctuation'}
+          keyboardType={'numeric'}
           maxLength={common.textInputMaxLenBankNo}
           editable={editable}
         />

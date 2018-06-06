@@ -201,7 +201,7 @@ class Register extends Component {
         dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
       } else if (registerResponse.error.code === 4000104) {
-        Toast.fail('注册用户失败')
+        Toast.fail('请重新获取验证码')
       } else if (registerResponse.error.code === 4000101) {
         Toast.fail('验证码不能为空')
       } else if (registerResponse.error.code === 4000102) {
