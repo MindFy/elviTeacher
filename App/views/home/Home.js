@@ -7,6 +7,7 @@ import {
   StyleSheet,
   RefreshControl,
 } from 'react-native'
+import SplashScreen from 'react-native-splash-screen'
 import {
   common,
 } from '../../constants/common'
@@ -27,7 +28,9 @@ const styles = StyleSheet.create({
 class Home extends Component {
   componentDidMount() {
     const { dispatch } = this.props
-
+    setTimeout(() => {
+      SplashScreen.hide()
+    }, 200)
     dispatch(actions.requestBanners(schemas.findBanners()))
     dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
     dispatch(actions.requestMarket())
