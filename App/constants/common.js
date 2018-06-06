@@ -66,6 +66,7 @@ const common = {
     CNY: 'CNY',
     ETH: 'ETH',
     ETC: 'ETC',
+    LTC: 'LTC',
   },
 
   legalDeal: {
@@ -194,7 +195,7 @@ const common = {
 
   activeOpacity: 0.7,
 
-  regMobile: /^1[3|4|5|7|8][0-9]\d{4,8}$/,
+  regMobile: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
   regMobileMsg: '请输入正确的手机号', // 手机号提示
   regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
   regSpace: /^[^ ]+$/, // 空格正则
@@ -203,10 +204,6 @@ const common = {
   regBankName: /^[\u4e00-\u9fa5]{4}/,
   regBankNo: /[0-9]{16,19}$/,
   regEmail: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
-  toFix2(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3') },
-  toFix4(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d).*$/, '$1$2.$3') },
-  toFix6(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d).*$/, '$1$2.$3') },
-  toFix8(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/, '$1$2.$3') },
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
@@ -262,6 +259,8 @@ const common = {
     if ((goodsName === common.token.ETH
       && currencyName === common.token.BTC)
       || (goodsName === common.token.ETC
+      && currencyName === common.token.BTC)
+      || (goodsName === common.token.LTC
       && currencyName === common.token.BTC)) {
       // p:6 q:4 a:6
       block(6, 4, 6)
@@ -273,8 +272,10 @@ const common = {
       && currencyName === common.token.BTC) {
       // p:8 q:0 a:8
       block(8, 0, 8)
-    } else if (goodsName === common.token.ETC
-      && currencyName === common.token.TK) {
+    } else if ((goodsName === common.token.ETC
+      && currencyName === common.token.TK)
+      || (goodsName === common.token.LTC
+        && currencyName === common.token.TK)) {
       // p:0 q:4 a:4
       block(0, 4, 4)
       // } else if (
@@ -283,6 +284,8 @@ const common = {
       //   || ((goodsName === common.token.ETC
       //     && currencyName === common.token.CNYT))
       //   || ((goodsName === common.token.ETC
+      //     && currencyName === common.token.CNYT))
+      //   || ((goodsName === common.token.LTC
       //     && currencyName === common.token.CNYT))
       //   || ((goodsName === common.token.ETH
       //     && currencyName === common.token.TK))

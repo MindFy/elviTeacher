@@ -16,6 +16,9 @@ const initialState = {
   }, {
     id: 6,
     name: 'ETC',
+  }, {
+    id: 7,
+    name: 'LTC',
   }],
   asset: [],
   amountVisible: undefined,

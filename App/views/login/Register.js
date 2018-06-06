@@ -4,6 +4,7 @@ import {
   View,
   Text,
   ScrollView,
+  StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
@@ -14,11 +15,26 @@ import TKInputItem from '../../components/TKInputItem'
 import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import TKButton from '../../components/TKButton'
 
+const styles = StyleSheet.create({
+  mobileTip: {
+    position: 'absolute',
+    top: common.margin5,
+    left: common.w100,
+    fontSize: common.font12,
+    color: common.redColor,
+  },
+})
+
 class Register extends Component {
   constructor() {
     super()
     this.showRegisterResponse = false
     this.showGetVerificateCodeResponse = false
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.handleGetVerificateCodeRequest(nextProps)
+    this.handleRegisterRequest(nextProps)
   }
 
   componentWillUnmount() {
@@ -145,8 +161,8 @@ class Register extends Component {
     }))
   }
 
-  handleGetVerificateCodeRequest() {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
+  handleGetVerificateCodeRequest(nextProps) {
+    const { getVerificateCodeVisible, getVerificateCodeResponse } = nextProps
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
 
     if (getVerificateCodeVisible) {
@@ -169,8 +185,8 @@ class Register extends Component {
     }
   }
 
-  handleRegisterRequest() {
-    const { registerVisible, registerResponse, navigation } = this.props
+  handleRegisterRequest(nextProps) {
+    const { registerVisible, registerResponse, navigation } = nextProps
     if (!registerVisible && !this.showRegisterResponse) return
 
     if (registerVisible) {
@@ -219,6 +235,22 @@ class Register extends Component {
         maxLength={11}
         onChange={e => this.onChange(e, 'mobile')}
       />
+    )
+  }
+
+  renderAccountTip = () => {
+    const { mobile } = this.props
+    let showTip = false
+    if (!common.regMobile.test(mobile)) {
+      showTip = true
+    }
+    return (
+      <View style={{ height: 40 }}>
+        { showTip ?
+          <Text style={styles.mobileTip}>
+            请输入正确的11位手机号
+          </Text> : null }
+      </View>
     )
   }
 
@@ -360,9 +392,6 @@ class Register extends Component {
   }
 
   render() {
-    this.handleGetVerificateCodeRequest()
-    this.handleRegisterRequest()
-
     const {
       registerVisible,
     } = this.props
@@ -382,7 +411,7 @@ class Register extends Component {
           <View style={{ marginHorizontal: common.margin38, marginTop: common.margin110 }}>
             {this.renderAccount()}
 
-            <View style={{ height: 40 }} />
+            {this.renderAccountTip()}
 
             {this.renderCheckCode()}
 

@@ -1,57 +1,66 @@
 import { common } from './common'
 
-test('11 should be 11', () => {
-  expect(common.toFix2(11)).toBe('11')
+test('mobile reg', () => {
+  const mobile = '11123456789'
+  expect(common.regMobile.test(mobile)).toBe(false)
 })
 
-test('11.100 should be 11.1', () => {
-  expect(common.toFix2(11.100)).toBe('11.1')
+test('mobile reg', () => {
+  const mobile = '12123456789'
+  expect(common.regMobile.test(mobile)).toBe(false)
 })
 
-test('11.1001 should be 11.1001', () => {
-  expect(common.toFix2(11.1001)).toBe('11.10')
+test('mobile reg', () => {
+  const mobile = '13123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('11.1001 should be 11.1001', () => {
-  expect(common.toFix2('/11.1001')).toBe('/11.1001')
+test('mobile reg', () => {
+  const mobile = '14123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('abc should be abc', () => {
-  expect(common.toFix8('abc')).toBe('abc')
+test('mobile reg', () => {
+  const mobile = '15123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('abc.123 should be abc.123', () => {
-  expect(common.toFix2('abc.123')).toBe('abc.123')
+test('mobile reg', () => {
+  const mobile = '16123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('abc.def should be abc.def', () => {
-  expect(common.toFix2('abc.def')).toBe('abc.def')
+test('mobile reg', () => {
+  const mobile = '17123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('abc.123 should be abc.123', () => {
-  expect(common.toFix8('abc.123')).toBe('abc.123')
+test('mobile reg', () => {
+  const mobile = '18123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('11.1122334455 should be 11.11', () => {
-  expect(common.toFix2(11.1122334455)).toBe('11.11')
+test('mobile reg', () => {
+  const mobile = '19123456789'
+  expect(common.regMobile.test(mobile)).toBe(true)
 })
 
-test('11.1122334455 should be 11.1122', () => {
-  expect(common.toFix4(11.1122334455)).toBe('11.1122')
+test('mobile reg', () => {
+  const mobile = '10123456789'
+  expect(common.regMobile.test(mobile)).toBe(false)
 })
 
-test('11.11 should be 11.11', () => {
-  expect(common.toFix4(11.11)).toBe('11.11')
+test('mobile reg', () => {
+  const mobile = '1234'
+  expect(common.regMobile.test(mobile)).toBe(false)
 })
 
-test('11.1122334455 should be 11.112233', () => {
-  expect(common.toFix6(11.1122334455)).toBe('11.112233')
+test('mobile reg', () => {
+  const mobile = 'asdfqwer'
+  expect(common.regMobile.test(mobile)).toBe(false)
 })
 
-test('11.1122334455 should be 11.11223344', () => {
-  expect(common.toFix8(11.1122334455)).toBe('11.11223344')
-})
-
-test('11.112233 should be 11.112233', () => {
-  expect(common.toFix8(11.112233)).toBe('11.112233')
+test('mobile reg', () => {
+  const mobile = '182 6238122'
+  expect(common.regMobile.test(mobile)).toBe(false)
 })
