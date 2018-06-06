@@ -47,6 +47,9 @@ export default function dealstat(state = initialState, action) {
         homeRoseSelected: action.data,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

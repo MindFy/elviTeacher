@@ -143,6 +143,59 @@ class Deal extends Component {
     }
   }
 
+  lastPriceCellAction(rd, type) {
+    const { dispatch, lastPrice, loggedIn, navigation, amountVisible, selectedPair } = this.props
+    if (!loggedIn) {
+      navigation.navigate('LoginStack')
+      return
+    }
+    const index = type === common.buy ? 1 : 0
+    if (this.drawer) {
+      dispatch(exchange.updateCreateOrderIndex(index))
+      const { buy = [], sell = [] } = lastPrice
+      if (index === 0) {
+        const sellQuantity = rd.sum_quantity
+        const availQuantity = amountVisible[selectedPair.goods.name]
+        const nextValue = caculateExchangeFormData({
+          selectedPair,
+          formData: {
+            price: rd.price,
+            quantity: '',
+            amount: '',
+          },
+          actions: {
+            cmd: 'input',
+            type: 'quantity',
+            val: new BigNumber(availQuantity).lte(sellQuantity) ? availQuantity : sellQuantity,
+          },
+          amountVisible,
+          index,
+        })
+        dispatch(exchange.updateForm(nextValue))
+      } else if (index === 1) {
+        const buyQuantity = rd.sum_quantity
+        const availQuantity = amountVisible[selectedPair.currency.name]
+        const nextValue = caculateExchangeFormData({
+          selectedPair,
+          formData: {
+            price: rd.price,
+            quantity: '',
+            amount: '',
+          },
+          actions: {
+            cmd: 'input',
+            type: 'quantity',
+            val: new BigNumber(availQuantity).lte(buyQuantity) ? availQuantity : buyQuantity,
+          },
+          amountVisible,
+          index,
+        })
+        dispatch(exchange.updateForm(nextValue))
+      }
+      this.drawer.showAtIndex(index)
+    }
+  }
+
   resetFormData() {
     const { dispatch } = this.props
     dispatch(exchange.updateForm({
@@ -324,6 +377,7 @@ class Deal extends Component {
         <LastPriceList
           selectedPair={selectedPair}
           dataSource={lastPrice}
+          cellPressAction={(rd, type) => this.lastPriceCellAction(rd, type)}
         />
       )
     }

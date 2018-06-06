@@ -71,6 +71,9 @@ export default function deal(state = initialState, action) {
         buyOrSell: action.buyOrSell,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

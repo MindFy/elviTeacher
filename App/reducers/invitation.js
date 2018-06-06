@@ -24,6 +24,9 @@ export default function invitation(state = initialState, action) {
         ...state,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

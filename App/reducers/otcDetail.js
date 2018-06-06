@@ -182,6 +182,9 @@ export default function otcDetail(state = initialState, action) {
         otcList: payload,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break

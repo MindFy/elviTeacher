@@ -43,6 +43,9 @@ export default function addressAdd(state = initialState, action) {
         error: null,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break

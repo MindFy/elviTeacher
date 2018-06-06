@@ -85,7 +85,7 @@ export default class DealMarket extends PureComponent {
           </Text>
           <Text
             style={[styles.rmb, { color: cpriceColor }]}
-          >{`${rose}%`}</Text>
+          >{`${cpriceColor === common.redColor ? `+${newRose}` : newRose}%`}</Text>
         </View>
 
         <View style={{ flexDirection: 'row' }}>

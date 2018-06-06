@@ -31,6 +31,9 @@ export default function detailDeal(state = initialState, action) {
         delegateCurrent: action.delegateCurrent,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

@@ -226,6 +226,9 @@ export default function exchange(state = initialState, action) {
         depthMapRequesting: false,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break
