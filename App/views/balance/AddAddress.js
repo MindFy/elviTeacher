@@ -202,7 +202,7 @@ class AddAddress extends Component {
   }
 
   render() {
-    const { navigation, formState, loading } = this.props
+    const { navigation, formState } = this.props
 
     return (
       <View

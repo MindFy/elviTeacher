@@ -3,7 +3,7 @@ import { common } from '../constants/common'
 
 function textInputLimit(
   price, quantity, amount, precisionPrice,
-  precisionQuantity, precisionAmount, tag, amountVisible,
+  precisionQuantity, precisionAmount, tag,
 ) {
   if ((tag === 'price' && !price.length) || (tag === 'quantity' && !quantity.length)) {
     return { p: price, q: quantity, a: '' } // 1.输入框清空
@@ -54,7 +54,9 @@ function textInputLimit(
   return { p, q, a }
 }
 
-function textInputUpdate(price, quantity, amount, tag, selectedPair, amountVisible, createOrderIndex) {
+function textInputUpdate(
+  price, quantity, amount, tag, selectedPair, amountVisible, createOrderIndex,
+) {
   let returnVal
   if (selectedPair) {
     common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, a) => {
@@ -188,10 +190,12 @@ export function caculateExchangeFormData({
   }
   if (cmd === 'input') {
     if (type === 'price') {
-      return textInputUpdate(val, quantity, undefined, type, selectedPair, amountVisible, createOrderIndex)
+      return textInputUpdate(
+        val, quantity, undefined, type, selectedPair, amountVisible, createOrderIndex)
     }
     if (type === 'quantity') {
-      return textInputUpdate(price, val, undefined, type, selectedPair, amountVisible, createOrderIndex)
+      return textInputUpdate(
+        price, val, undefined, type, selectedPair, amountVisible, createOrderIndex)
     }
   }
   return undefined
@@ -202,8 +206,10 @@ export function slideAction({ selectedPair, formData, actions, amountVisible, cr
   const { price, quantity } = formData
   let temp = currentVisible.toNumber() * percent
   if (!index) {
-    return textInputUpdate(price, quantity, temp, undefined, selectedPair, amountVisible, createOrderIndex)
+    return textInputUpdate(
+      price, quantity, temp, undefined, selectedPair, amountVisible, createOrderIndex)
   }
   temp = new BigNumber(temp).dp(0, 1)
-  return textInputUpdate(price, temp.toString(), undefined, undefined, selectedPair, amountVisible, createOrderIndex)
+  return textInputUpdate(
+    price, temp.toString(), undefined, undefined, selectedPair, amountVisible, createOrderIndex)
 }

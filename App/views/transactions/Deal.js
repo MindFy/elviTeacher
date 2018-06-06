@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native'
-import { Toast, Menu } from 'teaset'
+import { Toast } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import KLine from './KLineWeb'
@@ -187,19 +187,8 @@ class Deal extends Component {
   }
 
   menuPress() {
-    const { dispatch, market, navigation } = this.props
+    const { navigation } = this.props
     navigation.navigate('Market2')
-    // const items = []
-    // market.forEach((element) => {
-    //   items.push({
-    //     title: `${element.goods.name}/${element.currency.name}`,
-    //     onPress: () => {
-    //       dispatch(exchange.updatePair(element))
-    //       this.loadNecessaryData()
-    //     },
-    //   })
-    // })
-    // Menu.show({ x: common.sw / 2, y: 64 }, items)
   }
 
   tabBarPress(index) {
