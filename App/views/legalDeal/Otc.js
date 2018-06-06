@@ -112,7 +112,7 @@ class Otc extends Component {
         Toast.fail('挂单失败，请重试')
       }
     } else if (type === 'buy') {
-      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!')
+      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!', 5000, 'bottom')
     } else {
       Toast.success('卖出成功')
     }
@@ -241,13 +241,13 @@ class Otc extends Component {
   }
 
   renderSubmit = () => {
-    const { type, formState } = this.props
+    const { type, formState, loggedIn } = this.props
     const { quantity } = formState
     const caption = type === common.buy ? '买入' : '卖出'
     const q = new BigNumber(quantity)
     let disabled = false
     let titleColor = common.btnTextColor
-    if (!quantity.length || q.eq(0)) {
+    if (!quantity.length || q.eq(0) || !loggedIn) {
       disabled = true
     }
     if (disabled) {
