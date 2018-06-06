@@ -360,6 +360,11 @@ class WithDraw extends Component {
       return
     }
 
+    if (!formState.withdrawAddress) {
+      Toast.message('请输入提现地址')
+      return
+    }
+
     this.showVerificationCode()
   }
 
