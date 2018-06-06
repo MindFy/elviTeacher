@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, Image, Alert } from 'react-native'
+import { connect } from 'react-redux'
 import { common } from '../../constants/common'
 import QRScannerView from './scan/QRScannerView'
+import { updateForm } from '../../actions/withdraw'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {
@@ -43,19 +45,18 @@ class ScanBarCode extends Component {
     super(props)
     this.didFindData = false
   }
+
   barcodeReceived(barCode) {
     if (this.didFindData) {
       return
     }
     this.didFindData = true
-    Alert.alert(
-      '扫描结果',
-      barCode.data,
-      [
-        { text: '确定', onPress: () => { } },
-      ],
-      { cancelable: false },
-    )
+    const { dispatch, formState, navigation } = this.props
+    dispatch(updateForm({
+      ...formState,
+      withdrawAddress: barCode.data,
+    }))
+    navigation.goBack()
   }
 
   render() {
@@ -72,4 +73,12 @@ class ScanBarCode extends Component {
   }
 }
 
-export default ScanBarCode
+function mapStateToProps(state) {
+  return {
+    ...state.withdraw,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(ScanBarCode)
