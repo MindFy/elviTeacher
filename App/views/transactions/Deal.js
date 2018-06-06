@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ListView,
 } from 'react-native'
-import { Toast, Menu } from 'teaset'
+import { Toast } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import KLine from './KLineWeb'

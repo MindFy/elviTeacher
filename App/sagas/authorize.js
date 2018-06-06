@@ -28,7 +28,7 @@ export function* authorize(data) {
   }
 }
 
-export function* sync(action) {
+export function* sync() {
   try {
     const response = yield call(api.sync)
 

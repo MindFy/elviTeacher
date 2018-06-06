@@ -3,7 +3,7 @@ import { common } from '../constants/common'
 
 function textInputLimit(
   price, quantity, amount, precisionPrice,
-  precisionQuantity, precisionAmount, tag, amountVisible,
+  precisionQuantity, precisionAmount, tag,
 ) {
   if ((tag === 'price' && !price.length) || (tag === 'quantity' && !quantity.length)) {
     return { p: price, q: quantity, a: '' } // 1.输入框清空
@@ -11,9 +11,6 @@ function textInputLimit(
 
   let p = new BigNumber(price)
   let q = new BigNumber(quantity)
-  if (q.gt(amountVisible)) {
-    q = new BigNumber(amountVisible)
-  }
   let a
   if (amount || amount === 0) {
     q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
@@ -24,6 +21,9 @@ function textInputLimit(
     a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
     return { p, q, a }
   }
+  // if (q.gt(amountVisible)) {
+  //   q = new BigNumber(amountVisible)
+  // }
   if (tag === 'price' && p.isNaN()) return undefined // 2.限制只能输入数字、小数点
   if (tag === 'quantity' && q.isNaN()) return undefined // 3.限制只能输入数字、小数点
   const pArr = price.split('.')
@@ -33,7 +33,7 @@ function textInputLimit(
   if (price.endsWith('.') || pArr.length > 1) {
     a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
     a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
-    return { p: price, q: q.toString(), a }
+    return { p: price, q: quantity, a }
   }
   if (qArr[0].length > common.maxLenDelegate) return undefined // 6.整数长度限制
   if (precisionQuantity === 0) {
@@ -54,7 +54,9 @@ function textInputLimit(
   return { p, q, a }
 }
 
-function textInputUpdate(price, quantity, amount, tag, selectedPair, amountVisible, createOrderIndex) {
+function textInputUpdate(
+  price, quantity, amount, tag, selectedPair, amountVisible, createOrderIndex,
+) {
   let returnVal
   if (selectedPair) {
     common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, a) => {
@@ -108,7 +110,7 @@ export function caculateExchangeFormData({
         return undefined
       }
       const nextFormData = { ...formData }
-      common.precision('BTC', 'TK', (p, q, nextAmount) => {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, nextAmount) => {
         const minusNum = BigNumber(0.1).pow(p)
         let newPrice = BigNumber(price).minus(minusNum)
         if (newPrice.lt(0)) {
@@ -127,7 +129,7 @@ export function caculateExchangeFormData({
         return undefined
       }
       const nextFormData = { ...formData }
-      common.precision('BTC', 'TK', (p, q, nextAmount) => {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, nextAmount) => {
         const minusNum = BigNumber(0.1).pow(q)
         let newQuantity = BigNumber(quantity).minus(minusNum)
         if (newQuantity.lt(0)) {
@@ -150,7 +152,7 @@ export function caculateExchangeFormData({
         return undefined
       }
       const nextFormData = { ...formData }
-      common.precision('BTC', 'TK', (p, q, nextAmount) => {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, nextAmount) => {
         const plusNum = BigNumber(0.1).pow(p)
         let newPrice = BigNumber(price).plus(plusNum)
         if (newPrice.lt(0)) {
@@ -169,7 +171,7 @@ export function caculateExchangeFormData({
         return undefined
       }
       const nextFormData = { ...formData }
-      common.precision('BTC', 'TK', (p, q, nextAmount) => {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, nextAmount) => {
         const plusNum = BigNumber(0.1).pow(q)
         let newQuantity = BigNumber(quantity).plus(plusNum)
         if (newQuantity.lt(0)) {
@@ -188,10 +190,12 @@ export function caculateExchangeFormData({
   }
   if (cmd === 'input') {
     if (type === 'price') {
-      return textInputUpdate(val, quantity, undefined, type, selectedPair, amountVisible, createOrderIndex)
+      return textInputUpdate(
+        val, quantity, undefined, type, selectedPair, amountVisible, createOrderIndex)
     }
     if (type === 'quantity') {
-      return textInputUpdate(price, val, undefined, type, selectedPair, amountVisible, createOrderIndex)
+      return textInputUpdate(
+        price, val, undefined, type, selectedPair, amountVisible, createOrderIndex)
     }
   }
   return undefined
@@ -202,8 +206,10 @@ export function slideAction({ selectedPair, formData, actions, amountVisible, cr
   const { price, quantity } = formData
   let temp = currentVisible.toNumber() * percent
   if (!index) {
-    return textInputUpdate(price, quantity, temp, undefined, selectedPair, amountVisible, createOrderIndex)
+    return textInputUpdate(
+      price, quantity, temp, undefined, selectedPair, amountVisible, createOrderIndex)
   }
   temp = new BigNumber(temp).dp(0, 1)
-  return textInputUpdate(price, temp.toString(), undefined, undefined, selectedPair, amountVisible, createOrderIndex)
+  return textInputUpdate(
+    price, temp.toString(), undefined, undefined, selectedPair, amountVisible, createOrderIndex)
 }
