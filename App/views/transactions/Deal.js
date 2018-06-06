@@ -331,7 +331,8 @@ class Deal extends Component {
 
   renderOrderHistory = () => {
     const { orderHistory, selectedPair } = this.props
-    const data = orderHistory.map((item) => {
+    const nextOrderHistory = (orderHistory || []).slice(0, 5)
+    const data = nextOrderHistory.map((item) => {
       let price
       let quantity
       const direct = item.endDirect

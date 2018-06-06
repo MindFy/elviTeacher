@@ -104,7 +104,7 @@ class LastPriceList extends Component {
       <View style={styles.shelvesList}>
         <ListView
           style={{ width: '50%' }}
-          dataSource={this.dataSource.cloneWithRows(dataSource.buy)}
+          dataSource={this.dataSource.cloneWithRows((dataSource.buy || []).slice(0, 5))}
           renderHeader={() => this.renderHeader(common.buy)}
           renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.buy)}
           enableEmptySections
@@ -112,7 +112,7 @@ class LastPriceList extends Component {
         />
         <ListView
           style={{ width: '50%' }}
-          dataSource={this.dataSource.cloneWithRows(dataSource.sell)}
+          dataSource={this.dataSource.cloneWithRows((dataSource.sell || []).slice(0, 5))}
           renderHeader={() => this.renderHeader(common.sell)}
           renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.sell)}
           enableEmptySections
