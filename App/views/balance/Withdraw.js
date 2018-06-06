@@ -672,9 +672,9 @@ class WithDraw extends Component {
         }}
         placeholder="地址"
         value={formState.withdrawAddress}
-        onChangeText={withdrawAddress => dispatch(updateForm({
+        onChangeText={(withdrawAddress = '') => dispatch(updateForm({
           ...formState,
-          withdrawAddress,
+          withdrawAddress: withdrawAddress.trim(),
         }))}
         extra={() => (
           <View style={styles.extraBtnCover}>
