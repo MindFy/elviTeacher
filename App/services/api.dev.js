@@ -92,6 +92,8 @@ export const getRose = makePostAPI('/1.0/app/dealstat/getRose')
 export const latestDeals = makePostAPI('/1.0/app/deal/latestDeals')
 // Banners
 export const imgHashApi = `${API_ROOT}/1.0/fileProc/`
+// Alleges
+export const createAllege = makePostAPI('/1.0/app/alleges/create')
 
 // Asset
 export const createAddress = makePostAPI('/1.0/app/asset/createAddress')
