@@ -50,12 +50,15 @@ export default class SelectImage extends Component {
   }
 
   render() {
-    const { title, avatarSource } = this.props
+    const { title, avatarSource, onPress } = this.props
     if (avatarSource) {
       return (
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
-          onPress={() => this.showImagePicker()}
+          onPress={() => {
+            onPress()
+            this.showImagePicker()
+          }}
         >
           <Image
             style={{
@@ -84,7 +87,10 @@ export default class SelectImage extends Component {
           borderWidth: 1,
         }}
         activeOpacity={common.activeOpacity}
-        onPress={() => this.showImagePicker()}
+        onPress={() => {
+          onPress()
+          this.showImagePicker()
+        }}
       >
         <Image
           style={{

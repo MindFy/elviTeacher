@@ -273,16 +273,19 @@ class Authentication extends Component {
 
           <SelectImage
             title={'请上传身份证正面照片'}
+            onPress={() => Keyboard.dismiss()}
             imagePickerBlock={response => this.imagePicker(response, 'first')}
             avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
           />
           <SelectImage
             title={'请上传身份证反面照片'}
+            onPress={() => Keyboard.dismiss()}
             imagePickerBlock={response => this.imagePicker(response, 'second')}
             avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
           />
           <SelectImage
             title={'请上传手持身份证照片'}
+            onPress={() => Keyboard.dismiss()}
             imagePickerBlock={response => this.imagePicker(response, 'third')}
             avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
           />
