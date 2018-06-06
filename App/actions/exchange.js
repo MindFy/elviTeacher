@@ -116,6 +116,26 @@ export function requestCancelOrderSetError(payload) {
   }
 }
 
+export function requestValuation() {
+  return {
+    type: 'exchange/requset_valuation',
+  }
+}
+
+export function requestValuationSucceed(payload) {
+  return {
+    type: 'exchange/requset_valuation_succeed',
+    payload,
+  }
+}
+
+export function requestValuationFailed(payload) {
+  return {
+    type: 'exchange/requset_valuation_failed',
+    payload,
+  }
+}
+
 export function requestDepthMap(payload) {
   return {
     type: 'exchange/request_depth_map',

@@ -64,21 +64,20 @@ class Otc extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerRight:
-        (
-          <TouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={params.detailPress}
-          >
-            <Text
-              style={{
-                marginRight: common.margin10,
-                fontSize: common.font16,
-                color: 'white',
-              }}
-            >明细</Text>
-          </TouchableOpacity>
-        ),
+      headerRight: (
+        <TouchableOpacity
+          activeOpacity={common.activeOpacity}
+          onPress={params.detailPress}
+        >
+          <Text
+            style={{
+              marginRight: common.margin10,
+              fontSize: common.font16,
+              color: 'white',
+            }}
+          >明细</Text>
+        </TouchableOpacity>
+      ),
     }
   }
 
@@ -113,7 +112,7 @@ class Otc extends Component {
         Toast.fail('挂单失败，请重试')
       }
     } else if (type === 'buy') {
-      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!')
+      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!', 5000, 'bottom')
     } else {
       Toast.success('卖出成功')
     }
@@ -131,30 +130,41 @@ class Otc extends Component {
       navigation,
     } = this.props
 
+    if (!loggedIn) {
+      navigation.navigate('LoginStack')
+      return
+    }
+
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
       Toast.message(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
       return
     }
-
     if (q.lt(common.minQuantityLegalDeal)) {
       Toast.message(`${type === common.buy ? '买入' : '卖出'}数量最少为${
         common.minQuantityLegalDeal}`)
       return
     }
-
-    if (loggedIn) {
-      dispatch(submitRequest({
-        type,
-        quantity,
-      }))
-    } else {
-      navigation.navigate('LoginStack')
-    }
+    dispatch(submitRequest({
+      type,
+      quantity,
+    }))
   }
 
   onQuantityChange(text) {
     const { dispatch } = this.props
+    const q = new BigNumber(text)
+    if (q.isNaN() && text.length) return // 1.限制只能输入数字、小数点
+    if (!q.isNaN() && q.gt(common.maxQuantityLegalDeal)) {
+      dispatch(updateForm(`${common.maxQuantityLegalDeal}`))
+      return // 2.限制最大输入数量
+    }
+    const qArr = text.split('.')
+    if (qArr.length === 1 && q.eq(0)) {
+      dispatch(updateForm('0'))
+      return // 3.输入0
+    }
+    if (qArr.length > 1 && qArr[1].length > 2) return // 4.小数长度限制
     dispatch(updateForm(text))
   }
 
@@ -183,7 +193,7 @@ class Otc extends Component {
   renderPrice = () => {
     const { type } = this.props
     const prices = {
-      buy: '1',
+      buy: '1.00',
       sell: '0.99',
     }
     const price = prices[type]
@@ -231,15 +241,27 @@ class Otc extends Component {
   }
 
   renderSubmit = () => {
-    const { type } = this.props
+    const { type, formState, loggedIn } = this.props
+    const { quantity } = formState
     const caption = type === common.buy ? '买入' : '卖出'
+    const q = new BigNumber(quantity)
+    let disabled = false
+    let titleColor = common.btnTextColor
+    if (!quantity.length || q.eq(0) || !loggedIn) {
+      disabled = true
+    }
+    if (disabled) {
+      titleColor = common.placeholderColor
+    }
 
     return (
       <TKButton
         style={{ marginTop: common.margin10, marginLeft: 0, marginRight: 0 }}
+        titleStyle={{ color: titleColor }}
         theme="gray"
         caption={caption}
         onPress={() => this.onSubmit()}
+        disabled={disabled}
       />
     )
   }

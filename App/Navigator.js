@@ -31,6 +31,7 @@ import OtcDetail from './views/legalDeal/OtcDetail'
 import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
+import Market2 from './views/transactions/Market2'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -143,6 +144,7 @@ const TabBarStack = StackNavigator({
       header: null,
     },
   },
+  Market2,
   Orders,
   ScanBarCode,
   History,
