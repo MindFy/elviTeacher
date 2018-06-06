@@ -74,8 +74,18 @@ class Login extends PureComponent {
 
   loginPress = () => {
     Keyboard.dismiss()
-
     const { dispatch, formState } = this.props
+
+    // TODO 上线需要清理掉
+    if (process.env.NODE_ENV === 'development'
+      && formState.mobile.length === 0
+    ) {
+      dispatch(actions.login({
+        mobile: '15913913914',
+        password: '123456',
+      }))
+    }
+
     if (!formState.mobile.length) {
       Toast.message('请输入账号')
       return
