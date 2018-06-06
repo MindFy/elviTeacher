@@ -476,8 +476,16 @@ class WithDraw extends Component {
   }
 
   jumpToScanPage() {
-    const { navigation } = this.props
-    navigation.navigate('ScanBarCode')
+    const { navigation, currCoin, dispatch, formState } = this.props
+    navigation.navigate('ScanBarCode', {
+      coin: currCoin,
+      didScan: (val) => {
+        dispatch(updateForm({
+          ...formState,
+          withdrawAddress: val,
+        }))
+      },
+    })
   }
 
   tapAddAddress = () => {
