@@ -350,294 +350,312 @@ class WithDraw extends Component {
     })
   }
 
-   tapAddAddress = () => {
-     const { address = [], currCoin } = this.props
-     const items = []
-     for (let i = 0; i < address.length; i++) {
-       const element = address[i]
-       if (element.token.name === currCoin) {
-         items.push({
-           title: element.withdrawaddr,
-           onPress: () => this.selectAddress(element.withdrawaddr),
-         })
-       }
-     }
-     items.push({
-       title: '+添加新地址',
-       onPress: () => this.addAddressPress(),
-     })
-     const cancelItem = { title: '取消' }
-     ActionSheet.show(items, cancelItem)
-   }
+  tapAddAddress = () => {
+    const { address = [], currCoin } = this.props
+    const items = []
+    for (let i = 0; i < address.length; i++) {
+      const element = address[i]
+      if (element.token.name === currCoin) {
+        items.push({
+          title: element.withdrawaddr,
+          onPress: () => this.selectAddress(element.withdrawaddr),
+        })
+      }
+    }
+    items.push({
+      title: '+添加新地址',
+      onPress: () => this.addAddressPress(),
+    })
+    const cancelItem = { title: '取消' }
+    ActionSheet.show(items, cancelItem)
+  }
 
-   renderCoinSelector() {
-     const { currCoin, listToggled } = this.props
+  jumpToScanPage() {
+    const { navigation } = this.props
+    navigation.navigate('ScanBarCode')
+  }
 
-     return (
-       <TouchableOpacity
-         activeOpacity={common.activeOpacity}
-         onPress={() => this.showForm()}
-       >
-         <View
-           style={styles.coinSelector}
-         >
-           <Text
-             style={{
-               marginLeft: common.margin10,
-               fontSize: common.font14,
-               color: common.textColor,
-               alignSelf: 'center',
-             }}
-           >{currCoin}</Text>
-           <View style={{ alignSelf: 'center' }}>
-             <Image
-               style={listToggled ? {
-                 width: common.h20,
-                 height: common.w10,
-               } : {
-                 marginRight: common.margin10,
-                 height: common.h20,
-                 width: common.w10,
-               }}
-               source={(listToggled ?
-                 require('../../assets/下拉--向下.png') :
-                 require('../../assets/下拉--向右.png'))}
-             />
-           </View>
-         </View>
-       </TouchableOpacity>
-     )
-   }
+  renderCoinSelector() {
+    const { currCoin, listToggled } = this.props
 
-   renderCoinList() {
-     const { listToggled, coinList } = this.props
+    return (
+      <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => this.showForm()}
+      >
+        <View
+          style={styles.coinSelector}
+        >
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              fontSize: common.font14,
+              color: common.textColor,
+              alignSelf: 'center',
+            }}
+          >{currCoin}</Text>
+          <View style={{ alignSelf: 'center' }}>
+            <Image
+              style={listToggled ? {
+                width: common.h20,
+                height: common.w10,
+              } : {
+                marginRight: common.margin10,
+                height: common.h20,
+                width: common.w10,
+              }}
+              source={(listToggled ?
+                require('../../assets/下拉--向下.png') :
+                require('../../assets/下拉--向右.png'))}
+            />
+          </View>
+        </View>
+      </TouchableOpacity>
+    )
+  }
 
-     return !listToggled ? null : coinList.map(ele => (
-       <TouchableOpacity
-         key={ele}
-         activeOpacity={common.activeOpacity}
-         onPress={() => {
-           this.tapCoinListCell(ele)
-         }}
-       >
-         <View
-           style={{
-             marginTop: common.margin5,
-             height: common.h40,
-             backgroundColor: common.navBgColor,
-             flexDirection: 'row',
-             justifyContent: 'space-between',
-           }}
-         >
-           <Text
-             style={{
-               marginLeft: common.margin10,
-               fontSize: common.font14,
-               color: common.textColor,
-               alignSelf: 'center',
-             }}
-           >{ele}</Text>
-         </View>
-       </TouchableOpacity>
-     ))
-   }
+  renderCoinList() {
+    const { listToggled, coinList } = this.props
 
-   renderFormWithdrawAmount = () => {
-     const { formState } = this.props
-     return (
-       <TKInputItem
-         viewStyle={{
-           marginTop: common.margin35,
-           marginLeft: common.margin10,
-           marginRight: common.margin10,
-           height: common.h35,
-         }}
-         inputStyle={{
-           textAlign: 'center',
-         }}
-         placeholder="提现金额"
-         value={formState.withdrawAmount}
-         onChangeText={this.onChangeWithdrawAmount}
-       />
-     )
-   }
+    return !listToggled ? null : coinList.map(ele => (
+      <TouchableOpacity
+        key={ele}
+        activeOpacity={common.activeOpacity}
+        onPress={() => {
+          this.tapCoinListCell(ele)
+        }}
+      >
+        <View
+          style={{
+            marginTop: common.margin5,
+            height: common.h40,
+            backgroundColor: common.navBgColor,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              fontSize: common.font14,
+              color: common.textColor,
+              alignSelf: 'center',
+            }}
+          >{ele}</Text>
+        </View>
+      </TouchableOpacity>
+    ))
+  }
 
-   renderFormFeeOrBalanceReceived = () => {
-     const { fee, currCoin, formState } = this.props
-     let bAalanceReceived = '0'
-     if (formState.withdrawAmount) {
-       const tFee = this.coinsIdDic[currCoin].fee
-       const bAmount = new BigNumber(formState.withdrawAmount)
-       bAalanceReceived = bAmount.minus(tFee).toFixed(8, 1)
-     }
-     return (
-       <View
-         style={{
-           marginTop: common.margin5,
-           flexDirection: 'row',
-           justifyContent: 'space-between',
-         }}
-       >
-         <Text
-           style={{
-             marginLeft: common.margin10,
-             color: common.textColor,
-             fontSize: common.font12,
-             alignSelf: 'center',
-           }}
-         >{`手续费：${fee}${currCoin}`}</Text>
-         <Text
-           style={{
-             marginRight: common.margin10,
-             marginLeft: common.margin10,
-             color: common.textColor,
-             fontSize: common.font12,
-             alignSelf: 'center',
-           }}
-         >{`实际到账：${bAalanceReceived}`}</Text>
-       </View>
-     )
-   }
+  renderFormWithdrawAmount = () => {
+    const { formState } = this.props
+    return (
+      <TKInputItem
+        viewStyle={{
+          marginTop: common.margin35,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          height: common.h35,
+        }}
+        inputStyle={{
+          textAlign: 'center',
+        }}
+        placeholder="提现金额"
+        value={formState.withdrawAmount}
+        onChangeText={this.onChangeWithdrawAmount}
+      />
+    )
+  }
 
-   renderFormWithdrawAddress = () => {
-     const { dispatch, formState } = this.props
+  renderFormFeeOrBalanceReceived = () => {
+    const { fee, currCoin, formState } = this.props
+    let bAalanceReceived = '0'
+    if (formState.withdrawAmount) {
+      const tFee = this.coinsIdDic[currCoin].fee
+      const bAmount = new BigNumber(formState.withdrawAmount)
+      bAalanceReceived = bAmount.minus(tFee).toFixed(8, 1)
+    }
+    return (
+      <View
+        style={{
+          marginTop: common.margin5,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text
+          style={{
+            marginLeft: common.margin10,
+            color: common.textColor,
+            fontSize: common.font12,
+            alignSelf: 'center',
+          }}
+        >{`手续费：${fee}${currCoin}`}</Text>
+        <Text
+          style={{
+            marginRight: common.margin10,
+            marginLeft: common.margin10,
+            color: common.textColor,
+            fontSize: common.font12,
+            alignSelf: 'center',
+          }}
+        >{`实际到账：${bAalanceReceived}`}</Text>
+      </View>
+    )
+  }
 
-     return (
-       <TKInputItem
-         viewStyle={{
-           marginTop: common.margin30,
-           marginLeft: common.margin10,
-           marginRight: common.margin10,
-           height: common.h35,
-         }}
-         inputStyle={{
-           textAlign: 'center',
-         }}
-         placeholder="地址"
-         value={formState.withdrawAddress}
-         onChangeText={withdrawAddress => dispatch(updateForm({
-           ...formState,
-           withdrawAddress,
-         }))}
-         extra={() => (
-           <TouchableOpacity
-             style={{
-               position: 'absolute',
-               right: 0,
-             }}
-             activeOpacity={common.activeOpacity}
-             onPress={() => this.tapAddAddress()}
-           >
-             <Image
-               style={{
-                 width: common.w20,
-                 height: common.w20,
-               }}
-               source={require('../../assets/二维码.png')}
-             />
-           </TouchableOpacity>
-         )}
-       />
-     )
-   }
+  renderFormWithdrawAddress = () => {
+    const { dispatch, formState } = this.props
 
-   renderFormWithdrawBtn = () => (
-     <TKButton
-       style={{ marginTop: common.margin40 }}
-       onPress={() => this.withdrawPress()}
-       theme={'gray'}
-       caption={'提现'}
-     />
-   )
+    return (
+      <TKInputItem
+        viewStyle={{
+          marginTop: common.margin30,
+          marginLeft: common.margin10,
+          marginRight: common.margin10,
+          height: common.h35,
+        }}
+        inputStyle={{
+          textAlign: 'center',
+        }}
+        placeholder="地址"
+        value={formState.withdrawAddress}
+        onChangeText={withdrawAddress => dispatch(updateForm({
+          ...formState,
+          withdrawAddress,
+        }))}
+        extra={() => (
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity
+              style={{
+                marginRight: 5,
+              }}
+              activeOpacity={common.activeOpacity}
+              onPress={() => this.jumpToScanPage()}
+            >
+              <Image
+                style={{
+                  width: common.w20,
+                  height: common.w20,
+                }}
+                source={require('../../assets/二维码.png')}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={common.activeOpacity}
+              onPress={() => this.tapAddAddress()}
+            >
+              <Image
+                style={{
+                  width: common.w20,
+                  height: common.w20,
+                }}
+                source={require('../../assets/二维码.png')}
+              />
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+    )
+  }
 
-   renderFormTip = () => {
-     const { currCoin } = this.props
-     const minAmount = this.coinsIdDic[currCoin].minAmount
-     return (
-       <View>
-         <Text
-           style={{
-             marginTop: common.margin10,
-             marginLeft: common.margin10,
-             marginRight: common.margin10,
-             color: common.textColor,
-             fontSize: common.font12,
-             lineHeight: common.h15,
-           }}
-         >温馨提示:</Text>
-         <Text
-           style={{
-             marginTop: common.margin10,
-             marginLeft: common.margin10,
-             marginRight: common.margin10,
-             color: common.textColor,
-             fontSize: common.font10,
-             lineHeight: common.h15,
-           }}
-         >{`1. 最小提币数量为：${minAmount} ${currCoin}
+  renderFormWithdrawBtn = () => (
+    <TKButton
+      style={{ marginTop: common.margin40 }}
+      onPress={() => this.withdrawPress()}
+      theme={'gray'}
+      caption={'提现'}
+    />
+  )
+
+  renderFormTip = () => {
+    const { currCoin } = this.props
+    const minAmount = this.coinsIdDic[currCoin].minAmount
+    return (
+      <View>
+        <Text
+          style={{
+            marginTop: common.margin10,
+            marginLeft: common.margin10,
+            marginRight: common.margin10,
+            color: common.textColor,
+            fontSize: common.font12,
+            lineHeight: common.h15,
+          }}
+        >温馨提示:</Text>
+        <Text
+          style={{
+            marginTop: common.margin10,
+            marginLeft: common.margin10,
+            marginRight: common.margin10,
+            color: common.textColor,
+            fontSize: common.font10,
+            lineHeight: common.h15,
+          }}
+        >{`1. 最小提币数量为：${minAmount} ${currCoin}
 2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种`}
-         </Text>
-       </View>
-     )
-   }
+        </Text>
+      </View>
+    )
+  }
 
-   renderForm() {
-     const {
-       balance,
-       currCoin,
-       listToggled,
-     } = this.props
+  renderForm() {
+    const {
+      balance,
+      currCoin,
+      listToggled,
+    } = this.props
 
-     const bBalance = new BigNumber(balance)
-     let balanceString = ''
-     if (bBalance.isNaN()) {
-       balanceString = '0'
-     } else {
-       balanceString = bBalance.toFixed(8, 1)
-     }
+    const bBalance = new BigNumber(balance)
+    let balanceString = ''
+    if (bBalance.isNaN()) {
+      balanceString = '0'
+    } else {
+      balanceString = bBalance.toFixed(8, 1)
+    }
 
-     return (currCoin !== '选择币种' && !listToggled) ? (
-       (
-         <View>
-           <Text style={styles.balanceTip}>可用</Text>
-           <Text style={styles.balance}>{balanceString}</Text>
-           {
-             (['ETC', 'BTC', 'ETH'].includes(currCoin)) &&
-             <View>
-               {this.renderFormWithdrawAmount()}
-               {this.renderFormFeeOrBalanceReceived()}
-               {this.renderFormWithdrawAddress()}
-               {this.renderFormWithdrawBtn()}
-               {this.renderFormTip()}
-             </View>
-           }
-         </View>
-       )
-     ) : null
-   }
+    return (currCoin !== '选择币种' && !listToggled) ? (
+      (
+        <View>
+          <Text style={styles.balanceTip}>可用</Text>
+          <Text style={styles.balance}>{balanceString}</Text>
+          {
+            (['ETC', 'BTC', 'ETH'].includes(currCoin)) &&
+            <View>
+              {this.renderFormWithdrawAmount()}
+              {this.renderFormFeeOrBalanceReceived()}
+              {this.renderFormWithdrawAddress()}
+              {this.renderFormWithdrawBtn()}
+              {this.renderFormTip()}
+            </View>
+          }
+        </View>
+      )
+    ) : null
+  }
 
-   render() {
-     const coinSelector = this.renderCoinSelector()
-     const coinList = this.renderCoinList()
-     const form = this.renderForm()
-     return (
-       <KeyboardAvoidingView
-         style={{
-           flex: 1,
-           backgroundColor: common.bgColor,
-         }}
-         behavior="padding"
-       >
-         <ScrollView
-           keyboardShouldPersistTaps="handled"
-         >
-           {coinSelector}
-           {coinList}
-           {form}
-         </ScrollView>
-       </KeyboardAvoidingView>
-     )
-   }
+  render() {
+    const coinSelector = this.renderCoinSelector()
+    const coinList = this.renderCoinList()
+    const form = this.renderForm()
+    return (
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          backgroundColor: common.bgColor,
+        }}
+        behavior="padding"
+      >
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+        >
+          {coinSelector}
+          {coinList}
+          {form}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    )
+  }
 }
 
 function mapStateToProps(store) {
