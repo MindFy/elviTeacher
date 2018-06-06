@@ -128,6 +128,7 @@ class WithDraw extends Component {
       4000416: '提币地址格式错误',
       4000156: '授权验证失败',
       4000606: '提币地址格式错误',
+      4000608: '修改密码后，24小时内禁止提币操作',
     }
     this.verificationCodeErrorDic = {
       4000101: '手机号码或服务类型错误',
@@ -146,8 +147,8 @@ class WithDraw extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, loading } = this.props
-    if (nextProps.loading !== loading && nextProps.withdrawSuccess) {
+    const { dispatch, withdrawLoading } = this.props
+    if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success('提现成功')
     }
 
@@ -174,6 +175,7 @@ class WithDraw extends Component {
     }
 
     if (nextProps.googleCodeCheckError) {
+      Overlay.hide(this.overlayViewKeyID)
       const errorCode = nextProps.googleCodeCheckError.code
       if (errorCode === 4000171) {
         Toast.fail('请先绑定谷歌验证码!')
@@ -328,7 +330,14 @@ class WithDraw extends Component {
       return
     }
 
-    const { formState, currCoin } = this.props
+    const { formState } = this.props
+
+    if (!formState.withdrawAmount) {
+      Toast.message('请输入提现金额')
+      return
+    }
+
+    const { currCoin } = this.props
     const { valuation } = this.props
     const { count, rates } = valuation
     const { quotaCount, withdrawedCount } = count
@@ -341,13 +350,18 @@ class WithDraw extends Component {
 
     const minAmount = this.coinsIdDic[currCoin].minAmount
     const minAmountMsg = `最小提币金额为${minAmount}`
+
     if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
       Toast.message('提现金额已超过当日限额！')
       return
     }
-
     if (bAmount.lt(minAmount)) {
       Toast.message(minAmountMsg)
+      return
+    }
+
+    if (!formState.withdrawAddress) {
+      Toast.message('请输入提现地址')
       return
     }
 
@@ -416,8 +430,9 @@ class WithDraw extends Component {
   }
 
   segmentValueChanged = (e) => {
-    this.props.dispatch(updateAuthCodeType(e.title))
     const { dispatch, formState } = this.props
+    dispatch(updateAuthCodeType(e.title))
+
     if (e.title === '谷歌验证码') {
       dispatch(updateForm({
         ...formState,
@@ -433,6 +448,7 @@ class WithDraw extends Component {
 
   showVerificationCode = () => {
     const { dispatch, user } = this.props
+    dispatch(updateAuthCodeType('短信验证码'))
     const overlayView = (
       <Overlay.View
         style={{
@@ -603,7 +619,8 @@ class WithDraw extends Component {
   }
 
   renderFormFeeOrBalanceReceived = () => {
-    const { fee, currCoin, formState } = this.props
+    const { currCoin, formState } = this.props
+    const fee = this.coinsIdDic[currCoin].fee
     let bAalanceReceived = '0'
     if (formState.withdrawAmount) {
       const tFee = this.coinsIdDic[currCoin].fee

@@ -16,6 +16,9 @@ const initialState = {
   }, {
     id: 6,
     name: 'ETC',
+  }, {
+    id: 7,
+    name: 'LTC',
   }],
   asset: [],
   amountVisible: undefined,
@@ -120,6 +123,9 @@ export default function asset(state = initialState, action) {
         asset: action.data.asset,
         amountVisible: action.data.amountVisible,
       }
+      break
+    case 'notify/clear_reducer':
+      nextState = initialState
       break
     default:
       break

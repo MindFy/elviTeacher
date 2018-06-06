@@ -170,6 +170,9 @@ export default function orders(state = initialState, action) {
         ...initialState,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break

@@ -18,10 +18,12 @@ import {
   requestAddressAdd,
   requestAddressClearError,
 } from '../../actions/addressAdd'
+import { requestWithdrawAddress } from '../../actions/withdraw'
 import { getVerificateCode } from '../../actions/user'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
+import findAddress from '../../schemas/address'
 
 const styles = StyleSheet.create({
   container: {
@@ -110,7 +112,9 @@ class AddAddress extends Component {
     if (this.props.loading && !nextProps.loading) {
       Toast.success('添加地址成功')
       Overlay.hide(this.overlayViewKey)
-      this.props.navigation.goBack()
+      const { navigation, dispatch, user } = this.props
+      dispatch(requestWithdrawAddress(findAddress(user.id)))
+      navigation.goBack()
     }
   }
 
@@ -129,11 +133,12 @@ class AddAddress extends Component {
     4000416: '提币地址格式错误',
   }
 
-  handleChangeAddress = (address) => {
+  handleChangeAddress = (address = '') => {
     const { dispatch, formState } = this.props
+    const newAddress = address.trim()
     dispatch(updateForm({
       ...formState,
-      address,
+      address: newAddress,
     }))
   }
 

@@ -15,6 +15,7 @@ const initialState = {
   authCodeType: '短信验证码',
   valuation: null,
   loading: false,
+  withdrawLoading: false,
   withdrawSuccess: false,
   withdrawError: null,
   error: null,
@@ -109,7 +110,7 @@ export default function withdraw(state = initialState, action) {
     case 'withdraw/request_withdraw':
       nextState = {
         ...state,
-        loading: true,
+        withdrawLoading: true,
         withdrawError: null,
         withdrawSuccess: false,
       }
@@ -123,14 +124,14 @@ export default function withdraw(state = initialState, action) {
     case 'withdraw/request_withdraw_succeed':
       nextState = {
         ...state,
-        loading: false,
+        withdrawLoading: false,
         withdrawSuccess: true,
       }
       break
     case 'withdraw/request_withdraw_failed':
       nextState = {
         ...state,
-        loading: false,
+        withdrawLoading: false,
         withdrawError: payload,
         withdrawSuccess: false,
       }
@@ -162,7 +163,7 @@ export default function withdraw(state = initialState, action) {
         googleCodeCheckLoading: false,
       }
       break
-    case 'withdraw/check2_google_auth_failer':
+    case 'withdraw/check2_google_auth_failed':
       nextState = {
         ...state,
         googleCodeCheckError: payload,
@@ -173,6 +174,9 @@ export default function withdraw(state = initialState, action) {
         ...state,
         googleCodeCheckError: payload,
       }
+      break
+    case 'notify/clear_reducer':
+      nextState = initialState
       break
     default:
       nextState = state

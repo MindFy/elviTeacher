@@ -150,6 +150,9 @@ export default function payment(state = initialState, action) {
         refreshStateWithdraw: action.data.refreshStateWithdraw,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

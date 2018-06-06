@@ -113,9 +113,11 @@ export default class HomeMarket extends Component {
     let rangeColor = null
     let rose = new BigNumber(rd.rose).multipliedBy(100)
     let cprice
+    let roseSymbol = ''
     if (rose.gt(0)) {
       priceColor = common.redColor
       rangeColor = common.redColor
+      roseSymbol = '+'
       dirImageSource = require('../../assets/箭头.png')
     } else if (rose.lt(0)) {
       priceColor = common.greenColor
@@ -169,7 +171,7 @@ export default class HomeMarket extends Component {
         </View>
 
         <Text style={[styles.rose, { color: rangeColor }]}>
-          {`${rose}%`}
+          {`${roseSymbol}${rose}%`}
         </Text>
       </TouchableOpacity>
     )

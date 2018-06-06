@@ -86,6 +86,9 @@ export default function address(state = initialState, action) {
           ? action.findAsset[state.selectedIndex] : state.selectedToken,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

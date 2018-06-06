@@ -549,7 +549,7 @@ class Orders extends Component {
     let dealledOrdealAmount
 
     const { isShowTotalPrice } = this.props
-    if (isShowTotalPrice) {
+    if (!isShowTotalPrice) {
       let averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
       if (averagePrice.isNaN()) {
         averagePrice = 0

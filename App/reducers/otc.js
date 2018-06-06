@@ -53,6 +53,9 @@ export default function otc(state = initialState, action) {
         response: null,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break
