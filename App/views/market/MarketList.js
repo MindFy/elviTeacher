@@ -84,8 +84,10 @@ export default class MarketList extends Component {
     let rose = new BigNumber(rd.rose).multipliedBy(100)
     let quantity
     let cprice
+    let roseSymbol = ''
     if (rose.gt(0)) {
       typeColor = common.redColor
+      roseSymbol = '+'
     } else if (rose.lt(0)) {
       typeColor = common.greenColor
     } else {
@@ -155,7 +157,7 @@ export default class MarketList extends Component {
                 textAlign: 'right',
                 alignSelf: 'center',
               }}
-            >{`${rose}%`}</Text>
+            >{`${roseSymbol}${rose}%`}</Text>
           </View>
 
           <View
