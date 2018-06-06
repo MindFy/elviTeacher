@@ -44,6 +44,13 @@ const styles = StyleSheet.create({
     height: common.h40,
     justifyContent: 'center',
   },
+  tipStyle: {
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    marginTop: common.margin15,
+    fontSize: common.font14,
+    color: common.placeholderColor,
+  },
 })
 
 class Rebates extends Component {
@@ -370,9 +377,10 @@ class Rebates extends Component {
           {tkItem}
 
           {btcItem}
-
+          <Text style={styles.tipStyle}>
+            若需了解更多返利详情，请前往币图官网-超级返利中查看
+          </Text>
           <View style={{ height: 44 }} />
-
           <View
             style={{
               position: 'absolute',

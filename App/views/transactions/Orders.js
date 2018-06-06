@@ -426,9 +426,9 @@ class Orders extends Component {
     const { isShowTotalPrice } = this.props
 
     const rightColor =
-    isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
+      isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
     const leftColor =
-    !isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
+      !isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
 
     return (
       <View style={OHCStyles.headerContainer}>
@@ -479,7 +479,7 @@ class Orders extends Component {
     let cancelBtnTitle = ''
     let cancelDisabled = true
     if ((item.status === common.delegate.status.dealing)
-        || (item.status === common.delegate.status.waiting)) {
+      || (item.status === common.delegate.status.waiting)) {
       cancelBtnTitle = '撤单'
       cancelDisabled = false
     } else if (item.status === common.delegate.status.cancel) {
@@ -579,14 +579,7 @@ class Orders extends Component {
     )
   }
 
-  renderHeader = () => {
-    const { titleSeleted } = this.props
-
-    if (titleSeleted === '当前委托') {
-      return this.renderOpenOrderHeader()
-    }
-    return this.renderOrderHistoryHeader()
-  }
+  renderHeader = () => this.renderOrderHistoryHeader()
 
   renderCell = ({ item, index }) => {
     const { titleSeleted } = this.props
