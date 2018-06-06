@@ -22,7 +22,6 @@ import { getVerificateCode } from '../../actions/user'
 import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
-import TKSpinner from '../../components/TKSpinner'
 
 const styles = StyleSheet.create({
   container: {
@@ -97,12 +96,19 @@ class AddAddress extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.error) {
-      Toast.fail('添加地址错误')
+      Overlay.hide(this.overlayViewKey)
+      const errCode = nextProps.error.code
+      const errMsg = this.errMsgs[errCode]
+      if (errMsg) {
+        Toast.fail(errMsg)
+      } else {
+        Toast.fail('添加地址错误')
+      }
       this.props.dispatch(requestAddressClearError())
     }
 
     if (this.props.loading && !nextProps.loading) {
-      Toast.fail('添加地址成功')
+      Toast.success('添加地址成功')
       Overlay.hide(this.overlayViewKey)
       this.props.navigation.goBack()
     }
@@ -110,7 +116,17 @@ class AddAddress extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(updateForm({}))
+    dispatch(updateForm({
+      address: '',
+      remark: '',
+      authCode: '',
+    }))
+  }
+
+  errMsgs = {
+    4000413: '提币地址长度有误！',
+    4000414: '提币地址已存在！',
+    4000416: '提币地址格式错误',
   }
 
   handleChangeAddress = (address) => {
@@ -224,10 +240,6 @@ class AddAddress extends Component {
             theme={'gray'}
           />
         </ScrollView>
-
-        <TKSpinner
-          isVisible={loading}
-        />
       </View>
     )
   }
