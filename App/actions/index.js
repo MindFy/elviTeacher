@@ -58,6 +58,7 @@ import {
   idCardAuthUpdate,
   isExist,
   logout,
+  clearAllReducer,
   register,
   registerUpdate,
   resetPassword,
@@ -166,5 +167,7 @@ const actions = {
   login,
   loginUpdate,
   clearError,
+
+  clearAllReducer,
 }
 export default actions

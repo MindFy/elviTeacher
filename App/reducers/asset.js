@@ -121,6 +121,9 @@ export default function asset(state = initialState, action) {
         amountVisible: action.data.amountVisible,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

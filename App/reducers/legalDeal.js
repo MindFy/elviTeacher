@@ -136,6 +136,9 @@ export default function legalDeal(state = initialState, action) {
         refreshState: action.data.refreshState,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

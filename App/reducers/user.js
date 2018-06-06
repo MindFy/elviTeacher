@@ -334,6 +334,9 @@ export default function user(state = initialState, action) {
         codeEmail: action.data.codeEmail,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

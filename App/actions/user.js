@@ -80,6 +80,12 @@ export function logout() {
   }
 }
 
+export function clearAllReducer() {
+  return {
+    type: 'notify/clear_reducer',
+  }
+}
+
 export function register(data) {
   return {
     type: constants.REGISTER_REQUEST,

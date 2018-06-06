@@ -72,6 +72,9 @@ export default function updateBank(state = initialState, action) {
         getCodeResult: null,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break
