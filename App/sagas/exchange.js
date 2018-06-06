@@ -12,11 +12,13 @@ export function* requestLastpriceListWorker(action) {
 
   if (response.success) {
     const result = response.result
+    const buy = result.buy.sort((x1, x2) => Number(x2.price) - Number(x1.price))
+    const sell = result.sell.sort((x1, x2) => Number(x1.price) - Number(x2.price))
     yield put({
       type: 'exchange/request_lastprice_list_succeed',
       payload: {
-        buy: result.buy.slice(0, 5),
-        sell: result.sell.slice(0, 5),
+        buy,
+        sell,
       },
     })
   } else {
@@ -54,7 +56,7 @@ export function* requestOrderhistoryListWorker(action) {
   if (response.success) {
     yield put({
       type: 'exchange/request_orderhistory_list_succeed',
-      payload: (response.result || []).slice(0, 5),
+      payload: response.result,
     })
   } else {
     yield put({
@@ -77,6 +79,21 @@ export function* createOrderWorker(action) {
     yield put({
       type: 'exchange/create_order_failed',
       payload: response.error,
+    })
+  }
+}
+
+export function* requestValuationWorker() {
+  const response = yield call(api.getValuation)
+  if (response.success) {
+    yield put({
+      type: 'exchange/requset_valuation_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'exchange/requset_valuation_failed',
+      payload: undefined,
     })
   }
 }
@@ -144,6 +161,10 @@ export function* createOrder() {
 
 export function* requestCancelOrder() {
   yield takeEvery('exchange/request_cancel_order', requestCancelOrderWorker)
+}
+
+export function* requestValuation() {
+  yield takeEvery('exchange/requset_valuation', requestValuationWorker)
 }
 
 export function* requestDepthMap() {

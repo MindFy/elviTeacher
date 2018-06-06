@@ -106,6 +106,7 @@ export default function* rootSaga() {
     fork(exchanges.requestOrderhistoryList),
     fork(exchanges.createOrder),
     fork(exchanges.requestCancelOrder),
+    fork(exchanges.requestValuation),
     fork(exchanges.requestDepthMap),
     fork(requestBalanceList),
     fork(requestBalanceValuation),
