@@ -194,7 +194,7 @@ const common = {
 
   activeOpacity: 0.7,
 
-  regMobile: /^1[3|4|5|7|8][0-9]\d{4,8}$/,
+  regMobile: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
   regMobileMsg: '请输入正确的手机号', // 手机号提示
   regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
   regSpace: /^[^ ]+$/, // 空格正则
