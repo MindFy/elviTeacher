@@ -18,6 +18,8 @@ import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import * as exchange from '../../actions/exchange'
 
+global.Buffer = require('buffer').Buffer
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

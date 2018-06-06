@@ -207,7 +207,6 @@ class OtcDetail extends Component {
   allegeConfirmPress(data) {
     const { dispatch } = this.props
     dispatch(requestAllege(data))
-    this.setState({ showAllegeView: false })
   }
 
   refreshOtcList(data, refreshState) {
@@ -245,6 +244,8 @@ class OtcDetail extends Component {
     4000102: '一分钟内不能重复发送验证码',
     4000104: '手机号码已注册',
     4000156: '授权验证失败',
+    4001480: '订单状态已过期',
+    4001421: '订单状态已过期',
   }
 
   handleRequestGetCode(nextProps) {
@@ -329,10 +330,11 @@ class OtcDetail extends Component {
     const { dispatch, allegeResult, allegeError, otcList } = nextProps
 
     if (allegeResult && allegeResult !== this.props.allegeResult) {
-      Toast.success('申诉成功')
+      Toast.success('投诉成功')
       const nextOtcList = otcList.concat()
       nextOtcList[this.operateIndex].isAllege = 'yes'
       dispatch(updateOtcList(nextOtcList))
+      this.setState({ showAllegeView: false })
     }
     if (allegeError && allegeError !== this.props.allegeError) {
       if (allegeError.message === common.badNet) {
@@ -340,8 +342,9 @@ class OtcDetail extends Component {
       } else {
         const msg = this.errors[allegeError.code]
         if (msg) Toast.fail(msg)
-        else Toast.fail('申诉失败，请稍后重试')
+        else Toast.fail('投诉失败，请稍后重试')
       }
+      this.setState({ showAllegeView: false })
     }
   }
 
@@ -529,11 +532,11 @@ class OtcDetail extends Component {
           onPress={() => this.setState({ showAllegeView: false })}
           inputValue={allegeText}
           onChangeText={e => this.onChangeText(e, 'allege')}
-          placeholder={'请填写投诉理由，不得多于50个字'}
+          placeholder={'请填写投诉事由，50个字之内'}
           cancelPress={() => this.setState({ showAllegeView: false })}
           confirmPress={() => {
-            if (!formState.allegeText) {
-              Toast.message('请输入申诉理由, 不超过50个字')
+            if (!formState.allegeText || formState.allegeText > 50) {
+              Toast.message('请填写投诉事由，50个字之内')
               return
             }
             const data = { legaldeal_id: allegeId, reason: formState.allegeText }
