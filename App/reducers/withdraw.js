@@ -163,7 +163,7 @@ export default function withdraw(state = initialState, action) {
         googleCodeCheckLoading: false,
       }
       break
-    case 'withdraw/check2_google_auth_failer':
+    case 'withdraw/check2_google_auth_failed':
       nextState = {
         ...state,
         googleCodeCheckError: payload,

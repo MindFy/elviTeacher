@@ -175,6 +175,7 @@ class WithDraw extends Component {
     }
 
     if (nextProps.googleCodeCheckError) {
+      Overlay.hide(this.overlayViewKeyID)
       const errorCode = nextProps.googleCodeCheckError.code
       if (errorCode === 4000171) {
         Toast.fail('请先绑定谷歌验证码!')
