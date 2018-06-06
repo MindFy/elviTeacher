@@ -34,10 +34,9 @@ class Depth extends Component {
     return { prices, amountsBuy, amountsSell }
   }
 
-  render() {
+  caculateOptions() {
     const { prices, amountsBuy, amountsSell } = this.processData()
-
-    const option = {
+    return {
       title: {
         show: false,
       },
@@ -294,9 +293,13 @@ class Depth extends Component {
         animation: false,
       }],
     }
+  }
+
+  render() {
+    const opts = this.caculateOptions()
     return (
       <Echarts
-        option={option}
+        option={opts}
         width={common.sw}
         height={common.sw * common.sw / common.sh}
       />
