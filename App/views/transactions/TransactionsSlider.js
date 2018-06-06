@@ -28,7 +28,7 @@ export default class TransactionsSlider extends Component {
           minimumTrackTintColor={'white'}
           thumbImage={require('../../assets/椭圆形.png')}
           onSlidingComplete={(v) => {
-            const percent = Number(common.toFix2(v / 1))
+            const percent = Number(v / 1).toFixed(2)
             onValueChange(percent)
           }}
         />
