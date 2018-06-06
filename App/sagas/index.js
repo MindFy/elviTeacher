@@ -4,7 +4,6 @@ import * as rebates from './rebates'
 import * as payment from './payment'
 import * as legalDeal from './legalDeal'
 import invitationTotalCount from './invitation'
-import * as delegate from './delegate'
 import getRose from './dealstat'
 import * as deal from './deal'
 import * as asset from './asset'
@@ -74,15 +73,6 @@ export default function* rootSaga() {
 
     fork(invitationTotalCount),
 
-    fork(delegate.allCancel),
-    fork(delegate.cancel),
-    fork(delegate.create),
-    fork(delegate.getDepthMap),
-    fork(delegate.getShelves),
-    fork(delegate.findDelegateSelfCurrent),
-    fork(delegate.findDelegateSelfCurrentWithGoodsId),
-    fork(delegate.findDelegateSelfHistory),
-
     fork(getRose),
 
     fork(deal.findListSelf),
@@ -117,6 +107,7 @@ export default function* rootSaga() {
     fork(exchanges.createOrder),
     fork(exchanges.requestCancelOrder),
     fork(exchanges.requestValuation),
+    fork(exchanges.requestDepthMap),
     fork(requestBalanceList),
     fork(requestBalanceValuation),
 

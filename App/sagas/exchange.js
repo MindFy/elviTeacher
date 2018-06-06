@@ -126,6 +126,23 @@ export function* requestCancelOrderWorker(action) {
   }
 }
 
+export function* requestDepthMapWorker(action) {
+  const { payload } = action
+  const response = yield call(api.getDepthMap, payload)
+
+  if (response.success) {
+    yield put({
+      type: 'exchange/request_depth_map_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'exchange/request_depth_map_failed',
+      payload: response.error,
+    })
+  }
+}
+
 export function* requestLastpriceList() {
   yield takeEvery('exchange/request_lastprice_list', requestLastpriceListWorker)
 }
@@ -148,4 +165,8 @@ export function* requestCancelOrder() {
 
 export function* requestValuation() {
   yield takeEvery('exchange/requset_valuation', requestValuationWorker)
+}
+
+export function* requestDepthMap() {
+  yield takeEvery('exchange/request_depth_map', requestDepthMapWorker)
 }

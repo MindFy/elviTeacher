@@ -135,3 +135,10 @@ export function requestValuationFailed(payload) {
     payload,
   }
 }
+
+export function requestDepthMap(payload) {
+  return {
+    type: 'exchange/request_depth_map',
+    payload,
+  }
+}

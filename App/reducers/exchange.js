@@ -207,6 +207,25 @@ export default function exchange(state = initialState, action) {
         valuation: payload,
       }
       break
+    case 'exchange/request_depth_map':
+      nextState = {
+        ...state,
+        depthMapRequesting: true,
+      }
+      break
+    case 'exchange/request_depth_map_succeed':
+      nextState = {
+        ...state,
+        depthMapRequesting: false,
+        depthMap: payload,
+      }
+      break
+    case 'exchange/request_depth_map_failed':
+      nextState = {
+        ...state,
+        depthMapRequesting: false,
+      }
+      break
     default:
       nextState = state
       break
