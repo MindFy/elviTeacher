@@ -115,3 +115,10 @@ export function requestCancelOrderSetError(payload) {
     payload,
   }
 }
+
+export function requestDepthMap(payload) {
+  return {
+    type: 'exchange/request_depth_map',
+    payload,
+  }
+}

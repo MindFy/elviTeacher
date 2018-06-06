@@ -1,33 +1,30 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import Echarts from 'native-echarts'
 import { common } from '../../constants/common'
 
-class Depth extends Component {
-  componentDidMount() { }
-
+export default class Depth extends Component {
   processData() {
-    const { depthMap } = this.props
+    const { data } = this.props
     const prices = [] // 存放坐标
     const amountsBuy = [] // 存放买入
     const amountsSell = [] // 存放卖出
-    if (!depthMap) {
+    if (!data) {
       return { prices, amountsBuy, amountsSell }
     }
 
-    for (let i = 0; i < depthMap.buy.length; i++) {
-      prices.push(depthMap.buy[i].price)
-      amountsBuy.push(depthMap.buy[i].totalamount)
+    for (let i = 0; i < data.buy.length; i++) {
+      prices.push(data.buy[i].price)
+      amountsBuy.push(data.buy[i].totalamount)
       amountsSell.unshift('-')
     }
 
-    prices.push(depthMap.lastprice)
+    prices.push(data.lastprice)
     amountsBuy.push(0)
     amountsSell.push(0)
 
-    for (let i = 0; i < depthMap.sell.length; i++) {
-      prices.push(depthMap.sell[i].price)
-      amountsSell.push(depthMap.sell[i].totalamount)
+    for (let i = 0; i < data.sell.length; i++) {
+      prices.push(data.sell[i].price)
+      amountsSell.push(data.sell[i].totalamount)
       amountsBuy.push('-')
     }
 
@@ -124,7 +121,6 @@ class Depth extends Component {
           scale: true,
           minInterval: 1,
           maxInterval: 3600 * 24 * 1000,
-          // interval: 254,
           silent: false,
           axisLine: {
             show: true,
@@ -227,8 +223,6 @@ class Depth extends Component {
         type: 'line',
         name: '买入',
         coordinateSystem: 'cartesian2d',
-        hoverAnimation: true,
-        legendHoverLink: true,
         cursor: 'pointer',
         connectNulls: true,
         clipOverflow: true,
@@ -239,6 +233,7 @@ class Depth extends Component {
           },
         },
         areaStyle: {
+          
           normal: {
             color: {
               type: 'linear',
@@ -257,14 +252,11 @@ class Depth extends Component {
             origin: 'auto',
           },
         },
-        smooth: true,
         data: amountsBuy,
         animation: false,
       }, {
         name: '卖出',
         type: 'line',
-        smooth: true,
-
         lineStyle: {
           normal: {
             color: common.greenColor,
@@ -306,13 +298,3 @@ class Depth extends Component {
     )
   }
 }
-
-function mapStateToProps(store) {
-  return {
-    depthMap: store.delegate.depthMap,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(Depth)
