@@ -21,21 +21,6 @@ import {
 import {
   marketListUpdate,
 } from './dealstat'
-import {
-  allCancel,
-  cancel,
-  create,
-  getDepthMap,
-  getShelves,
-  wsGetShelvesUpdate,
-  findDelegateSelfCurrent,
-  findDelegateSelfCurrentWithGoodsId,
-  wsDelegatesCurrentUpdate,
-  findDelegateSelfHistory,
-  currentOrHistoryUpdate,
-  textInputDelegateUpdate,
-  skipDelegateUpdate,
-} from './delegate'
 import invitationTotalCount from './invitation'
 import {
   legalDealCancel,
@@ -124,20 +109,6 @@ const actions = {
   homeRoseSelectedUpdate,
 
   marketListUpdate,
-
-  allCancel,
-  cancel,
-  create,
-  getDepthMap,
-  getShelves,
-  wsGetShelvesUpdate,
-  findDelegateSelfCurrent,
-  findDelegateSelfCurrentWithGoodsId,
-  wsDelegatesCurrentUpdate,
-  findDelegateSelfHistory,
-  currentOrHistoryUpdate,
-  textInputDelegateUpdate,
-  skipDelegateUpdate,
 
   invitationTotalCount,
 
