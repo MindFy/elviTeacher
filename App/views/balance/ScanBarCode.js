@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
+import WAValidator from 'wallet-address-validator'
 import { TouchableOpacity, Image, Alert } from 'react-native'
-import { connect } from 'react-redux'
 import { common } from '../../constants/common'
 import QRScannerView from './scan/QRScannerView'
-import { updateForm } from '../../actions/withdraw'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {
@@ -51,11 +50,28 @@ class ScanBarCode extends Component {
       return
     }
     this.didFindData = true
-    const { dispatch, formState, navigation } = this.props
-    dispatch(updateForm({
-      ...formState,
-      withdrawAddress: barCode.data,
-    }))
+    const { navigation } = this.props
+    const { coin, didScan } = navigation.state.params
+    const data = barCode.data
+    const disMatch = !WAValidator.validate(data, coin) &&
+    !WAValidator.validate(data, coin, 'testnet')
+    if (disMatch) {
+      Alert.alert(
+        '提示',
+        `请填写正确的${coin}提币地址！`,
+        [
+          {
+            text: '确定',
+            onPress: () => {
+              navigation.goBack()
+            },
+          },
+        ],
+      )
+      return
+    } else if (didScan) {
+      didScan(data)
+    }
     navigation.goBack()
   }
 
@@ -73,12 +89,4 @@ class ScanBarCode extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    ...state.withdraw,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(ScanBarCode)
+export default ScanBarCode
