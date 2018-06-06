@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class MarketList extends Component {
   constructor(props) {
@@ -98,66 +99,74 @@ export default class MarketList extends Component {
 
     return (
       <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginHorizontal: common.w10,
+        <NextTouchableOpacity
+          onPress={() => {
+            if (this.props.onClickMarketItem) {
+              this.props.onClickMarketItem(rd, currencyName)
+            }
           }}
         >
-          <Text
+          <View
             style={{
-              flex: 1,
-              paddingTop: common.margin5,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.textColor,
-              textAlign: 'left',
-              alignSelf: 'center',
+              flexDirection: 'row',
+              marginHorizontal: common.w10,
             }}
-          >{rd.name}</Text>
-          <Text
-            style={{
-              flex: 3,
-              paddingTop: common.margin5,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.textColor,
-              textAlign: 'right',
-              alignSelf: 'center',
-            }}
-          >{quantity}</Text>
-          <Text
-            style={{
-              flex: 3,
-              paddingTop: common.margin5,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: typeColor,
-              textAlign: 'right',
-              alignSelf: 'center',
-            }}
-          >{cprice}</Text>
-          <Text
-            style={{
-              flex: 3,
-              paddingTop: common.margin5,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: typeColor,
-              textAlign: 'right',
-              alignSelf: 'center',
-            }}
-          >{`${rose}%`}</Text>
-        </View>
+          >
+            <Text
+              style={{
+                flex: 1,
+                paddingTop: common.margin5,
+                paddingBottom: common.margin5,
+                fontSize: common.font14,
+                color: common.textColor,
+                textAlign: 'left',
+                alignSelf: 'center',
+              }}
+            >{rd.name}</Text>
+            <Text
+              style={{
+                flex: 3,
+                paddingTop: common.margin5,
+                paddingBottom: common.margin5,
+                fontSize: common.font14,
+                color: common.textColor,
+                textAlign: 'right',
+                alignSelf: 'center',
+              }}
+            >{quantity}</Text>
+            <Text
+              style={{
+                flex: 3,
+                paddingTop: common.margin5,
+                paddingBottom: common.margin5,
+                fontSize: common.font14,
+                color: typeColor,
+                textAlign: 'right',
+                alignSelf: 'center',
+              }}
+            >{cprice}</Text>
+            <Text
+              style={{
+                flex: 3,
+                paddingTop: common.margin5,
+                paddingBottom: common.margin5,
+                fontSize: common.font14,
+                color: typeColor,
+                textAlign: 'right',
+                alignSelf: 'center',
+              }}
+            >{`${rose}%`}</Text>
+          </View>
 
-        <View
-          style={{
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            height: 0.5,
-            backgroundColor: common.placeholderColor,
-          }}
-        />
+          <View
+            style={{
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              height: 0.5,
+              backgroundColor: common.placeholderColor,
+            }}
+          />
+        </NextTouchableOpacity>
       </View>
     )
   }

@@ -348,7 +348,7 @@ class OtcDetail extends Component {
   handleRequestOtcList(nextProps) {
     const { dispatch, otcList } = nextProps
     const { refreshState, skip } = this.state
-    if (otcList.length && refreshState === RefreshState.HeaderRefreshing) {
+    if (refreshState === RefreshState.HeaderRefreshing) {
       this.setState({
         refreshState: RefreshState.Idle,
       })
@@ -550,9 +550,8 @@ class OtcDetail extends Component {
     const { refreshState, skip } = this.state
 
     return (
-      <View>
+      <View style={{ flex: 1, backgroundColor: common.blackColor }}>
         <RefreshListView
-          style={{ backgroundColor: common.blackColor }}
           data={otcList}
           renderItem={({ item, index }) => this.renderRow(item, index)}
           keyExtractor={this.keyExtractor}

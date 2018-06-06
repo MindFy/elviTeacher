@@ -15,12 +15,12 @@ export function* submitRequestWorker(action) {
   if (response.success) {
     yield put({
       type: 'otc/submit_request_succeed',
-      payload: response.result,
+      payload: response,
     })
   } else {
     yield put({
       type: 'otc/submit_request_failed',
-      payload: response.error,
+      payload: response,
     })
   }
 }

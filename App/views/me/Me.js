@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   View,
   ScrollView,
+  Alert,
 } from 'react-native'
 import {
   common,
@@ -42,7 +43,15 @@ class Me extends Component {
 
   logoutPress() {
     const { dispatch } = this.props
-    dispatch(actions.logout())
+    Alert.alert(
+      '真的要退出吗？',
+      '',
+      [
+        { text: '点错了', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        { text: '是的', onPress: () => dispatch(actions.logout()) },
+      ],
+      { cancelable: false },
+    )
   }
 
   maskPhone(phone) {
