@@ -42,6 +42,8 @@ const initialState = {
   },
   cancelOrderLoading: false,
   cancelOrderError: null,
+  valuationRequesting: false,
+  valuation: undefined,
 }
 
 export default function exchange(state = initialState, action) {
@@ -183,6 +185,26 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         cancelOrderError: payload,
+      }
+      break
+    case 'exchange/request_valuation':
+      nextState = {
+        ...state,
+        valuationRequesting: true,
+      }
+      break
+    case 'exchange/requset_valuation_succeed':
+      nextState = {
+        ...state,
+        valuationRequesting: false,
+        valuation: payload,
+      }
+      break
+    case 'exchange/requset_valuation_failed':
+      nextState = {
+        ...state,
+        valuationRequesting: false,
+        valuation: payload,
       }
       break
     default:

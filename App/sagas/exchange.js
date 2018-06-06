@@ -11,9 +11,15 @@ export function* requestLastpriceListWorker(action) {
   const response = yield call(api.getShelves, payload)
 
   if (response.success) {
+    const result = response.result
+    const buy = result.buy.sort((x1, x2) => Number(x2.price) - Number(x1.price))
+    const sell = result.sell.sort((x1, x2) => Number(x1.price) - Number(x2.price))
     yield put({
       type: 'exchange/request_lastprice_list_succeed',
-      payload: response.result,
+      payload: {
+        buy,
+        sell,
+      },
     })
   } else {
     yield put({
@@ -77,6 +83,21 @@ export function* createOrderWorker(action) {
   }
 }
 
+export function* requestValuationWorker() {
+  const response = yield call(api.getValuation)
+  if (response.success) {
+    yield put({
+      type: 'exchange/requset_valuation_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'exchange/requset_valuation_failed',
+      payload: undefined,
+    })
+  }
+}
+
 export function* requestCancelOrderWorker(action) {
   const { payload } = action
   const response = yield call(api.cancel, payload)
@@ -123,4 +144,8 @@ export function* createOrder() {
 
 export function* requestCancelOrder() {
   yield takeEvery('exchange/request_cancel_order', requestCancelOrderWorker)
+}
+
+export function* requestValuation() {
+  yield takeEvery('exchange/requset_valuation', requestValuationWorker)
 }

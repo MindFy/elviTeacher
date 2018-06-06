@@ -2,7 +2,8 @@ import { BigNumber } from 'bignumber.js'
 import { common } from '../constants/common'
 
 function textInputLimit(
-  price, quantity, amount, precisionPrice, precisionQuantity, precisionAmount, tag,
+  price, quantity, amount, precisionPrice,
+  precisionQuantity, precisionAmount, tag, amountVisible,
 ) {
   if ((tag === 'price' && !price.length) || (tag === 'quantity' && !quantity.length)) {
     return { p: price, q: quantity, a: '' } // 1.输入框清空
@@ -10,6 +11,9 @@ function textInputLimit(
 
   let p = new BigNumber(price)
   let q = new BigNumber(quantity)
+  if (q.gt(amountVisible)) {
+    q = new BigNumber(amountVisible)
+  }
   let a
   if (amount || amount === 0) {
     q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
@@ -20,7 +24,6 @@ function textInputLimit(
     a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
     return { p, q, a }
   }
-
   if (tag === 'price' && p.isNaN()) return undefined // 2.限制只能输入数字、小数点
   if (tag === 'quantity' && q.isNaN()) return undefined // 3.限制只能输入数字、小数点
   const pArr = price.split('.')
@@ -30,7 +33,7 @@ function textInputLimit(
   if (price.endsWith('.') || pArr.length > 1) {
     a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
     a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
-    return { p: price, q: quantity, a }
+    return { p: price, q: q.toString(), a }
   }
   if (qArr[0].length > common.maxLenDelegate) return undefined // 6.整数长度限制
   if (precisionQuantity === 0) {
@@ -51,11 +54,17 @@ function textInputLimit(
   return { p, q, a }
 }
 
-function textInputUpdate(price, quantity, amount, tag, selectedPair) {
+function textInputUpdate(price, quantity, amount, tag, selectedPair, amountVisible, createOrderIndex) {
   let returnVal
   if (selectedPair) {
     common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, a) => {
-      const temp = textInputLimit(price, quantity, amount, p, q, a, tag)
+      let availble = null
+      if (createOrderIndex === 0) {
+        availble = amountVisible[selectedPair.currency.name]
+      } else {
+        availble = amountVisible[selectedPair.goods.name]
+      }
+      const temp = textInputLimit(price, quantity, amount, p, q, a, tag, availble)
       if (temp) {
         returnVal = {
           price: temp.p,
@@ -65,7 +74,13 @@ function textInputUpdate(price, quantity, amount, tag, selectedPair) {
       }
     })
   } else {
-    const temp = textInputLimit(price, quantity, amount, 2, 4, 6, tag)
+    let availble = null
+    if (createOrderIndex === 0) {
+      availble = amountVisible[selectedPair.currency.name]
+    } else {
+      availble = amountVisible[selectedPair.goods.name]
+    }
+    const temp = textInputLimit(price, quantity, amount, 2, 4, 6, tag, availble)
     if (temp) {
       returnVal = {
         price: temp.p,
@@ -82,6 +97,8 @@ export function caculateExchangeFormData({
   selectedPair,
   formData,
   actions,
+  amountVisible,
+  createOrderIndex,
 }) {
   const { price, quantity } = formData
   const { cmd, type, val } = actions
@@ -171,22 +188,22 @@ export function caculateExchangeFormData({
   }
   if (cmd === 'input') {
     if (type === 'price') {
-      return textInputUpdate(val, quantity, undefined, type, selectedPair)
+      return textInputUpdate(val, quantity, undefined, type, selectedPair, amountVisible, createOrderIndex)
     }
     if (type === 'quantity') {
-      return textInputUpdate(price, val, undefined, type, selectedPair)
+      return textInputUpdate(price, val, undefined, type, selectedPair, amountVisible, createOrderIndex)
     }
   }
   return undefined
 }
 
-export function slideAction({ selectedPair, formData, actions }) {
+export function slideAction({ selectedPair, formData, actions, amountVisible, createOrderIndex }) {
   const { currentVisible, percent, index } = actions
   const { price, quantity } = formData
   let temp = currentVisible.toNumber() * percent
   if (!index) {
-    return textInputUpdate(price, quantity, temp, undefined, selectedPair)
+    return textInputUpdate(price, quantity, temp, undefined, selectedPair, amountVisible, createOrderIndex)
   }
   temp = new BigNumber(temp).dp(0, 1)
-  return textInputUpdate(price, temp.toString(), undefined, undefined, selectedPair)
+  return textInputUpdate(price, temp.toString(), undefined, undefined, selectedPair, amountVisible, createOrderIndex)
 }

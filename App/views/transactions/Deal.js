@@ -25,6 +25,7 @@ import findOpenOrders from '../../schemas/exchange'
 import LastPriceList from './component/LastPriceList'
 import OpenOrders from './component/OpenOrders'
 import { caculateExchangeFormData, slideAction } from '../../utils/caculateExchangeFormData'
+import findAssetList from '../../schemas/asset'
 
 const styles = StyleSheet.create({
   container: {
@@ -54,8 +55,8 @@ class Deal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch } = this.props
-    const { createResponse, createOrderIndex } = nextProps
+    const { dispatch, createOrderIndex } = this.props
+    const { createResponse, loggedInResult } = nextProps
 
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
       Toast.success('撤单成功')
@@ -69,8 +70,9 @@ class Deal extends Component {
     if (createResponse.id) {
       Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}成功`)
       this.loadNecessaryData()
+      dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
     } else {
-      Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
+      Toast.fail(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
     }
     dispatch(exchange.clearResponse())
   }
@@ -87,6 +89,7 @@ class Deal extends Component {
       goods_id: goods.id,
       currency_id: currency.id,
     }
+    dispatch(exchange.requestValuation())
     dispatch(exchange.requestLastpriceList(params))
     dispatch(exchange.requestOrderhistoryList(params))
   }
@@ -124,8 +127,15 @@ class Deal extends Component {
     }
   }
 
-  changeAction(selectedPair, formData, value) {
-    const nextValue = caculateExchangeFormData({ selectedPair, formData, actions: value })
+  changeAction(selectedPair, formData, value, amountVisible) {
+    const { createOrderIndex } = this.props
+    const nextValue = caculateExchangeFormData({
+      selectedPair,
+      formData,
+      actions: value,
+      amountVisible,
+      createOrderIndex,
+    })
     if (nextValue) {
       const { dispatch } = this.props
       dispatch(exchange.updateForm(nextValue))
@@ -160,8 +170,15 @@ class Deal extends Component {
     }
   }
 
-  slideAction(selectedPair, formData, value) {
-    const nextValue = slideAction({ selectedPair, formData, actions: value })
+  slideAction(selectedPair, formData, value, amountVisible) {
+    const { createOrderIndex } = this.props
+    const nextValue = slideAction({
+      selectedPair,
+      formData,
+      actions: value,
+      amountVisible,
+      createOrderIndex,
+    })
     if (nextValue) {
       const { dispatch } = this.props
       dispatch(exchange.updateForm(nextValue))
@@ -169,28 +186,45 @@ class Deal extends Component {
   }
 
   menuPress() {
-    const { dispatch, market } = this.props
-    const items = []
-    market.forEach((element) => {
-      items.push({
-        title: `${element.goods.name}/${element.currency.name}`,
-        onPress: () => {
-          dispatch(exchange.updatePair(element))
-          this.loadNecessaryData()
-        },
-      })
-    })
-    Menu.show({ x: common.sw / 2, y: 64 }, items)
+    const { dispatch, market, navigation } = this.props
+    navigation.navigate('Market2')
+    // const items = []
+    // market.forEach((element) => {
+    //   items.push({
+    //     title: `${element.goods.name}/${element.currency.name}`,
+    //     onPress: () => {
+    //       dispatch(exchange.updatePair(element))
+    //       this.loadNecessaryData()
+    //     },
+    //   })
+    // })
+    // Menu.show({ x: common.sw / 2, y: 64 }, items)
   }
 
   tabBarPress(index) {
-    const { loggedIn, navigation, dispatch } = this.props
+    const { loggedIn, navigation, dispatch, formData, lastPrice } = this.props
     if (!loggedIn) {
       navigation.navigate('LoginStack')
       return
     }
     if (this.drawer) {
       dispatch(exchange.updateCreateOrderIndex(index))
+      const { buy = [], sell = [] } = lastPrice
+      if (index === 0) {
+        if (sell.length) {
+          dispatch(exchange.updateForm({
+            ...formData,
+            price: sell[0].price,
+          }))
+        }
+      } else if (index === 1) {
+        if (buy.length) {
+          dispatch(exchange.updateForm({
+            ...formData,
+            price: buy[0].price,
+          }))
+        }
+      }
       this.drawer.showAtIndex(index)
     }
   }
@@ -377,8 +411,8 @@ class Deal extends Component {
           formData={formData}
           amountVisible={amountVisible}
           selectedPair={selectedPair}
-          changeAction={value => this.changeAction(selectedPair, formData, value)}
-          slideAction={value => this.slideAction(selectedPair, formData, value)}
+          changeAction={value => this.changeAction(selectedPair, formData, value, amountVisible)}
+          slideAction={value => this.slideAction(selectedPair, formData, value, amountVisible)}
           buttonAction={idx => this.tapBuySellBtn(idx)}
           unmountAction={() => this.resetFormData()}
         />
@@ -395,14 +429,16 @@ function mapStateToProps(state) {
     lastPrice: state.exchange.lastPrice,
     openOrders: state.exchange.openOrders,
     formData: state.exchange.formData,
+    createOrderIndex: state.exchange.createOrderIndex,
     createResponse: state.exchange.createResponse,
     createOrder_index: state.exchange.createOrder_index,
+    valuation: state.exchange.valuation,
+
     amountVisible: state.asset.amountVisible,
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,
     market: state.home.market,
 
-    valuation: state.asset.valuation,
     kLineOrDepth: state.ui.kLineOrDepth,
   }
 }
