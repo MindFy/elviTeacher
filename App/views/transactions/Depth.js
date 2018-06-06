@@ -254,9 +254,11 @@ export default class Depth extends Component {
         },
         data: amountsBuy,
         animation: false,
+        smooth: 0.05,
       }, {
         name: '卖出',
         type: 'line',
+        smooth: 0.05,
         lineStyle: {
           normal: {
             color: common.greenColor,
