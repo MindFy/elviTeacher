@@ -424,8 +424,9 @@ class WithDraw extends Component {
   }
 
   segmentValueChanged = (e) => {
-    this.props.dispatch(updateAuthCodeType(e.title))
     const { dispatch, formState } = this.props
+    dispatch(updateAuthCodeType(e.title))
+
     if (e.title === '谷歌验证码') {
       dispatch(updateForm({
         ...formState,
@@ -441,6 +442,7 @@ class WithDraw extends Component {
 
   showVerificationCode = () => {
     const { dispatch, user } = this.props
+    dispatch(updateAuthCodeType('短信验证码'))
     const overlayView = (
       <Overlay.View
         style={{
