@@ -246,13 +246,18 @@ class Otc extends Component {
     const caption = type === common.buy ? '买入' : '卖出'
     const q = new BigNumber(quantity)
     let disabled = false
+    let titleColor = common.btnTextColor
     if (!quantity.length || q.eq(0)) {
       disabled = true
+    }
+    if (disabled) {
+      titleColor = common.placeholderColor
     }
 
     return (
       <TKButton
         style={{ marginTop: common.margin10, marginLeft: 0, marginRight: 0 }}
+        titleStyle={{ color: titleColor }}
         theme="gray"
         caption={caption}
         onPress={() => this.onSubmit()}
