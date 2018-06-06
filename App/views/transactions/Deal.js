@@ -13,7 +13,7 @@ import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import KLine from './KLineWeb'
 import DealDrawer from './DealDrawer'
-import Depth from '../transactions/Depth'
+import Depth from './Depth'
 import ShelvesList from './ShelvesList'
 import actions from '../../actions/index'
 import LatestDealList from './LatestDealList'
@@ -89,6 +89,7 @@ class Deal extends Component {
     }
     dispatch(exchange.requestLastpriceList(params))
     dispatch(exchange.requestOrderhistoryList(params))
+    dispatch(exchange.requestDepthMap(params))
   }
 
   tapBuySellBtn(idx) {
@@ -248,7 +249,7 @@ class Deal extends Component {
   }
 
   renderDepthView = () => {
-    const { dispatch, kLineOrDepth } = this.props
+    const { dispatch, kLineOrDepth, depthMap } = this.props
     return (
       <View
         style={{
@@ -260,7 +261,7 @@ class Deal extends Component {
         {
           kLineOrDepth === common.ui.kLine
             ? <KLine />
-            : <Depth />
+            : <Depth depthMap={depthMap} />
         }
         <TouchableOpacity
           style={{
@@ -388,14 +389,7 @@ class Deal extends Component {
 
 function mapStateToProps(state) {
   return {
-    selectedPair: state.exchange.selectedPair,
-    segmentIndex: state.exchange.segmentIndex,
-    orderHistory: state.exchange.orderHistory,
-    lastPrice: state.exchange.lastPrice,
-    openOrders: state.exchange.openOrders,
-    formData: state.exchange.formData,
-    createResponse: state.exchange.createResponse,
-    createOrder_index: state.exchange.createOrder_index,
+    ...state.exchange,
     amountVisible: state.asset.amountVisible,
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,
