@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   inputTitle: {
+    marginTop: common.margin5,
     color: common.blackColor,
     fontSize: common.font12,
   },
@@ -124,7 +125,7 @@ export default class AllegeView extends PureComponent {
             />
           </View>
           <Text style={styles.tip}>
-            投诉后，请耐心等待客服联络。
+            投诉后，请耐心等待客服联络。若仍有其他信息需要反馈，请发送邮件至客服邮箱:service@tok.com，客服将尽快为您处理。
           </Text>
           <View style={styles.underline} />
           <View style={styles.cancelBtnView}>
