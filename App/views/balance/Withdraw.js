@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   StyleSheet,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -73,6 +74,10 @@ const styles = StyleSheet.create({
   },
   withdrawBtn: {
 
+  },
+  extraBtnCover: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
 
@@ -182,6 +187,7 @@ class WithDraw extends Component {
         ...formState,
         withdrawAmount: bMaxBalace.toString(),
       }))
+      return
     }
     const splitArr = withdrawAmount.split('.')
     if (splitArr[0].length > common.maxLenDelegate) { // 整数长度限制
@@ -350,7 +356,14 @@ class WithDraw extends Component {
     })
   }
 
+  jumpToScanPage() {
+    const { navigation } = this.props
+    navigation.navigate('ScanBarCode')
+  }
+
   tapAddAddress = () => {
+    Keyboard.dismiss()
+
     const { address = [], currCoin } = this.props
     const items = []
     for (let i = 0; i < address.length; i++) {
@@ -368,11 +381,6 @@ class WithDraw extends Component {
     })
     const cancelItem = { title: '取消' }
     ActionSheet.show(items, cancelItem)
-  }
-
-  jumpToScanPage() {
-    const { navigation } = this.props
-    navigation.navigate('ScanBarCode')
   }
 
   renderCoinSelector() {
@@ -525,7 +533,7 @@ class WithDraw extends Component {
           withdrawAddress,
         }))}
         extra={() => (
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={styles.extraBtnCover}>
             <TouchableOpacity
               style={{
                 marginRight: 5,
@@ -648,6 +656,7 @@ class WithDraw extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
         >
           {coinSelector}
           {coinList}

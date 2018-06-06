@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
 
 class Otc extends Component {
   static navigationOptions(props) {
+    const params = props.navigation.state.params || {}
     return {
       headerTitle: '法币',
       headerStyle: {
@@ -67,9 +68,7 @@ class Otc extends Component {
         (
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => {
-              props.navigation.navigate('LegalDealDetail')
-            }}
+            onPress={params.detailPress}
           >
             <Text
               style={{
@@ -81,6 +80,10 @@ class Otc extends Component {
           </TouchableOpacity>
         ),
     }
+  }
+
+  componentWillMount() {
+    this.props.navigation.setParams({ detailPress: this._detailPress })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -109,8 +112,10 @@ class Otc extends Component {
       } else {
         Toast.fail('挂单失败，请重试')
       }
+    } else if (type === 'buy') {
+      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!')
     } else {
-      Toast.success(`${type === 'buy' ? '买入' : '卖出'}成功`)
+      Toast.success('卖出成功')
     }
     dispatch(clearResponse())
   }
@@ -151,6 +156,12 @@ class Otc extends Component {
   onQuantityChange(text) {
     const { dispatch } = this.props
     dispatch(updateForm(text))
+  }
+
+  _detailPress = () => {
+    const { loggedIn, navigation } = this.props
+    if (loggedIn) navigation.navigate('OtcDetail')
+    else navigation.navigate('LoginStack')
   }
 
   renderSelectionBar = () => {

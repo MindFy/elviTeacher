@@ -88,6 +88,10 @@ class Register extends Component {
 
   codePress() {
     const { dispatch, mobile } = this.props
+    if (!mobile) {
+      Toast.message('手机号不可为空')
+      return
+    }
     if (!common.regMobile.test(mobile)) {
       Toast.message('请输入正确的手机号')
       return
@@ -100,6 +104,7 @@ class Register extends Component {
 
   registerPress() {
     const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
+
     if (!mobile.length) {
       Toast.message('请输入手机号')
       return

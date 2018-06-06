@@ -27,7 +27,7 @@ import UpdateEmail from './views/me/UpdateEmail'
 import Settings from './views/me/Settings'
 import UpdatePassword from './views/me/UpdatePassword'
 import Otc from './views/legalDeal/Otc'
-import LegalDealDetail from './views/legalDeal/LegalDealDetail'
+import OtcDetail from './views/legalDeal/OtcDetail'
 import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
@@ -153,7 +153,7 @@ const TabBarStack = StackNavigator({
   Settings,
   UpdatePassword,
   Otc,
-  LegalDealDetail,
+  OtcDetail,
   Payment,
   UpdateBank,
   Banner,
@@ -162,12 +162,12 @@ const TabBarStack = StackNavigator({
   UpdateEmail,
   Rebates: {
     screen: Rebates,
-    navigationOptions: {
-      // header: null,
-    },
   },
   Buttons,
-})
+}, {
+  headerMode: 'screen',
+},
+)
 
 const LoginStack = DismissableStackNavigator({
   Login: {

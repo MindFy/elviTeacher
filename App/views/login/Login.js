@@ -2,10 +2,8 @@ import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
-  Text,
   Image,
   ScrollView,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
   StyleSheet,

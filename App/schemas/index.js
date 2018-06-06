@@ -4,7 +4,6 @@ import {
   findDelegateSelfCurrentWithGoodsId,
   findDelegateSelfHistory,
 } from './delegate'
-import findLegalDeal from './legalDeal'
 import {
   findPaymentListRecharge,
   findPaymentListWithdraw,
@@ -13,6 +12,7 @@ import findListSelf from './deal'
 import * as home from './home'
 import findAssetList from './asset'
 import findAddress from './address'
+import findOtcList from './otcDetail'
 import findOpenOrders from './exchange'
 
 const schemas = {
@@ -22,12 +22,12 @@ const schemas = {
   findDelegateSelfCurrent,
   findDelegateSelfCurrentWithGoodsId,
   findDelegateSelfHistory,
-  findLegalDeal,
   findListSelf,
   findAssetList,
   findBanners: home.findBanners,
   findAnnouncement: home.findAnnouncement,
   findAddress,
+  findOtcList,
   findOpenOrders,
 }
 export default schemas
