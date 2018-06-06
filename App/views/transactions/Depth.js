@@ -3,8 +3,15 @@ import Echarts from 'native-echarts'
 import { common } from '../../constants/common'
 
 export default class Depth extends Component {
-  processData() {
-    const { data } = this.props
+  shouldComponentUpdate(nextProps) {
+    if (this.props.depthMap !== nextProps.depthMap) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  processData(data) {
     const prices = [] // 存放坐标
     const amountsBuy = [] // 存放买入
     const amountsSell = [] // 存放卖出
@@ -31,8 +38,8 @@ export default class Depth extends Component {
     return { prices, amountsBuy, amountsSell }
   }
 
-  caculateOptions() {
-    const { prices, amountsBuy, amountsSell } = this.processData()
+  caculateOptions(data) {
+    const { prices, amountsBuy, amountsSell } = this.processData(data)
     return {
       title: {
         show: false,
@@ -287,10 +294,13 @@ export default class Depth extends Component {
         animation: false,
       }],
     }
+    // 使用刚指定的配置项和数据显示图表。
+    this.myChart.setOption(option)
   }
 
   render() {
-    const opts = this.caculateOptions()
+    const { data } = this.props
+    const opts = this.caculateOptions(data)
     return (
       <Echarts
         option={opts}
