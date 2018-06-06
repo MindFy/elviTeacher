@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   WebView,
 } from 'react-native'
+import { common } from '../../constants/common'
 
 export default class KLine extends Component {
   componentDidMount() { }
@@ -10,8 +11,8 @@ export default class KLine extends Component {
     return (
       <WebView
         style={{
-          width,
-          height,
+          width: common.sw,
+          height: common.sw * common.sw / common.sh,
         }}
         // bounces={false}
         // contentInset={{
