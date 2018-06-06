@@ -30,6 +30,7 @@ import Otc from './views/legalDeal/Otc'
 import OtcDetail from './views/legalDeal/OtcDetail'
 import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
+import ScanBarCode from './views/balance/ScanBarCode'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -143,6 +144,7 @@ const TabBarStack = StackNavigator({
     },
   },
   Orders,
+  ScanBarCode,
   History,
   Withdraw,
   Recharge,

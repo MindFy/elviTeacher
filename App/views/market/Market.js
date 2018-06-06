@@ -10,6 +10,7 @@ import {
   updateCurrentPair,
 } from '../../actions/market'
 import HeaderScrollView from './HeaderScrollView'
+import * as exchange from '../../actions/exchange'
 
 class Market extends Component {
   static navigationOptions() {
@@ -48,6 +49,48 @@ class Market extends Component {
     }))
   }
 
+  onClickMarketItem = (e, currencyName) => {
+    const goods = {
+      id: e.id,
+      name: e.name,
+    }
+    const currency = {
+      id: this.coinsIdDic[currencyName].id,
+      name: currencyName,
+    }
+    const rd = {
+      goods,
+      currency,
+      cprice: e.cprice,
+      hprice: e.hprice,
+      lastprice: e.lastprice,
+      lprice: e.lprice,
+      quantity: e.quantity,
+      rose: e.rose,
+    }
+    const { dispatch, navigation } = this.props
+    dispatch(exchange.updatePair(rd))
+    navigation.navigate('Deal')
+  }
+
+  coinsIdDic = {
+    TK: {
+      id: 1,
+    },
+    BTC: {
+      id: 2,
+    },
+    CNYT: {
+      id: 3,
+    },
+    ETH: {
+      id: 5,
+    },
+    ETC: {
+      id: 6,
+    },
+  }
+
   render() {
     const { currPair, pairs } = this.props
 
@@ -70,6 +113,7 @@ class Market extends Component {
         <MarketList
           data={marketData}
           currencyName={currPair}
+          onClickMarketItem={this.onClickMarketItem}
         />
       </View>
     )

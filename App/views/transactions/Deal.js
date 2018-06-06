@@ -208,8 +208,11 @@ class Deal extends Component {
           } else if (type === 'title') {
             this.menuPress()
           } else if (type === 'rightBtn') {
-            if (loggedIn) navigation.navigate('Orders')
-            else navigation.navigate('LoginStack')
+            if (loggedIn) {
+              navigation.navigate('Orders', {
+                title: '当前委托',
+              })
+            } else navigation.navigate('LoginStack')
           }
         }}
       />
@@ -256,10 +259,7 @@ class Deal extends Component {
       >
         {
           kLineOrDepth === common.ui.kLine
-            ? <KLine
-              width={common.sw}
-              height={common.h263}
-            />
+            ? <KLine />
             : <Depth />
         }
         <TouchableOpacity
