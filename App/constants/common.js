@@ -203,10 +203,6 @@ const common = {
   regBankName: /^[\u4e00-\u9fa5]{4}/,
   regBankNo: /[0-9]{16,19}$/,
   regEmail: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
-  toFix2(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3') },
-  toFix4(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d).*$/, '$1$2.$3') },
-  toFix6(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d).*$/, '$1$2.$3') },
-  toFix8(text) { return `${text}`.replace(/^(-)*(\d+)\.(\d\d\d\d\d\d\d\d).*$/, '$1$2.$3') },
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,
