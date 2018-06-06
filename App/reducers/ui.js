@@ -69,6 +69,9 @@ export default function ui(state = initialState, action) {
         clearTextInputBank: action.data.clearTextInputBank,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       break
   }

@@ -175,6 +175,9 @@ export default function withdraw(state = initialState, action) {
         googleCodeCheckError: payload,
       }
       break
+    case 'notify/clear_reducer':
+      nextState = initialState
+      break
     default:
       nextState = state
       break

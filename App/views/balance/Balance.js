@@ -121,7 +121,7 @@ class Balance extends Component {
   }
 
   renderRow(rd) {
-    const amount = new BigNumber(rd.amount).toFixed(8, 1)
+    const amount = new BigNumber(rd.amount).plus(rd.freezed).toFixed(8, 1)
     return (
       <BalanceCell
         leftImageSource={require('../../assets/111.png')}
@@ -139,7 +139,7 @@ class Balance extends Component {
     if (valuation && valuation.rates) {
       for (let i = 0; i < balanceList.length; i++) {
         const element = balanceList[i]
-        const amount = new BigNumber(element.amount)
+        const amount = new BigNumber(element.amount).plus(element.freezed)
         const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
         const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
         amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)

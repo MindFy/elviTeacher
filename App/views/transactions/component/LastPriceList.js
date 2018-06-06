@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   ListView,
+  TouchableOpacity,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../../constants/common'
@@ -81,7 +82,16 @@ class LastPriceList extends Component {
       detailColor = common.textColor
     }
     return (
-      <View style={styles.shelvesListRowView}>
+      <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        style={styles.shelvesListRowView}
+        onPress={() => {
+          const { cellPressAction } = this.props
+          if (cellPressAction) {
+            cellPressAction(rd, type)
+          }
+        }}
+      >
         <Text
           style={{
             fontSize: common.font12,
@@ -94,7 +104,7 @@ class LastPriceList extends Component {
             color: detailColor,
           }}
         >{detail}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 

@@ -47,8 +47,18 @@ class Me extends Component {
       '真的要退出吗？',
       '',
       [
-        { text: '点错了', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-        { text: '是的', onPress: () => dispatch(actions.logout()) },
+        {
+          text: '点错了',
+          onPress: () => { },
+          style: 'cancel',
+        },
+        {
+          text: '是的',
+          onPress: () => {
+            dispatch(actions.logout())
+            dispatch(actions.clearAllReducer())
+          },
+        },
       ],
       { cancelable: false },
     )
