@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
+import idcard from 'idcard'
 import PutObject from 'rn-put-object'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
@@ -145,7 +146,7 @@ class Authentication extends Component {
       Toast.message('请输入姓名')
       return
     }
-    if (!idNo.length || !common.regIdCard.test(idNo)) {
+    if (!idNo.length || !idcard.verify(idNo)) {
       Toast.message('请输入正确的身份证号')
       return
     }

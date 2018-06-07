@@ -26,6 +26,7 @@
     "react-native-spinkit": "1.1.1",
     "react-native-splash-screen": "^3.0.7",
     "wallet-address-validator": "^0.1.6",
+    "idcard": "^4.1.0",
     "buffer": "5.1.0",
     "react-native-swiper": "^1.5.13",
     "react-navigation": "^1.5.8",
