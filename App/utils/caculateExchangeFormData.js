@@ -2,56 +2,73 @@ import { BigNumber } from 'bignumber.js'
 import { common } from '../constants/common'
 
 function textInputLimit(
-  price, quantity, amount, precisionPrice,
-  precisionQuantity, precisionAmount, tag,
+  price, quantity, amount,
+  precisionPrice, precisionQuantity, precisionAmount,
+  tag, amountVisible, createOrderIndex,
 ) {
-  if ((tag === 'price' && !price.length) || (tag === 'quantity' && !quantity.length)) {
-    return { p: price, q: quantity, a: '' } // 1.输入框清空
-  }
-
-  let p = new BigNumber(price)
-  let q = new BigNumber(quantity)
-  let a
-  if (amount || amount === 0) {
-    q = new BigNumber(amount).dividedBy(p).dp(precisionQuantity, 1)
-    if (q.isNaN()) return undefined // 9.分子不能为0，非数字
-    a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-    p = p.isNaN() ? '' : p.toString()
-    q = q.isNaN() ? '' : q.toString()
-    a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
-    return { p, q, a }
-  }
-  // if (q.gt(amountVisible)) {
-  //   q = new BigNumber(amountVisible)
-  // }
-  if (tag === 'price' && p.isNaN()) return undefined // 2.限制只能输入数字、小数点
-  if (tag === 'quantity' && q.isNaN()) return undefined // 3.限制只能输入数字、小数点
-  const pArr = price.split('.')
-  const qArr = quantity.split('.')
-  if (pArr[0].length > common.maxLenDelegate) return undefined // 4.整数长度限制
-  if (pArr.length > 1 && pArr[1].length > precisionPrice) return undefined // 5.小数长度限制
-  if (price.endsWith('.') || pArr.length > 1) {
-    a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-    a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
+  if (tag === 'price') {
+    let p = new BigNumber(price)
+    if (p.isNaN() && price.length) { // 限制非数字字符
+      return undefined
+    }
+    const pArr = price.split('.')
+    if (pArr.length === 1 && p.eq(0)) { // 限制输入多个0
+      let a = new BigNumber(p).multipliedBy(quantity)
+      a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
+      return { p: '0', q: quantity, a }
+    }
+    if (pArr.length > 1 && pArr[1].length > precisionPrice) { // 小数精度限制
+      return undefined
+    }
+    let a = new BigNumber(p).multipliedBy(quantity).toFixed(precisionAmount, 1)
+    if (BigNumber(a).isNaN()) { // 金额为空不显示
+      return { p: price, q: quantity, a: '' }
+    }
+    if (!createOrderIndex && BigNumber(a).gt(amountVisible)) { // 买入时根据可用限制最大输入
+      a = new BigNumber(amountVisible).toFixed(precisionAmount, 1)
+      p = new BigNumber(a).dividedBy(quantity).toFixed(precisionPrice, 1)
+      return { p, q: quantity, a }
+    }
     return { p: price, q: quantity, a }
   }
-  if (qArr[0].length > common.maxLenDelegate) return undefined // 6.整数长度限制
-  if (precisionQuantity === 0) {
-    if (qArr.length > 1) return undefined // 7.限制只能输入整数
-  } else {
-    if (qArr.length > 1 && qArr[1].length > precisionQuantity) return undefined // 8.小数长度限制
-    if (quantity.endsWith('.') || qArr.length > 1) {
-      a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-      a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
-      return { p: price, q: quantity, a }
+  if (tag === 'quantity') {
+    let q = new BigNumber(quantity)
+    if (q.isNaN() && quantity.length) { // 限制非数字字符
+      return undefined
     }
+    const qArr = quantity.split('.')
+    if (qArr.length === 1 && q.eq(0)) { // 限制输入多个0
+      let a = new BigNumber(q).multipliedBy(price)
+      a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
+      return { p: price, q: '0', a }
+    }
+    if (qArr.length > 1 && qArr[1].length > precisionQuantity) { // 小数精度限制
+      return undefined
+    }
+    let a = new BigNumber(q).multipliedBy(price).toFixed(precisionAmount, 1)
+    if (BigNumber(a).isNaN()) { // 金额为空不显示
+      return { p: price, q: quantity, a: '' }
+    }
+    if (!createOrderIndex && BigNumber(a).gt(amountVisible)) { // 买入时根据可用限制最大输入
+      a = new BigNumber(amountVisible).toFixed(precisionAmount, 1)
+      q = new BigNumber(a).dividedBy(price).toFixed(precisionQuantity, 1)
+      return { p: price, q, a }
+    } else if (createOrderIndex && BigNumber(q).gt(amountVisible)) { // 卖出时根据可用限制最大输入
+      q = new BigNumber(amountVisible).toFixed(precisionQuantity, 1)
+      a = new BigNumber(q).multipliedBy(price).toFixed(precisionAmount, 1)
+      return { p: price, q, a }
+    }
+    return { p: price, q: quantity, a }
   }
-
-  a = new BigNumber(p).multipliedBy(q).dp(precisionAmount, 1)
-  p = p.isNaN() ? '' : p.toString()
-  q = q.isNaN() ? '' : q.toString()
-  a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
-  return { p, q, a }
+  if (tag === 'amount') {
+    const q = new BigNumber(amount).dividedBy(price).toFixed(precisionQuantity, 1)
+    if (BigNumber(q).isNaN()) { // 分子不能为0，非数字
+      return undefined
+    }
+    const a = new BigNumber(price).multipliedBy(q).toFixed(precisionAmount, 1)
+    return { p: price, q, a }
+  }
+  return undefined
 }
 
 function textInputUpdate(
@@ -66,7 +83,7 @@ function textInputUpdate(
       } else {
         availble = amountVisible[selectedPair.goods.name]
       }
-      const temp = textInputLimit(price, quantity, amount, p, q, a, tag, availble)
+      const temp = textInputLimit(price, quantity, amount, p, q, a, tag, availble, createOrderIndex)
       if (temp) {
         returnVal = {
           price: temp.p,
@@ -82,7 +99,7 @@ function textInputUpdate(
     } else {
       availble = amountVisible[selectedPair.goods.name]
     }
-    const temp = textInputLimit(price, quantity, amount, 2, 4, 6, tag, availble)
+    const temp = textInputLimit(price, quantity, amount, 2, 4, 6, tag, availble, createOrderIndex)
     if (temp) {
       returnVal = {
         price: temp.p,
@@ -207,9 +224,9 @@ export function slideAction({ selectedPair, formData, actions, amountVisible, cr
   let temp = currentVisible.toNumber() * percent
   if (!index) {
     return textInputUpdate(
-      price, quantity, temp, undefined, selectedPair, amountVisible, createOrderIndex)
+      price, quantity, temp, 'amount', selectedPair, amountVisible, createOrderIndex)
   }
   temp = new BigNumber(temp).dp(0, 1)
   return textInputUpdate(
-    price, temp.toString(), undefined, undefined, selectedPair, amountVisible, createOrderIndex)
+    price, temp.toString(), undefined, 'quantity', selectedPair, amountVisible, createOrderIndex)
 }

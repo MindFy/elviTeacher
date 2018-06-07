@@ -7,11 +7,13 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native'
 import {
   Toast,
   Overlay,
 } from 'teaset'
+import WAValidator from 'wallet-address-validator'
 import { common } from '../../constants/common'
 import {
   updateForm,
@@ -158,12 +160,39 @@ class AddAddress extends Component {
     }))
   }
 
+  checkWithdrawAddressIsIneligible = (address, coin) => {
+    const isIneligible =
+    !WAValidator.validate(address, coin) &&
+    !WAValidator.validate(address, coin, 'testnet')
+
+    return isIneligible
+  }
+
   confirmPress() {
     const { formState } = this.props
     if (!formState.address.length) {
       Toast.message('请填写提币地址')
       return
     }
+
+    const { address } = formState
+    const { navigation } = this.props
+    const { title } = navigation.state.params
+
+    if (this.checkWithdrawAddressIsIneligible(address, title)) {
+      Alert.alert(
+        '提示',
+        `请填写正确的${title}提币地址！`,
+        [
+          {
+            text: '确定',
+            onPress: () => {},
+          },
+        ],
+      )
+      return
+    }
+
     if (!formState.remark.length) {
       Toast.message('请填写备注')
       return
