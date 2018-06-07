@@ -563,11 +563,11 @@ class Orders extends Component {
       if (averagePrice.isNaN()) {
         averagePrice = 0
       }
-      common.precision(item.goods.name, item.currency.name, (p, q) => {
+      common.precision(item.goods.name, item.currency.name, (p) => {
         averagePriceOrPrice = averagePrice.toFixed(p, 1)
       })
     } else {
-      common.precision(item.goods.name, item.currency.name, (p, q, a) => {
+      common.precision(item.goods.name, item.currency.name, (p) => {
         averagePriceOrPrice = new BigNumber(item.price).toFixed(p, 1)
       })
     }
