@@ -59,7 +59,7 @@ describe('输入框price 测试', () => {
     expect(textInputLimit('100.1', '1', undefined, 2, 4, 6, 'price', '100.01', 0))
       .toEqual({ p: '100.01', q: '1', a: '100.010000' })
     expect(textInputLimit('4', '25', undefined, 2, 4, 6, 'price', '99.9', 0))
-      .toEqual({ p: '3.99', q: '25', a: '99.900000' })
+      .toEqual({ p: '3.99', q: '25', a: '99.750000' })
   })
 })
 
@@ -124,7 +124,7 @@ describe('输入框quantity 测试', () => {
     expect(textInputLimit('1', '100.1', undefined, 2, 4, 6, 'quantity', '100.01', 0))
       .toEqual({ p: '1', q: '100.0100', a: '100.010000' })
     expect(textInputLimit('25', '4', undefined, 2, 4, 6, 'quantity', '99.999', 0))
-      .toEqual({ p: '25', q: '3.9999', a: '99.999000' })
+      .toEqual({ p: '25', q: '3.9999', a: '99.997500' })
   })
 })
 
