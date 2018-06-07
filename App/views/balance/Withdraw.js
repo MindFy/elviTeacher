@@ -209,10 +209,14 @@ class WithDraw extends Component {
   }
 
   onChangeWithdrawAmount = (withdrawAmount) => {
+    const { dispatch, formState, balance } = this.props
     if (!withdrawAmount) {
+      dispatch(updateForm({
+        ...formState,
+        withdrawAmount,
+      }))
       return
     }
-    const { dispatch, formState, balance } = this.props
     const bWithdrawAmount = new BigNumber(withdrawAmount)
 
     if (bWithdrawAmount.isNaN()) {
