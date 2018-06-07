@@ -1,4 +1,4 @@
-import findUser from './user'
+import { findUser, findAuditmanage } from './user'
 import {
   findDelegateSelfCurrent,
   findDelegateSelfCurrentWithGoodsId,
@@ -17,6 +17,7 @@ import findOpenOrders from './exchange'
 
 const schemas = {
   findUser,
+  findAuditmanage,
   findPaymentListRecharge,
   findPaymentListWithdraw,
   findDelegateSelfCurrent,
