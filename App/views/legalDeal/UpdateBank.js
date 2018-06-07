@@ -106,7 +106,10 @@ class UpdateBank extends Component {
     } else if (tag === 'subbankName') {
       dispatch(actions.updateForm({ ...formState, subbankName: text }))
     } else if (tag === 'bankNo') {
-      dispatch(actions.updateForm({ ...formState, bankNo: text }))
+      const reg = /^\+?[1-9][0-9]*$/
+      if (text === '' || reg.test(text)) {
+        dispatch(actions.updateForm({ ...formState, bankNo: text }))
+      }
     } else if (tag === 'code') {
       dispatch(actions.updateForm({ ...formState, code: text }))
     }
