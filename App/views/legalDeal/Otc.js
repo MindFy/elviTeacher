@@ -230,8 +230,8 @@ class Otc extends Component {
     if (quantity.length === 0) quantity = 0
 
     const showTotal = type === common.buy ?
-      `买入总计:${new BigNumber('1').times(new BigNumber(quantity)).toFixed()}元` :
-      `卖出总计:${new BigNumber('0.99').times(new BigNumber(quantity)).toFixed()}元`
+      `买入总计:${new BigNumber('1').times(new BigNumber(quantity)).toFixed(2, 1)}元` :
+      `卖出总计:${new BigNumber('0.99').times(new BigNumber(quantity)).toFixed(2, 1)}元`
 
     return (
       <Text
