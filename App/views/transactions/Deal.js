@@ -128,14 +128,14 @@ class Deal extends Component {
 
   tapBuySellBtn(idx) {
     const { dispatch, navigation, formData, loggedIn, selectedPair } = this.props
-    const { price, quantity, amount } = formData
+    const { price, quantity } = formData
     if (!loggedIn) {
       navigation.navigate('LoginStack')
       return
     }
     const p = new BigNumber(price)
     const q = new BigNumber(quantity)
-    const a = new BigNumber(amount)
+    const a = new BigNumber(p).multipliedBy(q)
     if (!price.length || BigNumber(p).eq(0)) {
       Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
       this.drawer.hide()
