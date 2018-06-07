@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
+import idcard from 'idcard'
 import PutObject from 'rn-put-object'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
@@ -99,10 +100,12 @@ class Authentication extends Component {
       authenticationAgain,
     }))
     dispatch(actions.findUser(schemas.findUser(user.id)))
+    dispatch(actions.findAuditmanage(schemas.findAuditmanage(user.id)))
     this.listener = DeviceEventEmitter.addListener(common.noti.idCardAuth, () => {
       user.idCardAuthStatus = common.user.status.waiting
       dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
       dispatch(actions.findUser(schemas.findUser(user.id)))
+      dispatch(actions.findAuditmanage(schemas.findAuditmanage(user.id, user.idCardAuthStatus)))
     })
   }
 
@@ -145,7 +148,7 @@ class Authentication extends Component {
       Toast.message('请输入姓名')
       return
     }
-    if (!idNo.length || !common.regIdCard.test(idNo)) {
+    if (!idNo.length || !idcard.verify(idNo)) {
       Toast.message('请输入正确的身份证号')
       return
     }
@@ -316,7 +319,11 @@ class Authentication extends Component {
   }
 
   renderFailed() {
-    const { dispatch } = this.props
+    const { dispatch, findAuditmanageData } = this.props
+    let reason = ''
+    if (findAuditmanageData) {
+      reason = findAuditmanageData[0].auditdata.refuseReason
+    }
     return (
       <ScrollView>
         <Image
@@ -327,7 +334,7 @@ class Authentication extends Component {
           抱歉！您的身份认证未通过审核！
         </Text>
         <Text style={[styles.titleSucceed, { marginTop: common.margin10 }]}>
-          失败原因：照片不清晰
+          失败原因：{reason}
         </Text>
         <TouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -431,6 +438,7 @@ function mapStateToProps(store) {
     authenticationAgain: store.user.authenticationAgain,
     idCardAuthVisible: store.user.idCardAuthVisible,
     idCardAuthResponse: store.user.idCardAuthResponse,
+    findAuditmanageData: store.user.findAuditmanageData,
   }
 }
 

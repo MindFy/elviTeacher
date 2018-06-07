@@ -3,6 +3,7 @@ const initialState = {
   orderHistory: [],
   titleSeleted: '当前委托',
   isShowTotalPrice: false,
+  isShowDealAmount: false,
   refreshState: 0,
 
   openOrderPage: 0,
@@ -115,6 +116,12 @@ export default function orders(state = initialState, action) {
       nextState = {
         ...state,
         isShowTotalPrice: !state.isShowTotalPrice,
+      }
+      break
+    case 'orders/toggle_is_show_dealAmount':
+      nextState = {
+        ...state,
+        isShowDealAmount: !state.isShowDealAmount,
       }
       break
     case 'orders/request_cancel_order':

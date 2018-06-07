@@ -63,6 +63,8 @@ const initialState = {
   updateBankResponse: undefined,
 
   updateEmailVisible: false,
+
+  findAuditmanageData: undefined,
 }
 
 export default function user(state = initialState, action) {
@@ -327,12 +329,18 @@ export default function user(state = initialState, action) {
         updateEmailVisible: false,
       }
       break
-
     case constants.UPDATE_EMAIL_UPDATE:
       nextState = {
         ...state,
         email: action.data.email,
         codeEmail: action.data.codeEmail,
+      }
+      break
+    case constants.FIND_AUDIT_MANAGE_SUCCEED:
+    case constants.FIND_AUDIT_MANAGE_FAILED:
+      nextState = {
+        ...state,
+        findAuditmanageData: action.data,
       }
       break
     case 'notify/clear_reducer':
