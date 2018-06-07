@@ -209,8 +209,8 @@ class Otc extends Component {
   }
 
   renderQuantity = () => {
-    const { formState: { quantity }, buy } = this.props
-    const placeholder = `${buy === common.buy ? '买入' : '卖出'}数量`
+    const { formState: { quantity }, type } = this.props
+    const placeholder = `${type === common.buy ? '买入' : '卖出'}数量`
 
     return (
       <TKInputItem
