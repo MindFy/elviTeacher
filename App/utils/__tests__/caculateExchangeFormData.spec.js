@@ -26,6 +26,8 @@ describe('输入框price 测试', () => {
       .toEqual({ p: '0.01', q: '', a: '' })
     expect(textInputLimit('0.00', '', undefined, 2, 4, 6, 'price', '9999', 0))
       .toEqual({ p: '0.00', q: '', a: '' })
+    expect(textInputLimit('0.00000010', '24', undefined, 8, 0, 8, 'quantity', '9999', 0))
+      .toEqual({ p: '0.00000010', q: '24', a: '0.00000240' })
   })
   it('输入框price 输入超过小数精度为2的值', () => {
     // const params =
@@ -57,7 +59,7 @@ describe('输入框price 测试', () => {
     expect(textInputLimit('100.1', '1', undefined, 2, 4, 6, 'price', '100.01', 0))
       .toEqual({ p: '100.01', q: '1', a: '100.010000' })
     expect(textInputLimit('4', '25', undefined, 2, 4, 6, 'price', '99.9', 0))
-      .toEqual({ p: '3.99', q: '25', a: '99.750000' })
+      .toEqual({ p: '3.99', q: '25', a: '99.900000' })
   })
 })
 
@@ -122,7 +124,7 @@ describe('输入框quantity 测试', () => {
     expect(textInputLimit('1', '100.1', undefined, 2, 4, 6, 'quantity', '100.01', 0))
       .toEqual({ p: '1', q: '100.0100', a: '100.010000' })
     expect(textInputLimit('25', '4', undefined, 2, 4, 6, 'quantity', '99.999', 0))
-      .toEqual({ p: '25', q: '3.9999', a: '99.997500' })
+      .toEqual({ p: '25', q: '3.9999', a: '99.999000' })
   })
 })
 
@@ -131,21 +133,21 @@ describe('slider 测试', () => {
     // const params =
     expect(textInputLimit('0.01', '', '0', 2, 4, 6, 'amount', '99.999999', 0))
       .toEqual({ p: '0.01', q: '0.0000', a: '0.000000' })
-    expect(textInputLimit('0.01', '0', undefined, 2, 4, 6, 'amount', '99.999999', 0))
+    expect(textInputLimit('0.01', '0', undefined, 2, 4, 6, 'sliderForSell', '99.999999', 0))
       .toEqual({ p: '0.01', q: '0.0000', a: '0.000000' })
   })
   it('slider 滑动到最大值', () => {
     // const params =
     expect(textInputLimit('0.01', '', '0', 2, 4, 6, 'amount', '99.999999', 0))
       .toEqual({ p: '0.01', q: '0.0000', a: '0.000000' })
-    expect(textInputLimit('0.01', '99.9999', undefined, 2, 4, 6, 'amount', '99.999999', 0))
+    expect(textInputLimit('0.01', '99.9999', undefined, 2, 4, 6, 'sliderForSell', '99.999999', 0))
       .toEqual({ p: '0.01', q: '99.9999', a: '0.999999' })
   })
   it('slider 滑动到49.999999', () => {
     // const params =
     expect(textInputLimit('2.22', '', '49.999999', 2, 4, 6, 'amount', '99.999999', 0))
       .toEqual({ p: '2.22', q: '22.5225', a: '49.999950' })
-    expect(textInputLimit('2.22', '49.9999', undefined, 2, 4, 6, 'amount', '99.999999', 0))
+    expect(textInputLimit('2.22', '49.9999', undefined, 2, 4, 6, 'sliderForSell', '99.999999', 0))
       .toEqual({ p: '2.22', q: '49.9999', a: '110.999778' })
   })
 })
