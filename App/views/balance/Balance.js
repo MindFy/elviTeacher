@@ -5,6 +5,7 @@ import {
   Text,
   ListView,
   ScrollView,
+  RefreshControl,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native'
@@ -131,6 +132,21 @@ class Balance extends Component {
     )
   }
 
+  renderRefreshControl = () => {
+    const { loading } = this.props
+    return (
+      <RefreshControl
+        onRefresh={() => {
+          const { dispatch, loggedInResult, loggedIn } = this.props
+          if (!loggedIn) return
+          dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
+          dispatch(requestBalanceValuation())
+        }}
+        refreshing={loading}
+      />
+    )
+  }
+
   render() {
     const { balanceList, loggedIn, navigation, valuation } = this.props
 
@@ -150,7 +166,10 @@ class Balance extends Component {
     amountRMB = amountRMB.toFixed(2, 1)
 
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        refreshControl={this.renderRefreshControl()}
+      >
         <Text style={styles.balance}>{amountBTC}</Text>
         <Text style={styles.balanceRMB}>{`(¥${amountRMB})`}</Text>
         <Text style={styles.balanceTip}>总资产(BTC)</Text>
@@ -205,6 +224,7 @@ function mapStateToProps(state) {
 
     balanceList: state.balance.balanceList,
     valuation: state.balance.valuation,
+    loading: state.balance.loading,
   }
 }
 

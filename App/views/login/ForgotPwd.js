@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
+  Text,
+  View,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
@@ -29,6 +31,13 @@ const styles = StyleSheet.create({
   inputText: {
     width: common.w100,
   },
+  mobileTip: {
+    position: 'absolute',
+    top: common.margin5,
+    left: common.w100 + common.margin48,
+    fontSize: common.font12,
+    color: common.redColor,
+  },
 })
 
 class ForgotPwd extends Component {
@@ -36,6 +45,9 @@ class ForgotPwd extends Component {
     super()
     this.showGetVerificateCodeResponse = false
     this.showCheckVerificateCodeResponse = false
+    this.state = {
+      showTip: false,
+    }
   }
 
   componentWillUnmount() {
@@ -54,6 +66,7 @@ class ForgotPwd extends Component {
 
     switch (tag) {
       case 'mobile':
+        this.setState({ showTip: false })
         dispatch(actions.registerUpdate({ mobile: text, code, password: '', passwordAgain: '' }))
         break
       case 'code':
@@ -67,7 +80,7 @@ class ForgotPwd extends Component {
   codePress() {
     const { dispatch, mobile } = this.props
     if (!common.regMobile.test(mobile)) {
-      Toast.message('请输入正确的手机号')
+      Toast.fail('请输入正确的手机号')
       return
     }
     dispatch(actions.getVerificateCode({
@@ -79,15 +92,15 @@ class ForgotPwd extends Component {
   nextPress() {
     const { dispatch, mobile, code } = this.props
     if (!mobile.length) {
-      Toast.message('请输入手机号')
+      Toast.fail('请输入手机号')
       return
     }
     if (!code.length) {
-      Toast.message('请输入验证码')
+      Toast.fail('请输入验证码')
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.message('请输入正确的手机号')
+      Toast.fail('请输入正确的手机号')
       return
     }
     dispatch(actions.checkVerificateCode({
@@ -149,6 +162,18 @@ class ForgotPwd extends Component {
     }
   }
 
+  renderMobileTip = () => {
+    const { showTip } = this.state
+    return (
+      <View style={{ height: 40 }}>
+        { showTip ?
+          <Text style={styles.mobileTip}>
+            请输入正确的11位手机号
+          </Text> : null }
+      </View>
+    )
+  }
+
   render() {
     this.handleGetVerificateCodeRequest()
     this.handleCheckVerificateCodeRequest()
@@ -167,6 +192,15 @@ class ForgotPwd extends Component {
             viewStyle={styles.inputView}
             inputStyle={styles.input}
             titleStyle={styles.inputText}
+            textInputProps={{
+              onBlur: () => {
+                if (!common.regMobile.test(this.props.mobile)) {
+                  this.setState({ showTip: true })
+                } else {
+                  this.setState({ showTip: false })
+                }
+              },
+            }}
             title="账号"
             placeholder="请输入11位手机号"
             value={mobile}
@@ -174,8 +208,10 @@ class ForgotPwd extends Component {
             onChange={e => this.onChange(e, 'mobile')}
           />
 
+          {this.renderMobileTip()}
+
           <TKInputItemCheckCode
-            viewStyle={[styles.inputView, { marginTop: common.margin40 }]}
+            viewStyle={[styles.inputView, { marginTop: 0 }]}
             inputStyle={styles.input}
             titleStyle={styles.inputText}
             title="验证码"

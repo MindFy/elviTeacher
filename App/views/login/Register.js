@@ -30,6 +30,9 @@ class Register extends Component {
     super()
     this.showRegisterResponse = false
     this.showGetVerificateCodeResponse = false
+    this.state = {
+      showTip: false,
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,6 +56,7 @@ class Register extends Component {
     const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
     switch (tag) {
       case 'mobile':
+        this.setState({ showTip: false })
         dispatch(actions.registerUpdate({
           mobile: text,
           code,
@@ -105,11 +109,11 @@ class Register extends Component {
   codePress() {
     const { dispatch, mobile } = this.props
     if (!mobile) {
-      Toast.message('手机号不可为空')
+      Toast.fail('手机号不可为空')
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.message('请输入正确的手机号')
+      Toast.fail('请输入正确的手机号')
       return
     }
     dispatch(actions.getVerificateCode({
@@ -122,11 +126,11 @@ class Register extends Component {
     const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
 
     if (!mobile.length) {
-      Toast.message('请输入手机号')
+      Toast.fail('请输入手机号')
       return
     }
     if (!code.length) {
-      Toast.message('请输入验证码')
+      Toast.fail('请输入验证码')
       return
     }
     if (!password.length || !common.regPassword.test(password) ||
@@ -142,15 +146,15 @@ class Register extends Component {
       return
     }
     if (!passwordAgain.length) {
-      Toast.message('请再次设置密码')
+      Toast.fail('请再次设置密码')
       return
     }
     if (password !== passwordAgain) {
-      Toast.message('确认密码需要和密码保持一致')
+      Toast.fail('确认密码需要和密码保持一致')
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.message('请输入正确的手机号')
+      Toast.fail('请输入正确的手机号')
       return
     }
     dispatch(actions.register({
@@ -231,6 +235,15 @@ class Register extends Component {
         }}
         title="账号"
         placeholder="请输入11位手机号"
+        textInputProps={{
+          onBlur: () => {
+            if (!common.regMobile.test(this.props.mobile)) {
+              this.setState({ showTip: true })
+            } else {
+              this.setState({ showTip: false })
+            }
+          },
+        }}
         value={mobile}
         maxLength={11}
         onChange={e => this.onChange(e, 'mobile')}
@@ -239,11 +252,7 @@ class Register extends Component {
   }
 
   renderAccountTip = () => {
-    const { mobile } = this.props
-    let showTip = false
-    if (!common.regMobile.test(mobile)) {
-      showTip = true
-    }
+    const { showTip } = this.state
     return (
       <View style={{ height: 40 }}>
         { showTip ?
