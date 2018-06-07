@@ -79,6 +79,22 @@ export function* idCardAuth() {
     }
   }
 }
+
+export function* findAuditmanage() {
+  while (true) {
+    const request = yield take(constants.FIND_AUDIT_MANAGE)
+    const response = yield call(api.graphql, request.data)
+    if (response.success) {
+      yield put({
+        type: constants.FIND_AUDIT_MANAGE_SUCCEED,
+        data: response.result.data.find_auditmanage,
+      })
+    } else {
+      yield put({ type: constants.FIND_AUDIT_MANAGE_FAILED, data: undefined })
+    }
+  }
+}
+
 /* 检查对象是否存在 */
 export function* isExist() {
   while (true) {
