@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { common } from '../constants/common'
 
-function textInputLimit(
+export function textInputLimit(
   price, quantity, amount,
   precisionPrice, precisionQuantity, precisionAmount,
   tag, amountVisible, createOrderIndex,
@@ -27,6 +27,7 @@ function textInputLimit(
     if (!createOrderIndex && BigNumber(a).gt(amountVisible)) { // 买入时根据可用限制最大输入
       a = new BigNumber(amountVisible).toFixed(precisionAmount, 1)
       p = new BigNumber(a).dividedBy(quantity).toFixed(precisionPrice, 1)
+      a = new BigNumber(p).multipliedBy(quantity).toFixed(precisionAmount, 1)
       return { p, q: quantity, a }
     }
     return { p: price, q: quantity, a }
@@ -52,6 +53,7 @@ function textInputLimit(
     if (!createOrderIndex && BigNumber(a).gt(amountVisible)) { // 买入时根据可用限制最大输入
       a = new BigNumber(amountVisible).toFixed(precisionAmount, 1)
       q = new BigNumber(a).dividedBy(price).toFixed(precisionQuantity, 1)
+      a = new BigNumber(q).multipliedBy(price).toFixed(precisionAmount, 1)
       return { p: price, q, a }
     } else if (createOrderIndex && BigNumber(q).gt(amountVisible)) { // 卖出时根据可用限制最大输入
       q = new BigNumber(amountVisible).toFixed(precisionQuantity, 1)
@@ -66,6 +68,14 @@ function textInputLimit(
       return undefined
     }
     const a = new BigNumber(price).multipliedBy(q).toFixed(precisionAmount, 1)
+    return { p: price, q, a }
+  }
+  if (tag === 'sliderForSell') {
+    const q = new BigNumber(quantity).toFixed(precisionQuantity, 1)
+    let a = new BigNumber(q).multipliedBy(price).toFixed(precisionAmount, 1)
+    if (BigNumber(a).isNaN()) {
+      a = ''
+    }
     return { p: price, q, a }
   }
   return undefined
@@ -133,7 +143,7 @@ export function caculateExchangeFormData({
         if (newPrice.lt(0)) {
           newPrice = BigNumber(0)
         }
-        nextFormData.price = newPrice.toString()
+        nextFormData.price = newPrice.toFixed()
         const newAmount = BigNumber(quantity).multipliedBy(newPrice)
         if (newAmount.isNaN()) {
           return
@@ -152,7 +162,7 @@ export function caculateExchangeFormData({
         if (newQuantity.lt(0)) {
           newQuantity = BigNumber(0)
         }
-        nextFormData.quantity = newQuantity.toString()
+        nextFormData.quantity = newQuantity.toFixed()
         const newAmount = BigNumber(price).multipliedBy(newQuantity)
         if (newAmount.isNaN()) {
           return
@@ -175,7 +185,7 @@ export function caculateExchangeFormData({
         if (newPrice.lt(0)) {
           newPrice = BigNumber(0)
         }
-        nextFormData.price = newPrice.toString()
+        nextFormData.price = newPrice.toFixed()
         const newAmount = BigNumber(quantity).multipliedBy(newPrice)
         if (newAmount.isNaN()) {
           return
@@ -194,7 +204,7 @@ export function caculateExchangeFormData({
         if (newQuantity.lt(0)) {
           newQuantity = BigNumber(0)
         }
-        nextFormData.quantity = newQuantity.toString()
+        nextFormData.quantity = newQuantity.toFixed()
         const newAmount = BigNumber(price).multipliedBy(newQuantity)
         if (newAmount.isNaN()) {
           return
@@ -228,5 +238,5 @@ export function slideAction({ selectedPair, formData, actions, amountVisible, cr
   }
   temp = new BigNumber(temp).dp(0, 1)
   return textInputUpdate(
-    price, temp.toString(), undefined, 'quantity', selectedPair, amountVisible, createOrderIndex)
+    price, temp.toString(), undefined, 'sliderForSell', selectedPair, amountVisible, createOrderIndex)
 }

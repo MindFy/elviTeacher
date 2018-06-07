@@ -88,7 +88,10 @@ class LastPriceList extends Component {
         onPress={() => {
           const { cellPressAction } = this.props
           if (cellPressAction) {
-            cellPressAction(rd, type)
+            cellPressAction({
+              price,
+              sum_quantity: sumQuantity,
+            }, type)
           }
         }}
       >
