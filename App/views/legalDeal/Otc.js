@@ -96,14 +96,14 @@ class Otc extends Component {
       if (error.code === 4001414) {
         Toast.fail('余额不足')
       } else if (error.code === 4001415) {
-        Toast.fail('银行卡信息未绑定')
+        Toast.fail('请先绑定银行卡')
         navigation.navigate('UpdateBank')
       } else if (error.code === 4001416) {
         Toast.fail('系统未提供可交易的商家')
       } else if (error.code === 4001417) {
         Toast.fail('商家未提供银行卡信息')
       } else if (error.code === 4001418) {
-        Toast.fail('未实名认证')
+        Toast.fail('请先实名认证')
       } else if (error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else if (error.code === 4031601) {
