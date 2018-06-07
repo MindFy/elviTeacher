@@ -67,6 +67,12 @@ export function toggleIsShowTotalPrice() {
   }
 }
 
+export function toggleIsShowDealAmount() {
+  return {
+    type: 'orders/toggle_is_show_dealAmount',
+  }
+}
+
 export function requestCancelOrder(payload) {
   return {
     type: 'orders/request_cancel_order',
