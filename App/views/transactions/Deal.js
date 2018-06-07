@@ -42,6 +42,25 @@ const styles = StyleSheet.create({
     fontSize: common.font14,
     textAlign: 'left',
   },
+  kLineView: {
+    marginTop: common.margin15,
+    backgroundColor: common.blackColor,
+    width: '100%',
+  },
+  kLineBtn: {
+    position: 'absolute',
+    top: 5,
+    right: 10,
+    height: common.h20,
+    width: common.h30,
+    backgroundColor: common.navBgColor,
+    justifyContent: 'center',
+  },
+  kLineBtnTitle: {
+    color: common.textColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+  },
 })
 
 class Deal extends Component {
@@ -340,29 +359,21 @@ class Deal extends Component {
 
   renderDepthView = () => {
     const { dispatch, kLineOrDepth, depthMap } = this.props
+    let kLineBtnTitle = 'k线'
+    if (kLineOrDepth === common.ui.kLine) {
+      kLineBtnTitle = '深度'
+    }
+    const renderCharts = () => {
+      if (kLineOrDepth === common.ui.kLine) {
+        return <KLine />
+      }
+      return <Depth depthMap={depthMap} />
+    }
     return (
-      <View
-        style={{
-          marginTop: common.margin15,
-          backgroundColor: common.blackColor,
-          width: '100%',
-        }}
-      >
-        {
-          kLineOrDepth === common.ui.kLine
-            ? <KLine />
-            : <Depth depthMap={depthMap} />
-        }
+      <View style={styles.kLineView}>
+        {renderCharts()}
         <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 5,
-            right: 10,
-            height: common.h20,
-            width: common.h30,
-            backgroundColor: common.navBgColor,
-            justifyContent: 'center',
-          }}
+          style={styles.kLineBtn}
           activeOpacity={common.activeOpacity}
           onPress={() => {
             if (kLineOrDepth === common.ui.kLine) {
@@ -372,13 +383,9 @@ class Deal extends Component {
             }
           }}
         >
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-            }}
-          >{kLineOrDepth === common.ui.kLine ? '深度' : 'k线'}</Text>
+          <Text style={styles.kLineBtnTitle}>
+            {kLineBtnTitle}
+          </Text>
         </TouchableOpacity>
       </View>
     )
