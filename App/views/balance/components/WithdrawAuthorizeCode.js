@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginLeft: common.margin48,
     marginRight: common.margin48,
-    height: 180,
+    height: '28%',
   },
   phoneContainer: {
     marginTop: common.margin20,

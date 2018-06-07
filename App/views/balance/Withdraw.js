@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Keyboard,
+  Alert,
 } from 'react-native'
 import {
   Toast,
@@ -16,6 +17,7 @@ import {
   ActionSheet,
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
+import WAValidator from 'wallet-address-validator'
 import { common } from '../../constants/common'
 import {
   coinSelected,
@@ -323,6 +325,14 @@ class WithDraw extends Component {
     return false
   }
 
+  checkWithdrawAddressIsIneligible = (address, coin) => {
+    const isIneligible =
+      !WAValidator.validate(address, coin) &&
+      !WAValidator.validate(address, coin, 'testnet')
+
+    return isIneligible
+  }
+
   withdrawPress() {
     if (this.checkValuationIsEmpty()) {
       const { dispatch } = this.props
@@ -337,11 +347,16 @@ class WithDraw extends Component {
       return
     }
 
+    const bAmount = new BigNumber(formState.withdrawAmount)
+    if (bAmount.eq(0)) {
+      Toast.message('请输入提现金额')
+      return
+    }
+
     const { currCoin } = this.props
     const { valuation } = this.props
     const { count, rates } = valuation
     const { quotaCount, withdrawedCount } = count
-    const bAmount = new BigNumber(formState.withdrawAmount)
     const bQuotaCount = new BigNumber(quotaCount)
     const bWithdrawedCount = new BigNumber(withdrawedCount)
     const bToBTC = new BigNumber(rates[currCoin].BTC)
@@ -362,6 +377,20 @@ class WithDraw extends Component {
 
     if (!formState.withdrawAddress) {
       Toast.message('请输入提现地址')
+      return
+    }
+
+    if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, currCoin)) {
+      Alert.alert(
+        '提示',
+        `请填写正确的${currCoin}提币地址！`,
+        [
+          {
+            text: '确定',
+            onPress: () => { },
+          },
+        ],
+      )
       return
     }
 
