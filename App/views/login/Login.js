@@ -53,6 +53,15 @@ class Login extends PureComponent {
     this.loginHandle(nextProps)
   }
 
+  componentWillUnmount() {
+    const { dispatch, formState } = this.props
+    dispatch(actions.loginUpdate({
+      ...formState,
+      mobile: '',
+      password: '',
+    }))
+  }
+
   onChange(event, tag) {
     const { text } = event.nativeEvent
     const { dispatch, formState } = this.props
