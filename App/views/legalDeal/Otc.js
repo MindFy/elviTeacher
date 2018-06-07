@@ -241,13 +241,13 @@ class Otc extends Component {
   }
 
   renderSubmit = () => {
-    const { type, formState, loggedIn } = this.props
+    const { type, formState } = this.props
     const { quantity } = formState
     const caption = type === common.buy ? '买入' : '卖出'
     const q = new BigNumber(quantity)
     let disabled = false
     let titleColor = common.btnTextColor
-    if (!quantity.length || q.eq(0) || !loggedIn) {
+    if (!quantity.length || q.eq(0)) {
       disabled = true
     }
     if (disabled) {
