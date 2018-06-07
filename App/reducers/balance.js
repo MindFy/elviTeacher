@@ -12,17 +12,20 @@ export default function balance(state = initialState, action) {
     case 'balance/request_balance_list':
       nextState = {
         ...state,
+        loading: true,
       }
       break
     case 'balance/request_balance_list_succeed':
       nextState = {
         ...state,
+        loading: false,
         balanceList: payload,
       }
       break
     case 'balance/request_balance_list_failed':
       nextState = {
         ...state,
+        loading: false,
       }
       break
     case 'balance/request_balance_valuation':
