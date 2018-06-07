@@ -327,8 +327,8 @@ class WithDraw extends Component {
 
   checkWithdrawAddressIsIneligible = (address, coin) => {
     const isIneligible =
-    !WAValidator.validate(address, coin) &&
-    !WAValidator.validate(address, coin, 'testnet')
+      !WAValidator.validate(address, coin) &&
+      !WAValidator.validate(address, coin, 'testnet')
 
     return isIneligible
   }
@@ -347,11 +347,16 @@ class WithDraw extends Component {
       return
     }
 
+    const bAmount = new BigNumber(formState.withdrawAmount)
+    if (bAmount.eq(0)) {
+      Toast.message('请输入提现金额')
+      return
+    }
+
     const { currCoin } = this.props
     const { valuation } = this.props
     const { count, rates } = valuation
     const { quotaCount, withdrawedCount } = count
-    const bAmount = new BigNumber(formState.withdrawAmount)
     const bQuotaCount = new BigNumber(quotaCount)
     const bWithdrawedCount = new BigNumber(withdrawedCount)
     const bToBTC = new BigNumber(rates[currCoin].BTC)
@@ -382,7 +387,7 @@ class WithDraw extends Component {
         [
           {
             text: '确定',
-            onPress: () => {},
+            onPress: () => { },
           },
         ],
       )
