@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
 import {
+  Text,
   View,
   Image,
   ScrollView,
@@ -46,11 +47,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  mobileTip: {
+    position: 'absolute',
+    top: common.margin5,
+    left: common.h80,
+    fontSize: common.font12,
+    color: common.redColor,
+  },
 })
 
 class Login extends PureComponent {
+  constructor() {
+    super()
+    this.state = {
+      showTip: false,
+    }
+  }
   componentWillReceiveProps(nextProps) {
     this.loginHandle(nextProps)
+  }
+
+  componentWillUnmount() {
+    const { dispatch, formState } = this.props
+    dispatch(actions.loginUpdate({
+      ...formState,
+      mobile: '',
+      password: '',
+    }))
   }
 
   onChange(event, tag) {
@@ -62,6 +85,7 @@ class Login extends PureComponent {
         ...formState,
         mobile: text,
       }
+      this.setState({ showTip: false })
       dispatch(actions.loginUpdate(nextFormState))
     } else if (tag === 'password') {
       const nextFormState = {
@@ -157,6 +181,18 @@ class Login extends PureComponent {
     />
   )
 
+  renderMobileTip = () => {
+    const { showTip } = this.state
+    return (
+      <View style={{ height: 40 }}>
+        { showTip ?
+          <Text style={styles.mobileTip}>
+            请输入正确的11位手机号
+          </Text> : null }
+      </View>
+    )
+  }
+
   renderInput = () => {
     const { formState, dispatch } = this.props
 
@@ -168,11 +204,20 @@ class Login extends PureComponent {
           placeholder="请输入11位手机号"
           value={formState.mobile}
           maxLength={11}
+          textInputProps={{
+            onBlur: () => {
+              if (!common.regMobile.test(this.props.formState.mobile)) {
+                this.setState({ showTip: true })
+              } else {
+                this.setState({ showTip: false })
+              }
+            },
+          }}
           onChange={e => this.onChange(e, 'mobile')}
           onFocus={() => { dispatch(actions.clearError()) }}
         />
 
-        <View style={{ height: common.h40 }} />
+        {this.renderMobileTip()}
 
         <TKInputItem
           titleStyle={{ width: common.w60 }}

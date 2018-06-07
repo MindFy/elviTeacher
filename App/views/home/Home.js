@@ -101,6 +101,7 @@ class Home extends Component {
         onRefresh={() => {
           dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
           dispatch(actions.requestBanners(schemas.findBanners()))
+          dispatch(actions.requestMarket())
         }}
         refreshing={
           !!((bannersLoading || announcementsLoading))

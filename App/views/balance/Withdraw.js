@@ -209,10 +209,14 @@ class WithDraw extends Component {
   }
 
   onChangeWithdrawAmount = (withdrawAmount) => {
+    const { dispatch, formState, balance } = this.props
     if (!withdrawAmount) {
+      dispatch(updateForm({
+        ...formState,
+        withdrawAmount,
+      }))
       return
     }
-    const { dispatch, formState, balance } = this.props
     const bWithdrawAmount = new BigNumber(withdrawAmount)
 
     if (bWithdrawAmount.isNaN()) {
@@ -401,6 +405,11 @@ class WithDraw extends Component {
     const { dispatch, currCoin, formState, authCodeType } = this.props
 
     if (authCodeType === '谷歌验证码') {
+      const { googleCode } = formState
+      if (!googleCode || googleCode.length === 0) {
+        Toast.message('请输入谷歌验证码')
+        return
+      }
       dispatch(check2GoogleAuth({
         googleCode: formState.googleCode,
       }))
