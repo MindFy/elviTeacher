@@ -140,3 +140,10 @@ export function updateEmailUpdate(data) {
     data,
   }
 }
+
+export function findAuditmanage(data) {
+  return {
+    type: constants.FIND_AUDIT_MANAGE,
+    data,
+  }
+}

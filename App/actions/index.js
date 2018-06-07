@@ -67,6 +67,7 @@ import {
   updatePasswordUpdate,
   updateEmail,
   updateEmailUpdate,
+  findAuditmanage,
 } from './user'
 import {
   selectionBarUpdate,
@@ -153,6 +154,7 @@ const actions = {
   updatePasswordUpdate,
   updateEmail,
   updateEmailUpdate,
+  findAuditmanage,
 
   selectionBarUpdate,
   kLineOrDepthUpdate,
