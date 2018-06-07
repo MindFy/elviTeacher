@@ -71,10 +71,22 @@ class Deal extends Component {
       Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}成功`)
       this.loadNecessaryData()
       dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
+    } else if (createResponse.code) {
+      const msg = this.errors[createResponse.code]
+      if (msg) Toast.fail(msg)
     } else {
       Toast.fail(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
     }
     dispatch(exchange.clearResponse())
+  }
+
+  errors = {
+    4000311: '货币或商品不存在',
+    4000312: '挂单失败，订单已经创建',
+    4000510: '参数为空',
+    4000511: '挂单失败，价格或数量为空',
+    4000513: '挂单失败，余额不足',
+    4000514: '挂单失败，余额不足',
   }
 
   cancelOrder(id) {
@@ -105,12 +117,14 @@ class Deal extends Component {
     const p = new BigNumber(price)
     const q = new BigNumber(quantity)
     const a = new BigNumber(amount)
-    if (!price.length || p === 0) {
-      Toast.message(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
+    if (!price.length || BigNumber(p).eq(0)) {
+      Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
+      this.drawer.hide()
       return
     }
-    if (!quantity.length || q === 0) {
-      Toast.message(`请输入正确的${!idx ? '买入' : '卖出'}数量`)
+    if (!quantity.length || BigNumber(q).eq(0)) {
+      Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}数量`)
+      this.drawer.hide()
       return
     }
     if (this.drawer) {
