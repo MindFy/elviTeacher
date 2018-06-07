@@ -511,7 +511,7 @@ class Orders extends Component {
     const goodsCurrency = `${goodsName}/${currencyName}`
     const buySell = item.direct === 'buy' ? '买入' : '卖出'
     const buySellColor =
-      item.direct === 'sell' ? { color: common.greenColo } : { color: common.redColor }
+      item.direct === 'sell' ? { color: common.greenColor } : { color: common.redColor }
     const cancelColor =
       cancelDisabled ? { color: common.placeholderColor } : { color: common.btnTextColor }
 
