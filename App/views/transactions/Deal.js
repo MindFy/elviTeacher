@@ -42,6 +42,25 @@ const styles = StyleSheet.create({
     fontSize: common.font14,
     textAlign: 'left',
   },
+  kLineView: {
+    marginTop: common.margin15,
+    backgroundColor: common.blackColor,
+    width: '100%',
+  },
+  kLineBtn: {
+    position: 'absolute',
+    top: 5,
+    right: 10,
+    height: common.h20,
+    width: common.h30,
+    backgroundColor: common.navBgColor,
+    justifyContent: 'center',
+  },
+  kLineBtnTitle: {
+    color: common.textColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+  },
 })
 
 class Deal extends Component {
@@ -71,10 +90,22 @@ class Deal extends Component {
       Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}成功`)
       this.loadNecessaryData()
       dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
+    } else if (createResponse.code) {
+      const msg = this.errors[createResponse.code]
+      if (msg) Toast.fail(msg)
     } else {
       Toast.fail(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
     }
     dispatch(exchange.clearResponse())
+  }
+
+  errors = {
+    4000311: '货币或商品不存在',
+    4000312: '挂单失败，订单已经创建',
+    4000510: '参数为空',
+    4000511: '挂单失败，价格或数量为空',
+    4000513: '挂单失败，余额不足',
+    4000514: '挂单失败，余额不足',
   }
 
   cancelOrder(id) {
@@ -105,12 +136,14 @@ class Deal extends Component {
     const p = new BigNumber(price)
     const q = new BigNumber(quantity)
     const a = new BigNumber(amount)
-    if (!price.length || p === 0) {
-      Toast.message(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
+    if (!price.length || BigNumber(p).eq(0)) {
+      Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
+      this.drawer.hide()
       return
     }
-    if (!quantity.length || q === 0) {
-      Toast.message(`请输入正确的${!idx ? '买入' : '卖出'}数量`)
+    if (!quantity.length || BigNumber(q).eq(0)) {
+      Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}数量`)
+      this.drawer.hide()
       return
     }
     if (this.drawer) {
@@ -311,7 +344,7 @@ class Deal extends Component {
       })
       if (valuation && valuation.rates) {
         rmb = valuation.rates[currencyName][common.token.CNYT]
-        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(4, 1)
+        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
       }
     }
     return (
@@ -326,29 +359,21 @@ class Deal extends Component {
 
   renderDepthView = () => {
     const { dispatch, kLineOrDepth, depthMap } = this.props
+    let kLineBtnTitle = 'k线'
+    if (kLineOrDepth === common.ui.kLine) {
+      kLineBtnTitle = '深度'
+    }
+    const renderCharts = () => {
+      if (kLineOrDepth === common.ui.kLine) {
+        return <KLine />
+      }
+      return <Depth depthMap={depthMap} />
+    }
     return (
-      <View
-        style={{
-          marginTop: common.margin15,
-          backgroundColor: common.blackColor,
-          width: '100%',
-        }}
-      >
-        {
-          kLineOrDepth === common.ui.kLine
-            ? <KLine />
-            : <Depth depthMap={depthMap} />
-        }
+      <View style={styles.kLineView}>
+        {renderCharts()}
         <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 5,
-            right: 10,
-            height: common.h20,
-            width: common.h30,
-            backgroundColor: common.navBgColor,
-            justifyContent: 'center',
-          }}
+          style={styles.kLineBtn}
           activeOpacity={common.activeOpacity}
           onPress={() => {
             if (kLineOrDepth === common.ui.kLine) {
@@ -358,13 +383,9 @@ class Deal extends Component {
             }
           }}
         >
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-            }}
-          >{kLineOrDepth === common.ui.kLine ? '深度' : 'k线'}</Text>
+          <Text style={styles.kLineBtnTitle}>
+            {kLineBtnTitle}
+          </Text>
         </TouchableOpacity>
       </View>
     )

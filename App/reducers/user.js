@@ -157,6 +157,7 @@ export default function user(state = initialState, action) {
       nextState = {
         ...state,
         idCardAuthVisible: false,
+        idCardAuthResponse: undefined,
       }
       break
     case constants.ID_CARD_AUTH_SUCCEED:
