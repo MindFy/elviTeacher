@@ -209,8 +209,8 @@ class Otc extends Component {
   }
 
   renderQuantity = () => {
-    const { formState: { quantity }, buy } = this.props
-    const placeholder = `${buy === common.buy ? '买入' : '卖出'}数量`
+    const { formState: { quantity }, type } = this.props
+    const placeholder = `${type === common.buy ? '买入' : '卖出'}数量`
 
     return (
       <TKInputItem
@@ -230,8 +230,8 @@ class Otc extends Component {
     if (quantity.length === 0) quantity = 0
 
     const showTotal = type === common.buy ?
-      `买入总计:${new BigNumber('1').times(new BigNumber(quantity)).toFixed()}元` :
-      `卖出总计:${new BigNumber('0.99').times(new BigNumber(quantity)).toFixed()}元`
+      `买入总计:${new BigNumber('1').times(new BigNumber(quantity)).toFixed(2, 1)}元` :
+      `卖出总计:${new BigNumber('0.99').times(new BigNumber(quantity)).toFixed(2, 1)}元`
 
     return (
       <Text
