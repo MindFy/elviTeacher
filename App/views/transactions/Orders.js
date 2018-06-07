@@ -21,6 +21,7 @@ import {
   orderHistrorySetError,
   updateSelectedTitle,
   toggleIsShowTotalPrice,
+  toggleIsShowDealAmount,
   requestCancelOrder,
   requestCancelOrderSetError,
   updateOpenOrderPage,
@@ -401,10 +402,13 @@ class Orders extends Component {
 
   keyExtractor = (item, index) => index
 
-
-  handleClickShowTotalPrice = () => {
+  handleClickShowTotalPrice = (e) => {
     const { dispatch } = this.props
-    dispatch(toggleIsShowTotalPrice())
+    if (e === 'totalPrice') {
+      dispatch(toggleIsShowTotalPrice())
+    } else if (e === 'dealAmount') {
+      dispatch(toggleIsShowDealAmount())
+    }
   }
 
   renderOpenOrderHeader = () => (
@@ -423,12 +427,17 @@ class Orders extends Component {
 
 
   renderOrderHistoryHeader = () => {
-    const { isShowTotalPrice } = this.props
+    const { isShowTotalPrice, isShowDealAmount } = this.props
 
     const rightColor =
       isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
     const leftColor =
       !isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
+
+    const daRightColor =
+      isShowDealAmount ? { color: common.btnTextColor } : { color: common.placeholderColor }
+    const daLeftColor =
+      !isShowDealAmount ? { color: common.btnTextColor } : { color: common.placeholderColor }
 
     return (
       <View style={OHCStyles.headerContainer}>
@@ -438,7 +447,7 @@ class Orders extends Component {
             style={{ flex: 1 }}
             disabled={!isShowTotalPrice}
             activeOpacity={common.activeOpacity}
-            onPress={this.handleClickShowTotalPrice}
+            onPress={() => { this.handleClickShowTotalPrice('totalPrice') }}
           >
             <Text style={[OHCStyles.headerLeft, leftColor]}>均价</Text>
           </NextTouchableOpacity>
@@ -447,7 +456,7 @@ class Orders extends Component {
             style={{ flex: 1 }}
             disabled={isShowTotalPrice}
             activeOpacity={common.activeOpacity}
-            onPress={this.handleClickShowTotalPrice}
+            onPress={() => { this.handleClickShowTotalPrice('totalPrice') }}
           >
             <Text style={[OHCStyles.headerRight, rightColor]}>价格</Text>
           </NextTouchableOpacity>
@@ -455,19 +464,19 @@ class Orders extends Component {
         <View style={OHCStyles.headerSConatiner}>
           <NextTouchableOpacity
             style={{ flex: 1 }}
-            disabled={!isShowTotalPrice}
+            disabled={!isShowDealAmount}
             activeOpacity={common.activeOpacity}
-            onPress={this.handleClickShowTotalPrice}
+            onPress={() => { this.handleClickShowTotalPrice('dealAmount') }}
           >
-            <Text style={[OHCStyles.headerLeft, leftColor]}>成交数量</Text>
+            <Text style={[OHCStyles.headerLeft, daLeftColor]}>成交数量</Text>
           </NextTouchableOpacity>
           <Text style={OHCStyles.Slash}> / </Text>
           <NextTouchableOpacity
-            disabled={isShowTotalPrice}
+            disabled={isShowDealAmount}
             activeOpacity={common.activeOpacity}
-            onPress={this.handleClickShowTotalPrice}
+            onPress={() => { this.handleClickShowTotalPrice('dealAmount') }}
           >
-            <Text style={[OHCStyles.headerRight, rightColor]}>金额</Text>
+            <Text style={[OHCStyles.headerRight, daRightColor]}>金额</Text>
           </NextTouchableOpacity>
         </View>
       </View>
@@ -548,7 +557,7 @@ class Orders extends Component {
     let averagePriceOrPrice
     let dealledOrdealAmount
 
-    const { isShowTotalPrice } = this.props
+    const { isShowTotalPrice, isShowDealAmount } = this.props
     if (!isShowTotalPrice) {
       let averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
       if (averagePrice.isNaN()) {
@@ -556,11 +565,18 @@ class Orders extends Component {
       }
       common.precision(item.goods.name, item.currency.name, (p, q) => {
         averagePriceOrPrice = averagePrice.toFixed(p, 1)
-        dealledOrdealAmount = new BigNumber(item.dealled).toFixed(q, 1)
       })
     } else {
       common.precision(item.goods.name, item.currency.name, (p, q, a) => {
         averagePriceOrPrice = new BigNumber(item.price).toFixed(p, 1)
+      })
+    }
+    if (!isShowDealAmount) {
+      common.precision(item.goods.name, item.currency.name, (p, q) => {
+        dealledOrdealAmount = new BigNumber(item.dealled).toFixed(q, 1)
+      })
+    } else {
+      common.precision(item.goods.name, item.currency.name, (p, q, a) => {
         dealledOrdealAmount = new BigNumber(item.dealamount).toFixed(a, 1)
       })
     }
@@ -579,7 +595,14 @@ class Orders extends Component {
     )
   }
 
-  renderHeader = () => this.renderOrderHistoryHeader()
+  renderHeader = () => {
+    const { titleSeleted } = this.props
+
+    if (titleSeleted === '当前委托') {
+      return null
+    }
+    return this.renderOrderHistoryHeader()
+  }
 
   renderCell = ({ item, index }) => {
     const { titleSeleted } = this.props
