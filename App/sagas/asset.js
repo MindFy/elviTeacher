@@ -29,7 +29,7 @@ export function* createAddress() {
       const copySelectedToken = { ...address.selectedToken }
       const newSelectedToken = {
         ...copySelectedToken,
-        rechargeaddr: '暂无可用地址',
+        rechargeaddr: '暂无可充值地址',
       }
       const data = {
         tokenListSelected: address.tokenListSelected,

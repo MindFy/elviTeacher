@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   CameraRoll,
+  StyleSheet,
 } from 'react-native'
 import {
   Toast,
@@ -17,6 +18,49 @@ import {
 import { common } from '../../constants/common'
 import SelectToken from './SelectToken'
 import actions from '../../actions/index'
+
+const styles = StyleSheet.create({
+  addressContainer: {
+    marginTop: common.margin10,
+    height: common.h97,
+    backgroundColor: common.navBgColor,
+    justifyContent: 'space-between',
+  },
+  addressTip: {
+    marginLeft: common.margin10,
+    marginTop: common.margin10,
+    fontSize: common.font12,
+    color: common.placeholderColor,
+  },
+  address: {
+    marginLeft: common.margin10,
+    marginTop: common.margin10,
+    fontSize: common.font14,
+    color: common.textColor,
+  },
+  btnsContainer: {
+    flexDirection: 'row',
+    marginBottom: common.margin10,
+  },
+  copyAddressBtn: {
+    marginLeft: common.margin10,
+    color: common.btnTextColor,
+    fontSize: common.font14,
+  },
+  qrBtn: {
+    marginLeft: common.margin10,
+    color: common.btnTextColor,
+    fontSize: common.font14,
+  },
+  tip: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    color: common.textColor,
+    fontSize: common.font12,
+    lineHeight: common.h15,
+  },
+})
 
 class Recharge extends Component {
   static navigationOptions(props) {
@@ -181,69 +225,31 @@ class Recharge extends Component {
   renderAddress = (selectedToken) => {
     const addressContent = (
       <View>
-        <Text
-          style={{
-            marginLeft: common.margin10,
-            marginTop: common.margin10,
-            fontSize: common.font12,
-            color: common.placeholderColor,
-          }}
-        >充值地址</Text>
-        <Text
-          style={{
-            marginLeft: common.margin10,
-            marginTop: common.margin10,
-            fontSize: common.font14,
-            color: common.textColor,
-          }}
-        >{selectedToken.rechargeaddr}</Text>
+        <Text style={styles.addressTip}>充值地址</Text>
+        <Text style={styles.address}>{selectedToken.rechargeaddr}</Text>
       </View>
     )
-    const isHide = selectedToken.rechargeaddr === '暂无可用地址'
+    const isHide = selectedToken.rechargeaddr === '暂无可充值地址'
     const addressBtn = !isHide && (
       <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginBottom: common.margin10,
-          }}
-        >
+        <View style={styles.btnsContainer}>
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => this.clipPress()}
           >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                color: common.btnTextColor,
-                fontSize: common.font14,
-              }}
-            >复制地址</Text>
+            <Text style={styles.copyAddressBtn}>复制地址</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => this.qrPress()}
           >
-            <Text
-              style={{
-                marginLeft: common.margin10,
-                color: common.btnTextColor,
-                fontSize: common.font14,
-              }}
-            >显示二维码</Text>
+            <Text style={styles.copyAddressBtn}>显示二维码</Text>
           </TouchableOpacity>
         </View>
       </View>
     )
     return (
-      <View
-        style={{
-          marginTop: common.margin10,
-          height: common.h97,
-          backgroundColor: common.navBgColor,
-          justifyContent: 'space-between',
-        }}
-      >
+      <View style={styles.addressContainer}>
         {addressContent}
         {addressBtn}
       </View>
@@ -270,26 +276,8 @@ class Recharge extends Component {
       return (
         <View>
           {addressView}
-          <Text
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-              lineHeight: common.h15,
-            }}
-          >温馨提示:</Text>
-          <Text
-            style={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font10,
-              lineHeight: common.h15,
-            }}
-          >{`1. 请勿向上述地址充值任何非BTC资产，否则资产将不可找回。
+          <Text style={styles.tip}>温馨提示:</Text>
+          <Text style={styles.tip}>{`1. 请勿向上述地址充值任何非BTC资产，否则资产将不可找回。
 2. 您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。
 3. 最小充值金额：0.00000001 ${selectedToken.token.name}，小于最小金额的充值将不会上账。
 4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。
@@ -301,6 +289,8 @@ class Recharge extends Component {
   }
   render() {
     const { dispatch, selectedToken, tokenListSelected } = this.props
+    const contentCell =
+      (selectedToken !== '选择币种' && !tokenListSelected) && this.renderBottomCell()
     return (
       <View
         style={{
@@ -319,7 +309,7 @@ class Recharge extends Component {
             selectedTokenBlock={() => { }}
           />
 
-          {this.renderBottomCell()}
+          {contentCell}
         </ScrollView>
       </View>
     )
@@ -335,6 +325,7 @@ function mapStateToProps(store) {
 
     selectedToken: store.address.selectedToken,
     tokenListSelected: store.address.tokenListSelected,
+
     user: store.user,
   }
 }
