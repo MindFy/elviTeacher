@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   address: {
     marginLeft: common.margin10,
-    marginTop: common.margin10,
+    marginTop: common.margin15,
     fontSize: common.font14,
     color: common.textColor,
   },
@@ -77,6 +77,26 @@ const styles = StyleSheet.create({
     color: common.textColor,
     fontSize: common.font12,
     lineHeight: common.h15,
+  },
+  qrContainer: {
+    backgroundColor: '#fff',
+    top: -common.w40,
+    borderRadius: common.radius6,
+    height: 2 * common.h100,
+    width: 2 * common.h100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  qrRecharge: {
+    position: 'absolute',
+    top: common.margin10,
+    fontSize: common.font14,
+    color: common.blackColor,
+  },
+  qrImage: {
+    height: common.h100,
+    width: common.h100,
+    alignSelf: 'center',
   },
 })
 
@@ -167,57 +187,30 @@ class Recharge extends Component {
         modal={false}
         overlayOpacity={0}
       >
-        <View
-          style={{
-            backgroundColor: '#fff',
-            top: -common.w40,
-            borderRadius: common.radius6,
-            height: 2 * common.h100,
-            width: 2 * common.h100,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text
+        <View style={styles.qrContainer}>
+          <Text style={styles.qrRecharge}>{`${coinName}充值地址`}</Text>
+          <Image
+            style={styles.qrImage}
+            source={{ uri: `${qrApi}${rechargeAddress}` }}
+          />
+          <TouchableOpacity
             style={{
               position: 'absolute',
-              top: common.margin10,
-              fontSize: common.font14,
-              color: common.blackColor,
+              bottom: common.margin10,
             }}
-          >{`${coinName}充值地址`}</Text>
-          {
-            rechargeAddress ?
-              <Image
-                style={{
-                  height: common.h100,
-                  width: common.h100,
-                  alignSelf: 'center',
-                }}
-                source={{ uri: `${qrApi}${rechargeAddress}` }}
-              /> : null
-          }
-          {
-            rechargeAddress ?
-              <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  bottom: common.margin10,
-                }}
-                activeOpacity={common.activeOpacity}
-                onPress={() => {
-                  // 保存图片
-                  this._saveImageToCameraRoll(rechargeAddress, qrApi)
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: common.font14,
-                    color: common.btnTextColor,
-                  }}
-                >保存二维码</Text>
-              </TouchableOpacity> : null
-          }
+            activeOpacity={common.activeOpacity}
+            onPress={() => {
+              // 保存图片
+              this._saveImageToCameraRoll(rechargeAddress, qrApi)
+            }}
+          >
+            <Text
+              style={{
+                fontSize: common.font14,
+                color: common.btnTextColor,
+              }}
+            >保存二维码</Text>
+          </TouchableOpacity>
         </View>
       </Overlay.View>
     )
@@ -245,35 +238,36 @@ class Recharge extends Component {
 
   canRechargeAddress = ['BTC', 'ETH', 'ETC', 'LTC']
 
-  renderCoinSelector = (currCoin, listToggled, showForm) => (
-    <TouchableOpacity
-      activeOpacity={common.activeOpacity}
-      onPress={() => {
-        if (showForm) {
-          showForm()
-        }
-      }}
-    >
-      <View style={styles.coinSelector}>
-        <Text style={styles.coin}>{currCoin.name}</Text>
-        <View style={{ alignSelf: 'center' }}>
-          <Image
-            style={listToggled ? {
-              width: common.h20,
-              height: common.w10,
-            } : {
-              marginRight: common.margin10,
-              height: common.h20,
-              width: common.w10,
-            }}
-            source={(listToggled ?
-              require('../../assets/arrow_down.png') :
-              require('../../assets/arrow_right.png'))}
-          />
+  renderCoinSelector = (currCoin, listToggled, showForm) => {
+    const arrow = listToggled ? (
+      <Image
+        style={{ marginRight: common.margin10, width: common.h20, height: common.w10 }}
+        source={require('../../assets/arrow_down.png')}
+      />
+    ) : (
+      <Image
+        style={{ marginRight: common.margin10, height: common.h20, width: common.w10 }}
+        source={require('../../assets/arrow_right.png')}
+      />
+    )
+    return (
+      <TouchableOpacity
+        activeOpacity={common.activeOpacity}
+        onPress={() => {
+          if (showForm) {
+            showForm()
+          }
+        }}
+      >
+        <View style={styles.coinSelector}>
+          <Text style={styles.coin}>{currCoin.name}</Text>
+          <View style={{ alignSelf: 'center' }}>
+            {arrow}
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  )
+      </TouchableOpacity>
+    )
+  }
 
   renderCoinList = (coinList, listToggled, tapCoinListCell) => {
     if (!listToggled) return null
@@ -309,6 +303,17 @@ class Recharge extends Component {
     ))
     return coinListView
   }
+
+  renderTip = tokenName => (
+    <View>
+      <Text style={styles.tip}>温馨提示:</Text>
+      <Text style={styles.tip}>{`1. 请勿向上述地址充值任何非BTC资产，否则资产将不可找回。
+  2. 您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。
+  3. 最小充值金额：0.00000001 ${tokenName}，小于最小金额的充值将不会上账。
+  4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。
+  5. 请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
+    </View>
+  )
 
   renderRechargeAddress = (rechargeAddress, coinName, qrApi) => {
     const addressContent = (
@@ -359,6 +364,7 @@ class Recharge extends Component {
       this.renderRechargeAddress(
         rechargeAddress[currCoin.id].rechargeaddr, currCoin.name, api.qrApi,
       )
+    const tipView = ishasAddress && this.renderTip(currCoin.name)
 
     return (
       <View
@@ -375,6 +381,7 @@ class Recharge extends Component {
           {coinSelector}
           {coinListView}
           {rechargeAddressView}
+          {tipView}
         </ScrollView>
       </View>
     )

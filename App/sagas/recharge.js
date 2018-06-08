@@ -2,11 +2,10 @@ import {
   call,
   put,
   takeEvery,
-  select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
-export function* requestCoinListWorker(action) {
+export function* requestCoinListWorker() {
   // const { payload } = action
   // const response = yield call(api.api_here, payload)
 
