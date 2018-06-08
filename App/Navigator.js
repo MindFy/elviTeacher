@@ -53,7 +53,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/首页.png') : require('./assets/首页copy2.png')}
+            source={focused ? require('./assets/home_selected.png') : require('./assets/home.png')}
           />
         ),
       },
@@ -68,7 +68,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/市场selected.png') : require('./assets/市场分析.png')}
+            source={focused ? require('./assets/market_selected.png') : require('./assets/market.png')}
           />
         ),
       },
@@ -83,7 +83,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/交易copy2.png') : require('./assets/交易.png')}
+            source={focused ? require('./assets/transaction_yellow.png') : require('./assets/transaction_white.png')}
           />
         ),
       },
@@ -98,7 +98,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/个人资金copy.png') : require('./assets/个人资金.png')}
+            source={focused ? require('./assets/personal_funds_selected.png') : require('./assets/personal_funds.png')}
           />
         ),
       },
@@ -113,7 +113,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/我的copy4.png') : require('./assets/我的.png')}
+            source={focused ? require('./assets/me_selected.png') : require('./assets/me.png')}
           />
         ),
       },
@@ -121,7 +121,6 @@ const TabBar = TabNavigator(
   },
   {
     tabBarPosition: 'bottom',
-    lazy: true,
     tabBarOptions: {
       activeTintColor: common.btnTextColor,
       inactiveTintColor: common.placeholderColor,

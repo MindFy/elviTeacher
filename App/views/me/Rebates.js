@@ -74,7 +74,7 @@ class Rebates extends Component {
               width: common.w10,
               height: common.h20,
             }}
-            source={require('../../assets/下拉copy.png')}
+            source={require('../../assets/arrow_left_left.png')}
           />
         </TouchableOpacity>
       ),
@@ -351,7 +351,7 @@ class Rebates extends Component {
                 height: common.h15,
                 width: common.h15,
               }}
-              source={require('../../assets/二维码copy.png')}
+              source={require('../../assets/qrcode_yellow.png')}
             />
             <Text
               style={{

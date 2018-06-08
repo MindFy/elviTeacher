@@ -115,28 +115,28 @@ export default class Buttons extends PureComponent {
             theme={'home-balance'}
             caption={'充值'}
             onPress={() => this.rechargePress('balance')}
-            icon={require('../../assets/充值.png')}
+            icon={require('../../assets/recharge.png')}
           />
 
           <TKButton
             theme={'home-balance'}
             caption={'提现'}
             onPress={() => this.cashPress('balance')}
-            icon={require('../../assets/充值copy.png')}
+            icon={require('../../assets/recharge2.png')}
           />
 
           <TKButton
             theme={'home-balance'}
             caption={'当前委托'}
             onPress={() => this.currentPress()}
-            icon={require('../../assets/当前委托.png')}
+            icon={require('../../assets/currentDelegate.png')}
           />
 
           <TKButton
             theme={'home-balance'}
             caption={'历史委托'}
             onPress={() => this.historyPress()}
-            icon={require('../../assets/法币交易.png')}
+            icon={require('../../assets/transaction_white.png')}
           />
         </View>
 
@@ -146,14 +146,14 @@ export default class Buttons extends PureComponent {
             theme={'balance'}
             caption={'充值'}
             onPress={() => this.rechargePress()}
-            icon={require('../../assets/充值.png')}
+            icon={require('../../assets/recharge.png')}
           />
 
           <TKButton
             theme={'balance'}
             caption={'提现'}
             onPress={() => this.cashPress()}
-            icon={require('../../assets/充值copy.png')}
+            icon={require('../../assets/recharge2.png')}
           />
         </View>
       </ScrollView>
