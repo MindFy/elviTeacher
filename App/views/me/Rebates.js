@@ -155,9 +155,6 @@ class Rebates extends Component {
   refreshData() {
     const { dispatch, loggedInResult } = this.props
     dispatch(actions.requestUser(schemas.findUser(loggedInResult.id)))
-    dispatch(actions.requesetInvitationCount({
-      userid: loggedInResult.id,
-    }))
   }
 
   clipUID() {
@@ -279,7 +276,7 @@ class Rebates extends Component {
       rebatesLink = api.rebatesLink + prefixNo + recommendId
     }
 
-    const tkINum = totalCountTK ? BigNumber(totalCountTK).toFixed(8, 1) : 0
+    const tkINum = totalCountTK ? BigNumber(totalCountTK).toFixed(0, 1) : 0
     const tkItem = (
       <View style={styles.textOutContainer}>
         <Text style={styles.textTitle}>

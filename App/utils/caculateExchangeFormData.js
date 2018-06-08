@@ -17,6 +17,9 @@ export function textInputLimit(
       a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
       return { p: '0', q: quantity, a }
     }
+    if (price.endsWith('.') && precisionPrice === 0) { // 精度为个位限制输入小数点
+      return undefined
+    }
     if (pArr.length > 1 && pArr[1].length > precisionPrice) { // 小数精度限制
       return undefined
     }
@@ -42,6 +45,9 @@ export function textInputLimit(
       let a = new BigNumber(q).multipliedBy(price)
       a = a.isNaN() ? '' : a.toFixed(precisionAmount, 1)
       return { p: price, q: '0', a }
+    }
+    if (quantity.endsWith('.') && precisionQuantity === 0) { // 精度为个位限制输入小数点
+      return undefined
     }
     if (qArr.length > 1 && qArr[1].length > precisionQuantity) { // 小数精度限制
       return undefined

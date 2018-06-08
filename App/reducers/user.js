@@ -65,6 +65,9 @@ const initialState = {
   updateEmailVisible: false,
 
   findAuditmanageData: undefined,
+
+  mobileIsExistRequesting: false,
+  mobileIsExist: false,
 }
 
 export default function user(state = initialState, action) {
@@ -341,6 +344,27 @@ export default function user(state = initialState, action) {
       nextState = {
         ...state,
         findAuditmanageData: action.data,
+      }
+      break
+    case 'user/mobile_isExist_requesting':
+      nextState = {
+        ...state,
+        mobileIsExistRequesting: true,
+        mobileIsExist: false,
+      }
+      break
+    case 'user/mobile_isExist_result':
+      nextState = {
+        ...state,
+        mobileIsExistRequesting: false,
+        mobileIsExist: action.data,
+      }
+      break
+    case 'user/mobile_isExist_clear':
+      nextState = {
+        ...state,
+        mobileIsExistRequesting: false,
+        mobileIsExist: false,
       }
       break
     case 'notify/clear_reducer':

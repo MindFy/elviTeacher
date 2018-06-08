@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     fontSize: common.font12,
   },
   input: {
+    padding: 0,
     paddingLeft: common.margin5,
     paddingBottom: common.margin5,
     paddingRight: common.margin5,
@@ -122,6 +123,7 @@ export default class AllegeView extends PureComponent {
               placeholderTextColor={'rgb(216,216,216)'}
               value={inputValue}
               onChangeText={onChangeText}
+              underlineColorAndroid="transparent"
             />
           </View>
           <Text style={styles.tip}>

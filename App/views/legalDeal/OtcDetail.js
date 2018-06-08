@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -535,7 +536,8 @@ class OtcDetail extends Component {
           placeholder={'请填写投诉事由，50个字之内'}
           cancelPress={() => this.setState({ showAllegeView: false })}
           confirmPress={() => {
-            if (!formState.allegeText || formState.allegeText > 50) {
+            Keyboard.dismiss()
+            if (!formState.allegeText || formState.allegeText.length > 50) {
               Toast.message('请填写投诉事由，50个字之内')
               return
             }

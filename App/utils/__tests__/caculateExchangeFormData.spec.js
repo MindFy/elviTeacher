@@ -29,6 +29,17 @@ describe('输入框price 测试', () => {
     expect(textInputLimit('0.00000010', '24', undefined, 8, 0, 8, 'quantity', '9999', 0))
       .toEqual({ p: '0.00000010', q: '24', a: '0.00000240' })
   })
+  it('输入框price 精度为个位限制输入小数点', () => {
+    // const params =
+    expect(textInputLimit('1.', '', undefined, 0, 4, 6, 'price', '9999', 0))
+      .toEqual(undefined)
+    expect(textInputLimit('1.1', '', undefined, 0, 4, 6, 'price', '9999', 0))
+      .toEqual(undefined)
+    expect(textInputLimit('0.', '', undefined, 0, 4, 6, 'price', '9999', 0))
+      .toEqual(undefined)
+    expect(textInputLimit('.', '', undefined, 0, 4, 6, 'price', '9999', 0))
+      .toEqual(undefined)
+  })
   it('输入框price 输入超过小数精度为2的值', () => {
     // const params =
     expect(textInputLimit('0.012', '', undefined, 2, 4, 6, 'price', '9999', 0))
@@ -93,6 +104,17 @@ describe('输入框quantity 测试', () => {
       .toEqual({ p: '', q: '0.0000', a: '' })
     expect(textInputLimit('0.081', '0.0001', undefined, 6, 4, 6, 'quantity', '9999', 0))
       .toEqual({ p: '0.081', q: '0.0001', a: '0.000008' })
+  })
+  it('输入框quantity 精度为个位限制输入小数点', () => {
+    // const params =
+    expect(textInputLimit('', '1.', undefined, 4, 0, 6, 'quantity', '9999', 0))
+      .toEqual(undefined)
+    expect(textInputLimit('', '1.1', undefined, 4, 0, 6, 'quantity', '9999', 0))
+      .toEqual(undefined)
+    expect(textInputLimit('', '0.', undefined, 4, 0, 6, 'quantity', '9999', 0))
+      .toEqual(undefined)
+    expect(textInputLimit('', '.', undefined, 4, 0, 6, 'quantity', '9999', 0))
+      .toEqual(undefined)
   })
   it('输入框quantity 输入超过小数精度为4的值', () => {
     // const params =

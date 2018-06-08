@@ -147,3 +147,16 @@ export function findAuditmanage(data) {
     data,
   }
 }
+
+export function mobileIsExist(data) {
+  return {
+    type: 'user/mobile_isExist_requesting',
+    data,
+  }
+}
+
+export function clearMobileIsExist() {
+  return {
+    type: 'user/mobile_isExist_clear',
+  }
+}
