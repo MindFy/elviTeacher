@@ -13,6 +13,7 @@ export default class KLine extends Component {
           width: common.sw,
           height: common.sw * common.sw / common.sh,
         }}
+        // source={{ uri: 'http://192.168.1.165:8000/tpl.html' }}
         // bounces={false}
         // contentInset={{
         //   top: 0,

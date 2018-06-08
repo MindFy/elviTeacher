@@ -7,7 +7,7 @@ import { common } from '../constants/common'
 
 class TKCheckCodeBtn extends Component {
   state = {
-    title: '验证码',
+    title: '获取验证码',
   }
 
   componentWillUnmount() {
@@ -33,7 +33,7 @@ class TKCheckCodeBtn extends Component {
     this.timerID = setInterval(() => {
       if (this.count === 0) {
         this.setState({
-          title: '验证码',
+          title: '获取验证码',
         })
         clearImmediate(this.timerID)
         this.timerID = null

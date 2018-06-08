@@ -21,6 +21,10 @@ import {
   submitRequest,
   clearResponse,
 } from '../../actions/otc'
+import {
+  requestBalanceList,
+} from '../../actions/balance'
+import findAssetList from '../../schemas/asset'
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +94,7 @@ class Otc extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { response } = nextProps
-    const { navigation, dispatch, type } = this.props
+    const { navigation, dispatch, type, loggedInResult } = this.props
 
     if (!response) return
 
@@ -118,6 +122,7 @@ class Otc extends Component {
       Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!', 5000, 'bottom')
     } else {
       Toast.success('卖出成功')
+      dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
     }
     dispatch(clearResponse())
   }
@@ -194,6 +199,7 @@ class Otc extends Component {
         onPress={(e) => {
           const types = ['buy', 'sell']
           dispatch(changeType(types[e.index]))
+          dispatch(updateForm(''))
         }}
       />)
   }
@@ -319,7 +325,6 @@ class Otc extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
           contentContainerStyle={styles.scrollviewContentContainer}
         >
           {this.renderSelectionBar()}
@@ -340,6 +345,7 @@ function mapStateToProps(state) {
   return {
     ...state.otc,
     loggedIn: state.authorize.loggedIn,
+    loggedInResult: state.authorize.loggedInResult,
     balanceList: state.balance.balanceList,
     amountVisible: state.asset.amountVisible,
   }

@@ -174,6 +174,7 @@ const common = {
   margin210: 210 / w * sw,
 
   w10: 10 / w * sw,
+  w15: 15 / w * sw,
   w20: 20 / w * sw,
   w25: 25 / w * sw,
   w40: 40 / w * sw,

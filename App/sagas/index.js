@@ -3,7 +3,6 @@ import * as user from './user'
 import * as rebates from './rebates'
 import * as payment from './payment'
 import * as legalDeal from './legalDeal'
-import invitationTotalCount from './invitation'
 import getRose from './dealstat'
 import * as deal from './deal'
 import * as asset from './asset'
@@ -57,9 +56,10 @@ export default function* rootSaga() {
     fork(user.updateEmail),
     fork(user.updatePassword),
 
-    fork(rebates.rebatesCount),
-    fork(rebates.rebatesCountTK),
-    fork(rebates.rebateCountBTC),
+    fork(rebates.requestUser),
+    fork(rebates.requestInvitationCount),
+    fork(rebates.requestRebatesCountTK),
+    fork(rebates.requestRebatesCountBTC),
 
     fork(payment.cancelWithdraw),
     fork(payment.findPaymentListRecharge),
@@ -72,8 +72,6 @@ export default function* rootSaga() {
     fork(legalDeal.legalDealCreate),
     fork(legalDeal.findLegalDeal),
     fork(legalDeal.havedPay),
-
-    fork(invitationTotalCount),
 
     fork(getRose),
 

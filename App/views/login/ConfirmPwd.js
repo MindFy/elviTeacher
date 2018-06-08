@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     backgroundColor: common.bgColor,
   },
   inputView: {
+    flex: undefined,
     marginTop: common.margin110,
     marginLeft: common.margin38,
     marginRight: common.margin38,
@@ -60,7 +61,7 @@ class ConfirmPwd extends Component {
               width: common.w10,
               height: common.h20,
             }}
-            source={require('../../assets/下拉copy.png')}
+            source={require('../../assets/arrow_left_left.png')}
           />
         </TouchableOpacity>
       ),
@@ -153,15 +154,16 @@ class ConfirmPwd extends Component {
 
     const { password, passwordAgain, resetPasswordVisible } = this.props
     return (
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-      >
-        <ScrollView
-          keyboardDismissMode={'on-drag'}
-          keyboardShouldPersistTaps={'handled'}
-        >
 
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
+      >
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="position"
+        >
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={styles.input}
@@ -193,12 +195,11 @@ class ConfirmPwd extends Component {
             onPress={() => this.confirmPress()}
             disabled={resetPasswordVisible}
           />
-        </ScrollView>
-
+        </KeyboardAvoidingView>
         <TKSpinner
           isVisible={resetPasswordVisible}
         />
-      </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }

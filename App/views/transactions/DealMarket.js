@@ -60,10 +60,10 @@ export default class DealMarket extends PureComponent {
     let newRose = new BigNumber(rose)
     if (newRose.gt(0)) {
       cpriceColor = common.redColor
-      dirImageSource = require('../../assets/箭头.png')
+      dirImageSource = require('../../assets/red_arrow_up.png')
     } else if (newRose.lt(0)) {
       cpriceColor = common.greenColor
-      dirImageSource = require('../../assets/箭头copy.png')
+      dirImageSource = require('../../assets/down_arrow_green.png')
     } else {
       cpriceColor = common.textColor
     }

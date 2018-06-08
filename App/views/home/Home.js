@@ -69,10 +69,10 @@ class Home extends Component {
     const btnTitles = ['充值', '提现', '当前委托', '历史委托']
     const menuBtns = []
     const icons = [
-      require('../../assets/充值.png'),
-      require('../../assets/充值copy.png'),
-      require('../../assets/当前委托.png'),
-      require('../../assets/法币交易.png'),
+      require('../../assets/recharge.png'),
+      require('../../assets/recharge2.png'),
+      require('../../assets/currentDelegate.png'),
+      require('../../assets/transaction_white.png'),
     ]
 
     for (let i = 0; i < btnTitles.length; i++) {

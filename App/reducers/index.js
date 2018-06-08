@@ -3,7 +3,6 @@ import address from './address'
 import asset from './asset'
 import deal from './deal'
 import dealstat from './dealstat'
-import invitation from './invitation'
 import legalDeal from './legalDeal'
 import payment from './payment'
 import rebates from './rebates'
@@ -29,7 +28,6 @@ const rootReducer = combineReducers({
   asset,
   deal,
   dealstat,
-  invitation,
   legalDeal,
   payment,
   rebates,

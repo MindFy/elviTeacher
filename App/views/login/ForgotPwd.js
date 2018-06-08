@@ -71,7 +71,7 @@ class ForgotPwd extends Component {
                 width: common.w10,
                 height: common.h20,
               }}
-              source={require('../../assets/下拉copy.png')}
+              source={require('../../assets/arrow_left_left.png')}
             />
           </TouchableOpacity>
         ),
@@ -206,10 +206,10 @@ class ForgotPwd extends Component {
     const { showTip } = this.state
     return (
       <View style={{ height: 40 }}>
-        { showTip ?
+        {showTip ?
           <Text style={styles.mobileTip}>
             请输入正确的11位手机号
-          </Text> : null }
+          </Text> : null}
       </View>
     )
   }
@@ -220,19 +220,21 @@ class ForgotPwd extends Component {
 
     const { mobile, code, getVerificateCodeVisible, checkVerificateCodeVisible } = this.props
     return (
-      <KeyboardAvoidingView
+      <ScrollView
         style={styles.container}
-        behavior="padding"
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
       >
-        <ScrollView
-          keyboardDismissMode={'on-drag'}
-          keyboardShouldPersistTaps={'handled'}
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="position"
         >
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={styles.input}
             titleStyle={styles.inputText}
             textInputProps={{
+              keyboardType: 'phone-pad',
               onBlur: () => {
                 if (!common.regMobile.test(this.props.mobile)) {
                   this.setState({ showTip: true })
@@ -247,9 +249,7 @@ class ForgotPwd extends Component {
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
           />
-
           {this.renderMobileTip()}
-
           <TKInputItemCheckCode
             viewStyle={[styles.inputView, { marginTop: 0 }]}
             inputStyle={styles.input}
@@ -260,8 +260,10 @@ class ForgotPwd extends Component {
             maxLength={6}
             onPressCheckCodeBtn={() => this.codePress()}
             onChange={e => this.onChange(e, 'code')}
+            textInputProps={{
+              keyboardType: 'numeric',
+            }}
           />
-
           <TKButton
             style={{ marginTop: common.margin210 }}
             theme={'yellow'}
@@ -269,11 +271,12 @@ class ForgotPwd extends Component {
             disabled={getVerificateCodeVisible}
             onPress={() => this.nextPress()}
           />
-        </ScrollView>
+        </KeyboardAvoidingView>
         <TKSpinner
           isVisible={checkVerificateCodeVisible}
         />
-      </KeyboardAvoidingView>
+      </ScrollView>
+
     )
   }
 }

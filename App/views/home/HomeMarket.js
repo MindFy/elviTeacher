@@ -118,11 +118,11 @@ export default class HomeMarket extends Component {
       priceColor = common.redColor
       rangeColor = common.redColor
       roseSymbol = '+'
-      dirImageSource = require('../../assets/箭头.png')
+      dirImageSource = require('../../assets/red_arrow_up.png')
     } else if (rose.lt(0)) {
       priceColor = common.greenColor
       rangeColor = common.greenColor
-      dirImageSource = require('../../assets/箭头copy.png')
+      dirImageSource = require('../../assets/down_arrow_green.png')
     } else {
       priceColor = common.textColor
       rangeColor = common.textColor
