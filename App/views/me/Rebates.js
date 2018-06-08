@@ -193,9 +193,8 @@ class Rebates extends Component {
 
   _tapLinkQRImage = (uri) => {
     const items = [
-      { title: '分享', onPress: this._shareImage },
-      {
-        title: '保存图片',
+      { title: '保存图片',
+
         onPress: () => {
           this._saveImage(uri)
         },
