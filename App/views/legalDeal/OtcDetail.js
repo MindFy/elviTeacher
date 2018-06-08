@@ -185,10 +185,11 @@ class OtcDetail extends Component {
   }
 
   cancelPress(title, id) {
-    const { dispatch } = this.props
+    const { dispatch, formState } = this.props
     if (title === '撤单') {
       dispatch(requestCancel({ id }))
     } else if (title === '投诉') {
+      dispatch(updateForm({ ...formState, allegeText: '' }))
       this.setState({
         showAllegeView: true,
         allegeId: id,
