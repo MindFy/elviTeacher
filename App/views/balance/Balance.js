@@ -237,11 +237,13 @@ class Balance extends Component {
     if (valuation && valuation.rates) {
       for (let i = 0; i < balanceList.length; i++) {
         const element = balanceList[i]
-        const amount = new BigNumber(element.amount).plus(element.freezed)
+        const amount = new BigNumber(element.amount).plus(new BigNumber(element.freezed))
         const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
         const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
-        amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
-        amountRMB = amount.multipliedBy(scaleCNYT).plus(amountRMB)
+        const nextAmountBTC = amount.multipliedBy(scaleBTC).toFixed(2, 1)
+        amountBTC = new BigNumber(nextAmountBTC).plus(amountBTC)
+        const nextAmountRMB = amount.multipliedBy(scaleCNYT).toFixed(2, 1)
+        amountRMB = new BigNumber(nextAmountRMB).plus(amountRMB)
       }
     }
     amountBTC = amountBTC.toFixed(8, 1)
