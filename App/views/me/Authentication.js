@@ -72,7 +72,7 @@ class Authentication extends Component {
               width: common.w10,
               height: common.h20,
             }}
-            source={require('../../assets/下拉copy.png')}
+            source={require('../../assets/arrow_left_left.png')}
           />
         </TouchableOpacity>
       ),
@@ -311,7 +311,7 @@ class Authentication extends Component {
       <ScrollView>
         <Image
           style={styles.imageSucceed}
-          source={require('../../assets/成功.png')}
+          source={require('../../assets/success.png')}
         />
         <Text style={styles.titleSucceed}>
           恭喜！身份认证成功！
@@ -323,14 +323,18 @@ class Authentication extends Component {
   renderFailed() {
     const { dispatch, findAuditmanageData } = this.props
     let reason = ''
-    if (findAuditmanageData) {
-      reason = findAuditmanageData[0].auditdata.refuseReason
+    try {
+      if (findAuditmanageData) {
+        reason = findAuditmanageData[0].auditdata.refuseReason
+      }
+    } catch (ex) {
+      reason = ''
     }
     return (
       <ScrollView>
         <Image
           style={styles.imageSucceed}
-          source={require('../../assets/失败.png')}
+          source={require('../../assets/failed.png')}
         />
         <Text style={styles.titleSucceed}>
           抱歉！您的身份认证未通过审核！

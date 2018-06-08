@@ -43,6 +43,10 @@ import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 
 const styles = StyleSheet.create({
+  contaier: {
+    flex: 1,
+    backgroundColor: common.blackColor,
+  },
   coinSelector: {
     marginTop: common.margin10,
     height: common.h40,
@@ -115,7 +119,7 @@ class WithDraw extends Component {
                 width: common.w10,
                 height: common.h20,
               }}
-              source={require('../../assets/下拉copy.png')}
+              source={require('../../assets/arrow_left_left.png')}
             />
           </TouchableOpacity>
         ),
@@ -485,8 +489,13 @@ class WithDraw extends Component {
   }
 
   showVerificationCode = () => {
-    const { dispatch, user } = this.props
+    const { dispatch, user, formState } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
+    dispatch(updateForm({
+      ...formState,
+      verificationCode: '',
+      googleCode: '',
+    }))
     const overlayView = (
       <Overlay.View
         style={{
@@ -594,8 +603,8 @@ class WithDraw extends Component {
                 width: common.w10,
               }}
               source={(listToggled ?
-                require('../../assets/下拉--向下.png') :
-                require('../../assets/下拉--向右.png'))}
+                require('../../assets/arrow_down.png') :
+                require('../../assets/arrow_right.png'))}
             />
           </View>
         </View>
@@ -731,7 +740,7 @@ class WithDraw extends Component {
                   width: common.w20,
                   height: common.w20,
                 }}
-                source={require('../../assets/二维码.png')}
+                source={require('../../assets/qrcode_white.png')}
               />
             </TouchableOpacity>
             <TouchableOpacity
@@ -743,7 +752,8 @@ class WithDraw extends Component {
                   width: common.w20,
                   height: common.w20,
                 }}
-                source={require('../../assets/二维码.png')}
+                resizeMode="contain"
+                source={require('../../assets/arrow_down.png')}
               />
             </TouchableOpacity>
           </View>
@@ -844,22 +854,23 @@ class WithDraw extends Component {
     const coinList = this.renderCoinList()
     const form = this.renderForm()
     return (
-      <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-        behavior="padding"
+
+      <ScrollView
+        style={styles.contaier}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
+        <KeyboardAvoidingView
+          style={{
+            flex: 1,
+            backgroundColor: common.bgColor,
+          }}
+          behavior="position"
         >
           {coinSelector}
           {coinList}
           {form}
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }

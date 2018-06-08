@@ -2,7 +2,9 @@ import React from 'react'
 import { StackNavigator, TabNavigator } from 'react-navigation'
 import {
   Image,
+  Animated,
 } from 'react-native'
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import {
   common,
 } from './constants/common'
@@ -53,7 +55,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/首页.png') : require('./assets/首页copy2.png')}
+            source={focused ? require('./assets/home_selected.png') : require('./assets/home.png')}
           />
         ),
       },
@@ -68,7 +70,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/市场selected.png') : require('./assets/市场分析.png')}
+            source={focused ? require('./assets/market_selected.png') : require('./assets/market.png')}
           />
         ),
       },
@@ -83,7 +85,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/交易copy2.png') : require('./assets/交易.png')}
+            source={focused ? require('./assets/transaction_yellow.png') : require('./assets/transaction_white.png')}
           />
         ),
       },
@@ -98,7 +100,7 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/个人资金copy.png') : require('./assets/个人资金.png')}
+            source={focused ? require('./assets/personal_funds_selected.png') : require('./assets/personal_funds.png')}
           />
         ),
       },
@@ -113,16 +115,18 @@ const TabBar = TabNavigator(
               height: common.h20,
               width: common.h20,
             }}
-            source={focused ? require('./assets/我的copy4.png') : require('./assets/我的.png')}
+            source={focused ? require('./assets/me_selected.png') : require('./assets/me.png')}
           />
         ),
       },
     },
   },
   {
-    tabBarPosition: 'bottom',
+    swipeEnabled: false,
     lazy: true,
+    tabBarPosition: 'bottom',
     tabBarOptions: {
+      showIcon: true,
       activeTintColor: common.btnTextColor,
       inactiveTintColor: common.placeholderColor,
       style: {
@@ -138,58 +142,78 @@ const TabBar = TabNavigator(
   },
 )
 
-const TabBarStack = StackNavigator({
-  TabBar,
-  Deal: {
-    screen: Deal,
-    navigationOptions: {
-      header: null,
-    },
+const TransitionConfiguration = () => ({
+  transitionSpec: {
+    timing: Animated.timing,
+    duration: 250,
   },
-  Market2,
-  Orders,
-  ScanBarCode,
-  History,
-  Withdraw,
-  Recharge,
-  AddAddress,
-  Authentication,
-  Settings,
-  UpdatePassword,
-  Otc,
-  OtcDetail,
-  Payment,
-  UpdateBank,
-  Banner,
-  Announcement,
-  SecurityCenter,
-  UpdateEmail,
-  Rebates: {
-    screen: Rebates,
-  },
-  Buttons,
-}, {
-  headerMode: 'screen',
-},
-)
-
-const LoginStack = DismissableStackNavigator({
-  Login: {
-    screen: Login,
-  },
-  Register: {
-    screen: Register,
-  },
-  ForgotPwd: {
-    screen: ForgotPwd,
-  },
-  ConfirmPwd: {
-    screen: ConfirmPwd,
-  },
-  Agreement: {
-    screen: Agreement,
+  screenInterpolator: (sceneProps) => {
+    const { scene } = sceneProps
+    const { route } = scene
+    const params = route.params || {}
+    const transition = params.transition || 'forHorizontal'
+    return CardStackStyleInterpolator[transition](sceneProps)
   },
 })
+
+const TabBarStack = StackNavigator(
+  {
+    TabBar,
+    Deal: {
+      screen: Deal,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Market2,
+    Orders,
+    ScanBarCode,
+    History,
+    Withdraw,
+    Recharge,
+    AddAddress,
+    Authentication,
+    Settings,
+    UpdatePassword,
+    Otc,
+    OtcDetail,
+    Payment,
+    UpdateBank,
+    Banner,
+    Announcement,
+    SecurityCenter,
+    UpdateEmail,
+    Rebates: {
+      screen: Rebates,
+    },
+    Buttons,
+  }, {
+    headerMode: 'screen',
+    transitionConfig: TransitionConfiguration,
+  },
+)
+
+const LoginStack = DismissableStackNavigator(
+  {
+    Login: {
+      screen: Login,
+    },
+    Register: {
+      screen: Register,
+    },
+    ForgotPwd: {
+      screen: ForgotPwd,
+    },
+    ConfirmPwd: {
+      screen: ConfirmPwd,
+    },
+    Agreement: {
+      screen: Agreement,
+    },
+  }, {
+    headerMode: 'screen',
+    transitionConfig: TransitionConfiguration,
+  })
 const loginStackDefaultGetStateForAction = LoginStack.router.getStateForAction
 LoginStack.router.getStateForAction = (action, state) => {
   if (state && action.type === 'Navigation/BACK' && action.key) {
@@ -207,21 +231,22 @@ LoginStack.router.getStateForAction = (action, state) => {
   return loginStackDefaultGetStateForAction(action, state)
 }
 
-const RootStack = StackNavigator({
-  TabBarStack: {
-    screen: TabBarStack,
-    navigationOptions: {
-      header: null,
+const RootStack = StackNavigator(
+  {
+    TabBarStack: {
+      screen: TabBarStack,
+      navigationOptions: {
+        header: null,
+      },
     },
-  },
-  LoginStack: {
-    screen: LoginStack,
-    navigationOptions: {
-      header: null,
+    LoginStack: {
+      screen: LoginStack,
+      navigationOptions: {
+        header: null,
+      },
     },
-  },
-}, {
-  mode: 'modal',
-})
+  }, {
+    mode: 'modal',
+  })
 
 export default RootStack

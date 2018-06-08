@@ -96,7 +96,7 @@ class Me extends Component {
               width: common.w25,
               height: common.w25,
             }}
-            leftImageSource={require('../../assets/默认头像ICON.png')}
+            leftImageSource={require('../../assets/default_icon.png')}
             titleStyle={{
               fontSize: common.font16,
             }}
@@ -111,7 +111,7 @@ class Me extends Component {
               if (loggedIn) navigation.navigate('Authentication')
               else navigation.navigate('LoginStack')
             }}
-            leftImageSource={require('../../assets/手机认证copy.png')}
+            leftImageSource={require('../../assets/phone_right.png')}
             title="身份认证"
           />
           <MeCell
@@ -119,7 +119,7 @@ class Me extends Component {
               if (loggedIn) navigation.navigate('SecurityCenter')
               else navigation.navigate('LoginStack')
             }}
-            leftImageSource={require('../../assets/手机认证.png')}
+            leftImageSource={require('../../assets/phone_down.png')}
             title="安全中心"
           />
           <MeCell
@@ -127,7 +127,7 @@ class Me extends Component {
               if (loggedIn) navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
               else navigation.navigate('LoginStack')
             }}
-            leftImageSource={require('../../assets/银行卡.png')}
+            leftImageSource={require('../../assets/bank_card.png')}
             title="银行卡管理"
           />
           <MeCell
@@ -135,7 +135,7 @@ class Me extends Component {
               if (loggedIn) navigation.navigate('Rebates')
               else navigation.navigate('LoginStack')
             }}
-            leftImageSource={require('../../assets/手机认证copy3.png')}
+            leftImageSource={require('../../assets/gift.png')}
             title="超级返利"
           />
           <MeCell
@@ -143,7 +143,7 @@ class Me extends Component {
               if (loggedIn) navigation.navigate('Settings')
               else navigation.navigate('LoginStack')
             }}
-            leftImageSource={require('../../assets/手机认证copy4.png')}
+            leftImageSource={require('../../assets/setting.png')}
             title="设置"
           />
 

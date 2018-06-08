@@ -26,7 +26,7 @@ export default class TransactionsSlider extends Component {
           maximumValue={maximumValue}
           maximumTrackTintColor={common.borderColor}
           minimumTrackTintColor={'white'}
-          thumbImage={require('../../assets/椭圆形.png')}
+          thumbImage={require('../../assets/point.png')}
           onSlidingComplete={(v) => {
             const percent = Number(v / 1).toFixed(2)
             onValueChange(percent)

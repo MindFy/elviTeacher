@@ -43,7 +43,7 @@ class History extends Component {
                 width: common.w10,
                 height: common.h20,
               }}
-              source={require('../../assets/下拉copy.png')}
+              source={require('../../assets/arrow_left_left.png')}
             />
           </TouchableOpacity>
         ),
