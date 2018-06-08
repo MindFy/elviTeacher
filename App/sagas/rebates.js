@@ -11,16 +11,22 @@ function* requestUserWorker(action) {
     const prefixNo = user.prefixNo
     const recommendId = user.recommendId
     const id = user.id
+    let invitationParams = { parentid: id } // 默认散户查询推荐好友
     yield put({
       type: 'rebates/request_rebates_count_tk',
       payload: { user_id: id, token_id: 1 },
     })
     if (levelName === 'level1') {
+      invitationParams = { userid: id } // 大使查询推荐好友
       yield put({
         type: 'rebates/request_rebates_count_btc',
         payload: { user_id: id, token_id: 2 },
       })
     }
+    yield put({
+      type: 'rebates/request_invitation_count',
+      payload: invitationParams,
+    })
 
     yield put({
       type: 'rebates/request_user_succeed',

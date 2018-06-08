@@ -240,7 +240,7 @@ class Balance extends Component {
         const amount = new BigNumber(element.amount).plus(new BigNumber(element.freezed))
         const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
         const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
-        const nextAmountBTC = amount.multipliedBy(scaleBTC).toFixed(2, 1)
+        const nextAmountBTC = amount.multipliedBy(scaleBTC).toFixed(8, 1)
         amountBTC = new BigNumber(nextAmountBTC).plus(amountBTC)
         const nextAmountRMB = amount.multipliedBy(scaleCNYT).toFixed(2, 1)
         amountRMB = new BigNumber(nextAmountRMB).plus(amountRMB)
