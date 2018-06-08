@@ -72,11 +72,11 @@ class ConfirmPwd extends Component {
       return
     }
     if (!passwordAgain.length) {
-      Toast.message('请再次设置密码')
+      Toast.fail('请再次设置密码')
       return
     }
     if (password !== passwordAgain) {
-      Toast.message('两次密码输入不一致')
+      Toast.fail('两次密码输入不一致')
       return
     }
     dispatch(actions.resetPassword({

@@ -145,23 +145,23 @@ class Authentication extends Component {
 
     const { dispatch, name, idNo, idCardImages } = this.props
     if (!name.length) {
-      Toast.message('请输入姓名')
+      Toast.fail('请输入姓名')
       return
     }
     if (!idNo.length || !idcard.verify(idNo)) {
-      Toast.message('请输入正确的身份证号')
+      Toast.fail('请输入正确的身份证号')
       return
     }
     if (!idCardImages.first) {
-      Toast.message('请上传身份证正面照片')
+      Toast.fail('请上传身份证正面照片')
       return
     }
     if (!idCardImages.second) {
-      Toast.message('请上传身份证反面照片')
+      Toast.fail('请上传身份证反面照片')
       return
     }
     if (!idCardImages.third) {
-      Toast.message('请上传手持身份证照片')
+      Toast.fail('请上传手持身份证照片')
       return
     }
     dispatch(actions.imgHash())
