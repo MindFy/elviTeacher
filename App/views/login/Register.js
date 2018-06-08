@@ -6,6 +6,8 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  Image,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import Spinner from 'react-native-spinkit'
@@ -16,6 +18,20 @@ import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import TKButton from '../../components/TKButton'
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: common.margin10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  title: {
+    alignSelf: 'center',
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  contentContainer: {
+    marginHorizontal: common.margin38,
+    marginTop: common.margin110 - common.navHeight,
+  },
   mobileTip: {
     position: 'absolute',
     top: common.margin5,
@@ -26,6 +42,41 @@ const styles = StyleSheet.create({
 })
 
 class Register extends Component {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '注册',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft:
+        (
+          <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
+    }
+  }
+
   constructor() {
     super()
     this.showRegisterResponse = false
@@ -255,10 +306,10 @@ class Register extends Component {
     const { showTip } = this.state
     return (
       <View style={{ height: 40 }}>
-        { showTip ?
+        {showTip ?
           <Text style={styles.mobileTip}>
             请输入正确的11位手机号
-          </Text> : null }
+          </Text> : null}
       </View>
     )
   }
@@ -368,22 +419,11 @@ class Register extends Component {
 
   renderExtraBtns = () => {
     const { navigation } = this.props
-
     return (
-      <View
-        style={{
-          marginTop: common.margin10,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
+      <View style={styles.container}>
         <View style={{ flexDirection: 'row' }} >
           <Text
-            style={{
-              alignSelf: 'center',
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
+            style={styles.title}
           >注册即同意</Text>
           <TKButton
             theme={'small'}
@@ -407,17 +447,14 @@ class Register extends Component {
 
     return (
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={{ flex: 1, backgroundColor: common.bgColor }}
         behavior="padding"
       >
         <ScrollView
           keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps="handled"
         >
-          <View style={{ marginHorizontal: common.margin38, marginTop: common.margin110 }}>
+          <View style={styles.contentContainer}>
             {this.renderAccount()}
 
             {this.renderAccountTip()}
@@ -449,7 +486,6 @@ class Register extends Component {
           />
 
         </ScrollView>
-
         <Spinner
           style={{
             position: 'absolute',

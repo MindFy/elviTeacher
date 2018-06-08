@@ -174,27 +174,15 @@ const TabBarStack = StackNavigator({
 const LoginStack = DismissableStackNavigator({
   Login: {
     screen: Login,
-    navigationOptions: {
-      header: null,
-    },
   },
   Register: {
     screen: Register,
-    navigationOptions: {
-      header: null,
-    },
   },
   ForgotPwd: {
     screen: ForgotPwd,
-    navigationOptions: {
-      header: null,
-    },
   },
   ConfirmPwd: {
     screen: ConfirmPwd,
-    navigationOptions: {
-      header: null,
-    },
   },
   Agreement: {
     screen: Agreement,
