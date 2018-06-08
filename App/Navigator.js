@@ -120,6 +120,8 @@ const TabBar = TabNavigator(
     },
   },
   {
+    tabBarPosition: 'bottom',
+    lazy: true,
     tabBarOptions: {
       activeTintColor: common.btnTextColor,
       inactiveTintColor: common.placeholderColor,
@@ -174,27 +176,15 @@ const TabBarStack = StackNavigator({
 const LoginStack = DismissableStackNavigator({
   Login: {
     screen: Login,
-    navigationOptions: {
-      header: null,
-    },
   },
   Register: {
     screen: Register,
-    navigationOptions: {
-      header: null,
-    },
   },
   ForgotPwd: {
     screen: ForgotPwd,
-    navigationOptions: {
-      header: null,
-    },
   },
   ConfirmPwd: {
     screen: ConfirmPwd,
-    navigationOptions: {
-      header: null,
-    },
   },
   Agreement: {
     screen: Agreement,

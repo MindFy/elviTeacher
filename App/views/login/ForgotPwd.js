@@ -6,6 +6,8 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  Image,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { common } from '../../constants/common'
@@ -41,6 +43,41 @@ const styles = StyleSheet.create({
 })
 
 class ForgotPwd extends Component {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '忘记密码',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft:
+        (
+          <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.goBack()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
+    }
+  }
+
   constructor() {
     super()
     this.showGetVerificateCodeResponse = false
@@ -79,6 +116,10 @@ class ForgotPwd extends Component {
 
   codePress() {
     const { dispatch, mobile } = this.props
+    if (!mobile) {
+      Toast.fail('手机号不可为空')
+      return
+    }
     if (!common.regMobile.test(mobile)) {
       Toast.fail('请输入正确的手机号')
       return
@@ -141,7 +182,6 @@ class ForgotPwd extends Component {
   handleCheckVerificateCodeRequest() {
     const { checkVerificateCodeVisible, checkVerificateCodeResponse, navigation } = this.props
     if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
-
     if (checkVerificateCodeVisible) {
       this.showCheckVerificateCodeResponse = true
     } else {
@@ -230,7 +270,6 @@ class ForgotPwd extends Component {
             onPress={() => this.nextPress()}
           />
         </ScrollView>
-
         <TKSpinner
           isVisible={checkVerificateCodeVisible}
         />

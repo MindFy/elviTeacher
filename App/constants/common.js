@@ -1,15 +1,37 @@
 import {
   Dimensions,
   AsyncStorage,
+  Platform,
 } from 'react-native'
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
 const w = 375
-
+const IsIOS = Platform.OS.toLowerCase() === 'ios'
+const isIphoneX = (IsIOS && sw === 375 && sh === 812)
+let navHeight
+let paddingTop
+let tabbarHeight
+if (IsIOS) {
+  if (isIphoneX) {
+    navHeight = 88
+    paddingTop = 44
+    tabbarHeight = 83
+  } else {
+    navHeight = 64
+    paddingTop = 20
+    tabbarHeight = 49
+  }
+} else {
+  navHeight = 44
+  paddingTop = 0
+  tabbarHeight = 49
+}
 const common = {
   badNet: 'Network request failed',
-
+  navHeight,
+  paddingTop,
+  tabbarHeight,
   selectedTokenDefault: '选择币种',
 
   noti: {
