@@ -78,7 +78,7 @@ export default class DealNavigator extends Component {
         >
           <Image
             style={styles.leftImage}
-            source={require('../../assets/下拉copy.png')}
+            source={require('../../assets/arrow_left_left.png')}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -91,7 +91,7 @@ export default class DealNavigator extends Component {
           </Text>
           <Image
             style={styles.titleImage}
-            source={require('../../assets/下拉.png')}
+            source={require('../../assets/arrow_down_yellow.png')}
           />
         </TouchableOpacity>
         <TouchableOpacity

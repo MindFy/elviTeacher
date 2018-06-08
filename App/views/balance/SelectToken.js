@@ -147,8 +147,8 @@ class SelectToken extends Component {
                 },
                 this.changeCellRightImageSize(tokenListSelected)]}
                 source={(tokenListSelected ?
-                  require('../../assets/下拉--向下.png') :
-                  require('../../assets/下拉--向右.png'))}
+                  require('../../assets/arrow_down.png') :
+                  require('../../assets/arrow_right.png'))}
               />
             </View>
           </View>

@@ -238,7 +238,7 @@ class DealDrawer extends Component {
               >
                 <Image
                   style={styles.plusBtnImage}
-                  source={require('../../assets/减号.png')}
+                  source={require('../../assets/release.png')}
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
@@ -269,7 +269,7 @@ class DealDrawer extends Component {
               >
                 <Image
                   style={styles.plusBtnImage}
-                  source={require('../../assets/加号.png')}
+                  source={require('../../assets/plus.png')}
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
@@ -289,7 +289,7 @@ class DealDrawer extends Component {
               >
                 <Image
                   style={styles.plusBtnImage}
-                  source={require('../../assets/减号.png')}
+                  source={require('../../assets/release.png')}
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>
@@ -320,7 +320,7 @@ class DealDrawer extends Component {
               >
                 <Image
                   style={styles.plusBtnImage}
-                  source={require('../../assets/加号.png')}
+                  source={require('../../assets/plus.png')}
                   resizeMode={'contain'}
                 />
               </TouchableOpacity>

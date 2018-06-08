@@ -325,7 +325,6 @@ class Otc extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
           contentContainerStyle={styles.scrollviewContentContainer}
         >
           {this.renderSelectionBar()}

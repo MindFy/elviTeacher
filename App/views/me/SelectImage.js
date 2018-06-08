@@ -99,7 +99,7 @@ export default class SelectImage extends Component {
             height: common.w40,
             alignSelf: 'center',
           }}
-          source={require('../../assets/添加copy2.png')}
+          source={require('../../assets/plus2.png')}
         />
         <Text
           style={{

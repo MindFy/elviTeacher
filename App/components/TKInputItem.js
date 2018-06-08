@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: common.margin10,
     alignSelf: 'center',
+    padding: 0,
   },
   input: {
     color: common.textColor,

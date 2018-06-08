@@ -65,7 +65,7 @@ export default class MeCell extends Component {
           this.props.rightImageHide ? null :
             (<Image
               style={styles.rightDir}
-              source={require('../../assets/下拉--向右.png')}
+              source={require('../../assets/arrow_right.png')}
             />)
         }
       </NextTouchableOpacity>
