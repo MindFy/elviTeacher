@@ -157,7 +157,6 @@ class Rebates extends Component {
     dispatch(actions.requestUser(schemas.findUser(loggedInResult.id)))
     dispatch(actions.requesetInvitationCount({
       userid: loggedInResult.id,
-      parentid: loggedInResult.id,
     }))
   }
 
@@ -280,22 +279,19 @@ class Rebates extends Component {
       rebatesLink = api.rebatesLink + prefixNo + recommendId
     }
 
-    let tkItem = null
-    if (levelName === common.user.level0) {
-      const tkINum = totalCountTK ? BigNumber(totalCountTK).toFixed(8, 1) : 0
-      tkItem = (
-        <View style={styles.textOutContainer}>
-          <Text style={styles.textTitle}>
-            已获得的收益TK
+    const tkINum = totalCountTK ? BigNumber(totalCountTK).toFixed(8, 1) : 0
+    const tkItem = (
+      <View style={styles.textOutContainer}>
+        <Text style={styles.textTitle}>
+          已获得的收益TK
+        </Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.textInner}>
+            {tkINum}
           </Text>
-          <View style={styles.textContainer}>
-            <Text style={styles.textInner}>
-              {tkINum}
-            </Text>
-          </View>
         </View>
-      )
-    }
+      </View>
+    )
 
     let btcItem = null
     if (levelName === common.user.level1) {
