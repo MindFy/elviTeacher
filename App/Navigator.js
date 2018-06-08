@@ -120,6 +120,8 @@ const TabBar = TabNavigator(
     },
   },
   {
+    tabBarPosition: 'bottom',
+    lazy: true,
     tabBarOptions: {
       activeTintColor: common.btnTextColor,
       inactiveTintColor: common.placeholderColor,
