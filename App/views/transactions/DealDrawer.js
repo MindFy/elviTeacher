@@ -3,11 +3,10 @@ import {
   Text,
   View,
   Image,
-  Animated,
-  Keyboard,
   StyleSheet,
   TouchableOpacity,
   Modal,
+  KeyboardAvoidingView,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import TransactionsSlider from './TransactionsSlider'
@@ -92,25 +91,6 @@ class DealDrawer extends Component {
     this.state = {
       visible: false,
       index: 0,
-      keyboardHeight: new Animated.Value(0),
-    }
-  }
-
-  componentWillMount() {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
-      Animated.timing(this.state.keyboardHeight, { toValue: 216, duration: 100 }).start()
-    })
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
-      Animated.timing(this.state.keyboardHeight, { toValue: 0, duration: 100 }).start()
-    })
-  }
-
-  componentWillUnmount() {
-    if (this.keyboardDidShowListener != null) {
-      this.keyboardDidShowListener.remove()
-    }
-    if (this.keyboardDidHideListener != null) {
-      this.keyboardDidHideListener.remove()
     }
   }
 
@@ -211,9 +191,9 @@ class DealDrawer extends Component {
           style={styles.cover}
           onPress={() => this.hide()}
         />
-        <View
-          style={styles.container}
-          behavior="padding"
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center', backgroundColor: common.navBgColor }}
+          behavior="position"
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
             <Text style={styles.amountVisibleTitle}>可用</Text>
@@ -369,11 +349,7 @@ class DealDrawer extends Component {
             }}
             disabled={caculatedData.delegateCreateVisible}
           />
-
-          <Animated.View
-            style={{ height: this.state.keyboardHeight }}
-          />
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
 
     )
