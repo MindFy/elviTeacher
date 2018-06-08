@@ -119,7 +119,7 @@ class UpdateBank extends Component {
   confirmPress(title) {
     Keyboard.dismiss()
 
-    const { dispatch, formState } = this.props
+    const { dispatch, formState, navigation, user } = this.props
     if (title === '重新添加') {
       this.editable = true
       dispatch(actions.updateForm({ bankName: '', subbankName: '', bankNo: '', code: '' }))
@@ -139,12 +139,21 @@ class UpdateBank extends Component {
       Toast.message('请输入银行卡号, 16-19位数字')
       return
     }
-    this.showOverlay()
+    if (!navigation.state.params || !user.bankName.length) {
+      // 如果第一次绑定银行卡，则不需要二次验证；走法币交易、我的页面进入
+      dispatch(actions.requestUpdateBank(formState))
+    } else {
+      this.showOverlay()
+    }
   }
 
   updateBank() {
     const { dispatch, formState } = this.props
-
+    const { code } = formState
+    if (!code) {
+      Toast.fail('请输入验证码')
+      return
+    }
     dispatch(actions.requestUpdateBank(formState))
   }
 
