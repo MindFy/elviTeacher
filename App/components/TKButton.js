@@ -103,6 +103,7 @@ class TKButton extends PureComponent {
         activeOpacity={0.5}
         onPress={onPress}
         style={[styles.button, buttonTheme, style]}
+        delay={300}
       >
         {iconImage}
         <Text
