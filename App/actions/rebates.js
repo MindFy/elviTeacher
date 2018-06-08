@@ -1,23 +1,27 @@
-import * as constants from '../constants/index'
-
-export function rebatesCount(data) {
+export function requesetInvitationCount(payload) {
   return {
-    type: constants.REBATES_COUNT_REQUEST,
-    data,
+    type: 'rebates/request_invitation_count',
+    payload,
   }
 }
 
-export function rebatesCountTK(data) {
+export function requestRebatesCountTK(payload) {
   return {
-    type: constants.REBATES_COUNT_TK_REQUEST,
-    data,
+    type: 'rebates/request_rebates_count_tk',
+    payload,
   }
 }
 
-export function rebatesCountBTC(data) {
+export function requestRebatesCountBTC(payload) {
   return {
-    type: constants.REBATES_COUNT_BTC_REQUEST,
-    data,
+    type: 'rebates/request_rebates_count_btc',
+    payload,
   }
 }
 
+export function requestUser(payload) {
+  return {
+    type: 'rebates/request_user',
+    payload,
+  }
+}
