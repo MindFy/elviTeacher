@@ -69,6 +69,15 @@ class Recharge extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedToken !== '选择币种' &&
+        !nextProps.selectedToken.rechargeaddr) {
+      this.props.dispatch(actions.createAddress({
+        token_id: nextProps.selectedToken.token.id,
+      }))
+    }
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(actions.selectTokenUpdate({
@@ -169,74 +178,98 @@ class Recharge extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  renderBottomCell() {
-    const { selectedToken } = this.props
-    if ((selectedToken !== common.selectedTokenDefault
-      && selectedToken.token.id === 2)
-    || (selectedToken !== common.selectedTokenDefault
-      && selectedToken.token.id === 5)
-    || (selectedToken !== common.selectedTokenDefault
-      && selectedToken.token.id === 6)
-    || (selectedToken !== common.selectedTokenDefault
-      && selectedToken.token.id === 7)) {
-      return (
-        <View>
-          <View
-            style={{
-              marginTop: common.margin10,
-              height: common.h97,
-              backgroundColor: common.navBgColor,
-              justifyContent: 'space-between',
-            }}
+  renderAddress = (selectedToken) => {
+    const addressContent = (
+      <View>
+        <Text
+          style={{
+            marginLeft: common.margin10,
+            marginTop: common.margin10,
+            fontSize: common.font12,
+            color: common.placeholderColor,
+          }}
+        >充值地址</Text>
+        <Text
+          style={{
+            marginLeft: common.margin10,
+            marginTop: common.margin10,
+            fontSize: common.font14,
+            color: common.textColor,
+          }}
+        >{selectedToken.rechargeaddr}</Text>
+      </View>
+    )
+    const isHide = selectedToken.rechargeaddr === '暂无可用地址'
+    const addressBtn = !isHide && (
+      <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginBottom: common.margin10,
+          }}
+        >
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.clipPress()}
           >
             <Text
               style={{
                 marginLeft: common.margin10,
-                marginTop: common.margin10,
-                fontSize: common.font12,
-                color: common.placeholderColor,
+                color: common.btnTextColor,
+                fontSize: common.font14,
               }}
-            >充值地址</Text>
+            >复制地址</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.qrPress()}
+          >
             <Text
               style={{
                 marginLeft: common.margin10,
+                color: common.btnTextColor,
                 fontSize: common.font14,
-                color: common.textColor,
               }}
-            >{selectedToken.rechargeaddr}</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                marginBottom: common.margin10,
-              }}
-            >
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity}
-                onPress={() => this.clipPress()}
-              >
-                <Text
-                  style={{
-                    marginLeft: common.margin10,
-                    color: common.btnTextColor,
-                    fontSize: common.font14,
-                  }}
-                >复制地址</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={common.activeOpacity}
-                onPress={() => this.qrPress()}
-              >
-                <Text
-                  style={{
-                    marginLeft: common.margin10,
-                    color: common.btnTextColor,
-                    fontSize: common.font14,
-                  }}
-                >显示二维码</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+            >显示二维码</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+    return (
+      <View
+        style={{
+          marginTop: common.margin10,
+          height: common.h97,
+          backgroundColor: common.navBgColor,
+          justifyContent: 'space-between',
+        }}
+      >
+        {addressContent}
+        {addressBtn}
+      </View>
+    )
+  }
 
+  renderBottomCell() {
+    const { selectedToken } = this.props
+
+    if ((selectedToken !== common.selectedTokenDefault
+      && selectedToken.token.id === 2)
+      || (selectedToken !== common.selectedTokenDefault
+        && selectedToken.token.id === 5)
+      || (selectedToken !== common.selectedTokenDefault
+        && selectedToken.token.id === 6)
+      || (selectedToken !== common.selectedTokenDefault
+        && selectedToken.token.id === 7)) {
+      if (!selectedToken.rechargeaddr || selectedToken.rechargeaddr.length === 0) {
+        return null
+      }
+
+      const addressView = this.renderAddress(selectedToken)
+
+      return (
+        <View>
+          {addressView}
           <Text
             style={{
               marginTop: common.margin10,
@@ -261,7 +294,7 @@ class Recharge extends Component {
 3. 最小充值金额：0.00000001 ${selectedToken.token.name}，小于最小金额的充值将不会上账。
 4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。
 5. 请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
-        </View>
+        </View >
       )
     }
     return null
@@ -302,6 +335,7 @@ function mapStateToProps(store) {
 
     selectedToken: store.address.selectedToken,
     tokenListSelected: store.address.tokenListSelected,
+    user: store.user,
   }
 }
 
