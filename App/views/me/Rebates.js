@@ -155,9 +155,6 @@ class Rebates extends Component {
   refreshData() {
     const { dispatch, loggedInResult } = this.props
     dispatch(actions.requestUser(schemas.findUser(loggedInResult.id)))
-    dispatch(actions.requesetInvitationCount({
-      userid: loggedInResult.id,
-    }))
   }
 
   clipUID() {
