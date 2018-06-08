@@ -86,8 +86,18 @@ class Authentication extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, authenticationAgain } = this.props
-
+    const { dispatch, user, authenticationAgain, loggedInResult } = this.props
+    dispatch(actions.findUser(schemas.findUser(loggedInResult.id)))
+    dispatch(actions.findAuditmanage(schemas.findAuditmanage(loggedInResult.id)))
+    this.listener = DeviceEventEmitter.addListener(common.noti.idCardAuth, () => {
+      user.idCardAuthStatus = common.user.status.waiting
+      dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
+      dispatch(actions.findUser(schemas.findUser(user.id)))
+      dispatch(actions.findAuditmanage(schemas.findAuditmanage(user.id, user.idCardAuthStatus)))
+    })
+    if (!user) {
+      return
+    }
     dispatch(actions.idCardAuthUpdate({
       name: user.name,
       idNo: user.idNo ? user.idNo : '',
@@ -99,14 +109,6 @@ class Authentication extends Component {
         } : {},
       authenticationAgain,
     }))
-    dispatch(actions.findUser(schemas.findUser(user.id)))
-    dispatch(actions.findAuditmanage(schemas.findAuditmanage(user.id)))
-    this.listener = DeviceEventEmitter.addListener(common.noti.idCardAuth, () => {
-      user.idCardAuthStatus = common.user.status.waiting
-      dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
-      dispatch(actions.findUser(schemas.findUser(user.id)))
-      dispatch(actions.findAuditmanage(schemas.findAuditmanage(user.id, user.idCardAuthStatus)))
-    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -145,23 +147,23 @@ class Authentication extends Component {
 
     const { dispatch, name, idNo, idCardImages } = this.props
     if (!name.length) {
-      Toast.message('请输入姓名')
+      Toast.fail('请输入姓名')
       return
     }
     if (!idNo.length || !idcard.verify(idNo)) {
-      Toast.message('请输入正确的身份证号')
+      Toast.fail('请输入正确的身份证号')
       return
     }
     if (!idCardImages.first) {
-      Toast.message('请上传身份证正面照片')
+      Toast.fail('请上传身份证正面照片')
       return
     }
     if (!idCardImages.second) {
-      Toast.message('请上传身份证反面照片')
+      Toast.fail('请上传身份证反面照片')
       return
     }
     if (!idCardImages.third) {
-      Toast.message('请上传手持身份证照片')
+      Toast.fail('请上传手持身份证照片')
       return
     }
     dispatch(actions.imgHash())
@@ -362,7 +364,7 @@ class Authentication extends Component {
 
   renderContentView() {
     const { user, authenticationAgain } = this.props
-    if (!user.idCardAuthStatus) return null
+    if (!user || !user.idCardAuthStatus) return null
     if (authenticationAgain) return this.renderScrollView()
 
     switch (user.idCardAuthStatus) {
@@ -388,7 +390,7 @@ class Authentication extends Component {
       >
         {this.renderContentView()}
         {
-          user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting ?
+          user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting ?
             <View
               style={{
                 position: 'absolute',
@@ -429,16 +431,18 @@ class Authentication extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
-    name: store.user.name,
-    idNo: store.user.idNo,
-    idCardImages: store.user.idCardImages,
-    authenticationAgain: store.user.authenticationAgain,
-    idCardAuthVisible: store.user.idCardAuthVisible,
-    idCardAuthResponse: store.user.idCardAuthResponse,
-    findAuditmanageData: store.user.findAuditmanageData,
+    user: state.user.user,
+    name: state.user.name,
+    idNo: state.user.idNo,
+    idCardImages: state.user.idCardImages,
+    authenticationAgain: state.user.authenticationAgain,
+    idCardAuthVisible: state.user.idCardAuthVisible,
+    idCardAuthResponse: state.user.idCardAuthResponse,
+    findAuditmanageData: state.user.findAuditmanageData,
+
+    loggedInResult: state.authorize.loggedInResult,
   }
 }
 

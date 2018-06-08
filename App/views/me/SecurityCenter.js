@@ -98,7 +98,7 @@ class SecurityCenter extends Component {
   }
 
   render() {
-    const { navigation, user, dispatch } = this.props
+    const { navigation, loggedIn, dispatch } = this.props
     return (
       <ScrollView
         style={{
@@ -116,7 +116,7 @@ class SecurityCenter extends Component {
           }}
           leftImageHide
           onPress={() => {
-            if (user) navigation.navigate('UpdateEmail')
+            if (loggedIn) navigation.navigate('UpdateEmail')
             else navigation.navigate('LoginStack')
           }}
           title="邮箱绑定"
@@ -124,7 +124,7 @@ class SecurityCenter extends Component {
         <MeCell
           leftImageHide
           onPress={() => {
-            if (user) dispatch(actions.getGoogleAuth())
+            if (loggedIn) dispatch(actions.getGoogleAuth())
             else navigation.navigate('LoginStack')
           }}
           title="谷歌验证码"
@@ -135,10 +135,10 @@ class SecurityCenter extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
-    googleAuth: store.user.googleAuth,
+    googleAuth: state.user.googleAuth,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

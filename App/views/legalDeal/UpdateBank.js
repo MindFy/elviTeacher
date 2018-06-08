@@ -81,6 +81,7 @@ class UpdateBank extends Component {
 
   componentDidMount() {
     const { dispatch, user } = this.props
+    if (!user) return
     dispatch(actions.updateForm({
       bankName: user.bankName,
       subbankName: user.subbankName,
@@ -148,7 +149,7 @@ class UpdateBank extends Component {
   }
 
   showOverlay() {
-    const { dispatch, user } = this.props
+    const { dispatch, loggedInResult } = this.props
     const overlayView = (
       <Overlay.View
         style={{ justifyContent: 'center' }}
@@ -157,10 +158,13 @@ class UpdateBank extends Component {
       >
         <TKViewCheckAuthorize
           containerStyle={{ marginTop: -70 }}
-          mobile={user.mobile}
+          mobile={loggedInResult.mobile}
           onChangeText={e => this.onChangeText(e, 'code')}
           codePress={() => {
-            dispatch(actions.requestGetCode({ mobile: this.props.user.mobile, service: 'auth' }))
+            dispatch(actions.requestGetCode({
+              mobile: this.props.loggedInResult.mobile,
+              service: 'auth',
+            }))
           }}
           confirmPress={() => this.updateBank()}
           cancelPress={() => Overlay.hide(this.overlayViewKey)}
@@ -238,9 +242,13 @@ class UpdateBank extends Component {
 
   render() {
     const { loading, formState, navigation, user } = this.props
+    let bankName = ''
+    if (user) {
+      bankName = user.bankName
+    }
     const editable = !(navigation.state.params
       && navigation.state.params.fromMe === 'fromMe'
-      && user.bankName.length && !this.editable)
+      && bankName.length && !this.editable)
 
     return (
       <ScrollView
@@ -323,6 +331,7 @@ function mapStateToProps(store) {
   return {
     ...store.updateBank,
     user: store.user.user,
+    loggedInResult: store.authorize.loggedInResult,
   }
 }
 
