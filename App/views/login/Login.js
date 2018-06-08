@@ -225,12 +225,14 @@ class Login extends PureComponent {
     return (
       <View style={styles.input}>
         <TKInputItem
+          viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
           title="账号"
           placeholder="请输入11位手机号"
           value={formState.mobile}
           maxLength={11}
           textInputProps={{
+            keyboardType: 'phone-pad',
             onBlur: () => {
               if (!common.regMobile.test(this.props.formState.mobile)) {
                 this.setState({ showTip: true })
@@ -246,6 +248,7 @@ class Login extends PureComponent {
         {this.renderMobileTip()}
 
         <TKInputItem
+          viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
           title="密码"
           placeholder="请输入密码"
@@ -281,13 +284,14 @@ class Login extends PureComponent {
     const { loading } = this.props
 
     return (
-      <KeyboardAvoidingView
+      <ScrollView
         style={styles.container}
-        behavior="padding"
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="position"
         >
           {this.renderLogo()}
           {this.renderInput()}
@@ -299,11 +303,11 @@ class Login extends PureComponent {
             onPress={this.loginPress}
             disabled={this.loading}
           />
-        </ScrollView>
+        </KeyboardAvoidingView>
         <TKSpinner
           isVisible={loading}
         />
-      </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }

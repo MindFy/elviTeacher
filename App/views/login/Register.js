@@ -18,6 +18,10 @@ import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import TKButton from '../../components/TKButton'
 
 const styles = StyleSheet.create({
+  cover: {
+    flex: 1,
+    backgroundColor: common.blackColor,
+  },
   container: {
     marginTop: common.margin10,
     flexDirection: 'row',
@@ -281,12 +285,14 @@ class Register extends Component {
     const { mobile } = this.props
     return (
       <TKInputItem
+        viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
         title="账号"
         placeholder="请输入11位手机号"
         textInputProps={{
+          keyboardType: 'phone-pad',
           onBlur: () => {
             if (!common.regMobile.test(this.props.mobile)) {
               this.setState({ showTip: true })
@@ -318,6 +324,7 @@ class Register extends Component {
     const { code, mobile } = this.props
     return (
       <TKInputItemCheckCode
+        viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
@@ -328,6 +335,9 @@ class Register extends Component {
         onChange={e => this.onChange(e, 'code')}
         onPressCheckCodeBtn={() => { this.codePress() }}
         extraDisable={!mobile || !common.regMobile.test(mobile)}
+        textInputProps={{
+          keyboardType: 'numeric',
+        }}
       />
     )
   }
@@ -371,6 +381,7 @@ class Register extends Component {
     const { password } = this.props
     return (
       <TKInputItem
+        viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
@@ -388,6 +399,7 @@ class Register extends Component {
     const { passwordAgain } = this.props
     return (
       <TKInputItem
+        viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
@@ -405,6 +417,7 @@ class Register extends Component {
     const { recommendNo } = this.props
     return (
       <TKInputItem
+        viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
@@ -446,13 +459,14 @@ class Register extends Component {
     } = this.props
 
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1, backgroundColor: common.bgColor }}
-        behavior="padding"
+      <ScrollView
+        style={styles.cover}
+        automaticallyAdjustContentInsets={false}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          keyboardDismissMode="on-drag"
-          keyboardShouldPersistTaps="handled"
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="position"
         >
           <View style={styles.contentContainer}>
             {this.renderAccount()}
@@ -484,20 +498,20 @@ class Register extends Component {
             disabled={registerVisible}
             onPress={() => this.registerPress()}
           />
+          <Spinner
+            style={{
+              position: 'absolute',
+              alignSelf: 'center',
+              marginTop: common.sh / 2 - common.h50 / 2,
+            }}
+            isVisible={registerVisible}
+            size={common.h50}
+            type={'Wave'}
+            color={common.btnTextColor}
+          />
+        </KeyboardAvoidingView>
+      </ScrollView>
 
-        </ScrollView>
-        <Spinner
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            marginTop: common.sh / 2 - common.h50 / 2,
-          }}
-          isVisible={registerVisible}
-          size={common.h50}
-          type={'Wave'}
-          color={common.btnTextColor}
-        />
-      </KeyboardAvoidingView>
     )
   }
 }
