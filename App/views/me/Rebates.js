@@ -95,7 +95,7 @@ class Rebates extends Component {
       dispatch(actions.rebatesCountTK({ user_id: user.id, token_id: 1 }))
       dispatch(actions.rebatesCountBTC({ user_id: user.id, token_id: 2 }))
     }
-    dispatch(actions.invitationTotalCount({ parentid: user.id }))
+    dispatch(actions.invitationTotalCount({ userid: user.id, parentid: user.id }))
   }
 
   clipUID() {

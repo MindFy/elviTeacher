@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { common } from '../../constants/common'
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    marginTop: common.margin127,
+    marginTop: common.margin127 - common.navHeight,
     width: common.w150,
     height: common.h80,
     alignSelf: 'center',
@@ -57,12 +58,55 @@ const styles = StyleSheet.create({
 })
 
 class Login extends PureComponent {
+  static navigationOptions(props) {
+    return {
+      headerTitle: '登录',
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        fontSize: common.font16,
+      },
+      headerLeft:
+        (
+          <TouchableOpacity
+            style={{
+              height: common.w40,
+              width: common.w40,
+              justifyContent: 'center',
+            }}
+            activeOpacity={common.activeOpacity}
+            onPress={() => props.navigation.state.params.dismiss()}
+          >
+            <Image
+              style={{
+                marginLeft: common.margin10,
+                width: common.w10,
+                height: common.h20,
+              }}
+              source={require('../../assets/下拉copy.png')}
+            />
+          </TouchableOpacity>
+        ),
+    }
+  }
+
   constructor() {
     super()
     this.state = {
       showTip: false,
     }
   }
+
+  componentDidMount() {
+    const { screenProps, navigation } = this.props
+    navigation.setParams({
+      dismiss: () => screenProps.dismiss(),
+    })
+  }
+
   componentWillReceiveProps(nextProps) {
     this.loginHandle(nextProps)
   }
@@ -155,24 +199,6 @@ class Login extends PureComponent {
     }
   }
 
-  renderBack = () => {
-    const { screenProps } = this.props
-
-    return (
-      <TKButton
-        style={styles.back}
-        theme="small"
-        caption="返回"
-        titleStyle={{
-          color: 'white',
-          fontSize: common.font14,
-          alignSelf: 'center',
-        }}
-        onPress={() => screenProps.dismiss()}
-      />
-    )
-  }
-
   renderLogo = () => (
     <Image
       style={styles.logo}
@@ -185,10 +211,10 @@ class Login extends PureComponent {
     const { showTip } = this.state
     return (
       <View style={{ height: 40 }}>
-        { showTip ?
+        {showTip ?
           <Text style={styles.mobileTip}>
             请输入正确的11位手机号
-          </Text> : null }
+          </Text> : null}
       </View>
     )
   }
@@ -263,14 +289,9 @@ class Login extends PureComponent {
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
         >
-          {this.renderBack()}
-
           {this.renderLogo()}
-
           {this.renderInput()}
-
           {this.renderExtraBtns()}
-
           <TKButton
             style={{ marginTop: common.margin40 }}
             theme="yellow"
@@ -279,7 +300,6 @@ class Login extends PureComponent {
             disabled={this.loading}
           />
         </ScrollView>
-
         <TKSpinner
           isVisible={loading}
         />
