@@ -21,7 +21,6 @@ import {
 import {
   marketListUpdate,
 } from './dealstat'
-import invitationTotalCount from './invitation'
 import {
   legalDealCancel,
   confirmPay,
@@ -40,11 +39,6 @@ import {
   rechargeOrWithdrawUpdate,
   skipPaymentUpdate,
 } from './payment'
-import {
-  rebatesCount,
-  rebatesCountTK,
-  rebatesCountBTC,
-} from './rebates'
 import {
   checkVerificateCode,
   getGoogleAuth,
@@ -112,8 +106,6 @@ const actions = {
 
   marketListUpdate,
 
-  invitationTotalCount,
-
   legalDealCancel,
   confirmPay,
   legalDealCreate,
@@ -129,10 +121,6 @@ const actions = {
   withdraw,
   rechargeOrWithdrawUpdate,
   skipPaymentUpdate,
-
-  rebatesCount,
-  rebatesCountTK,
-  rebatesCountBTC,
 
   checkVerificateCode,
   getGoogleAuth,

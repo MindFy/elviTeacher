@@ -1,61 +1,88 @@
-import * as constants from '../constants/index'
-
 const initialState = {
-  totalCount: 0,
+  invitationCount: 0,
   totalCountTK: 0,
   totalCountBTC: 0,
+  user: {
+    levelName: null,
+    prefixNo: '',
+    recommendId: '',
+  },
+  userLoading: false,
+  userError: null,
 }
 
 export default function rebates(state = initialState, action) {
+  const { type, payload } = action
   let nextState = state
 
-  switch (action.type) {
-    case constants.REBATES_COUNT_REQUEST:
+  switch (type) {
+    case 'rebates/request_invitation_count':
       nextState = {
         ...state,
       }
       break
-    case constants.REBATES_COUNT_SUCCEED:
+    case 'rebates/request_invitation_count_succeed':
       nextState = {
         ...state,
-        totalCount: action.totalCount,
+        invitationCount: payload,
       }
       break
-    case constants.REBATES_COUNT_FAILED:
-      nextState = {
-        ...state,
-      }
-      break
-    case constants.REBATES_COUNT_TK_REQUEST:
+    case 'rebates/request_invitation_count_failed':
       nextState = {
         ...state,
       }
       break
-    case constants.REBATES_COUNT_TK_SUCCEED:
-      nextState = {
-        ...state,
-        totalCountTK: action.totalCount,
-      }
-      break
-    case constants.REBATES_COUNT_TK_FAILED:
+    case 'rebates/request_rebates_count_tk':
       nextState = {
         ...state,
       }
       break
-    case constants.REBATES_COUNT_BTC_REQUEST:
+    case 'rebates/request_rebates_count_tk_succeed':
+      nextState = {
+        ...state,
+        totalCountTK: payload,
+      }
+      break
+    case 'rebates/request_rebates_count_tk_failed':
       nextState = {
         ...state,
       }
       break
-    case constants.REBATES_COUNT_BTC_SUCCEED:
+    case 'rebates/request_rebates_count_btc':
       nextState = {
         ...state,
-        totalCountBTC: action.totalCount,
       }
       break
-    case constants.REBATES_COUNT_BTC_FAILED:
+    case 'rebates/request_rebates_count_btc_succeed':
       nextState = {
         ...state,
+        totalCountBTC: payload,
+      }
+      break
+    case 'rebates/request_rebates_count_btc_failed':
+      nextState = {
+        ...state,
+      }
+      break
+    case 'rebates/request_user':
+      nextState = {
+        ...state,
+        userLoading: true,
+      }
+      break
+    case 'rebates/request_user_succeed':
+      nextState = {
+        ...state,
+        userLoading: false,
+        user: payload,
+        userError: null,
+      }
+      break
+    case 'rebates/request_user_failed':
+      nextState = {
+        ...state,
+        userLoading: false,
+        userError: payload,
       }
       break
     case 'notify/clear_reducer':
