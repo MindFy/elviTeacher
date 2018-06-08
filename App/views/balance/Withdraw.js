@@ -485,8 +485,13 @@ class WithDraw extends Component {
   }
 
   showVerificationCode = () => {
-    const { dispatch, user } = this.props
+    const { dispatch, user, formState } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
+    dispatch(updateForm({
+      ...formState,
+      verificationCode: '',
+      googleCode: '',
+    }))
     const overlayView = (
       <Overlay.View
         style={{
