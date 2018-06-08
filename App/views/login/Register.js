@@ -162,7 +162,11 @@ class Register extends Component {
   }
 
   codePress() {
-    const { dispatch, mobile } = this.props
+    const { dispatch, mobile, mobileIsExist } = this.props
+    if (mobileIsExist) {
+      Toast.fail('手机号已被注册')
+      return
+    }
     if (!mobile) {
       Toast.fail('手机号不可为空')
       return
@@ -295,8 +299,13 @@ class Register extends Component {
           keyboardType: 'phone-pad',
           onBlur: () => {
             if (!common.regMobile.test(this.props.mobile)) {
+              this.props.dispatch(actions.clearMobileIsExist())
               this.setState({ showTip: true })
             } else {
+              this.props.dispatch(actions.mobileIsExist({
+                type: 'mobile',
+                value: this.props.mobile,
+              }))
               this.setState({ showTip: false })
             }
           },
@@ -310,6 +319,16 @@ class Register extends Component {
 
   renderAccountTip = () => {
     const { showTip } = this.state
+    const { mobileIsExist } = this.props
+    if (mobileIsExist) {
+      return (
+        <View style={{ height: 40 }}>
+          <Text style={styles.mobileTip}>
+            手机号已被注册
+          </Text>
+        </View>
+      )
+    }
     return (
       <View style={{ height: 40 }}>
         {showTip ?
@@ -516,19 +535,20 @@ class Register extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    mobile: store.user.mobileRegister,
-    code: store.user.codeRegister,
-    password: store.user.passwordRegister,
-    passwordAgain: store.user.passwordAgainRegister,
-    recommendNo: store.user.recommendNo,
+    mobile: state.user.mobileRegister,
+    code: state.user.codeRegister,
+    password: state.user.passwordRegister,
+    passwordAgain: state.user.passwordAgainRegister,
+    recommendNo: state.user.recommendNo,
+    mobileIsExist: state.user.mobileIsExist,
 
-    registerVisible: store.user.registerVisible,
-    registerResponse: store.user.registerResponse,
+    registerVisible: state.user.registerVisible,
+    registerResponse: state.user.registerResponse,
 
-    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
+    getVerificateCodeVisible: state.user.getVerificateCodeVisible,
+    getVerificateCodeResponse: state.user.getVerificateCodeResponse,
   }
 }
 
