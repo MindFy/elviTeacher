@@ -323,8 +323,12 @@ class Authentication extends Component {
   renderFailed() {
     const { dispatch, findAuditmanageData } = this.props
     let reason = ''
-    if (findAuditmanageData) {
-      reason = findAuditmanageData[0].auditdata.refuseReason
+    try {
+      if (findAuditmanageData) {
+        reason = findAuditmanageData[0].auditdata.refuseReason
+      }
+    } catch (ex) {
+      reason = ''
     }
     return (
       <ScrollView>

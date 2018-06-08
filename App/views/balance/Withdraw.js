@@ -43,6 +43,10 @@ import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 
 const styles = StyleSheet.create({
+  contaier: {
+    flex: 1,
+    backgroundColor: common.blackColor,
+  },
   coinSelector: {
     marginTop: common.margin10,
     height: common.h40,
@@ -743,7 +747,8 @@ class WithDraw extends Component {
                   width: common.w20,
                   height: common.w20,
                 }}
-                source={require('../../assets/qrcode_white.png')}
+                resizeMode="contain"
+                source={require('../../assets/arrow_down.png')}
               />
             </TouchableOpacity>
           </View>
@@ -844,22 +849,23 @@ class WithDraw extends Component {
     const coinList = this.renderCoinList()
     const form = this.renderForm()
     return (
-      <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-        behavior="padding"
+
+      <ScrollView
+        style={styles.contaier}
+        keyboardShouldPersistTaps="handled"
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
+        <KeyboardAvoidingView
+          style={{
+            flex: 1,
+            backgroundColor: common.bgColor,
+          }}
+          behavior="position"
         >
           {coinSelector}
           {coinList}
           {form}
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }

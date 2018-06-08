@@ -83,10 +83,11 @@ class Login extends PureComponent {
             <Image
               style={{
                 marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
+                width: common.w15,
+                height: common.h15,
               }}
-              source={require('../../assets/arrow_left_left.png')}
+              resizeMode="contain"
+              source={require('../../assets/close_icon.png')}
             />
           </TouchableOpacity>
         ),
