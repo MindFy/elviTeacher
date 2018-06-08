@@ -47,12 +47,7 @@ class SelectToken extends Component {
   rowPress(rd, rid) {
     const { dispatch, tokenListSelected, selectedTokenBlock, asset } = this.props
     let selectedToken = asset.find(value => value.token.id === rd.id)
-    let rechargeaddr = ''
-    if (rd.id === 2) {
-      rechargeaddr = 'mfXxAZpxNvrGrX2GerXyDKUcsycBvioNVH'
-    } else if (rd.id === 5) {
-      rechargeaddr = '0xa4cd4891c28ffc089c92bb7408561772c403d039'
-    }
+    const rechargeaddr = ''
     selectedToken = selectedToken || {
       amount: 0,
       createdAt: '',

@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
 
 class Login extends PureComponent {
   static navigationOptions(props) {
+    const params = props.navigation.state.params || {}
     return {
       headerTitle: '登录',
       headerStyle: {
@@ -78,7 +79,7 @@ class Login extends PureComponent {
               justifyContent: 'center',
             }}
             activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.state.params.dismiss()}
+            onPress={params.dismiss}
           >
             <Image
               style={{
@@ -101,7 +102,7 @@ class Login extends PureComponent {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { screenProps, navigation } = this.props
     navigation.setParams({
       dismiss: () => screenProps.dismiss(),
