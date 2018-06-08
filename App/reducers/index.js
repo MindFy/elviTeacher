@@ -20,6 +20,7 @@ import exchange from './exchange'
 import updateBank from './updateBank'
 import otcDetail from './otcDetail'
 import balance from './balance'
+import recharge from './recharge'
 
 const rootReducer = combineReducers({
   authorize,
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
   updateBank,
   otcDetail,
   balance,
+  recharge,
 })
 
 export default rootReducer

@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   Clipboard,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
   CameraRoll,
@@ -16,10 +15,29 @@ import {
   Overlay,
 } from 'teaset'
 import { common } from '../../constants/common'
-import SelectToken from './SelectToken'
-import actions from '../../actions/index'
+import {
+  coinSelected,
+  toggleForm,
+  requestCoinList,
+  requestRechargeAddress,
+  resetNexus,
+} from '../../actions/recharge'
+import * as api from '../../services/api'
 
 const styles = StyleSheet.create({
+  coinSelector: {
+    marginTop: common.margin10,
+    height: common.h40,
+    backgroundColor: common.navBgColor,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  coin: {
+    marginLeft: common.margin10,
+    fontSize: common.font14,
+    color: common.textColor,
+    alignSelf: 'center',
+  },
   addressContainer: {
     marginTop: common.margin10,
     height: common.h97,
@@ -113,38 +131,23 @@ class Recharge extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedToken !== '选择币种' &&
-        !nextProps.selectedToken.rechargeaddr) {
-      this.props.dispatch(actions.createAddress({
-        token_id: nextProps.selectedToken.token.id,
-      }))
-    }
-  }
-
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(actions.selectTokenUpdate({
-      selectedToken: common.selectedTokenDefault,
-      tokenListSelected: false,
-      selectedIndex: undefined,
-    }))
+    dispatch(resetNexus())
   }
 
-  clipPress() {
-    const { selectedToken } = this.props
-    if (selectedToken.rechargeaddr.length) {
-      Clipboard.setString(selectedToken.rechargeaddr)
+  clipPress = (rechargeAddress) => {
+    if (rechargeAddress) {
+      Clipboard.setString(rechargeAddress)
       Toast.message('已复制到剪贴板')
     }
   }
 
-  _saveImageToCameraRoll() {
-    const { selectedToken, qrApi } = this.props
-    if (selectedToken.rechargeaddr.length === 0) {
+  _saveImageToCameraRoll = (rechargeAddress, qrApi) => {
+    if (rechargeAddress.length === 0) {
       return
     }
-    const uri = `${qrApi}${selectedToken.rechargeaddr}`
+    const uri = `${qrApi}${rechargeAddress}`
     CameraRoll.saveToCameraRoll(uri).then(() => {
       Toast.message('保存成功')
       Overlay.hide(this.overlayViewKey)
@@ -154,8 +157,7 @@ class Recharge extends Component {
     })
   }
 
-  qrPress() {
-    const { selectedToken, qrApi } = this.props
+  qrPress = (rechargeAddress, coinName, qrApi) => {
     const overlayView = (
       <Overlay.View
         style={{
@@ -183,20 +185,20 @@ class Recharge extends Component {
               fontSize: common.font14,
               color: common.blackColor,
             }}
-          >{`${selectedToken.token.name}充值地址`}</Text>
+          >{`${coinName}充值地址`}</Text>
           {
-            selectedToken.rechargeaddr.length ?
+            rechargeAddress ?
               <Image
                 style={{
                   height: common.h100,
                   width: common.h100,
                   alignSelf: 'center',
                 }}
-                source={{ uri: `${qrApi}${selectedToken.rechargeaddr}` }}
+                source={{ uri: `${qrApi}${rechargeAddress}` }}
               /> : null
           }
           {
-            selectedToken.rechargeaddr.length ?
+            rechargeAddress ?
               <TouchableOpacity
                 style={{
                   position: 'absolute',
@@ -205,7 +207,7 @@ class Recharge extends Component {
                 activeOpacity={common.activeOpacity}
                 onPress={() => {
                   // 保存图片
-                  this._saveImageToCameraRoll()
+                  this._saveImageToCameraRoll(rechargeAddress, qrApi)
                 }}
               >
                 <Text
@@ -222,26 +224,112 @@ class Recharge extends Component {
     this.overlayViewKey = Overlay.show(overlayView)
   }
 
-  renderAddress = (selectedToken) => {
+  showForm = () => {
+    const { dispatch, user } = this.props
+    dispatch(toggleForm())
+    dispatch(requestCoinList(user.id))
+  }
+
+  tapCoinListCell = (ele) => {
+    const {
+      dispatch,
+    } = this.props
+    dispatch(toggleForm())
+    dispatch(coinSelected(ele))
+    if (this.canRechargeAddress.includes(ele.name)) {
+      dispatch(requestRechargeAddress({
+        token_ids: [ele.id],
+      }))
+    }
+  }
+
+  canRechargeAddress = ['BTC', 'ETH', 'ETC', 'LTC']
+
+  renderCoinSelector = (currCoin, listToggled, showForm) => (
+    <TouchableOpacity
+      activeOpacity={common.activeOpacity}
+      onPress={() => {
+        if (showForm) {
+          showForm()
+        }
+      }}
+    >
+      <View style={styles.coinSelector}>
+        <Text style={styles.coin}>{currCoin.name}</Text>
+        <View style={{ alignSelf: 'center' }}>
+          <Image
+            style={listToggled ? {
+              width: common.h20,
+              height: common.w10,
+            } : {
+              marginRight: common.margin10,
+              height: common.h20,
+              width: common.w10,
+            }}
+            source={(listToggled ?
+              require('../../assets/下拉--向下.png') :
+              require('../../assets/下拉--向右.png'))}
+          />
+        </View>
+      </View>
+    </TouchableOpacity>
+  )
+
+  renderCoinList = (coinList, listToggled, tapCoinListCell) => {
+    if (!listToggled) return null
+    const coinListView = coinList.map(ele => (
+      <TouchableOpacity
+        key={ele.id}
+        activeOpacity={common.activeOpacity}
+        onPress={() => {
+          if (tapCoinListCell) {
+            tapCoinListCell(ele)
+          }
+        }}
+      >
+        <View
+          style={{
+            marginTop: common.margin5,
+            height: common.h40,
+            backgroundColor: common.navBgColor,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Text
+            style={{
+              marginLeft: common.margin10,
+              fontSize: common.font14,
+              color: common.textColor,
+              alignSelf: 'center',
+            }}
+          >{ele.name}</Text>
+        </View>
+      </TouchableOpacity>
+    ))
+    return coinListView
+  }
+
+  renderRechargeAddress = (rechargeAddress, coinName, qrApi) => {
     const addressContent = (
       <View>
         <Text style={styles.addressTip}>充值地址</Text>
-        <Text style={styles.address}>{selectedToken.rechargeaddr}</Text>
+        <Text style={styles.address}>{rechargeAddress}</Text>
       </View>
     )
-    const isHide = selectedToken.rechargeaddr === '暂无可充值地址'
+    const isHide = rechargeAddress === '暂无可充值地址'
     const addressBtn = !isHide && (
       <View>
         <View style={styles.btnsContainer}>
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => this.clipPress()}
+            onPress={() => this.clipPress(rechargeAddress)}
           >
             <Text style={styles.copyAddressBtn}>复制地址</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={common.activeOpacity}
-            onPress={() => this.qrPress()}
+            onPress={() => this.qrPress(rechargeAddress, coinName, qrApi)}
           >
             <Text style={styles.copyAddressBtn}>显示二维码</Text>
           </TouchableOpacity>
@@ -256,77 +344,47 @@ class Recharge extends Component {
     )
   }
 
-  renderBottomCell() {
-    const { selectedToken } = this.props
-
-    if ((selectedToken !== common.selectedTokenDefault
-      && selectedToken.token.id === 2)
-      || (selectedToken !== common.selectedTokenDefault
-        && selectedToken.token.id === 5)
-      || (selectedToken !== common.selectedTokenDefault
-        && selectedToken.token.id === 6)
-      || (selectedToken !== common.selectedTokenDefault
-        && selectedToken.token.id === 7)) {
-      if (!selectedToken.rechargeaddr || selectedToken.rechargeaddr.length === 0) {
-        return null
-      }
-
-      const addressView = this.renderAddress(selectedToken)
-
-      return (
-        <View>
-          {addressView}
-          <Text style={styles.tip}>温馨提示:</Text>
-          <Text style={styles.tip}>{`1. 请勿向上述地址充值任何非BTC资产，否则资产将不可找回。
-2. 您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。
-3. 最小充值金额：0.00000001 ${selectedToken.token.name}，小于最小金额的充值将不会上账。
-4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。
-5. 请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
-        </View >
-      )
-    }
-    return null
-  }
   render() {
-    const { dispatch, selectedToken, tokenListSelected } = this.props
-    const contentCell =
-      (selectedToken !== '选择币种' && !tokenListSelected) && this.renderBottomCell()
+    const { currCoin, listToggled, coinList, rechargeAddress } = this.props
+    const coinSelector = this.renderCoinSelector(currCoin, listToggled, this.showForm)
+    const coinListView = this.renderCoinList(coinList, listToggled, this.tapCoinListCell)
+    const ishasAddress =
+      rechargeAddress &&
+      this.canRechargeAddress.includes(currCoin.name) &&
+      rechargeAddress[currCoin.id] &&
+      !listToggled
+
+    const rechargeAddressView =
+      ishasAddress &&
+      this.renderRechargeAddress(
+        rechargeAddress[currCoin.id].rechargeaddr, currCoin.name, api.qrApi,
+      )
+
     return (
       <View
         style={{
           flex: 1,
           backgroundColor: common.bgColor,
         }}
+        behavior="padding"
       >
-        <StatusBar
-          barStyle={'light-content'}
-        />
-        <ScrollView>
-          <SelectToken
-            selectedToken={selectedToken}
-            tokenListSelected={tokenListSelected}
-            dispatch={dispatch}
-            selectedTokenBlock={() => { }}
-          />
-
-          {contentCell}
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+        >
+          {coinSelector}
+          {coinListView}
+          {rechargeAddressView}
         </ScrollView>
       </View>
     )
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    asset: store.asset.asset,
-    createAddress: store.asset.createAddress,
-
-    qrApi: store.payment.qrApi,
-
-    selectedToken: store.address.selectedToken,
-    tokenListSelected: store.address.tokenListSelected,
-
-    user: store.user,
+    ...state.recharge,
+    user: state.user.user,
   }
 }
 
