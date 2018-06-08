@@ -34,6 +34,7 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from './balance'
+import * as recharge from './recharge'
 
 export default function* rootSaga() {
   yield [
@@ -122,5 +123,9 @@ export default function* rootSaga() {
     otcDetail.requestHavedPay(),
     otcDetail.requestCancel(),
     otcDetail.requestAllege(),
+
+    recharge.requestCoinList(),
+    recharge.requestRechargeAddress(),
+    recharge.requestCreateAddress(),
   ]
 }
