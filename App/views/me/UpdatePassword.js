@@ -167,7 +167,6 @@ class UpdatePassword extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode={'on-drag'}
         >
 
           <TextInputPwd

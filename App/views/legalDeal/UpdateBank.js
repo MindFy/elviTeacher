@@ -253,7 +253,6 @@ class UpdateBank extends Component {
     return (
       <ScrollView
         style={styles.container}
-        keyboardDismissMode={'on-drag'}
         keyboardShouldPersistTaps="handled"
       >
         <TKInputItem

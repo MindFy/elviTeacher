@@ -172,7 +172,6 @@ class UpdateEmail extends Component {
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode={'on-drag'}
         >
           <TKInputItem
             viewStyle={{
