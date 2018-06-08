@@ -466,7 +466,7 @@ class Register extends Component {
       >
         <KeyboardAvoidingView
           contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="position"
+          behavior="padding"
         >
           <View style={styles.contentContainer}>
             {this.renderAccount()}
