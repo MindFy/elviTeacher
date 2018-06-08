@@ -199,6 +199,7 @@ class Otc extends Component {
         onPress={(e) => {
           const types = ['buy', 'sell']
           dispatch(changeType(types[e.index]))
+          dispatch(updateForm(''))
         }}
       />)
   }
