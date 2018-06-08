@@ -154,6 +154,7 @@ class UpdateBank extends Component {
       Toast.fail('请输入验证码')
       return
     }
+
     dispatch(actions.requestUpdateBank(formState))
   }
 
@@ -228,6 +229,7 @@ class UpdateBank extends Component {
       return
     }
     if (updateBankError && (updateBankError !== this.props.updateBankError)) {
+      Overlay.hide(this.overlayViewKey)
       if (updateBankError.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
         return
