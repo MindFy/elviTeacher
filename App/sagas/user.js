@@ -133,6 +133,25 @@ export function* updatePassword() {
     else yield put({ type: constants.UPDATE_PASSWORD_FAILED, response })
   }
 }
+/* 检测手机号是否已被注册 */
+export function* mobileIsExist() {
+  while (true) {
+    const request = yield take('user/mobile_isExist_requesting')
+    const response = yield call(api.isExist, request.data)
+    if (response.success) {
+      yield put({
+        type: 'user/mobile_isExist_result',
+        data: (response.result === 1),
+      })
+    } else {
+      yield put({
+        type: 'user/mobile_isExist_result',
+        data: false,
+      })
+    }
+  }
+}
+
 /* 用户绑定邮箱 */
 export function* updateEmail() {
   while (true) {

@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import Toast from 'teaset/components/Toast/Toast'
-import TKSelectionBar from '../../components/TKSelectionBar'
+import TKSelectionBar2 from '../../components/tkselectionbar2'
 import TKInputItem from '../../components/TKInputItem'
 import TKSpinner from '../../components/TKSpinner'
 import TKButton from '../../components/TKButton'
@@ -189,12 +189,13 @@ class Otc extends Component {
 
   renderSelectionBar = () => {
     const titles = ['买入', '卖出']
-    const { dispatch } = this.props
+    const { dispatch, type } = this.props
     const width = (common.sw - 2 * common.margin10) / titles.length
 
     return (
-      <TKSelectionBar
+      <TKSelectionBar2
         titles={titles}
+        initialIndexSelected={type === 'buy' ? 0 : 1}
         barItemStyle={{ width }}
         onPress={(e) => {
           const types = ['buy', 'sell']
