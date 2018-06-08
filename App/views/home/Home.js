@@ -72,7 +72,7 @@ class Home extends Component {
       require('../../assets/recharge.png'),
       require('../../assets/recharge2.png'),
       require('../../assets/currentDelegate.png'),
-      require('../../assets/transaction_white.png'),
+      require('../../assets/history_delegate.png'),
     ]
 
     for (let i = 0; i < btnTitles.length; i++) {
