@@ -33,10 +33,13 @@ const styles = StyleSheet.create({
   priceInput: { marginTop: common.margin20 },
   quantityInput: { marginTop: common.margin10 },
   total: {
-    marginTop: common.margin10,
-    marginLeft: common.margin10,
     color: common.textColor,
     fontSize: common.font14,
+  },
+  totalView: {
+    marginTop: common.margin10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   tipsContainer: {
     marginTop: common.margin15,
@@ -174,6 +177,11 @@ class Otc extends Component {
     else navigation.navigate('LoginStack')
   }
 
+  prices = {
+    buy: '1.00',
+    sell: '0.99',
+  }
+
   renderSelectionBar = () => {
     const titles = ['买入', '卖出']
     const { dispatch } = this.props
@@ -192,11 +200,7 @@ class Otc extends Component {
 
   renderPrice = () => {
     const { type } = this.props
-    const prices = {
-      buy: '1.00',
-      sell: '0.99',
-    }
-    const price = prices[type]
+    const price = this.prices[type]
 
     return (
       <TKInputItem
@@ -225,18 +229,43 @@ class Otc extends Component {
   }
 
   renderTotal = () => {
-    const { type } = this.props
+    const { type, balanceList, amountVisible } = this.props
     let { formState: { quantity } } = this.props
     if (quantity.length === 0) quantity = 0
 
-    const showTotal = type === common.buy ?
-      `买入总计:${new BigNumber('1').times(new BigNumber(quantity)).toFixed(2, 1)}元` :
-      `卖出总计:${new BigNumber('0.99').times(new BigNumber(quantity)).toFixed(2, 1)}元`
+    let showTotal
+    let showVisible
+    const price = this.prices[type]
+    const total = new BigNumber(price).times(new BigNumber(quantity)).toFixed(2, 1)
+    if (type === common.buy) {
+      showTotal = `买入总计:${total}元`
+    } else {
+      showTotal = `卖出总计:${total}元`
+      let cnytVisible = '0.00'
+      if (balanceList && balanceList.length !== 0) {
+        balanceList.forEach((element) => {
+          if (element.token.name === common.token.CNYT) {
+            cnytVisible = new BigNumber(element.amount).toFixed(8, 1)
+          }
+        })
+      } else if (amountVisible) {
+        cnytVisible = new BigNumber(amountVisible[common.token.CNYT]).toFixed(8, 1)
+      }
+      const cnytVisibleTitle = `可用:${cnytVisible}CNYT`
+      showVisible = (
+        <Text style={styles.total}>
+          {cnytVisibleTitle}
+        </Text>
+      )
+    }
 
     return (
-      <Text
-        style={styles.total}
-      >{showTotal}</Text>
+      <View style={styles.totalView}>
+        <Text style={styles.total}>
+          {showTotal}
+        </Text>
+        {showVisible}
+      </View>
     )
   }
 
@@ -311,6 +340,8 @@ function mapStateToProps(state) {
   return {
     ...state.otc,
     loggedIn: state.authorize.loggedIn,
+    balanceList: state.balance.balanceList,
+    amountVisible: state.asset.amountVisible,
   }
 }
 
