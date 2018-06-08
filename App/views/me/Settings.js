@@ -46,7 +46,7 @@ class Settings extends Component {
   }
   componentDidMount() { }
   render() {
-    const { navigation, user } = this.props
+    const { navigation, loggedIn } = this.props
     return (
       <ScrollView
         style={{
@@ -64,7 +64,7 @@ class Settings extends Component {
           }}
           leftImageHide
           onPress={() => {
-            if (user) navigation.navigate('UpdatePassword')
+            if (loggedIn) navigation.navigate('UpdatePassword')
             else navigation.navigate('LoginStack')
           }}
           title="修改密码"
@@ -81,9 +81,9 @@ class Settings extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

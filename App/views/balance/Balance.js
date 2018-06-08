@@ -121,6 +121,88 @@ class Balance extends Component {
     else navigation.navigate('LoginStack')
   }
 
+  filterDataSource() {
+    const { balanceList = [] } = this.props
+    const initBalance = [{
+      token: {
+        id: 1,
+        name: 'TK',
+      },
+      amount: '0.00000000',
+      availableCash: '0.00000000',
+      freezed: '0.00000000',
+      rmbValue: '0.00',
+      btcValue: '0.00000000',
+    },
+    {
+      token: {
+        id: 2,
+        name: 'BTC',
+      },
+      amount: '0.00000000',
+      availableCash: '0.00000000',
+      freezed: '0.00000000',
+      rmbValue: '0.00',
+      btcValue: '0.00000000',
+    },
+    {
+      token: {
+        id: 3,
+        name: 'CNYT',
+      },
+      amount: '0.00000000',
+      availableCash: '0.00000000',
+      freezed: '0.00000000',
+      rmbValue: '0.00',
+      btcValue: '0.00000000',
+    },
+    {
+      token: {
+        id: 5,
+        name: 'ETH',
+      },
+      amount: '0.00000000',
+      availableCash: '0.00000000',
+      freezed: '0.00000000',
+      rmbValue: '0.00',
+      btcValue: '0.00000000',
+    },
+    {
+      token: {
+        id: 6,
+        name: 'ETC',
+      },
+      amount: '0.00000000',
+      availableCash: '0.00000000',
+      freezed: '0.00000000',
+      rmbValue: '0.00',
+      btcValue: '0.00000000',
+    },
+    {
+      token: {
+        id: 7,
+        name: 'LTC',
+      },
+      amount: '0.00000000',
+      availableCash: '0.00000000',
+      freezed: '0.00000000',
+      rmbValue: '0.00',
+      btcValue: '0.00000000',
+    }]
+    const indexs = {
+      TK: 0,
+      BTC: 1,
+      CNYT: 2,
+      ETH: 3,
+      ETC: 4,
+      LTC: 5,
+    }
+    balanceList.forEach((e) => {
+      initBalance[indexs[e.token.name]] = e
+    })
+    return initBalance
+  }
+
   renderRow(rd) {
     const amount = new BigNumber(rd.amount).plus(rd.freezed).toFixed(8, 1)
     return (
@@ -148,8 +230,8 @@ class Balance extends Component {
   }
 
   render() {
-    const { balanceList, loggedIn, navigation, valuation } = this.props
-
+    const { loggedIn, navigation, valuation } = this.props
+    const balanceList = this.filterDataSource()
     let amountBTC = new BigNumber(0)
     let amountRMB = new BigNumber(0)
     if (valuation && valuation.rates) {

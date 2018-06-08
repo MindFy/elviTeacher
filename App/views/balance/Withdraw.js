@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 
   },
   withdrawBtn: {
-
+    marginTop: common.margin40,
   },
   extraBtnCover: {
     flexDirection: 'row',
@@ -664,6 +664,9 @@ class WithDraw extends Component {
       const tFee = this.coinsIdDic[currCoin].fee
       const bAmount = new BigNumber(formState.withdrawAmount)
       bAalanceReceived = bAmount.minus(tFee).toFixed(8, 1)
+      if (BigNumber(bAalanceReceived).lt(0)) {
+        bAalanceReceived = '0'
+      }
     }
     return (
       <View
@@ -749,14 +752,26 @@ class WithDraw extends Component {
     )
   }
 
-  renderFormWithdrawBtn = () => (
-    <TKButton
-      style={{ marginTop: common.margin40 }}
-      onPress={() => this.withdrawPress()}
-      theme={'gray'}
-      caption={'提现'}
-    />
-  )
+  renderFormWithdrawBtn = () => {
+    const { formState } = this.props
+    const { withdrawAmount } = formState
+    let disabled = false
+    let captionColor = common.btnTextColor
+    if (!withdrawAmount || BigNumber(withdrawAmount).eq(0)) {
+      disabled = true
+      captionColor = common.placeholderColor
+    }
+    return (
+      <TKButton
+        style={styles.withdrawBtn}
+        titleStyle={{ color: captionColor }}
+        onPress={() => this.withdrawPress()}
+        theme={'gray'}
+        caption={'提现'}
+        disabled={disabled}
+      />
+    )
+  }
 
   renderFormTip = () => {
     const { currCoin } = this.props

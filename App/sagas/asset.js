@@ -1,5 +1,5 @@
 import {
-  take, call, put,
+  take, call, put, select,
 } from 'redux-saga/effects'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
@@ -9,8 +9,35 @@ export function* createAddress() {
   while (true) {
     const request = yield take(constants.CREATE_ADDRESS_REQUEST)
     const response = yield call(api.createAddress, request.data)
-    if (response.success) yield put({ type: constants.CREATE_ADDRESS_SUCCEED, response })
-    else yield put({ type: constants.CREATE_ADDRESS_FAILED, response })
+    if (response.success) {
+      yield put({ type: constants.CREATE_ADDRESS_SUCCEED, response })
+      const address = yield select(state => state.address)
+      const copySelectedToken = { ...address.selectedToken }
+      const newSelectedToken = {
+        ...copySelectedToken,
+        rechargeaddr: response.result.rechargeaddr,
+      }
+      const data = {
+        selectedToken: newSelectedToken,
+        tokenListSelected: address.tokenListSelected,
+        selectedIndex: address.selectedIndex,
+      }
+      yield put({ type: constants.SELECT_TOKEN_UPDATE, data })
+    } else {
+      yield put({ type: constants.CREATE_ADDRESS_FAILED, response })
+      const address = yield select(state => state.address)
+      const copySelectedToken = { ...address.selectedToken }
+      const newSelectedToken = {
+        ...copySelectedToken,
+        rechargeaddr: '暂无可充值地址',
+      }
+      const data = {
+        tokenListSelected: address.tokenListSelected,
+        selectedIndex: address.selectedIndex,
+        selectedToken: newSelectedToken,
+      }
+      yield put({ type: constants.SELECT_TOKEN_UPDATE, data })
+    }
   }
 }
 /* 获取某几个币种的余额等信息 */

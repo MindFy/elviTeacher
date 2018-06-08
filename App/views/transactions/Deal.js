@@ -154,9 +154,9 @@ class Deal extends Component {
         goods_id: selectedPair.goods.id,
         currency_id: selectedPair.currency.id,
         direct: !idx ? 'buy' : 'sell',
-        price: p,
-        quantity: q,
-        total_money: a.toString(),
+        price: p.toFixed(),
+        quantity: q.toFixed(),
+        total_money: a.toFixed(),
       }))
     }
   }
@@ -177,7 +177,7 @@ class Deal extends Component {
   }
 
   lastPriceCellAction(rd, type) {
-    const { dispatch, lastPrice, loggedIn, navigation, amountVisible, selectedPair } = this.props
+    const { dispatch, loggedIn, navigation, amountVisible, selectedPair } = this.props
     if (!loggedIn) {
       navigation.navigate('LoginStack')
       return
@@ -185,7 +185,6 @@ class Deal extends Component {
     const index = type === common.buy ? 1 : 0
     if (this.drawer) {
       dispatch(exchange.updateCreateOrderIndex(index))
-      const { buy = [], sell = [] } = lastPrice
       if (index === 0) {
         const sellQuantity = rd.sum_quantity
         const availQuantity = amountVisible[selectedPair.goods.name]
@@ -290,14 +289,14 @@ class Deal extends Component {
         if (sell.length) {
           dispatch(exchange.updateForm({
             ...formData,
-            price: sell[0].price,
+            price: new BigNumber(sell[0].price).toFixed(),
           }))
         }
       } else if (index === 1) {
         if (buy.length) {
           dispatch(exchange.updateForm({
             ...formData,
-            price: buy[0].price,
+            price: new BigNumber(buy[0].price).toFixed(),
           }))
         }
       }
