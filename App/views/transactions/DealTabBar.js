@@ -3,9 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -42,7 +42,7 @@ export default class DealTabBar extends PureComponent {
         backgroundColor = common.greenColor
       }
       return (
-        <TouchableOpacity
+        <NextTouchableOpacity
           key={index}
           style={[styles.barItem, { backgroundColor }]}
           activeOpacity={common.activeOpacity}
@@ -51,7 +51,7 @@ export default class DealTabBar extends PureComponent {
           <Text style={styles.barItemTitle}>
             {title}
           </Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       )
     }
 

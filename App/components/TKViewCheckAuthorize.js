@@ -3,11 +3,11 @@ import {
   Text,
   View,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native'
 import { common } from '../constants/common'
 import TKCheckCodeBtn from '../components/TKCheckCodeBtn'
+import NextTouchableOpacity from '../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -114,7 +114,7 @@ export default class TKViewCheckAuthorize extends Component {
             justifyContent: 'space-between',
           }}
         >
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               width: common.h70,
               height: common.h30,
@@ -131,8 +131,8 @@ export default class TKViewCheckAuthorize extends Component {
                 alignSelf: 'center',
               }}
             >确定</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
             style={{
               width: common.h70,
               height: common.h30,
@@ -150,7 +150,7 @@ export default class TKViewCheckAuthorize extends Component {
                 alignSelf: 'center',
               }}
             >取消</Text>
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         </View>
       </View>
     )

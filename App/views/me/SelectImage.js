@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import {
   Text,
   Image,
-  TouchableOpacity,
 } from 'react-native'
 import {
   ActionSheet,
 } from 'teaset'
 import ImagePicker from 'rn-image-picker-d3j'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class SelectImage extends Component {
   componentDidMount() { }
@@ -55,7 +55,7 @@ export default class SelectImage extends Component {
     const { title, avatarSource, onPress } = this.props
     if (avatarSource) {
       return (
-        <TouchableOpacity
+        <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
           onPress={() => {
             onPress()
@@ -74,11 +74,11 @@ export default class SelectImage extends Component {
             }}
             source={{ uri: (common.IsIOS ? avatarSource : `file://${avatarSource}`) }}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       )
     }
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         style={{
           marginTop: common.margin10,
           marginLeft: common.margin10,
@@ -111,7 +111,7 @@ export default class SelectImage extends Component {
             alignSelf: 'center',
           }}
         >{title}</Text>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 }

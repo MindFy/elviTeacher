@@ -4,11 +4,11 @@ import {
   View,
   TextInput,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import {
   common,
 } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   contant: {
@@ -102,12 +102,12 @@ export default class AllegeView extends PureComponent {
     } = this.props
 
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         style={style}
         activeOpacity={common.activeOpacity}
         onPress={onPress}
       >
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={styles.contant}
           activeOpacity={1}
           onPress={() => { }}
@@ -131,23 +131,23 @@ export default class AllegeView extends PureComponent {
           </Text>
           <View style={styles.underline} />
           <View style={styles.cancelBtnView}>
-            <TouchableOpacity
+            <NextTouchableOpacity
               style={styles.cancelBtn}
               activeOpacity={common.activeOpacity}
               onPress={cancelPress}
             >
               <Text style={styles.cancelTitle}>取消</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </NextTouchableOpacity>
+            <NextTouchableOpacity
               style={styles.confirmBtn}
               activeOpacity={common.activeOpacity}
               onPress={confirmPress}
             >
               <Text style={styles.cancelTitle}>确定</Text>
-            </TouchableOpacity>
+            </NextTouchableOpacity>
           </View>
-        </TouchableOpacity>
-      </TouchableOpacity>
+        </NextTouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 }

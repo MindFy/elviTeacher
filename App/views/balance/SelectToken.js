@@ -4,11 +4,11 @@ import {
   View,
   Text,
   Image,
-  TouchableOpacity,
   ListView,
 } from 'react-native'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class SelectToken extends Component {
   constructor() {
@@ -67,7 +67,7 @@ class SelectToken extends Component {
 
   renderRow(rd, rid) {
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         activeOpacity={common.activeOpacity}
         onPress={() => this.rowPress(rd, rid)}
       >
@@ -89,7 +89,7 @@ class SelectToken extends Component {
             }}
           >{rd.name}</Text>
         </View>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 
@@ -110,7 +110,7 @@ class SelectToken extends Component {
     const { selectedToken, tokenListSelected } = this.props
     return (
       <View>
-        <TouchableOpacity
+        <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
           onPress={() => this.cellRightImagePress()}
         >
@@ -152,7 +152,7 @@ class SelectToken extends Component {
               />
             </View>
           </View>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
 
         {this.renderTokenList()}
       </View>

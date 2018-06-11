@@ -6,7 +6,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   DeviceEventEmitter,
   KeyboardAvoidingView,
   Keyboard,
@@ -22,6 +21,7 @@ import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import { imgHashApi } from '../../services/api'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   inputView: {
@@ -57,7 +57,7 @@ class Authentication extends Component {
         fontSize: common.font16,
       },
       headerLeft: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             height: common.w40,
             width: common.w40,
@@ -74,7 +74,7 @@ class Authentication extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
     }
   }
@@ -343,7 +343,7 @@ class Authentication extends Component {
         <Text style={[styles.titleSucceed, { marginTop: common.margin10 }]}>
           失败原因：{reason}
         </Text>
-        <TouchableOpacity
+        <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
           onPress={() => {
             dispatch(actions.idCardAuthUpdate({
@@ -362,7 +362,7 @@ class Authentication extends Component {
               alignSelf: 'center',
             }}
           >再次认证</Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       </ScrollView>
     )
   }

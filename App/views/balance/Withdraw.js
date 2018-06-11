@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   ScrollView,
-  TouchableOpacity,
   KeyboardAvoidingView,
   StyleSheet,
   Keyboard,
@@ -41,6 +40,7 @@ import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   contaier: {
@@ -104,7 +104,7 @@ class WithDraw extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -121,7 +121,7 @@ class WithDraw extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }
@@ -577,7 +577,7 @@ class WithDraw extends Component {
     const { currCoin, listToggled } = this.props
 
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         activeOpacity={common.activeOpacity}
         onPress={() => this.showForm()}
       >
@@ -608,7 +608,7 @@ class WithDraw extends Component {
             />
           </View>
         </View>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 
@@ -616,7 +616,7 @@ class WithDraw extends Component {
     const { listToggled, coinList } = this.props
 
     return !listToggled ? null : coinList.map(ele => (
-      <TouchableOpacity
+      <NextTouchableOpacity
         key={ele}
         activeOpacity={common.activeOpacity}
         onPress={() => {
@@ -641,7 +641,7 @@ class WithDraw extends Component {
             }}
           >{ele}</Text>
         </View>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     ))
   }
 
@@ -728,7 +728,7 @@ class WithDraw extends Component {
         }))}
         extra={() => (
           <View style={styles.extraBtnCover}>
-            <TouchableOpacity
+            <NextTouchableOpacity
               style={{
                 marginRight: 5,
               }}
@@ -742,8 +742,8 @@ class WithDraw extends Component {
                 }}
                 source={require('../../assets/qrcode_white.png')}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
+            </NextTouchableOpacity>
+            <NextTouchableOpacity
               activeOpacity={common.activeOpacity}
               onPress={() => this.tapAddAddress()}
             >
@@ -755,7 +755,7 @@ class WithDraw extends Component {
                 resizeMode="contain"
                 source={require('../../assets/arrow_down.png')}
               />
-            </TouchableOpacity>
+            </NextTouchableOpacity>
           </View>
         )}
       />

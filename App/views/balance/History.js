@@ -5,7 +5,6 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native'
 import { RefreshState } from 'react-native-refresh-list-view'
 import { common } from '../../constants/common'
@@ -13,6 +12,7 @@ import TKSelectionBar from '../../components/TKSelectionBar'
 import HistoryList from './HistoryList'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class History extends Component {
   static navigationOptions(props) {
@@ -28,7 +28,7 @@ class History extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -45,7 +45,7 @@ class History extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

@@ -142,3 +142,9 @@ export function requestDepthMap(payload) {
     payload,
   }
 }
+
+export function clearOpenOrders() {
+  return {
+    type: 'exchange/clear_open_orders',
+  }
+}

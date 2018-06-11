@@ -4,9 +4,9 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -71,7 +71,7 @@ export default class DealNavigator extends Component {
       <View
         style={styles.container}
       >
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={styles.leftBtn}
           activeOpacity={common.activeOpacity}
           onPress={() => onPress(this.types.leftBtn)}
@@ -80,8 +80,8 @@ export default class DealNavigator extends Component {
             style={styles.leftImage}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
           style={styles.titleView}
           activeOpacity={common.activeOpacity}
           onPress={() => onPress(this.types.title)}
@@ -93,8 +93,8 @@ export default class DealNavigator extends Component {
             style={styles.titleImage}
             source={require('../../assets/arrow_down_yellow.png')}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
           style={styles.rightBtn}
           activeOpacity={common.activeOpacity}
           onPress={() => onPress(this.types.rightBtn)}
@@ -102,7 +102,7 @@ export default class DealNavigator extends Component {
           <Text style={styles.title}>
             {rightBtnTitle}
           </Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       </View>
     )
   }

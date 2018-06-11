@@ -6,7 +6,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   Keyboard,
 } from 'react-native'
 import { Toast, Overlay } from 'teaset'
@@ -17,6 +16,7 @@ import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import * as actions from '../../actions/updateBank'
 import { findUserUpdate } from '../../actions/user'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +57,7 @@ class UpdateBank extends Component {
         fontSize: common.font16,
       },
       headerLeft: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             height: common.w40,
             width: common.w40,
@@ -74,7 +74,7 @@ class UpdateBank extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
     }
   }

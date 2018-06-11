@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  TouchableOpacity,
   Image,
   Keyboard,
 } from 'react-native'
@@ -17,6 +16,7 @@ import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import actions from '../../actions/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +57,7 @@ class ForgotPwd extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -74,7 +74,7 @@ class ForgotPwd extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

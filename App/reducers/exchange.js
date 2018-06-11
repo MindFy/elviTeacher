@@ -226,6 +226,12 @@ export default function exchange(state = initialState, action) {
         depthMapRequesting: false,
       }
       break
+    case 'exchange/clear_open_orders':
+      nextState = {
+        ...state,
+        openOrders: [],
+      }
+      break
     case 'notify/clear_reducer':
       nextState = initialState
       break

@@ -4,10 +4,10 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class Settings extends Component {
   static navigationOptions(props) {
@@ -23,7 +23,7 @@ class Settings extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -40,7 +40,7 @@ class Settings extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

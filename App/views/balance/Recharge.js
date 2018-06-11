@@ -6,7 +6,6 @@ import {
   Image,
   Clipboard,
   ScrollView,
-  TouchableOpacity,
   CameraRoll,
   StyleSheet,
 } from 'react-native'
@@ -23,6 +22,7 @@ import {
   resetNexus,
 } from '../../actions/recharge'
 import * as api from '../../services/api'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   coinSelector: {
@@ -114,7 +114,7 @@ class Recharge extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -131,11 +131,11 @@ class Recharge extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
       headerRight:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => props.navigation.navigate('History')}
           >
@@ -146,7 +146,7 @@ class Recharge extends Component {
                 color: 'white',
               }}
             >历史记录</Text>
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }
@@ -193,7 +193,7 @@ class Recharge extends Component {
             style={styles.qrImage}
             source={{ uri: `${qrApi}${rechargeAddress}` }}
           />
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               position: 'absolute',
               bottom: common.margin10,
@@ -210,7 +210,7 @@ class Recharge extends Component {
                 color: common.btnTextColor,
               }}
             >保存二维码</Text>
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         </View>
       </Overlay.View>
     )
@@ -251,7 +251,7 @@ class Recharge extends Component {
       />
     )
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         activeOpacity={common.activeOpacity}
         onPress={() => {
           if (showForm) {
@@ -265,14 +265,14 @@ class Recharge extends Component {
             {arrow}
           </View>
         </View>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 
   renderCoinList = (coinList, listToggled, tapCoinListCell) => {
     if (!listToggled) return null
     const coinListView = coinList.map(ele => (
-      <TouchableOpacity
+      <NextTouchableOpacity
         key={ele.id}
         activeOpacity={common.activeOpacity}
         onPress={() => {
@@ -299,7 +299,7 @@ class Recharge extends Component {
             }}
           >{ele.name}</Text>
         </View>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     ))
     return coinListView
   }
@@ -326,18 +326,18 @@ class Recharge extends Component {
     const addressBtn = !isHide && (
       <View>
         <View style={styles.btnsContainer}>
-          <TouchableOpacity
+          <NextTouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => this.clipPress(rechargeAddress)}
           >
             <Text style={styles.copyAddressBtn}>复制地址</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => this.qrPress(rechargeAddress, coinName, qrApi)}
           >
             <Text style={styles.copyAddressBtn}>显示二维码</Text>
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         </View>
       </View>
     )

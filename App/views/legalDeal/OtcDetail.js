@@ -5,7 +5,6 @@ import {
   View,
   Image,
   StyleSheet,
-  TouchableOpacity,
   Keyboard,
 } from 'react-native'
 import {
@@ -30,6 +29,7 @@ import {
 } from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
 import AllegeView from './AllegeView'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   row: {
@@ -109,7 +109,7 @@ class OtcDetail extends Component {
         fontSize: common.font16,
       },
       headerLeft: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             height: common.w40,
             width: common.w40,
@@ -126,7 +126,7 @@ class OtcDetail extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
     }
   }
@@ -466,7 +466,7 @@ class OtcDetail extends Component {
               {`总价:¥${amount}`}</Text>
           </View>
           <View style={styles.priceView}>
-            <TouchableOpacity
+            <NextTouchableOpacity
               style={styles.paymentBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => {
@@ -475,8 +475,8 @@ class OtcDetail extends Component {
             >
               <Text style={styles.paymentTitle}>
                 {paymentBtnTitle}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </NextTouchableOpacity>
+            <NextTouchableOpacity
               style={[styles.paymentBtn, {
                 marginTop: common.margin8,
               }]}
@@ -493,8 +493,8 @@ class OtcDetail extends Component {
                   fontSize: common.font10,
                 }}
               >{cancelBtnTitle}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </NextTouchableOpacity>
+            <NextTouchableOpacity
               activeOpacity={common.activeOpacity}
               style={styles.havedPayBtn}
               disabled={havedPayDisabled}
@@ -509,7 +509,7 @@ class OtcDetail extends Component {
                   fontSize: common.font10,
                 }}
               >{havedPayTitle}</Text>
-            </TouchableOpacity>
+            </NextTouchableOpacity>
           </View>
         </View>
       </View>

@@ -6,7 +6,6 @@ import {
   ListView,
   ScrollView,
   RefreshControl,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
@@ -19,6 +18,7 @@ import {
   requestBalanceValuation,
 } from '../../actions/balance'
 import cache from '../../utils/cache'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -69,7 +69,7 @@ class Balance extends Component {
         fontSize: common.font16,
       },
       headerRight: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
           onPress={params.historyPress}
         >
@@ -80,7 +80,7 @@ class Balance extends Component {
               color: 'white',
             }}
           >历史记录</Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
       tabBarOnPress: ({ scene, jumpToIndex }) => {
         if (cache.getObject('isLoginIn')) {

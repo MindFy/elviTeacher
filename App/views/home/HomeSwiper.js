@@ -4,11 +4,11 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import Swiper from 'react-native-swiper'
 import { common } from '../../constants/common'
 import { imgHashApi } from '../../services/api'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   banners: {
@@ -50,7 +50,7 @@ export default class HomeSwiper extends Component {
     const renderBannersSwiper = () => {
       if (!banners.length) return null
       const items = banners.map(element => (
-        <TouchableOpacity
+        <NextTouchableOpacity
           key={element.id}
           activeOpacity={1}
           onPress={() => onPress({
@@ -63,7 +63,7 @@ export default class HomeSwiper extends Component {
             resizeMode="contain"
             source={{ uri: `${imgHashApi}${element.imghash}` }}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ))
       return (<Swiper
         index={this.bannersIndex}
@@ -81,7 +81,7 @@ export default class HomeSwiper extends Component {
     const renderAnnouncementsSwiper = () => {
       if (!announcements.length) return null
       const items = announcements.map(element => (
-        <TouchableOpacity
+        <NextTouchableOpacity
           key={element.id}
           activeOpacity={1}
           onPress={() => onPress({
@@ -93,7 +93,7 @@ export default class HomeSwiper extends Component {
             style={styles.announcementsTitle}
             numberOfLines={1}
           >{element.title}</Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ))
       return (<View
         style={styles.announcements}

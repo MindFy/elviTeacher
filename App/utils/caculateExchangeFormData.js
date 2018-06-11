@@ -95,11 +95,16 @@ function textInputUpdate(
     common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q, a) => {
       let availble = null
       if (createOrderIndex === 0) {
-        availble = amountVisible[selectedPair.currency.name]
+        availble = amountVisible[selectedPair.currency.name] || '0'
       } else {
-        availble = amountVisible[selectedPair.goods.name]
+        availble = amountVisible[selectedPair.goods.name] || '0'
       }
-      const temp = textInputLimit(price, quantity, amount, p, q, a, tag, availble, createOrderIndex)
+      const splitArray = quantity.split('.')
+      let nextQuantity = quantity
+      if (splitArray.length > 1 && splitArray[1].length > q) {
+        nextQuantity = new BigNumber(quantity).toFixed(q, 1)
+      }
+      const temp = textInputLimit(price, nextQuantity, amount, p, q, a, tag, availble, createOrderIndex)
       if (temp) {
         returnVal = {
           price: temp.p,
@@ -154,6 +159,18 @@ export function caculateExchangeFormData({
         if (newAmount.isNaN()) {
           return
         }
+        let availble = null
+        if (createOrderIndex === 0) {
+          availble = amountVisible[selectedPair.currency.name] || '0'
+        } else {
+          availble = amountVisible[selectedPair.goods.name] || '0'
+        }
+        if (createOrderIndex === 0) { // 买入
+          if (newAmount.gt(new BigNumber(availble))) {
+            nextFormData.price = price
+            return
+          }
+        }
         nextFormData.amount = newAmount.toFixed(nextAmount, 1)
       })
       return nextFormData
@@ -171,6 +188,21 @@ export function caculateExchangeFormData({
         nextFormData.quantity = newQuantity.toFixed()
         const newAmount = BigNumber(price).multipliedBy(newQuantity)
         if (newAmount.isNaN()) {
+          return
+        }
+        let availble = null
+        if (createOrderIndex === 0) {
+          availble = amountVisible[selectedPair.currency.name] || '0'
+        } else {
+          availble = amountVisible[selectedPair.goods.name] || '0'
+        }
+        if (createOrderIndex === 0) { // 买入
+          if (newAmount.gt(new BigNumber(availble))) {
+            nextFormData.quantity = quantity
+            return
+          }
+        } else if (newQuantity.gt(availble)) { // 卖出
+          nextFormData.quantity = quantity
           return
         }
         nextFormData.amount = newAmount.toFixed(nextAmount, 1)
@@ -196,6 +228,18 @@ export function caculateExchangeFormData({
         if (newAmount.isNaN()) {
           return
         }
+        let availble = null
+        if (createOrderIndex === 0) {
+          availble = amountVisible[selectedPair.currency.name] || '0'
+        } else {
+          availble = amountVisible[selectedPair.goods.name] || '0'
+        }
+        if (createOrderIndex === 0) { // 买入
+          if (newAmount.gt(new BigNumber(availble))) {
+            nextFormData.price = price
+            return
+          }
+        }
         nextFormData.amount = newAmount.toFixed(nextAmount, 1)
       })
       return nextFormData
@@ -213,6 +257,21 @@ export function caculateExchangeFormData({
         nextFormData.quantity = newQuantity.toFixed()
         const newAmount = BigNumber(price).multipliedBy(newQuantity)
         if (newAmount.isNaN()) {
+          return
+        }
+        let availble = null
+        if (createOrderIndex === 0) {
+          availble = amountVisible[selectedPair.currency.name] || '0'
+        } else {
+          availble = amountVisible[selectedPair.goods.name] || '0'
+        }
+        if (createOrderIndex === 0) { // 买入
+          if (newAmount.gt(new BigNumber(availble))) {
+            nextFormData.quantity = quantity
+            return
+          }
+        } else if (newQuantity.gt(new BigNumber(availble))) { // 卖出
+          nextFormData.quantity = quantity
           return
         }
         nextFormData.amount = newAmount.toFixed(nextAmount, 1)
@@ -237,12 +296,11 @@ export function caculateExchangeFormData({
 export function slideAction({ selectedPair, formData, actions, amountVisible, createOrderIndex }) {
   const { currentVisible, percent, index } = actions
   const { price, quantity } = formData
-  let temp = currentVisible.toNumber() * percent
+  const temp = (currentVisible.toNumber() * percent).toString()
   if (!index) {
     return textInputUpdate(
       price, quantity, temp, 'amount', selectedPair, amountVisible, createOrderIndex)
   }
-  temp = new BigNumber(temp).dp(0, 1)
   return textInputUpdate(
-    price, temp.toString(), undefined, 'sliderForSell', selectedPair, amountVisible, createOrderIndex)
+    price, temp, undefined, 'sliderForSell', selectedPair, amountVisible, createOrderIndex)
 }

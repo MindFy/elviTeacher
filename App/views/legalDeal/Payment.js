@@ -4,12 +4,12 @@ import {
   View,
   Image,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native'
 import BigNumber from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class Payment extends Component {
   static navigationOptions(props) {
@@ -26,7 +26,7 @@ export default class Payment extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -43,7 +43,7 @@ export default class Payment extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

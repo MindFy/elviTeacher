@@ -4,7 +4,6 @@ import {
   View,
   Image,
   StyleSheet,
-  TouchableOpacity,
   Modal,
   KeyboardAvoidingView,
 } from 'react-native'
@@ -13,6 +12,7 @@ import TransactionsSlider from './TransactionsSlider'
 import TextInputTransactions from './TextInputTransactions'
 import { common } from '../../constants/common'
 import TKButton from '../../components/TKButton'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   cover: {
@@ -186,7 +186,7 @@ class DealDrawer extends Component {
         visible
         onRequestClose={() => { }}
       >
-        <TouchableOpacity
+        <NextTouchableOpacity
           activeOpacity={1}
           style={styles.cover}
           onPress={() => this.hide()}
@@ -204,7 +204,7 @@ class DealDrawer extends Component {
 
           <View style={styles.inputView}>
             <View style={styles.price}>
-              <TouchableOpacity
+              <NextTouchableOpacity
                 style={styles.plusBtn}
                 activeOpacity={common.activeOpacity}
                 onPress={() => {
@@ -221,7 +221,7 @@ class DealDrawer extends Component {
                   source={require('../../assets/release.png')}
                   resizeMode={'contain'}
                 />
-              </TouchableOpacity>
+              </NextTouchableOpacity>
               <TextInputTransactions
                 placeholder={`价格（${caculatedData.currencyName}）`}
                 value={price}
@@ -235,7 +235,7 @@ class DealDrawer extends Component {
                   }
                 }}
               />
-              <TouchableOpacity
+              <NextTouchableOpacity
                 style={styles.plusBtn}
                 activeOpacity={common.activeOpacity}
                 onPress={() => {
@@ -252,10 +252,10 @@ class DealDrawer extends Component {
                   source={require('../../assets/plus.png')}
                   resizeMode={'contain'}
                 />
-              </TouchableOpacity>
+              </NextTouchableOpacity>
             </View>
             <View style={styles.price}>
-              <TouchableOpacity
+              <NextTouchableOpacity
                 style={styles.plusBtn}
                 activeOpacity={common.activeOpacity}
                 onPress={() => {
@@ -272,7 +272,7 @@ class DealDrawer extends Component {
                   source={require('../../assets/release.png')}
                   resizeMode={'contain'}
                 />
-              </TouchableOpacity>
+              </NextTouchableOpacity>
               <TextInputTransactions
                 placeholder={`数量（${caculatedData.goodsName}）`}
                 value={quantity}
@@ -286,7 +286,7 @@ class DealDrawer extends Component {
                   }
                 }}
               />
-              <TouchableOpacity
+              <NextTouchableOpacity
                 style={styles.plusBtn}
                 activeOpacity={common.activeOpacity}
                 onPress={() => {
@@ -303,7 +303,7 @@ class DealDrawer extends Component {
                   source={require('../../assets/plus.png')}
                   resizeMode={'contain'}
                 />
-              </TouchableOpacity>
+              </NextTouchableOpacity>
             </View>
           </View>
 
