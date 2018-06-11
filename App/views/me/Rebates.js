@@ -59,6 +59,10 @@ const styles = StyleSheet.create({
     fontSize: common.font14,
     alignSelf: 'center',
   },
+  qrImage: {
+    height: common.h15,
+    width: common.h15,
+  },
   copyBtn: {
     marginRight: common.margin10,
     alignSelf: 'center',
@@ -359,10 +363,7 @@ class Rebates extends Component {
             onPress={() => this.showLinkQr()}
           >
             <Image
-              style={{
-                height: common.h15,
-                width: common.h15,
-              }}
+              style={styles.qrImage}
               source={require('../../assets/qrcode_yellow.png')}
             />
             <Text style={styles.prefixNo}>
