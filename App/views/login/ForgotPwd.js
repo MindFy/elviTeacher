@@ -87,6 +87,11 @@ class ForgotPwd extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.handleGetVerificateCodeRequest(nextProps)
+    this.handleCheckVerificateCodeRequest(nextProps)
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(actions.registerUpdate({
@@ -152,8 +157,8 @@ class ForgotPwd extends Component {
   }
 
   /* 获取验证码请求结果处理 */
-  handleGetVerificateCodeRequest() {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = this.props
+  handleGetVerificateCodeRequest(nextProps) {
+    const { getVerificateCodeVisible, getVerificateCodeResponse } = nextProps
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
 
     if (getVerificateCodeVisible) {
@@ -179,8 +184,8 @@ class ForgotPwd extends Component {
   }
 
   /* 检测验证码请求结果处理 */
-  handleCheckVerificateCodeRequest() {
-    const { checkVerificateCodeVisible, checkVerificateCodeResponse, navigation } = this.props
+  handleCheckVerificateCodeRequest(nextProps) {
+    const { checkVerificateCodeVisible, checkVerificateCodeResponse, navigation } = nextProps
     if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
     if (checkVerificateCodeVisible) {
       this.showCheckVerificateCodeResponse = true
@@ -215,9 +220,6 @@ class ForgotPwd extends Component {
   }
 
   render() {
-    this.handleGetVerificateCodeRequest()
-    this.handleCheckVerificateCodeRequest()
-
     const { mobile, code, getVerificateCodeVisible, checkVerificateCodeVisible } = this.props
     return (
       <ScrollView
