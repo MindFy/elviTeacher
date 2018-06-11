@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   input: {
+    flex: undefined,
     marginTop: common.margin60,
     marginHorizontal: '10%',
   },
@@ -295,7 +296,7 @@ class Login extends PureComponent {
       >
         <KeyboardAvoidingView
           contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="position"
+          behavior="padding"
         >
           {this.renderLogo()}
           {this.renderInput()}

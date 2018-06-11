@@ -229,7 +229,7 @@ class ForgotPwd extends Component {
       >
         <KeyboardAvoidingView
           contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="position"
+          behavior="padding"
         >
           <TKInputItem
             viewStyle={styles.inputView}
