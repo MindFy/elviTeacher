@@ -146,9 +146,9 @@ android {
 }
 
 dependencies {
+    compile project(':rn-put-object')
     compile project(':react-native-splash-screen')
     compile project(':react-native-camera')
-    compile project(':rn-put-object')
     compile project(':rn-image-picker-d3j')
     compile project(':react-native-spinkit')
     compile fileTree(dir: "libs", include: ["*.jar"])

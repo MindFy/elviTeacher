@@ -35,7 +35,7 @@
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
     "rn-image-picker-d3j": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-image-picker-d3j.git#0.2.1",
-    "rn-put-object": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-put-object.git#0.2.3",
+    "rn-put-object": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-put-object.git#0.2.4",
     "teaset": "0.5.6",
     "wallet-address-validator": "^0.1.6"
   },
