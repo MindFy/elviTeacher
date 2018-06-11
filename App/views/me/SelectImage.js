@@ -25,7 +25,8 @@ export default class SelectImage extends Component {
             allowsEditing: false,
           }, (response) => {
             if (response.uri && response.uri.length) {
-              const uri = response.uri.replace('file://', '')
+              const uri = common.IsIOS ? response.uri : response.path
+              // const uri = response.uri.replace('file://', '')
               imagePickerBlock(uri)
             }
           })
@@ -38,7 +39,8 @@ export default class SelectImage extends Component {
             allowsEditing: false,
           }, (response) => {
             if (response.uri && response.uri.length) {
-              const uri = response.uri.replace('file://', '')
+              const uri = common.IsIOS ? response.uri : response.path
+              // const uri = response.uri.replace('file://', '')
               imagePickerBlock(uri)
             }
           })
@@ -70,7 +72,7 @@ export default class SelectImage extends Component {
               borderColor: common.borderColor,
               borderWidth: 1,
             }}
-            source={{ uri: avatarSource }}
+            source={{ uri: (common.IsIOS ? avatarSource : `file://${avatarSource}`) }}
           />
         </TouchableOpacity>
       )

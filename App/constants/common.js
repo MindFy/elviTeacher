@@ -49,6 +49,8 @@ const common = {
   sell: 'sell',
   btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
 
+  IsIOS,
+
   payment: {
     charge: {
       BTC: 0.001,

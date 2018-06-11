@@ -203,7 +203,9 @@ class Deal extends Component {
           amountVisible,
           index,
         })
-        dispatch(exchange.updateForm(nextValue))
+        if (nextValue) {
+          dispatch(exchange.updateForm(nextValue))
+        }
       } else if (index === 1) {
         const buyQuantity = rd.sum_quantity
         const availQuantity = amountVisible[selectedPair.currency.name]
@@ -222,7 +224,9 @@ class Deal extends Component {
           amountVisible,
           index,
         })
-        dispatch(exchange.updateForm(nextValue))
+        if (nextValue) {
+          dispatch(exchange.updateForm(nextValue))
+        }
       }
       this.drawer.showAtIndex(index)
     }
