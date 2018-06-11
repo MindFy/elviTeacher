@@ -5,12 +5,12 @@ import {
   Image,
   ListView,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import {
   common,
 } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   header: {
@@ -133,7 +133,7 @@ export default class HomeMarket extends Component {
     })
 
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         style={styles.row}
         activeOpacity={common.activeOpacity}
         onPress={() => onPress(rd)}
@@ -173,7 +173,7 @@ export default class HomeMarket extends Component {
         <Text style={[styles.rose, { color: rangeColor }]}>
           {`${roseSymbol}${rose}%`}
         </Text>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
   View,
+  AppState,
   StatusBar,
   ScrollView,
   StyleSheet,
@@ -29,16 +30,31 @@ const styles = StyleSheet.create({
 
 class Home extends Component {
   componentDidMount() {
-    const { dispatch } = this.props
     setTimeout(() => {
       SplashScreen.hide()
     }, 200)
+    this.refreshData()
+
+    AppState.addEventListener('change',
+      nextAppState => this._handleAppStateChange(nextAppState))
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change',
+      nextAppState => this._handleAppStateChange(nextAppState))
+  }
+
+  _handleAppStateChange(nextAppState) {
+    if (nextAppState === 'active') {
+      this.refreshData()
+    }
+  }
+
+  refreshData() {
+    const { dispatch } = this.props
     dispatch(actions.requestBanners(schemas.findBanners()))
     dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
     dispatch(actions.requestMarket())
-
-    // dispatch(actions.sync())
-    // dispatch(actions.getValuation())
   }
 
   marketPress(rd) {
@@ -95,14 +111,10 @@ class Home extends Component {
   }
 
   renderRefreshControl = () => {
-    const { dispatch, announcementsLoading, bannersLoading } = this.props
+    const { announcementsLoading, bannersLoading } = this.props
     return (
       <RefreshControl
-        onRefresh={() => {
-          dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
-          dispatch(actions.requestBanners(schemas.findBanners()))
-          dispatch(actions.requestMarket())
-        }}
+        onRefresh={() => this.refreshData()}
         refreshing={
           !!((bannersLoading || announcementsLoading))
         }

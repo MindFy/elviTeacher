@@ -73,6 +73,10 @@ class ConfirmPwd extends Component {
     this.showResetPasswordResponse = false
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.HandleResetPasswordRequest(nextProps)
+  }
+
   componentWillUnmount() {
     const { dispatch, mobile, code } = this.props
     dispatch(actions.registerUpdate({ mobile, code, password: '', passwordAgain: '' }))
@@ -123,8 +127,8 @@ class ConfirmPwd extends Component {
     }))
   }
 
-  HandleResetPasswordRequest() {
-    const { dispatch, resetPasswordVisible, resetPasswordResponse, navigation } = this.props
+  HandleResetPasswordRequest(nextProps) {
+    const { dispatch, resetPasswordVisible, resetPasswordResponse, navigation } = nextProps
     if (!resetPasswordVisible && !this.showResetPasswordResponse) return
 
     if (resetPasswordVisible) {
@@ -150,8 +154,6 @@ class ConfirmPwd extends Component {
   }
 
   render() {
-    this.HandleResetPasswordRequest()
-
     const { password, passwordAgain, resetPasswordVisible } = this.props
     return (
 
