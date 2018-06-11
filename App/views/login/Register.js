@@ -10,12 +10,12 @@ import {
   Image,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
-import Spinner from 'react-native-spinkit'
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 import TKInputItem from '../../components/TKInputItem'
 import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import TKButton from '../../components/TKButton'
+import TKSpinner from '../../components/TKSpinner'
 
 const styles = StyleSheet.create({
   cover: {
@@ -477,6 +477,8 @@ class Register extends Component {
       registerVisible,
     } = this.props
 
+    const behavior = common.IsIOS ? 'position' : 'padding'
+
     return (
       <ScrollView
         style={styles.cover}
@@ -485,7 +487,7 @@ class Register extends Component {
       >
         <KeyboardAvoidingView
           contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="padding"
+          behavior={behavior}
         >
           <View style={styles.contentContainer}>
             {this.renderAccount()}
@@ -517,18 +519,10 @@ class Register extends Component {
             disabled={registerVisible}
             onPress={() => this.registerPress()}
           />
-          <Spinner
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              marginTop: common.sh / 2 - common.h50 / 2,
-            }}
-            isVisible={registerVisible}
-            size={common.h50}
-            type={'Wave'}
-            color={common.btnTextColor}
-          />
         </KeyboardAvoidingView>
+        <TKSpinner
+          isVisible={registerVisible}
+        />
       </ScrollView>
 
     )

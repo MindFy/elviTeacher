@@ -252,12 +252,13 @@ class Authentication extends Component {
   renderScrollView() {
     const { name, idNo, idCardImages } = this.props
     return (
-      <KeyboardAvoidingView
-        behavior="padding"
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode={'on-drag'}
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="padding"
         >
           <TKInputItem
             viewStyle={styles.inputView}
@@ -301,8 +302,8 @@ class Authentication extends Component {
             caption="确认"
             theme={'gray'}
           />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 
