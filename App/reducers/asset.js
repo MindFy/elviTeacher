@@ -21,7 +21,7 @@ const initialState = {
     name: 'LTC',
   }],
   asset: [],
-  amountVisible: undefined,
+  amountVisible: {},
   valuation: undefined,
   createAddress: '',
   selectedIndex: undefined,

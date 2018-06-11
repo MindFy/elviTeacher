@@ -107,6 +107,8 @@ class Market2 extends Component {
     dispatch(exchange.requestLastpriceList(params))
     dispatch(exchange.requestOrderhistoryList(params))
     dispatch(exchange.requestDepthMap(params))
+    dispatch(exchange.updateSegmentIndex(0))
+    dispatch(exchange.clearOpenOrders())
     navigation.goBack()
   }
 

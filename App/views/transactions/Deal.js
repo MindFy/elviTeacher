@@ -201,7 +201,7 @@ class Deal extends Component {
             val: new BigNumber(availQuantity).lte(sellQuantity) ? availQuantity : sellQuantity,
           },
           amountVisible,
-          index,
+          createOrderIndex: index,
         })
         if (nextValue) {
           dispatch(exchange.updateForm(nextValue))
@@ -219,10 +219,10 @@ class Deal extends Component {
           actions: {
             cmd: 'input',
             type: 'quantity',
-            val: new BigNumber(availQuantity).lte(buyQuantity) ? availQuantity : buyQuantity,
+            val: new BigNumber(availQuantity).lte(new BigNumber(buyQuantity)) ? availQuantity : buyQuantity,
           },
           amountVisible,
-          index,
+          createOrderIndex: index,
         })
         if (nextValue) {
           dispatch(exchange.updateForm(nextValue))

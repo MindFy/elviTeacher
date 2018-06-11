@@ -65,7 +65,7 @@ export function* findAssetList() {
     const response = yield call(api.graphql, request.schema)
     if (response.success) {
       const findAsset = response.result.data.find_asset
-      const amountVisible = findAsset.length ? {} : undefined
+      const amountVisible = {}
       for (let i = 0; i < findAsset.length; i++) {
         const element = findAsset[i]
         amountVisible[element.token.name] = element.amount
