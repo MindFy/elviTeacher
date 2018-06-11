@@ -7,7 +7,7 @@ class NextTouchableOpacity extends PureComponent {
     this.didPress = false
   }
 
-  press(onPress, delay = 1000) {
+  press(onPress, delay = 500) {
     if (this.didPress) {
       return
     }
