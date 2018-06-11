@@ -103,6 +103,8 @@ class Register extends Component {
       password: '',
       passwordAgain: '',
       recommendNo: '',
+      registerResponse: undefined,
+      registerVisible: false,
     }))
   }
 

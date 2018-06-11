@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   Image,
+  Keyboard,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { common } from '../../constants/common'
@@ -120,6 +121,8 @@ class ForgotPwd extends Component {
   }
 
   codePress() {
+    Keyboard.dismiss()
+
     const { dispatch, mobile } = this.props
     if (!mobile) {
       Toast.fail('手机号不可为空')
@@ -136,6 +139,8 @@ class ForgotPwd extends Component {
   }
 
   nextPress() {
+    Keyboard.dismiss()
+
     const { dispatch, mobile, code } = this.props
     if (!mobile.length) {
       Toast.fail('请输入手机号')

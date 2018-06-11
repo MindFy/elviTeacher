@@ -383,8 +383,46 @@ class Authentication extends Component {
     }
   }
 
+  renderWaitingTip = () => (
+    <View
+      style={{
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'transparent',
+      }}
+    >
+      <View
+        style={{
+          position: 'absolute',
+          alignSelf: 'center',
+          justifyContent: 'center',
+          top: common.margin30,
+          width: '50%',
+          height: common.h60,
+          backgroundColor: 'white',
+          borderRadius: common.radius6,
+        }}
+      >
+        <Text
+          style={{
+            color: common.blackColor,
+            fontSize: common.font16,
+            alignSelf: 'center',
+            textAlign: 'center',
+            lineHeight: common.margin20,
+          }}
+        >{'提交成功\n请耐心等待后台审核'}</Text>
+      </View>
+    </View>
+  )
+
   render() {
     const { idCardAuthVisible, user } = this.props
+    const isShowWaitingTip =
+      user && user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting
+    const contentView = !isShowWaitingTip && this.renderContentView()
+    const waitingTip = isShowWaitingTip && this.renderWaitingTip()
     return (
       <View
         style={{
@@ -392,41 +430,8 @@ class Authentication extends Component {
           backgroundColor: common.bgColor,
         }}
       >
-        {this.renderContentView()}
-        {
-          user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting ?
-            <View
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                backgroundColor: 'transparent',
-              }}
-            >
-              <View
-                style={{
-                  position: 'absolute',
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  top: common.margin30,
-                  width: '50%',
-                  height: common.h60,
-                  backgroundColor: 'white',
-                  borderRadius: common.radius6,
-                }}
-              >
-                <Text
-                  style={{
-                    color: common.blackColor,
-                    fontSize: common.font16,
-                    alignSelf: 'center',
-                    textAlign: 'center',
-                    lineHeight: common.margin20,
-                  }}
-                >{'提交成功\n请耐心等待后台审核'}</Text>
-              </View>
-            </View> : null
-        }
+        {contentView}
+        {waitingTip}
         <TKSpinner
           isVisible={idCardAuthVisible}
         />
