@@ -37,14 +37,16 @@ export function* requestRechargeAddressWorker(action) {
   const { payload } = action
   const response = yield call(api.getAssets, payload)
   if (response.success) {
-    if (Object.keys(response.result).length) {
+    const tokenId = (payload.token_ids)[0]
+    if (Object.keys(response.result).length
+    && response.result[tokenId]
+    && response.result[tokenId].rechargeaddr) {
       const addressObjc = response.result
       yield put({
         type: 'recharge/request_recharge_address_succeed',
         payload: addressObjc,
       })
     } else {
-      const tokenId = (payload.token_ids)[0]
       yield put({
         type: 'recharge/request_create_address',
         payload: {

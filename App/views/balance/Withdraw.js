@@ -369,7 +369,7 @@ class WithDraw extends Component {
     const bWithdrawedCount = new BigNumber(withdrawedCount)
     const bToBTC = new BigNumber(rates[currCoin].BTC)
 
-    const limitNumber = bQuotaCount.minus(bWithdrawedCount).toFixed(8, 1)
+    const limitNumber = bQuotaCount.minus(bWithdrawedCount)
 
     const minAmount = this.coinsIdDic[currCoin].minAmount
     const minAmountMsg = `最小提币金额为${minAmount}`
@@ -763,6 +763,8 @@ class WithDraw extends Component {
   }
 
   renderFormWithdrawBtn = () => {
+    Keyboard.dismiss()
+
     const { formState } = this.props
     const { withdrawAmount } = formState
     let disabled = false

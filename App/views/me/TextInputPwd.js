@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     marginLeft: common.margin10,
     width: '80%',
-    fontSize: common.font14,
+    fontSize: common.font12,
     color: 'white',
   },
 })
@@ -51,6 +51,7 @@ export default class TextInputPwd extends Component {
             keyboardType={keyboardType}
             secureTextEntry={secureTextEntry}
             editable={editable}
+            underlineColorAndroid="transparent"
           />
           {
             codeEmail
@@ -59,6 +60,7 @@ export default class TextInputPwd extends Component {
                   position: 'absolute',
                   marginRight: 0,
                   right: 10,
+                  height: common.h15,
                 }}
                 onPress={onPress}
               /> : null
