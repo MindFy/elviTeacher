@@ -12,6 +12,7 @@ import MeCell from './MeCell'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
+import cache from '../../utils/cache'
 
 class Me extends Component {
   static navigationOptions() {
@@ -57,6 +58,7 @@ class Me extends Component {
           onPress: () => {
             dispatch(actions.logout())
             dispatch(actions.clearAllReducer())
+            cache.removeObject('isLoginIn')
           },
         },
       ],
