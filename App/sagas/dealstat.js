@@ -9,7 +9,7 @@ import * as api from '../services/api'
 import {
   common,
 } from '../constants/common'
-import ws from '../websocket/ws'
+// import ws from '../websocket/ws'
 
 /* 获取交易中心的涨幅，包含：左上角以及顶上数据 */
 export default function* getRose() {
@@ -44,7 +44,7 @@ export default function* getRose() {
             }
           } else if (i === 0 && j === 0) {
             homeRoseSelectedTemp = element
-            ws.onopen(homeRoseSelectedTemp.goods.id, homeRoseSelectedTemp.currency.id, user)
+            // ws.onopen(homeRoseSelectedTemp.goods.id, homeRoseSelectedTemp.currency.id, user)
           }
           homeRose.push(element)
         }
