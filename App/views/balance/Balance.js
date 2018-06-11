@@ -18,6 +18,7 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from '../../actions/balance'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   container: {
@@ -81,6 +82,13 @@ class Balance extends Component {
           >历史记录</Text>
         </TouchableOpacity>
       ),
+      tabBarOnPress: ({ scene, jumpToIndex }) => {
+        if (cache.getObject('isLoginIn')) {
+          jumpToIndex(scene.index)
+        } else {
+          navigation.navigate('LoginStack')
+        }
+      },
     }
   }
 
@@ -97,11 +105,6 @@ class Balance extends Component {
   }
 
   componentDidMount() {
-    const { navigation, loggedIn } = this.props
-    if (!loggedIn) {
-      navigation.navigate('LoginStack')
-      return
-    }
     const { loggedInResult, dispatch } = this.props
     dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
     dispatch(requestBalanceValuation())

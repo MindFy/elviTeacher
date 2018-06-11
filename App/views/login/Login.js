@@ -17,6 +17,7 @@ import schemas from '../../schemas/index'
 import TKInputItem from '../../components/TKInputItem'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   container: {
@@ -186,6 +187,7 @@ class Login extends PureComponent {
       const user = loggedInResult
       dispatch(actions.findUser(schemas.findUser(user.id)))
       dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+      cache.setObject('isLoginIn', 'true')
       screenProps.dismiss()
     }
 
