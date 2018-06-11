@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   Image,
   ScrollView,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
@@ -15,6 +14,7 @@ import TextInputPwd from './TextInputPwd'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class UpdatePassword extends Component {
   static navigationOptions(props) {
@@ -30,7 +30,7 @@ class UpdatePassword extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -47,7 +47,7 @@ class UpdatePassword extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native'
 import { common } from '../../../constants/common'
+import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +40,7 @@ class BalanceAuthSelectionBar extends Component {
     const { barItemStyle } = this.props
     const borderRightWidth = (index === 0) ? 0.2 : 0
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         key={index}
         style={[{
           marginRight: 1,
@@ -60,7 +60,7 @@ class BalanceAuthSelectionBar extends Component {
             alignSelf: 'center',
           }}
         >{title}</Text>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 

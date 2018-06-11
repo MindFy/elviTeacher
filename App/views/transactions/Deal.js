@@ -5,7 +5,6 @@ import {
   Text,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   ListView,
 } from 'react-native'
 import { Toast } from 'teaset'
@@ -26,6 +25,7 @@ import LastPriceList from './component/LastPriceList'
 import OpenOrders from './component/OpenOrders'
 import { caculateExchangeFormData, slideAction } from '../../utils/caculateExchangeFormData'
 import findAssetList from '../../schemas/asset'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -375,7 +375,7 @@ class Deal extends Component {
     return (
       <View style={styles.kLineView}>
         {renderCharts()}
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={styles.kLineBtn}
           activeOpacity={common.activeOpacity}
           onPress={() => {
@@ -389,7 +389,7 @@ class Deal extends Component {
           <Text style={styles.kLineBtnTitle}>
             {kLineBtnTitle}
           </Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       </View>
     )
   }

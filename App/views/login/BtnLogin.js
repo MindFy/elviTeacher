@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import {
   Text,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -27,7 +27,7 @@ export default class BtnLogin extends Component {
   componentDidMount() { }
   render() {
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
@@ -36,7 +36,7 @@ export default class BtnLogin extends Component {
         <Text
           style={[styles.textStyle, this.props.textStyle]}
         >{this.props.title}</Text>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 }

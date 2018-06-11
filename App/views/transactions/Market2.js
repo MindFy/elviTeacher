@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, TouchableOpacity, Image } from 'react-native'
+import { View, Image } from 'react-native'
 import { common } from '../../constants/common'
 import MarketList2 from '../market/MarketList2'
 import {
@@ -9,6 +9,7 @@ import {
 } from '../../actions/market'
 import * as exchange from '../../actions/exchange'
 import HeaderScrollView2 from '../market/HeaderScrollView2'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class Market2 extends Component {
   static navigationOptions(props) {
@@ -24,7 +25,7 @@ class Market2 extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -41,7 +42,7 @@ class Market2 extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

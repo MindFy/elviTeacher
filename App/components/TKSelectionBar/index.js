@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +40,7 @@ class TKSelectionBar extends Component {
   item(index, title, width, selected) {
     const { barItemStyle } = this.props
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         key={index}
         style={[{
           width,
@@ -58,7 +58,7 @@ class TKSelectionBar extends Component {
             alignSelf: 'center',
           }}
         >{title}</Text>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 

@@ -6,7 +6,6 @@ import {
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableOpacity,
   Image,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
@@ -16,6 +15,7 @@ import actions from '../../actions/index'
 import TKInputItem from '../../components/TKInputItem'
 import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import TKButton from '../../components/TKButton'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   cover: {
@@ -59,7 +59,7 @@ class Register extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -76,7 +76,7 @@ class Register extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

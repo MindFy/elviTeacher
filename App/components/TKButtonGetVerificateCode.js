@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import {
-  Text,
-  TouchableOpacity,
-} from 'react-native'
+import { Text } from 'react-native'
 import { common } from '../constants/common'
+import NextTouchableOpacity from '../components/NextTouchableOpacity'
 
 let count = 60
 
@@ -35,7 +33,7 @@ export default class TKButtonGetVerificateCode extends Component {
     const { disabled, title } = this.state
     const { viewStyle } = this.props
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         style={[{
           marginRight: common.margin5,
           height: common.h13,
@@ -53,7 +51,7 @@ export default class TKButtonGetVerificateCode extends Component {
             textAlign: 'right',
           }}
         >{title}</Text>
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 }

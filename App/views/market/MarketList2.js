@@ -3,10 +3,10 @@ import {
   View,
   Text,
   ListView,
-  TouchableOpacity,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class MarketList2 extends Component {
   constructor(props) {
@@ -100,7 +100,7 @@ export default class MarketList2 extends Component {
     })
 
     return (
-      <TouchableOpacity
+      <NextTouchableOpacity
         activeOpacity={common.activeOpacity}
         onPress={() => {
           const { cellPressAction } = this.props
@@ -169,7 +169,7 @@ export default class MarketList2 extends Component {
             backgroundColor: common.placeholderColor,
           }}
         />
-      </TouchableOpacity>
+      </NextTouchableOpacity>
     )
   }
 

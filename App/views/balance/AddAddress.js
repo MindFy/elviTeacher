@@ -5,7 +5,6 @@ import {
   Text,
   Image,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
   Alert,
 } from 'react-native'
@@ -15,6 +14,7 @@ import {
 } from 'teaset'
 import WAValidator from 'wallet-address-validator'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import {
   updateForm,
   requestAddressAdd,
@@ -76,7 +76,7 @@ class AddAddress extends Component {
         fontSize: common.font16,
       },
       headerLeft: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             height: common.w40,
             width: common.w40,
@@ -93,7 +93,7 @@ class AddAddress extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
     }
   }

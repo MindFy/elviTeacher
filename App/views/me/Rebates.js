@@ -9,7 +9,6 @@ import {
   StyleSheet,
   CameraRoll,
   RefreshControl,
-  TouchableOpacity,
   Alert,
 } from 'react-native'
 import {
@@ -22,6 +21,7 @@ import { common } from '../../constants/common'
 import * as actions from '../../actions/rebates'
 import * as api from '../../services/api'
 import * as schemas from '../../schemas/user'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -120,7 +120,7 @@ class Rebates extends Component {
     return ({
       headerTitle: '超级返利',
       headerLeft: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             height: common.w40,
             width: common.w40,
@@ -137,7 +137,7 @@ class Rebates extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
       headerTransparent: true,
       headerStyle: {
@@ -221,7 +221,7 @@ class Rebates extends Component {
         overlayOpacity={0}
         ref={(e) => { this.overlayView = e }}
       >
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             backgroundColor: '#fff',
             borderRadius: common.radius6,
@@ -246,7 +246,7 @@ class Rebates extends Component {
                 source={{ uri: rebatesLinkQr }}
               /> : null
           }
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       </Overlay.View>
     )
     Overlay.show(overlayView)
@@ -329,13 +329,13 @@ class Rebates extends Component {
             <Text style={styles.prefixNo}>
               {`${prefixNo}${recommendId}`}
             </Text>
-            <TouchableOpacity
+            <NextTouchableOpacity
               style={styles.copyBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => this.clipUID()}
             >
               <Text style={styles.copy}>复制</Text>
-            </TouchableOpacity>
+            </NextTouchableOpacity>
           </View>
           <Text style={styles.uidTitle}>推荐链接</Text>
           <View style={[styles.prefixNoView, {
@@ -345,15 +345,15 @@ class Rebates extends Component {
             <Text style={styles.recommendLink}>
               {rebatesLink}
             </Text>
-            <TouchableOpacity
+            <NextTouchableOpacity
               style={styles.copyBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => this.clipLink()}
             >
               <Text style={styles.copy}>复制</Text>
-            </TouchableOpacity>
+            </NextTouchableOpacity>
           </View>
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={styles.recommendImageView}
             activeOpacity={common.activeOpacity}
             onPress={() => this.showLinkQr()}
@@ -368,7 +368,7 @@ class Rebates extends Component {
             <Text style={styles.prefixNo}>
               推荐二维码
             </Text>
-          </TouchableOpacity>
+          </NextTouchableOpacity>
 
           <View style={styles.textOutContainer}>
             <Text style={styles.textTitle}>

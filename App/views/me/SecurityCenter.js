@@ -6,7 +6,6 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  TouchableOpacity,
   DeviceEventEmitter,
 } from 'react-native'
 import {
@@ -15,6 +14,7 @@ import {
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import actions from '../../actions/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class SecurityCenter extends Component {
   static navigationOptions(props) {
@@ -30,7 +30,7 @@ class SecurityCenter extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -47,7 +47,7 @@ class SecurityCenter extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

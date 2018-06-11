@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  TouchableOpacity,
 } from 'react-native'
 import RefreshListView from 'react-native-refresh-list-view'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class HistoryList extends Component {
   componentDidMount() { }
@@ -231,7 +231,7 @@ export default class HistoryList extends Component {
         >{rd.status}</Text>
         {
           rechargeOrWithdraw === common.payment.withdraw ?
-            <TouchableOpacity
+            <NextTouchableOpacity
               style={{
                 width: '10%',
                 alignSelf: 'center',
@@ -246,7 +246,7 @@ export default class HistoryList extends Component {
                   textAlign: 'right',
                 }}
               >撤单</Text>
-            </TouchableOpacity> : null
+            </NextTouchableOpacity> : null
         }
       </View>
     )

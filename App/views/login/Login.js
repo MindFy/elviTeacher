@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   StyleSheet,
-  TouchableOpacity,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { common } from '../../constants/common'
@@ -18,6 +17,7 @@ import TKInputItem from '../../components/TKInputItem'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import cache from '../../utils/cache'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -73,7 +73,7 @@ class Login extends PureComponent {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -91,7 +91,7 @@ class Login extends PureComponent {
               resizeMode="contain"
               source={require('../../assets/close_icon.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

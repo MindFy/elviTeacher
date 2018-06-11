@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import WAValidator from 'wallet-address-validator'
-import { TouchableOpacity, Image, Alert } from 'react-native'
+import { Image, Alert } from 'react-native'
 import { common } from '../../constants/common'
 import QRScannerView from './scan/QRScannerView'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {
@@ -18,7 +19,7 @@ class ScanBarCode extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -35,7 +36,7 @@ class ScanBarCode extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

@@ -3,11 +3,11 @@ import {
   Text,
   Image,
   ScrollView,
-  TouchableOpacity,
 } from 'react-native'
 import {
   common,
 } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class Announcement extends Component {
   static navigationOptions(props) {
@@ -23,7 +23,7 @@ export default class Announcement extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -40,7 +40,7 @@ export default class Announcement extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

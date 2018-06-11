@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   Image,
   ScrollView,
-  TouchableOpacity,
   DeviceEventEmitter,
   KeyboardAvoidingView,
   Keyboard,
@@ -18,6 +17,7 @@ import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 class UpdateEmail extends Component {
   static navigationOptions(props) {
@@ -33,7 +33,7 @@ class UpdateEmail extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -50,7 +50,7 @@ class UpdateEmail extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

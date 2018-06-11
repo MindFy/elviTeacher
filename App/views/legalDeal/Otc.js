@@ -4,7 +4,6 @@ import {
   Text,
   View,
   ScrollView,
-  TouchableOpacity,
   Keyboard,
   StyleSheet,
 } from 'react-native'
@@ -25,6 +24,7 @@ import {
   requestBalanceList,
 } from '../../actions/balance'
 import findAssetList from '../../schemas/asset'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -72,7 +72,7 @@ class Otc extends Component {
         fontSize: common.font16,
       },
       headerRight: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
           onPress={params.detailPress}
         >
@@ -83,7 +83,7 @@ class Otc extends Component {
               color: 'white',
             }}
           >明细</Text>
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
     }
   }

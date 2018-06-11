@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import {
   Image,
   WebView,
-  TouchableOpacity,
 } from 'react-native'
 import {
   common,
 } from '../../constants/common'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 export default class Banner extends Component {
   static navigationOptions(props) {
@@ -22,7 +22,7 @@ export default class Banner extends Component {
       },
       headerLeft:
         (
-          <TouchableOpacity
+          <NextTouchableOpacity
             style={{
               height: common.w40,
               width: common.w40,
@@ -39,7 +39,7 @@ export default class Banner extends Component {
               }}
               source={require('../../assets/arrow_left_left.png')}
             />
-          </TouchableOpacity>
+          </NextTouchableOpacity>
         ),
     }
   }

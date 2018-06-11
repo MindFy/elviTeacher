@@ -4,7 +4,6 @@ import {
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
-  TouchableOpacity,
   Image,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
@@ -13,6 +12,7 @@ import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
+import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -46,7 +46,7 @@ class ConfirmPwd extends Component {
         fontSize: common.font16,
       },
       headerLeft: (
-        <TouchableOpacity
+        <NextTouchableOpacity
           style={{
             height: common.w40,
             width: common.w40,
@@ -63,7 +63,7 @@ class ConfirmPwd extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
-        </TouchableOpacity>
+        </NextTouchableOpacity>
       ),
     }
   }
