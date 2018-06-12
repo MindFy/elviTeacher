@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   Image,
   ScrollView,
+  StyleSheet,
   DeviceEventEmitter,
   KeyboardAvoidingView,
   Keyboard,
@@ -19,6 +20,28 @@ import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
+const styles = StyleSheet.create({
+  backBtn: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  backImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  email: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+  },
+})
+
 class UpdateEmail extends Component {
   static navigationOptions(props) {
     return {
@@ -31,27 +54,18 @@ class UpdateEmail extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <NextTouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+      headerLeft: (
+        <NextTouchableOpacity
+          style={styles.backBtn}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={styles.backImage}
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
 
@@ -73,6 +87,10 @@ class UpdateEmail extends Component {
       dispatch(actions.findUser(schemas.findUser(user.id)))
       navigation.goBack()
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.handleGetVerificateSmtpCodeRequest(nextProps)
   }
 
   componentWillUnmount() {
@@ -133,8 +151,8 @@ class UpdateEmail extends Component {
     }))
   }
 
-  handleGetVerificateSmtpCodeRequest() {
-    const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse } = this.props
+  handleGetVerificateSmtpCodeRequest(nextProps) {
+    const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse } = nextProps
     if (!getVerificateSmtpCodeVisible && !this.showGetVerificateSmtpCodeResponse) return
 
     if (getVerificateSmtpCodeVisible) {
@@ -160,25 +178,17 @@ class UpdateEmail extends Component {
 
   render() {
     const { email, codeEmail, updateEmailVisible, user } = this.props
-    this.handleGetVerificateSmtpCodeRequest()
 
     return (
       <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
+        style={styles.container}
         behavior="padding"
       >
         <ScrollView
           keyboardShouldPersistTaps="handled"
         >
           <TKInputItem
-            viewStyle={{
-              marginTop: common.margin10,
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-            }}
+            viewStyle={styles.email}
             placeholder={'请输入邮箱地址'}
             value={email}
             onChange={e => this.onChange(e, 'email')}

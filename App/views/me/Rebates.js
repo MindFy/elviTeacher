@@ -24,6 +24,16 @@ import * as schemas from '../../schemas/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
+  backBtn: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  backImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
   container: {
     flex: 1,
     backgroundColor: common.bgColor,
@@ -77,6 +87,7 @@ const styles = StyleSheet.create({
     marginBottom: common.margin10,
     color: common.textColor,
     fontSize: common.font14,
+    width: '80%',
     alignSelf: 'center',
   },
   recommendImageView: {
@@ -117,6 +128,23 @@ const styles = StyleSheet.create({
     fontSize: common.font14,
     color: common.placeholderColor,
   },
+  overlay: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlayBtn: {
+    backgroundColor: '#fff',
+    borderRadius: common.radius6,
+    height: '80%',
+    width: '80%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  overlayImage: {
+    height: '100%',
+    width: '100%',
+    alignSelf: 'center',
+  },
 })
 
 class Rebates extends Component {
@@ -125,27 +153,18 @@ class Rebates extends Component {
       headerTitle: '超级返利',
       headerLeft: (
         <NextTouchableOpacity
-          style={{
-            height: common.w40,
-            width: common.w40,
-            justifyContent: 'center',
-          }}
+          style={styles.backBtn}
           activeOpacity={common.activeOpacity}
           onPress={() => props.navigation.goBack()}
         >
           <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
+            style={styles.backImage}
             source={require('../../assets/arrow_left_left.png')}
           />
         </NextTouchableOpacity>
       ),
       headerTransparent: true,
       headerStyle: {
-        // backgroundColor: 'transparent',
         borderBottomWidth: 0,
       },
       headerTintColor: '#fff',
@@ -197,7 +216,8 @@ class Rebates extends Component {
 
   _tapLinkQRImage = (uri) => {
     const items = [
-      { title: '保存图片',
+      {
+        title: '保存图片',
 
         onPress: () => {
           this._saveImage(uri)
@@ -217,39 +237,23 @@ class Rebates extends Component {
     }
     const overlayView = (
       <Overlay.View
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        style={styles.overlay}
         modal={false}
         overlayOpacity={0}
         ref={(e) => { this.overlayView = e }}
       >
         <NextTouchableOpacity
-          style={{
-            backgroundColor: '#fff',
-            borderRadius: common.radius6,
-            height: '80%',
-            width: '80%',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          style={styles.overlayBtn}
           activeOpacity={1}
           onPress={() => {
             this._tapLinkQRImage(rebatesLinkQr)
           }}
         >
-          {
-            rebatesLinkQr.length ?
-              <Image
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  alignSelf: 'center',
-                }}
-                source={{ uri: rebatesLinkQr }}
-              /> : null
-          }
+          {rebatesLinkQr.length ?
+            <Image
+              style={styles.overlayImage}
+              source={{ uri: rebatesLinkQr }}
+            /> : null}
         </NextTouchableOpacity>
       </Overlay.View>
     )
