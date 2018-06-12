@@ -16,14 +16,19 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   cover: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  container: {
-    backgroundColor: common.navBgColor,
+    position: 'absolute',
+    left: 0,
+    top: 0,
     width: common.sw,
+    height: common.IsIOS ? common.sh : (common.sh - 20),
+    zIndex: 10,
+  },
+  press: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    flex: 1,
   },
   bottomBtn: {
     marginTop: common.margin10,
@@ -82,6 +87,10 @@ const styles = StyleSheet.create({
     fontSize: common.font10,
     width: '15%',
     alignSelf: 'center',
+  },
+  buttinStyle: {
+    fontSize: common.font16,
+    color: 'white',
   },
 })
 
@@ -180,20 +189,16 @@ class DealDrawer extends Component {
       return null
     }
     return (
-      <Modal
-        animationType="fade"
-        transparent
-        visible
-        onRequestClose={() => { }}
-      >
+      <View style={styles.cover}>
         <NextTouchableOpacity
           activeOpacity={1}
-          style={styles.cover}
+          style={styles.press}
           onPress={() => this.hide()}
         />
         <KeyboardAvoidingView
-          contentContainerStyle={{ justifyContent: 'center', backgroundColor: common.navBgColor }}
-          behavior="position"
+          style={{ backgroundColor: common.blackColor }}
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="padding"
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
             <Text style={styles.amountVisibleTitle}>可用</Text>
@@ -336,10 +341,7 @@ class DealDrawer extends Component {
             style={[styles.bottomBtn, {
               backgroundColor: !index ? common.redColor : common.greenColor,
             }]}
-            titleStyle={{
-              fontSize: common.font16,
-              color: 'white',
-            }}
+            titleStyle={styles.buttonStyle}
             theme={'gray'}
             caption={!index ? '买入' : '卖出'}
             onPress={() => {
@@ -350,8 +352,7 @@ class DealDrawer extends Component {
             disabled={caculatedData.delegateCreateVisible}
           />
         </KeyboardAvoidingView>
-      </Modal>
-
+      </View>
     )
   }
 }

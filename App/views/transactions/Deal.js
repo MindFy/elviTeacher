@@ -32,6 +32,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: common.bgColor,
   },
+  contentStyle: {
+    paddingBottom: 10,
+  },
   latestDealHeader: {
     marginTop: common.margin5,
     paddingTop: common.margin10,
@@ -187,7 +190,8 @@ class Deal extends Component {
       dispatch(exchange.updateCreateOrderIndex(index))
       if (index === 0) {
         const sellQuantity = rd.sum_quantity
-        const availQuantity = amountVisible[selectedPair.currency.name]
+        const availble = amountVisible[selectedPair.currency.name] || '0'
+        const availQuantity = new BigNumber(availble).dividedBy(new BigNumber(rd.price)).toFixed()
         const nextValue = caculateExchangeFormData({
           selectedPair,
           formData: {
@@ -465,7 +469,10 @@ class Deal extends Component {
     return (
       <View style={styles.container}>
         {this.renderNavigationBar()}
-        <ScrollView>
+        <ScrollView
+          automaticallyAdjustContentInsets={false}
+          contentContainerStyle={styles.contentStyle}
+        >
           {this.renderMarketView()}
           {this.renderDepthView()}
           {this.renderDetailList()}
