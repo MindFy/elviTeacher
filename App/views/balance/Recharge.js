@@ -13,6 +13,7 @@ import {
   Toast,
   Overlay,
 } from 'teaset'
+import FS from 'rn-fs-d3j'
 import { common } from '../../constants/common'
 import {
   coinSelected,
@@ -169,13 +170,25 @@ class Recharge extends Component {
       return
     }
     const uri = `${qrApi}${rechargeAddress}`
-    CameraRoll.saveToCameraRoll(uri).then(() => {
-      Toast.message('保存成功')
-      Overlay.hide(this.overlayViewKey)
-    }).catch(() => {
-      Toast.message('保存失败')
-      Overlay.hide(this.overlayViewKey)
-    })
+    if (common.IsIOS) {
+      CameraRoll.saveToCameraRoll(uri).then(() => {
+        Toast.message('保存成功')
+        Overlay.hide(this.overlayViewKey)
+      }).catch(() => {
+        Overlay.hide(this.overlayViewKey)
+      })
+    } else {
+      FS.downloadOlineImage({
+        uri,
+      }, (r) => {
+        Overlay.hide(this.overlayViewKey)
+        if (r.error) {
+          Toast.message('保存失败')
+        } else {
+          Toast.message('保存成功')
+        }
+      })
+    }
   }
 
   qrPress = (rechargeAddress, coinName, qrApi) => {
