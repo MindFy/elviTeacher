@@ -103,16 +103,16 @@ class UpdateBank extends Component {
   onChangeText(text, tag) {
     const { dispatch, formState } = this.props
     if (tag === 'bankName') {
-      dispatch(actions.updateForm({ ...formState, bankName: text }))
+      dispatch(actions.updateForm({ ...formState, bankName: text.trim() }))
     } else if (tag === 'subbankName') {
-      dispatch(actions.updateForm({ ...formState, subbankName: text }))
+      dispatch(actions.updateForm({ ...formState, subbankName: text.trim() }))
     } else if (tag === 'bankNo') {
       const reg = /^\+?[1-9][0-9]*$/
       if (text === '' || reg.test(text)) {
-        dispatch(actions.updateForm({ ...formState, bankNo: text }))
+        dispatch(actions.updateForm({ ...formState, bankNo: text.trim() }))
       }
     } else if (tag === 'code') {
-      dispatch(actions.updateForm({ ...formState, code: text }))
+      dispatch(actions.updateForm({ ...formState, code: text.trim() }))
     }
   }
 
