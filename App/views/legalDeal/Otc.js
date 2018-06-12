@@ -255,7 +255,9 @@ class Otc extends Component {
             cnytVisible = new BigNumber(element.amount).toFixed(8, 1)
           }
         })
-      } else if (amountVisible) {
+      } else if (amountVisible
+        && Object.keys(amountVisible).length !== 0
+        && amountVisible[common.token.CNYT]) {
         cnytVisible = new BigNumber(amountVisible[common.token.CNYT]).toFixed(8, 1)
       }
       const cnytVisibleTitle = `可用:${cnytVisible}CNYT`
