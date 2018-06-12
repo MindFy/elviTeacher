@@ -187,7 +187,7 @@ class Deal extends Component {
       dispatch(exchange.updateCreateOrderIndex(index))
       if (index === 0) {
         const sellQuantity = rd.sum_quantity
-        const availQuantity = amountVisible[selectedPair.goods.name]
+        const availQuantity = amountVisible[selectedPair.currency.name]
         const nextValue = caculateExchangeFormData({
           selectedPair,
           formData: {
