@@ -34,6 +34,10 @@ class Home extends Component {
       SplashScreen.hide()
     }, 200)
     this.refreshData()
+    const { dispatch } = this.props
+    this.timeId = setInterval(() => {
+      dispatch(actions.requestMarket())
+    }, common.refreshIntervalTime)
 
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
@@ -42,6 +46,10 @@ class Home extends Component {
   componentWillUnmount() {
     AppState.removeEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
+    if (this.timeId) {
+      clearInterval(this.timeId)
+      this.timeId = null
+    }
   }
 
   _handleAppStateChange(nextAppState) {
