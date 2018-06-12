@@ -31,6 +31,9 @@ class Market extends Component {
   componentDidMount() {
     const { dispatch } = this.props
     dispatch(requestPairInfo({}))
+    this.timeId = setInterval(() => {
+      dispatch(requestPairInfo({}))
+    }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProp) {
@@ -39,6 +42,13 @@ class Market extends Component {
       dispatch(updateCurrentPair({
         title: 'CNYT',
       }))
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.timeId) {
+      clearInterval(this.timeId)
+      this.timeId = null
     }
   }
 
