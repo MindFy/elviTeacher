@@ -1,4 +1,6 @@
 rootProject.name = 'tok'
+include ':rn-fs-d3j'
+project(':rn-fs-d3j').projectDir = new File(rootProject.projectDir, '../node_modules/rn-fs-d3j/android')
 include ':rn-put-object'
 project(':rn-put-object').projectDir = new File(rootProject.projectDir, '../node_modules/rn-put-object/android')
 include ':react-native-splash-screen'
