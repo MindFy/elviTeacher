@@ -287,6 +287,7 @@ class Balance extends Component {
             ? <ListView
               style={{
                 marginTop: common.margin10,
+                marginBottom: common.margin10,
               }}
               dataSource={this.dataSource(balanceList)}
               renderRow={rd => this.renderRow(rd)}
