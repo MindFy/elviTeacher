@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   Image,
   ScrollView,
+  StyleSheet,
   KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
@@ -16,6 +17,29 @@ import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
+const styles = StyleSheet.create({
+  backBtn: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  backImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  confirmBtn: {
+    marginTop: common.margin10,
+  },
+  input: {
+    flex: undefined,
+  },
+})
+
 class UpdatePassword extends Component {
   static navigationOptions(props) {
     return {
@@ -28,33 +52,28 @@ class UpdatePassword extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <NextTouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+      headerLeft: (
+        <NextTouchableOpacity
+          style={styles.backBtn}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={styles.backImage}
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
 
   constructor() {
     super()
     this.showUpdatePasswordResponse = false
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.handlePasswordRequest(nextProps)
   }
 
   componentWillUnmount() {
@@ -90,7 +109,7 @@ class UpdatePassword extends Component {
 
     const { oldPassword, newPassword, newPasswordAgain } = this.props
     if (!oldPassword.length) {
-      Toast.message('请输入旧密码')
+      Toast.fail('请输入旧密码')
       return
     }
     if (!newPassword.length || !common.regPassword.test(newPassword)
@@ -106,15 +125,15 @@ class UpdatePassword extends Component {
       return
     }
     if (oldPassword === newPassword) {
-      Toast.message('新密码和旧密码不能一样')
+      Toast.fail('新密码和旧密码不能一样')
       return
     }
     if (!newPasswordAgain.length) {
-      Toast.message('请再次输入新密码')
+      Toast.fail('请再次输入新密码')
       return
     }
     if (newPassword !== newPasswordAgain) {
-      Toast.message('新密码输入不一致')
+      Toast.fail('新密码输入不一致')
       return
     }
     this.updatePassword()
@@ -128,8 +147,8 @@ class UpdatePassword extends Component {
     }))
   }
 
-  handlePasswordRequest() {
-    const { updatePasswordVisible, updatePasswordResponse, navigation } = this.props
+  handlePasswordRequest(nextProps) {
+    const { updatePasswordVisible, updatePasswordResponse, navigation } = nextProps
     if (!updatePasswordVisible && !this.showUpdatePasswordResponse) return
 
     if (updatePasswordVisible) {
@@ -154,22 +173,19 @@ class UpdatePassword extends Component {
   }
 
   render() {
-    this.handlePasswordRequest()
-
     const { oldPassword, newPassword, newPasswordAgain, updatePasswordVisible } = this.props
     return (
-      <KeyboardAvoidingView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-        behavior="padding"
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
+        <KeyboardAvoidingView
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="padding"
         >
-
           <TextInputPwd
+            viewStyle={styles.input}
             placeholder={'旧密码'}
             value={oldPassword}
             onChange={e => this.onChange(e, 'oldPassword')}
@@ -177,6 +193,7 @@ class UpdatePassword extends Component {
             secureTextEntry
           />
           <TextInputPwd
+            viewStyle={styles.input}
             placeholder={'输入密码'}
             value={newPassword}
             type={'newPassword'}
@@ -185,6 +202,7 @@ class UpdatePassword extends Component {
             maxLength={common.textInputMaxLenPwd}
           />
           <TextInputPwd
+            viewStyle={styles.input}
             placeholder={'再次输入密码'}
             value={newPasswordAgain}
             type={'newPasswordAgain'}
@@ -196,18 +214,18 @@ class UpdatePassword extends Component {
           />
 
           <TKButton
-            style={{ marginTop: common.margin10 }}
+            style={styles.confirmBtn}
             onPress={() => this.confirmPress()}
             disabled={updatePasswordVisible}
             caption="确认"
             theme={'gray'}
           />
-        </ScrollView>
+        </KeyboardAvoidingView>
 
         <TKSpinner
           isVisible={updatePasswordVisible}
         />
-      </KeyboardAvoidingView>
+      </ScrollView>
     )
   }
 }
