@@ -367,6 +367,22 @@ export default function user(state = initialState, action) {
         mobileIsExist: false,
       }
       break
+    case 'register/reset_nexus':
+      nextState = {
+        ...state,
+        mobileRegister: '',
+        codeRegister: '',
+        passwordRegister: '',
+        passwordAgainRegister: '',
+        recommendNo: '',
+        registerResponse: undefined,
+        registerVisible: false,
+        getVerificateCodeVisible: false,
+        getVerificateCodeResponse: undefined,
+        mobileIsExistRequesting: false,
+        mobileIsExist: false,
+      }
+      break
     case 'notify/clear_reducer':
       nextState = initialState
       break
