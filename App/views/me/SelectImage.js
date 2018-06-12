@@ -27,7 +27,9 @@ export default class SelectImage extends Component {
             if (response.uri && response.uri.length) {
               const uri = common.IsIOS ? response.uri : response.path
               // const uri = response.uri.replace('file://', '')
-              imagePickerBlock(uri)
+              imagePickerBlock(undefined, uri)
+            } else if (response.error) {
+              imagePickerBlock('获取相机权限失败')
             }
           })
         },
@@ -41,7 +43,9 @@ export default class SelectImage extends Component {
             if (response.uri && response.uri.length) {
               const uri = common.IsIOS ? response.uri : response.path
               // const uri = response.uri.replace('file://', '')
-              imagePickerBlock(uri)
+              imagePickerBlock(undefined, uri)
+            } else if (response.error) {
+              imagePickerBlock('获取相机权限失败')
             }
           })
         },

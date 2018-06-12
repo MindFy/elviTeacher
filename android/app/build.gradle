@@ -146,6 +146,7 @@ android {
 }
 
 dependencies {
+    compile project(':rn-fs-d3j')
     compile project(':rn-put-object')
     compile project(':react-native-splash-screen')
     compile project(':react-native-camera')

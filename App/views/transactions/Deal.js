@@ -74,6 +74,9 @@ class Deal extends Component {
 
   componentDidMount() {
     this.loadNecessaryData()
+    this.timer = setInterval(() => {
+      this.loadNecessaryData()
+    }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -100,6 +103,13 @@ class Deal extends Component {
       Toast.fail(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
     }
     dispatch(exchange.clearResponse())
+  }
+
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = undefined
+    }
   }
 
   errors = {
