@@ -134,6 +134,7 @@ class AddAddress extends Component {
     4000413: '提币地址长度有误！',
     4000414: '提币地址已存在！',
     4000416: '提币地址格式错误',
+    4000156: '授权验证失败',
   }
 
   handleChangeAddress = (address = '') => {
