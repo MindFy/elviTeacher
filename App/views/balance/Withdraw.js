@@ -342,6 +342,8 @@ class WithDraw extends Component {
   }
 
   withdrawPress() {
+    Keyboard.dismiss()
+
     if (this.checkValuationIsEmpty()) {
       const { dispatch } = this.props
       dispatch(requestValuation())
@@ -406,6 +408,8 @@ class WithDraw extends Component {
   }
 
   confirmPress = () => {
+    Keyboard.dismiss()
+
     const { dispatch, currCoin, formState, authCodeType } = this.props
 
     if (authCodeType === '谷歌验证码') {
@@ -763,8 +767,6 @@ class WithDraw extends Component {
   }
 
   renderFormWithdrawBtn = () => {
-    Keyboard.dismiss()
-
     const { formState } = this.props
     const { withdrawAmount } = formState
     let disabled = false
