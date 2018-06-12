@@ -160,3 +160,9 @@ export function clearMobileIsExist() {
     type: 'user/mobile_isExist_clear',
   }
 }
+
+export function registerResetNexus() {
+  return {
+    type: 'register/reset_nexus',
+  }
+}
