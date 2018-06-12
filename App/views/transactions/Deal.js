@@ -212,7 +212,7 @@ class Deal extends Component {
         }
       } else if (index === 1) {
         const buyQuantity = rd.sum_quantity
-        const availQuantity = amountVisible[selectedPair.currency.name]
+        const availQuantity = amountVisible[selectedPair.goods.name]
         const nextValue = caculateExchangeFormData({
           selectedPair,
           formData: {

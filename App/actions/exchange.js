@@ -148,3 +148,10 @@ export function clearOpenOrders() {
     type: 'exchange/clear_open_orders',
   }
 }
+
+export function updateCurrentPair(payload) {
+  return {
+    type: 'exchange/update_current_pair',
+    payload,
+  }
+}
