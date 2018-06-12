@@ -44,6 +44,8 @@ const initialState = {
   cancelOrderError: null,
   valuationRequesting: false,
   valuation: undefined,
+  currPair: 'CNTY',
+  pairs: {},
 }
 
 export default function exchange(state = initialState, action) {
@@ -230,6 +232,18 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         openOrders: [],
+      }
+      break
+    case 'exchange/update_current_pair':
+      nextState = {
+        ...state,
+        currPair: payload.title,
+      }
+      break
+    case 'exchange/request_pair_info_succeed':
+      nextState = {
+        ...state,
+        pairs: payload,
       }
       break
     case 'notify/clear_reducer':

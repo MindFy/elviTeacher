@@ -3,10 +3,7 @@ import { connect } from 'react-redux'
 import { View, Image } from 'react-native'
 import { common } from '../../constants/common'
 import MarketList2 from '../market/MarketList2'
-import {
-  requestPairInfo,
-  updateCurrentPair,
-} from '../../actions/market'
+import { requestPairInfo } from '../../actions/market'
 import * as exchange from '../../actions/exchange'
 import HeaderScrollView2 from '../market/HeaderScrollView2'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -50,14 +47,14 @@ class Market2 extends Component {
   componentDidMount() {
     const { dispatch, selectedPair } = this.props
     dispatch(requestPairInfo({}))
-    dispatch(updateCurrentPair({
+    dispatch(exchange.updateCurrentPair({
       title: selectedPair.currency.name,
     }))
   }
 
   onClickItem = (item) => {
     const { dispatch } = this.props
-    dispatch(updateCurrentPair({
+    dispatch(exchange.updateCurrentPair({
       title: item.title,
     }))
   }
@@ -147,7 +144,7 @@ function mapStateToProps(state) {
   return {
     selectedPair: state.exchange.selectedPair,
     pairs: state.market.pairs,
-    currPair: state.market.currPair,
+    currPair: state.exchange.currPair,
   }
 }
 
