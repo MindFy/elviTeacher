@@ -118,6 +118,7 @@ const TabBar = TabNavigator(
   },
   {
     swipeEnabled: false,
+    animationEnabled: false,
     lazy: true,
     tabBarPosition: 'bottom',
     tabBarOptions: {
