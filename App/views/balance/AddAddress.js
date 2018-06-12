@@ -28,6 +28,16 @@ import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 
 const styles = StyleSheet.create({
+  headerLeft: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  headerLeftImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
   container: {
     flex: 1,
     backgroundColor: common.bgColor,
@@ -61,6 +71,9 @@ const styles = StyleSheet.create({
   addContainer: {
     marginTop: common.margin40,
   },
+  overlay: {
+    justifyContent: 'center',
+  },
 })
 
 class AddAddress extends Component {
@@ -77,20 +90,12 @@ class AddAddress extends Component {
       },
       headerLeft: (
         <NextTouchableOpacity
-          style={{
-            height: common.w40,
-            width: common.w40,
-            justifyContent: 'center',
-          }}
+          style={styles.headerLeft}
           activeOpacity={common.activeOpacity}
           onPress={() => props.navigation.goBack()}
         >
           <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
+            style={styles.headerLeftImage}
             source={require('../../assets/arrow_left_left.png')}
           />
         </NextTouchableOpacity>
@@ -214,9 +219,7 @@ class AddAddress extends Component {
     const { dispatch, user } = this.props
     const overlayView = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={styles.overlay}
         modal={false}
         overlayOpacity={0}
       >
