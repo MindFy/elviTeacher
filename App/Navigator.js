@@ -3,6 +3,7 @@ import { StackNavigator, TabNavigator } from 'react-navigation'
 import {
   Image,
   Animated,
+  StyleSheet,
 } from 'react-native'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import {
@@ -42,6 +43,20 @@ import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
 
+const styles = StyleSheet.create({
+  tabBarIcon: {
+    height: common.h20,
+    width: common.h20,
+  },
+})
+
+const tabBarIcon = ({ focused, focusedSource, customSource }) => (
+  <Image
+    style={styles.tabBarIcon}
+    source={focused ? focusedSource : customSource}
+  />
+)
+
 const TabBar = TabNavigator(
   {
     Home: {
@@ -49,75 +64,55 @@ const TabBar = TabNavigator(
       navigationOptions: {
         header: null,
         tabBarLabel: '首页',
-        tabBarIcon: ({ focused }) => (
-          <Image
-            style={{
-              height: common.h20,
-              width: common.h20,
-            }}
-            source={focused ? require('./assets/home_selected.png') : require('./assets/home.png')}
-          />
-        ),
+        tabBarIcon: ({ focused }) => tabBarIcon({
+          focused,
+          focusedSource: require('./assets/home_selected.png'),
+          customSource: require('./assets/home.png'),
+        }),
       },
     },
     Market: {
       screen: Market,
       navigationOptions: {
         tabBarLabel: '市场',
-        tabBarIcon: ({ focused }) => (
-          <Image
-            style={{
-              height: common.h20,
-              width: common.h20,
-            }}
-            source={focused ? require('./assets/market_selected.png') : require('./assets/market.png')}
-          />
-        ),
+        tabBarIcon: ({ focused }) => tabBarIcon({
+          focused,
+          focusedSource: require('./assets/market_selected.png'),
+          customSource: require('./assets/market.png'),
+        }),
       },
     },
     Otc: {
       screen: Otc,
       navigationOptions: {
         tabBarLabel: '法币交易',
-        tabBarIcon: ({ focused }) => (
-          <Image
-            style={{
-              height: common.h20,
-              width: common.h20,
-            }}
-            source={focused ? require('./assets/transaction_yellow.png') : require('./assets/transaction_white.png')}
-          />
-        ),
+        tabBarIcon: ({ focused }) => tabBarIcon({
+          focused,
+          focusedSource: require('./assets/transaction_yellow.png'),
+          customSource: require('./assets/transaction_white.png'),
+        }),
       },
     },
     Balance: {
       screen: Balance,
       navigationOptions: {
         tabBarLabel: '资金',
-        tabBarIcon: ({ focused }) => (
-          <Image
-            style={{
-              height: common.h20,
-              width: common.h20,
-            }}
-            source={focused ? require('./assets/personal_funds_selected.png') : require('./assets/personal_funds.png')}
-          />
-        ),
+        tabBarIcon: ({ focused }) => tabBarIcon({
+          focused,
+          focusedSource: require('./assets/personal_funds_selected.png'),
+          customSource: require('./assets/personal_funds.png'),
+        }),
       },
     },
     Me: {
       screen: Me,
       navigationOptions: {
         tabBarLabel: '我的',
-        tabBarIcon: ({ focused }) => (
-          <Image
-            style={{
-              height: common.h20,
-              width: common.h20,
-            }}
-            source={focused ? require('./assets/me_selected.png') : require('./assets/me.png')}
-          />
-        ),
+        tabBarIcon: ({ focused }) => tabBarIcon({
+          focused,
+          focusedSource: require('./assets/me_selected.png'),
+          customSource: require('./assets/me.png'),
+        }),
       },
     },
   },
@@ -133,6 +128,7 @@ const TabBar = TabNavigator(
         backgroundColor: common.navBgColor,
       },
       labelStyle: {
+        width: common.h50,
         fontSize: common.font12,
       },
       indicatorStyle: {
@@ -195,21 +191,11 @@ const TabBarStack = StackNavigator(
 
 const LoginStack = DismissableStackNavigator(
   {
-    Login: {
-      screen: Login,
-    },
-    Register: {
-      screen: Register,
-    },
-    ForgotPwd: {
-      screen: ForgotPwd,
-    },
-    ConfirmPwd: {
-      screen: ConfirmPwd,
-    },
-    Agreement: {
-      screen: Agreement,
-    },
+    Login,
+    Register,
+    ForgotPwd,
+    ConfirmPwd,
+    Agreement,
   }, {
     headerMode: 'screen',
     transitionConfig: TransitionConfiguration,
