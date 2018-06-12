@@ -85,7 +85,11 @@ class Balance extends Component {
       tabBarOnPress: ({ scene, jumpToIndex }) => {
         if (cache.getObject('isLoginIn')) {
           jumpToIndex(scene.index)
-        } else {
+        } else if (!cache.getObject('isFirstBalance')) {
+          cache.setObject('isFirstBalance', 'true')
+          setTimeout(() => {
+            cache.removeObject('isFirstBalance')
+          }, 800)
           navigation.navigate('LoginStack')
         }
       },
