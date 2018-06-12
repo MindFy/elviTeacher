@@ -64,6 +64,7 @@ import {
   updateEmail,
   updateEmailUpdate,
   findAuditmanage,
+  registerResetNexus,
 } from './user'
 import {
   selectionBarUpdate,
@@ -147,6 +148,7 @@ const actions = {
   updateEmail,
   updateEmailUpdate,
   findAuditmanage,
+  registerResetNexus,
 
   selectionBarUpdate,
   kLineOrDepthUpdate,
