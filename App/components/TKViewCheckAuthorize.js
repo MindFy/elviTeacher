@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   textInput: {
+    padding: 0,
     marginLeft: common.margin5,
     color: common.blackColor,
     fontSize: common.font12,
@@ -93,6 +94,7 @@ export default class TKViewCheckAuthorize extends Component {
               maxLength={6}
               value={code}
               onChangeText={text => onChangeText(text)}
+              underlineColorAndroid="transparent"
             />
             <View style={styles.codeContainer}>
               <TKCheckCodeBtn

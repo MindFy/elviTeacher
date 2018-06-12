@@ -25,6 +25,21 @@ import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
+  backBtn: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  backImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
+  headerRightText: {
+    marginRight: common.margin10,
+    fontSize: common.font16,
+    color: 'white',
+  },
   coinSelector: {
     marginTop: common.margin10,
     height: common.h40,
@@ -112,42 +127,28 @@ class Recharge extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <NextTouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
-      headerRight:
-        (
-          <NextTouchableOpacity
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.navigate('History')}
-          >
-            <Text
-              style={{
-                marginRight: common.margin10,
-                fontSize: common.font16,
-                color: 'white',
-              }}
-            >历史记录</Text>
-          </NextTouchableOpacity>
-        ),
+      headerLeft: (
+        <NextTouchableOpacity
+          style={styles.backBtn}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={styles.backImage}
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
+      headerRight: (
+        <NextTouchableOpacity
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.navigate('History')}
+        >
+          <Text
+            style={styles.headerRightText}
+          >历史记录</Text>
+        </NextTouchableOpacity>
+      ),
     }
   }
 
