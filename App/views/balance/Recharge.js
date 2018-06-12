@@ -183,10 +183,10 @@ class Recharge extends Component {
         uri,
       }, (r) => {
         Overlay.hide(this.overlayViewKey)
-        if (r.error) {
-          Toast.message('保存失败')
-        } else {
+        if (r.result) {
           Toast.message('保存成功')
+        } else {
+          Toast.message('保存失败')
         }
       })
     }
