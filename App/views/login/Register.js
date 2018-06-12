@@ -97,15 +97,7 @@ class Register extends Component {
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(actions.registerUpdate({
-      mobile: '',
-      code: '',
-      password: '',
-      passwordAgain: '',
-      recommendNo: '',
-      registerResponse: undefined,
-      registerVisible: false,
-    }))
+    dispatch(actions.registerResetNexus())
   }
 
   onChange(event, tag) {
