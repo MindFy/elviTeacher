@@ -78,7 +78,7 @@ export function* requestCreateAddressWorker(action) {
       payload: addressObjc,
     })
   } else {
-    const tokenId = payload.token_ids
+    const tokenId = payload.token_id
     const addressObjc = {
       [tokenId]: { rechargeaddr: '暂无可充值地址' },
     }

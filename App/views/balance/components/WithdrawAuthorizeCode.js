@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginLeft: common.margin48,
     marginRight: common.margin48,
-    height: '28%',
   },
   phoneContainer: {
     marginTop: common.margin20,
@@ -55,6 +54,7 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   textInput: {
+    padding: 0,
     marginLeft: common.margin5,
     color: common.blackColor,
     fontSize: common.font12,
@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   btnsContainer: {
-    left: common.margin20,
-    bottom: common.margin15,
-    right: common.margin20,
-    position: 'absolute',
+    marginTop: common.margin10,
+    marginLeft: common.margin20,
+    marginBottom: common.margin15,
+    marginRight: common.margin20,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -105,6 +105,22 @@ const styles = StyleSheet.create({
     height: 0.3,
     backgroundColor: common.bgColor,
   },
+  titles: {
+    marginLeft: common.margin20,
+    marginRight: common.margin20,
+  },
+  cancelBtn: {
+    width: common.h70,
+    height: common.h30,
+    borderColor: common.placeholderColor,
+    borderWidth: 1,
+    justifyContent: 'center',
+  },
+  cancelBtnText: {
+    color: common.blackColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+  },
 })
 
 export default class TKViewCheckAuthorize extends Component {
@@ -113,11 +129,7 @@ export default class TKViewCheckAuthorize extends Component {
   renderTitles = () => {
     const { titles, segmentValueChanged } = this.props
     return (
-      <View style={{
-        marginLeft: common.margin20,
-        marginRight: common.margin20,
-      }}
-      >
+      <View style={styles.titlesView}>
         <WithdrawAuthSelecionBar
           titles={titles}
           onPress={(e) => {
@@ -150,6 +162,7 @@ export default class TKViewCheckAuthorize extends Component {
                 title: '',
                 index,
               }, text)}
+              underlineColorAndroid="transparent"
             />
             <View style={styles.codeContainer}>
               <TKCheckCodeBtn
@@ -181,6 +194,7 @@ export default class TKViewCheckAuthorize extends Component {
                 title: '',
                 index,
               }, text)}
+              underlineColorAndroid="transparent"
             />
             <View style={styles.codeContainer} />
           </View>
@@ -194,40 +208,25 @@ export default class TKViewCheckAuthorize extends Component {
     return (
       <View style={styles.btnsContainer}>
         <NextTouchableOpacity
-          style={{
-            width: common.h70,
-            height: common.h30,
-            borderColor: common.placeholderColor,
-            borderWidth: 1,
-            justifyContent: 'center',
-          }}
+          style={styles.cancelBtn}
           activeOpacity={common.activeOpacity}
           onPress={cancelPress}
         >
           <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-            }}
+            style={styles.cancelBtnText}
           >取消</Text>
         </NextTouchableOpacity>
         <NextTouchableOpacity
-          style={{
-            width: common.h70,
-            height: common.h30,
+          style={[styles.cancelBtn, {
             backgroundColor: common.btnTextColor,
-            justifyContent: 'center',
-          }}
+          }]}
           activeOpacity={common.activeOpacity}
           onPress={() => confirmPress()}
         >
           <Text
-            style={{
+            style={[styles.cancelBtnText, {
               color: 'white',
-              fontSize: common.font12,
-              alignSelf: 'center',
-            }}
+            }]}
           >确定</Text>
         </NextTouchableOpacity>
       </View>

@@ -60,7 +60,7 @@ export default class HomeSwiper extends Component {
         >
           <Image
             style={styles.bannersImage}
-            resizeMode="contain"
+            resizeMode="stretch"
             source={{ uri: `${imgHashApi}${element.imghash}` }}
           />
         </NextTouchableOpacity>

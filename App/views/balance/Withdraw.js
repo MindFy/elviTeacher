@@ -43,6 +43,16 @@ import findAddress from '../../schemas/address'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
+  headerLeft: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  headerLeftImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
   contaier: {
     flex: 1,
     backgroundColor: common.blackColor,
@@ -54,8 +64,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  coinList: {
-
+  currCoin: {
+    marginLeft: common.margin10,
+    fontSize: common.font14,
+    color: common.textColor,
+    alignSelf: 'center',
+  },
+  coinView: {
+    marginTop: common.margin5,
+    height: common.h40,
+    backgroundColor: common.navBgColor,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  coinText: {
+    marginLeft: common.margin10,
+    fontSize: common.font14,
+    color: common.textColor,
+    alignSelf: 'center',
   },
   form: {
 
@@ -75,8 +101,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
   },
-  withdrawAmount: {
-
+  amountView: {
+    marginTop: common.margin35,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    height: common.h35,
+  },
+  amountInput: {
+    textAlign: 'center',
+  },
+  addressInput: {
+    marginLeft: common.h60,
+    textAlign: 'center',
   },
   withdrawAddress: {
 
@@ -87,6 +123,23 @@ const styles = StyleSheet.create({
   extraBtnCover: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  overlay: {
+    justifyContent: 'center',
+  },
+  googleAuthView: {
+    marginTop: -common.margin127 * 2,
+    borderRadius: common.radius6,
+    height: common.h60,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    width: '50%',
+  },
+  googleAuthTip: {
+    fontSize: common.font16,
+    color: common.blackColor,
+    alignSelf: 'center',
   },
 })
 
@@ -102,27 +155,18 @@ class WithDraw extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <NextTouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+      headerLeft: (
+        <NextTouchableOpacity
+          style={styles.headerLeft}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={styles.headerLeftImage}
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
 
@@ -442,29 +486,13 @@ class WithDraw extends Component {
   alertBindingGoogleCode = () => {
     const googleCodeAlert = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={styles.overlay}
         modal={false}
         overlayOpacity={0}
       >
-        <View
-          style={{
-            marginTop: -common.margin127 * 2,
-            borderRadius: common.radius6,
-            height: common.h60,
-            backgroundColor: 'white',
-            justifyContent: 'center',
-            alignSelf: 'center',
-            width: '50%',
-          }}
-        >
+        <View style={styles.googleAuthView} >
           <Text
-            style={{
-              fontSize: common.font16,
-              color: common.blackColor,
-              alignSelf: 'center',
-            }}
+            style={styles.googleAuthTip}
           >{'请前去官网完成绑定'}</Text>
         </View>
       </Overlay.View>
@@ -502,9 +530,7 @@ class WithDraw extends Component {
     }))
     const overlayView = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={styles.overlay}
         modal={false}
         overlayOpacity={0}
       >
@@ -589,16 +615,12 @@ class WithDraw extends Component {
           style={styles.coinSelector}
         >
           <Text
-            style={{
-              marginLeft: common.margin10,
-              fontSize: common.font14,
-              color: common.textColor,
-              alignSelf: 'center',
-            }}
+            style={styles.currCoin}
           >{currCoin}</Text>
           <View style={{ alignSelf: 'center' }}>
             <Image
               style={listToggled ? {
+                marginRight: common.margin10,
                 width: common.h20,
                 height: common.w10,
               } : {
@@ -621,30 +643,16 @@ class WithDraw extends Component {
 
     return !listToggled ? null : coinList.map(ele => (
       <NextTouchableOpacity
+        style={styles.coinView}
         key={ele}
         activeOpacity={common.activeOpacity}
         onPress={() => {
           this.tapCoinListCell(ele)
         }}
       >
-        <View
-          style={{
-            marginTop: common.margin5,
-            height: common.h40,
-            backgroundColor: common.navBgColor,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              fontSize: common.font14,
-              color: common.textColor,
-              alignSelf: 'center',
-            }}
-          >{ele}</Text>
-        </View>
+        <Text
+          style={styles.coinText}
+        >{ele}</Text>
       </NextTouchableOpacity>
     ))
   }
@@ -653,15 +661,8 @@ class WithDraw extends Component {
     const { formState } = this.props
     return (
       <TKInputItem
-        viewStyle={{
-          marginTop: common.margin35,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          height: common.h35,
-        }}
-        inputStyle={{
-          textAlign: 'center',
-        }}
+        viewStyle={styles.amountView}
+        inputStyle={styles.amountInput}
         placeholder="提现金额"
         value={formState.withdrawAmount}
         onChangeText={this.onChangeWithdrawAmount}
@@ -715,15 +716,8 @@ class WithDraw extends Component {
 
     return (
       <TKInputItem
-        viewStyle={{
-          marginTop: common.margin30,
-          marginLeft: common.margin10,
-          marginRight: common.margin10,
-          height: common.h35,
-        }}
-        inputStyle={{
-          textAlign: 'center',
-        }}
+        viewStyle={styles.amountView}
+        inputStyle={styles.addressInput}
         placeholder="地址"
         value={formState.withdrawAddress}
         onChangeText={(withdrawAddress = '') => dispatch(updateForm({

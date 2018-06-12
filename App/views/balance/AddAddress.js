@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -28,6 +29,16 @@ import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 
 const styles = StyleSheet.create({
+  headerLeft: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  headerLeftImage: {
+    marginLeft: common.margin10,
+    width: common.w10,
+    height: common.h20,
+  },
   container: {
     flex: 1,
     backgroundColor: common.bgColor,
@@ -61,6 +72,9 @@ const styles = StyleSheet.create({
   addContainer: {
     marginTop: common.margin40,
   },
+  overlay: {
+    justifyContent: 'center',
+  },
 })
 
 class AddAddress extends Component {
@@ -77,20 +91,12 @@ class AddAddress extends Component {
       },
       headerLeft: (
         <NextTouchableOpacity
-          style={{
-            height: common.w40,
-            width: common.w40,
-            justifyContent: 'center',
-          }}
+          style={styles.headerLeft}
           activeOpacity={common.activeOpacity}
           onPress={() => props.navigation.goBack()}
         >
           <Image
-            style={{
-              marginLeft: common.margin10,
-              width: common.w10,
-              height: common.h20,
-            }}
+            style={styles.headerLeftImage}
             source={require('../../assets/arrow_left_left.png')}
           />
         </NextTouchableOpacity>
@@ -133,6 +139,7 @@ class AddAddress extends Component {
     4000413: '提币地址长度有误！',
     4000414: '提币地址已存在！',
     4000416: '提币地址格式错误',
+    4000156: '授权验证失败',
   }
 
   handleChangeAddress = (address = '') => {
@@ -156,7 +163,7 @@ class AddAddress extends Component {
     const { dispatch, formState } = this.props
     dispatch(updateForm({
       ...formState,
-      authCode,
+      authCode: authCode.trim(),
     }))
   }
 
@@ -201,7 +208,15 @@ class AddAddress extends Component {
   }
 
   addPress() {
-    const { dispatch, formState, navigation } = this.props
+    Keyboard.dismiss()
+
+    const { formState } = this.props
+    if (!formState.authCode.length) {
+      Toast.message('请输入验证码')
+      return
+    }
+
+    const { dispatch, navigation } = this.props
     dispatch(requestAddressAdd({
       token_id: navigation.state.params.tokenId,
       withdrawaddr: formState.address,
@@ -214,9 +229,7 @@ class AddAddress extends Component {
     const { dispatch, user } = this.props
     const overlayView = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={styles.overlay}
         modal={false}
         overlayOpacity={0}
       >
