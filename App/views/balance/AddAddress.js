@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Keyboard,
 } from 'react-native'
 import {
   Toast,
@@ -156,7 +157,7 @@ class AddAddress extends Component {
     const { dispatch, formState } = this.props
     dispatch(updateForm({
       ...formState,
-      authCode,
+      authCode: authCode.trim(),
     }))
   }
 
@@ -201,7 +202,15 @@ class AddAddress extends Component {
   }
 
   addPress() {
-    const { dispatch, formState, navigation } = this.props
+    Keyboard.dismiss()
+
+    const { formState } = this.props
+    if (!formState.authCode.length) {
+      Toast.message('请输入验证码')
+      return
+    }
+
+    const { dispatch, navigation } = this.props
     dispatch(requestAddressAdd({
       token_id: navigation.state.params.tokenId,
       withdrawaddr: formState.address,
