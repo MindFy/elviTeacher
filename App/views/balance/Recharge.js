@@ -172,10 +172,11 @@ class Recharge extends Component {
     const uri = `${qrApi}${rechargeAddress}`
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
-        Toast.message('保存成功')
         Overlay.hide(this.overlayViewKey)
+        Toast.message('保存成功')
       }).catch(() => {
         Overlay.hide(this.overlayViewKey)
+        Toast.message('保存失败')
       })
     } else {
       FS.downloadOlineImage({
