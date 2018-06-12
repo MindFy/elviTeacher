@@ -103,11 +103,12 @@ class Register extends Component {
   onChange(event, tag) {
     const { text } = event.nativeEvent
     const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
+    const newText = text.trim()
     switch (tag) {
       case 'mobile':
         this.setState({ showTip: false })
         dispatch(actions.registerUpdate({
-          mobile: text,
+          mobile: newText,
           code,
           password,
           passwordAgain,
@@ -117,7 +118,7 @@ class Register extends Component {
       case 'code':
         dispatch(actions.registerUpdate({
           mobile,
-          code: text,
+          code: newText,
           password,
           passwordAgain,
           recommendNo,
@@ -127,7 +128,7 @@ class Register extends Component {
         dispatch(actions.registerUpdate({
           mobile,
           code,
-          password: text,
+          password: newText,
           passwordAgain,
           recommendNo,
         }))
@@ -137,7 +138,7 @@ class Register extends Component {
           mobile,
           code,
           password,
-          passwordAgain: text,
+          passwordAgain: newText,
           recommendNo,
         }))
         break
@@ -147,7 +148,7 @@ class Register extends Component {
           code,
           password,
           passwordAgain,
-          recommendNo: text,
+          recommendNo: newText,
         }))
         break
       default:
@@ -469,10 +470,18 @@ class Register extends Component {
   render() {
     const {
       registerVisible,
+      mobile,
+      code,
+      password,
+      passwordAgain,
     } = this.props
 
     const behavior = common.IsIOS ? 'position' : 'padding'
-
+    let canRegister = false
+    if (!this.state.showTip && mobile && code && password && passwordAgain && true) {
+      canRegister = true
+    }
+    const registerBtnBackgroundColor = canRegister ? {} : { backgroundColor: 'gray' }
     return (
       <ScrollView
         style={styles.cover}
@@ -508,9 +517,10 @@ class Register extends Component {
           </View>
 
           <TKButton
+            style={registerBtnBackgroundColor}
             theme="yellow"
             caption={'注册'}
-            disabled={registerVisible}
+            disabled={!canRegister}
             onPress={() => this.registerPress()}
           />
         </KeyboardAvoidingView>

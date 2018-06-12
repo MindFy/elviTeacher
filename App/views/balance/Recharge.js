@@ -307,7 +307,7 @@ class Recharge extends Component {
   renderTip = tokenName => (
     <View>
       <Text style={styles.tip}>温馨提示:</Text>
-      <Text style={styles.tip}>{`1. 请勿向上述地址充值任何非BTC资产，否则资产将不可找回。
+      <Text style={styles.tip}>{`1. 请勿向上述地址充值任何非${tokenName}资产，否则资产将不可找回。
 2. 您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。
 3. 最小充值金额：0.00000001 ${tokenName}，小于最小金额的充值将不会上账。
 4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。
