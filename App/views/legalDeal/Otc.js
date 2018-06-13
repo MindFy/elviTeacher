@@ -61,10 +61,6 @@ const styles = StyleSheet.create({
 class Otc extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
-    let tabBarVisible = true
-    if (!common.IsIOS) {
-      tabBarVisible = params.tabBarVisible
-    }
     return {
       headerTitle: '法币',
       headerStyle: {
@@ -89,16 +85,11 @@ class Otc extends Component {
           >明细</Text>
         </NextTouchableOpacity>
       ),
-      tabBarVisible,
     }
   }
 
   componentWillMount() {
-    this.props.navigation.setParams({ detailPress: this._detailPress, tabBarVisible: true })
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow',
-      event => this._keyboardDidShow(event))
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide',
-      event => this._keyboardDidHide(event))
+    this.props.navigation.setParams({ detailPress: this._detailPress })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -136,11 +127,6 @@ class Otc extends Component {
     dispatch(clearResponse())
   }
 
-  componentWillUnmount() {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
-  }
-
   onSubmit() {
     Keyboard.dismiss()
 
@@ -153,15 +139,7 @@ class Otc extends Component {
     } = this.props
 
     if (!loggedIn) {
-      if (common.IsIOS) {
-        navigation.navigate('LoginStack')
-      } else if (navigation.state.params.tabBarVisible) {
-        navigation.navigate('LoginStack')
-      } else {
-        setTimeout(() => {
-          navigation.navigate('LoginStack')
-        }, 100)
-      }
+      navigation.navigate('LoginStack')
       return
     }
 
@@ -198,23 +176,12 @@ class Otc extends Component {
     dispatch(updateForm(text))
   }
 
-  _keyboardDidShow() {
-    this.props.navigation.setParams({ tabBarVisible: false })
-  }
-
-  _keyboardDidHide() {
-    this.props.navigation.setParams({ tabBarVisible: true })
-  }
-
   _detailPress = () => {
     Keyboard.dismiss()
 
     const { loggedIn, navigation } = this.props
-    if (loggedIn) { navigation.navigate('OtcDetail') } else {
-      setTimeout(() => {
-        navigation.navigate('LoginStack')
-      }, 50)
-    }
+    if (loggedIn) navigation.navigate('OtcDetail')
+    else navigation.navigate('LoginStack')
   }
 
   prices = {
