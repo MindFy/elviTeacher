@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginHorizontal: common.margin38,
-    marginTop: common.margin110 - common.navHeight,
+    marginTop: common.getH(90),
   },
   mobileTip: {
     position: 'absolute',
@@ -48,36 +48,31 @@ const styles = StyleSheet.create({
 class Register extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '注册',
       headerStyle: {
-        backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
       },
+      headerTransparent: true,
       headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
-      headerLeft:
-        (
-          <NextTouchableOpacity
+      headerLeft: (
+        <NextTouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
 
@@ -343,7 +338,7 @@ class Register extends Component {
           width: common.h80,
         }}
         title="验证码"
-        placeholder="获取验证码"
+        placeholder="请输入短信验证码"
         value={code}
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'code')}
@@ -481,7 +476,7 @@ class Register extends Component {
     if (!this.state.showTip && mobile && code && password && passwordAgain && true) {
       canRegister = true
     }
-    const registerBtnBackgroundColor = canRegister ? {} : { backgroundColor: 'gray' }
+    const registerBtnBackgroundColor = canRegister ? {} : { backgroundColor: common.grayColor }
     return (
       <ScrollView
         style={styles.cover}

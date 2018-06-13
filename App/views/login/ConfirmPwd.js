@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flex: undefined,
-    marginTop: common.margin110,
+    marginTop: common.getH(90),
     marginLeft: common.margin38,
     marginRight: common.margin38,
   },
@@ -36,15 +36,11 @@ const styles = StyleSheet.create({
 class ConfirmPwd extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '确认密码',
       headerStyle: {
-        backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
       },
       headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
+      headerTransparent: true,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -191,7 +187,7 @@ class ConfirmPwd extends Component {
           />
 
           <TKButton
-            style={{ marginTop: common.margin210 }}
+            style={{ marginTop: common.getH(227) }}
             theme={'yellow'}
             caption="确定"
             onPress={() => this.confirmPress()}
