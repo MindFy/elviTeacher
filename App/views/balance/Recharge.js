@@ -173,7 +173,7 @@ class Recharge extends Component {
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
         Overlay.hide(this.overlayViewKey)
-        Toast.fail('保存成功')
+        Toast.success('保存成功')
       }).catch(() => {
         Overlay.hide(this.overlayViewKey)
         Toast.fail('保存失败')
@@ -184,7 +184,7 @@ class Recharge extends Component {
       }, (r) => {
         Overlay.hide(this.overlayViewKey)
         if (r.result) {
-          Toast.fail('保存成功')
+          Toast.success('保存成功')
         } else {
           Toast.fail('保存失败')
         }
