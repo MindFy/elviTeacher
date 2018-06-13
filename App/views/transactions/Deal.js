@@ -80,8 +80,16 @@ class Deal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, createOrderIndex } = this.props
-    const { createResponse, loggedInResult } = nextProps
+    const { dispatch, createOrderIndex, market, selectedPair } = this.props
+    const { createResponse } = nextProps
+    for (let i = 0; i < market.length; i++) {
+      const item = market[i]
+      if (item.currency.id === selectedPair.currency.id
+        && item.goods.id === selectedPair.goods.id) {
+        dispatch(exchange.updatePair(item))
+        break
+      }
+    }
 
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
       Toast.success('撤单成功')
@@ -95,7 +103,6 @@ class Deal extends Component {
     if (createResponse.id) {
       Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}成功`)
       this.loadNecessaryData()
-      dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
     } else if (createResponse.code) {
       const msg = this.errors[createResponse.code]
       if (msg) Toast.fail(msg)
@@ -127,7 +134,7 @@ class Deal extends Component {
   }
 
   loadNecessaryData() {
-    const { dispatch, selectedPair } = this.props
+    const { dispatch, selectedPair, loggedInResult, loggedIn } = this.props
     const { currency, goods } = selectedPair
     const params = {
       goods_id: goods.id,
@@ -137,6 +144,9 @@ class Deal extends Component {
     dispatch(exchange.requestLastpriceList(params))
     dispatch(exchange.requestOrderhistoryList(params))
     dispatch(exchange.requestDepthMap(params))
+    if (loggedIn) {
+      dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
+    }
   }
 
   tapBuySellBtn(idx) {
