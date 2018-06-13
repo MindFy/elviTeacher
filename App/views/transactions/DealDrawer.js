@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     width: '15%',
     alignSelf: 'center',
   },
-  buttinStyle: {
+  buttonStyle: {
     fontSize: common.font16,
     color: 'white',
   },
