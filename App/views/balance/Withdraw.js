@@ -274,7 +274,7 @@ class WithDraw extends Component {
     if (bWithdrawAmount.gt(bMaxBalace)) {
       dispatch(updateForm({
         ...formState,
-        withdrawAmount: bMaxBalace.toString(),
+        withdrawAmount: bMaxBalace.toFixed(),
       }))
       return
     }
