@@ -138,7 +138,11 @@ export function* requestDepthMapWorker(action) {
   } else {
     yield put({
       type: 'exchange/request_depth_map_failed',
-      payload: response.error,
+      payload: {
+        buy: [],
+        lastprice: 0,
+        sell: [],
+      },
     })
   }
 }
