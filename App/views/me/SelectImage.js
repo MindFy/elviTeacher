@@ -29,7 +29,7 @@ export default class SelectImage extends Component {
               // const uri = response.uri.replace('file://', '')
               imagePickerBlock(undefined, uri)
             } else if (response.error) {
-              imagePickerBlock('获取相机权限失败')
+              imagePickerBlock('获取相机权限失败，请在设置中打开相机权限')
             }
           })
         },
@@ -45,7 +45,7 @@ export default class SelectImage extends Component {
               // const uri = response.uri.replace('file://', '')
               imagePickerBlock(undefined, uri)
             } else if (response.error) {
-              imagePickerBlock('获取相机权限失败')
+              imagePickerBlock('获取相册权限失败，请在设置中打开相册权限')
             }
           })
         },
