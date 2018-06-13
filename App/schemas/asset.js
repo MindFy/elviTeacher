@@ -9,6 +9,7 @@ export default function findAssetList(userId) {
         freezed,
         rechargeaddr,
         totalRechargeAmount,
+        platformFreeze,
         token{
           id
           name
