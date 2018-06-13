@@ -80,17 +80,8 @@ class Deal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, createOrderIndex, market, selectedPair } = this.props
+    const { dispatch, createOrderIndex } = this.props
     const { createResponse } = nextProps
-    for (let i = 0; i < market.length; i++) {
-      const item = market[i]
-      if (item.currency.id === selectedPair.currency.id
-        && item.goods.id === selectedPair.goods.id) {
-        dispatch(exchange.updatePair(item))
-        break
-      }
-    }
-
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
       Toast.success('撤单成功')
     }
@@ -243,7 +234,8 @@ class Deal extends Component {
           actions: {
             cmd: 'input',
             type: 'quantity',
-            val: new BigNumber(availQuantity).lte(new BigNumber(buyQuantity)) ? availQuantity : buyQuantity,
+            val: (new BigNumber(availQuantity).lte(new BigNumber(buyQuantity))
+              ? availQuantity : buyQuantity),
           },
           amountVisible,
           createOrderIndex: index,
@@ -522,8 +514,6 @@ function mapStateToProps(state) {
     amountVisible: state.asset.amountVisible,
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,
-    market: state.home.market,
-
     kLineOrDepth: state.ui.kLineOrDepth,
   }
 }
