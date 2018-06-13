@@ -35,33 +35,33 @@ const styles = StyleSheet.create({
 
 export default class Buttons extends PureComponent {
   yellowPress() {
-    Toast.message('点击了黄色按钮')
+    Toast.fail('点击了黄色按钮')
   }
   smallPress() {
-    Toast.message('点击了撤单按钮')
+    Toast.fail('点击了撤单按钮')
   }
   registerPress() {
-    Toast.message('点击了注册按钮')
+    Toast.fail('点击了注册按钮')
   }
   forgotPress() {
-    Toast.message('点击了忘记密码按钮')
+    Toast.fail('点击了忘记密码按钮')
   }
   grayPress() {
-    Toast.message('点击了灰色按钮')
+    Toast.fail('点击了灰色按钮')
   }
   rechargePress(type) {
-    if (type) Toast.message('点击了资金充值')
-    else Toast.message('点击了首页充值')
+    if (type) Toast.fail('点击了资金充值')
+    else Toast.fail('点击了首页充值')
   }
   cashPress(type) {
-    if (type) Toast.message('点击了资金提现')
-    else Toast.message('点击了首页提现')
+    if (type) Toast.fail('点击了资金提现')
+    else Toast.fail('点击了首页提现')
   }
   currentPress() {
-    Toast.message('点击了当前委托')
+    Toast.fail('点击了当前委托')
   }
   historyPress() {
-    Toast.message('点击了历史委托')
+    Toast.fail('点击了历史委托')
   }
 
   render() {

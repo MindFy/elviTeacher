@@ -161,7 +161,7 @@ class Recharge extends Component {
   clipPress = (rechargeAddress) => {
     if (rechargeAddress) {
       Clipboard.setString(rechargeAddress)
-      Toast.message('已复制到剪贴板')
+      Toast.fail('已复制到剪贴板')
     }
   }
 
@@ -173,10 +173,10 @@ class Recharge extends Component {
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
         Overlay.hide(this.overlayViewKey)
-        Toast.message('保存成功')
+        Toast.fail('保存成功')
       }).catch(() => {
         Overlay.hide(this.overlayViewKey)
-        Toast.message('保存失败')
+        Toast.fail('保存失败')
       })
     } else {
       FS.downloadOlineImage({
@@ -184,9 +184,9 @@ class Recharge extends Component {
       }, (r) => {
         Overlay.hide(this.overlayViewKey)
         if (r.result) {
-          Toast.message('保存成功')
+          Toast.fail('保存成功')
         } else {
-          Toast.message('保存失败')
+          Toast.fail('保存失败')
         }
       })
     }

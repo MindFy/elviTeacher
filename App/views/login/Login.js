@@ -159,15 +159,15 @@ class Login extends PureComponent {
     }
 
     if (!formState.mobile.length) {
-      Toast.message('请输入账号')
+      Toast.fail('请输入账号')
       return
     }
     if (!common.regMobile.test(formState.mobile)) {
-      Toast.message(common.regMobileMsg)
+      Toast.fail(common.regMobileMsg)
       return
     }
     if (!formState.password.length) {
-      Toast.message('请输入密码')
+      Toast.fail('请输入密码')
       return
     }
     dispatch(actions.login(formState))

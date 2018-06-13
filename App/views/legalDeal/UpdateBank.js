@@ -126,17 +126,17 @@ class UpdateBank extends Component {
       return
     }
     if (!formState.bankName.length || formState.bankName.length < 4) {
-      Toast.message('请输入开户银行, 至少四位')
+      Toast.fail('请输入开户银行, 至少四位')
       return
     }
     if (!formState.subbankName.length || formState.subbankName.length < 4) {
-      Toast.message('请输入开户支行名称, 至少四位')
+      Toast.fail('请输入开户支行名称, 至少四位')
       return
     }
     if (!formState.bankNo.length
       || !common.regBankNo.test(formState.bankNo)
       || !common.regSpace.test(formState.bankNo)) {
-      Toast.message('请输入银行卡号, 16-19位数字')
+      Toast.fail('请输入银行卡号, 16-19位数字')
       return
     }
     if (!navigation.state.params || !user.bankName.length) {

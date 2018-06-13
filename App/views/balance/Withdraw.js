@@ -397,13 +397,13 @@ class WithDraw extends Component {
     const { formState } = this.props
 
     if (!formState.withdrawAmount) {
-      Toast.message('请输入提现金额')
+      Toast.fail('请输入提现金额')
       return
     }
 
     const bAmount = new BigNumber(formState.withdrawAmount)
     if (bAmount.eq(0)) {
-      Toast.message('请输入提现金额')
+      Toast.fail('请输入提现金额')
       return
     }
 
@@ -421,16 +421,16 @@ class WithDraw extends Component {
     const minAmountMsg = `最小提币金额为${minAmount}`
 
     if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
-      Toast.message('提现金额已超过当日限额！')
+      Toast.fail('提现金额已超过当日限额！')
       return
     }
     if (bAmount.lt(minAmount)) {
-      Toast.message(minAmountMsg)
+      Toast.fail(minAmountMsg)
       return
     }
 
     if (!formState.withdrawAddress) {
-      Toast.message('请输入提现地址')
+      Toast.fail('请输入提现地址')
       return
     }
 
@@ -459,7 +459,7 @@ class WithDraw extends Component {
     if (authCodeType === '谷歌验证码') {
       const { googleCode } = formState
       if (!googleCode || googleCode.length === 0) {
-        Toast.message('请输入谷歌验证码')
+        Toast.fail('请输入谷歌验证码')
         return
       }
       dispatch(check2GoogleAuth({
@@ -469,7 +469,7 @@ class WithDraw extends Component {
     }
     const tokenId = this.coinsIdDic[currCoin].id
     if (!formState.verificationCode.length) {
-      Toast.message('请输入验证码')
+      Toast.fail('请输入验证码')
       return
     }
     let code = new BigNumber(formState.verificationCode)
