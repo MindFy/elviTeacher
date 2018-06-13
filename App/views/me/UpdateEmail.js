@@ -105,10 +105,10 @@ class UpdateEmail extends Component {
 
     switch (tag) {
       case 'email':
-        dispatch(actions.updateEmailUpdate({ email: text, codeEmail }))
+        dispatch(actions.updateEmailUpdate({ email: text.trim(), codeEmail }))
         break
       case 'code':
-        dispatch(actions.updateEmailUpdate({ email, codeEmail: text }))
+        dispatch(actions.updateEmailUpdate({ email, codeEmail: text.trim() }))
         break
       default:
         break
@@ -137,14 +137,17 @@ class UpdateEmail extends Component {
       Toast.fail('请输入邮箱地址')
       return
     }
+
+    if (!common.regEmail.test(email)) {
+      Toast.fail('邮箱地址不正确')
+      return
+    }
+
     if (!codeEmail.length) {
       Toast.fail('请输入邮箱验证码')
       return
     }
-    if (!common.regEmail.test(email)) {
-      Toast.fail('请输入正确格式的邮箱')
-      return
-    }
+
     dispatch(actions.updateEmail({
       email,
       code: codeEmail,

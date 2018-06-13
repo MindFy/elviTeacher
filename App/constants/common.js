@@ -34,7 +34,7 @@ const common = {
   tabbarHeight,
   selectedTokenDefault: '选择币种',
 
-  refreshIntervalTime: 3000,
+  refreshIntervalTime: 5000,
 
   noti: {
     home: 'home',
@@ -244,7 +244,8 @@ const common = {
   regIdCard: /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/,
   regBankName: /^[\u4e00-\u9fa5]{4}/,
   regBankNo: /[0-9]{16,19}$/,
-  regEmail: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
+  // regEmail: /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
+  regEmail: /^([a-zA-Z0-9_-|.])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-]+)+$/,
 
   textInputMaxLenPwd: 20,
   textInputMaxLenIdNo: 18,

@@ -46,7 +46,7 @@ export function* getAssets() {
     const request = yield take(constants.GET_ASSETS_REQUEST)
     const response = yield call(api.getAssets, request.data)
     if (response.success) yield put({ type: constants.GET_ASSETS_SUCCEED, response })
-    else yield put({ type: constants.GET_ASSETS_FAILED, response })
+    else yield put({ type: constants.GET_ASSETS_FAILED, response: undefined })
   }
 }
 /* 获取几种货币根据比特币换算的人民币价格和已提取数量 */
