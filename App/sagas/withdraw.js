@@ -10,7 +10,7 @@ export function* requestCoinListWorker() {
 
   yield put({
     type: 'withdraw/request_coin_list_succeed',
-    payload: ['TK', 'BTC', 'CNYT', 'ETH', 'ETC', 'LTC'],
+    payload: ['BTC', 'ETH', 'ETC', 'LTC'],
   })
 }
 
