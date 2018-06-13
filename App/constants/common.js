@@ -34,7 +34,7 @@ const common = {
   tabbarHeight,
   selectedTokenDefault: '选择币种',
 
-  refreshIntervalTime: 3000,
+  refreshIntervalTime: 5000,
 
   noti: {
     home: 'home',

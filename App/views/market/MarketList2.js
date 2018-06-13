@@ -112,8 +112,8 @@ export default class MarketList2 extends Component {
       <NextTouchableOpacity
         style={styles.row}
         onPress={() => {
-          if (this.props.onClickMarketItem) {
-            this.props.onClickMarketItem(rd, currencyName)
+          if (this.props.cellPressAction) {
+            this.props.cellPressAction(rd, currencyName)
           }
         }}
         activeOpacity={common.activeOpacity}

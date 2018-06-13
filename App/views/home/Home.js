@@ -43,8 +43,9 @@ class Home extends Component {
       nextAppState => this._handleAppStateChange(nextAppState))
   }
 
-  componentWillReceiveProps() {
-    const { market, selectedPair, dispatch } = this.props
+  componentWillReceiveProps(props) {
+    const { market, dispatch } = this.props
+    const { selectedPair } = props
     for (let i = 0; i < market.length; i++) {
       const item = market[i]
       if (item.currency.id === selectedPair.currency.id

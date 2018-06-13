@@ -44,7 +44,7 @@ export function* requestOpenordersListWorker(action) {
   } else {
     yield put({
       type: 'exchange/request_openorders_list_failed',
-      payload: response.error,
+      payload: [],
     })
   }
 }
@@ -61,7 +61,7 @@ export function* requestOrderhistoryListWorker(action) {
   } else {
     yield put({
       type: 'exchange/request_orderhistory_list_failed',
-      payload: response.error,
+      payload: [],
     })
   }
 }
