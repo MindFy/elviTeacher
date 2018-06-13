@@ -178,7 +178,7 @@ class OtcDetail extends Component {
     const { dispatch, formState } = this.props
     const { code } = formState
     if (!code.length) {
-      Toast.message('请输入验证码')
+      Toast.fail('请输入验证码')
       return
     }
     dispatch(requestConfirmPay({ id, code }))
@@ -539,7 +539,7 @@ class OtcDetail extends Component {
           confirmPress={() => {
             Keyboard.dismiss()
             if (!formState.allegeText || formState.allegeText.length > 50) {
-              Toast.message('请填写投诉事由，50个字之内')
+              Toast.fail('请填写投诉事由，50个字之内')
               return
             }
             const data = { legaldeal_id: allegeId, reason: formState.allegeText }
