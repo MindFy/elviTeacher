@@ -217,7 +217,7 @@ class Balance extends Component {
   }
 
   renderRow(rd) {
-    const amount = new BigNumber(rd.amount).plus(rd.freezed).toFixed(8, 1)
+    const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
     return (
       <BalanceCell
         leftImageSource={require('../../assets/111.png')}
