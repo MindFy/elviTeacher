@@ -43,6 +43,20 @@ class Home extends Component {
       nextAppState => this._handleAppStateChange(nextAppState))
   }
 
+  componentWillReceiveProps() {
+    const { market, selectedPair, dispatch } = this.props
+    for (let i = 0; i < market.length; i++) {
+      const item = market[i]
+      if (item.currency.id === selectedPair.currency.id
+        && item.goods.id === selectedPair.goods.id) {
+        if (item !== selectedPair) {
+          dispatch(exchange.updatePair(item))
+        }
+        break
+      }
+    }
+  }
+
   componentWillUnmount() {
     AppState.removeEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
@@ -167,6 +181,7 @@ class Home extends Component {
 function mapStateToProps(store) {
   return {
     ...store.home,
+    selectedPair: store.exchange.selectedPair,
     user: store.user.user,
   }
 }
