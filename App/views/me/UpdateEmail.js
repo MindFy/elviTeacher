@@ -139,7 +139,7 @@ class UpdateEmail extends Component {
     }
 
     if (!common.regEmail.test(email)) {
-      Toast.message('邮箱地址不正确')
+      Toast.fail('邮箱地址不正确')
       return
     }
 
