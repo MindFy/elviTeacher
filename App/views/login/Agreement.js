@@ -12,7 +12,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 export default class Agreement extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '详情',
+      headerTitle: '用户协议',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,

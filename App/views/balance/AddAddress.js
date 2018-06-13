@@ -178,7 +178,7 @@ class AddAddress extends Component {
   confirmPress() {
     const { formState } = this.props
     if (!formState.address.length) {
-      Toast.message('请填写提币地址')
+      Toast.fail('请填写提币地址')
       return
     }
 
@@ -201,7 +201,7 @@ class AddAddress extends Component {
     }
 
     if (!formState.remark.length) {
-      Toast.message('请填写备注')
+      Toast.fail('请填写备注')
       return
     }
     this.showOverlay()
@@ -212,7 +212,7 @@ class AddAddress extends Component {
 
     const { formState } = this.props
     if (!formState.authCode.length) {
-      Toast.message('请输入验证码')
+      Toast.fail('请输入验证码')
       return
     }
 

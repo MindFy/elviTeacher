@@ -167,11 +167,11 @@ class Otc extends Component {
 
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
-      Toast.message(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
+      Toast.fail(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
       return
     }
     if (q.lt(common.minQuantityLegalDeal)) {
-      Toast.message(`${type === common.buy ? '买入' : '卖出'}数量最少为${
+      Toast.fail(`${type === common.buy ? '买入' : '卖出'}数量最少为${
         common.minQuantityLegalDeal}`)
       return
     }

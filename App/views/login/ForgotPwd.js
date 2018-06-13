@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: common.bgColor,
   },
   inputView: {
-    marginTop: common.margin110,
+    marginTop: common.getH(90),
     marginLeft: common.margin38,
     marginRight: common.margin38,
   },
@@ -46,36 +46,31 @@ const styles = StyleSheet.create({
 class ForgotPwd extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '忘记密码',
       headerStyle: {
-        backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
       },
+      headerTransparent: true,
       headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
-      headerLeft:
-        (
-          <NextTouchableOpacity
+      headerLeft: (
+        <NextTouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
 
@@ -85,6 +80,7 @@ class ForgotPwd extends Component {
     this.showCheckVerificateCodeResponse = false
     this.state = {
       showTip: false,
+      nextBtnDisabled: true,
     }
   }
 
@@ -172,6 +168,7 @@ class ForgotPwd extends Component {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
         Toast.success(getVerificateCodeResponse.result.message)
+        this.setState({ nextBtnDisabled: false })
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail('手机号码或服务类型错误')
       } else if (getVerificateCodeResponse.error.code === 4000102) {
@@ -226,6 +223,11 @@ class ForgotPwd extends Component {
 
   render() {
     const { mobile, code, getVerificateCodeVisible, checkVerificateCodeVisible } = this.props
+    const { nextBtnDisabled } = this.state
+    let disabled = false
+    if (nextBtnDisabled || getVerificateCodeVisible) {
+      disabled = true
+    }
     return (
       <ScrollView
         style={styles.container}
@@ -266,16 +268,20 @@ class ForgotPwd extends Component {
             value={code}
             maxLength={6}
             onPressCheckCodeBtn={() => this.codePress()}
+            extraDisable={!mobile || !common.regMobile.test(mobile)}
             onChange={e => this.onChange(e, 'code')}
             textInputProps={{
               keyboardType: 'numeric',
             }}
           />
           <TKButton
-            style={{ marginTop: common.margin210 }}
+            style={{
+              marginTop: common.getH(227),
+              backgroundColor: disabled ? common.grayColor : common.btnTextColor,
+            }}
             theme={'yellow'}
             caption={'下一步'}
-            disabled={getVerificateCodeVisible}
+            disabled={disabled}
             onPress={() => this.nextPress()}
           />
         </KeyboardAvoidingView>

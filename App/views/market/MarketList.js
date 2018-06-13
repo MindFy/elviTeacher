@@ -3,10 +3,68 @@ import {
   View,
   Text,
   ListView,
+  StyleSheet,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+
+const styles = StyleSheet.create({
+  header: {
+    height: common.getH(48),
+    marginHorizontal: common.getH(10),
+  },
+  headerTextView: {
+    flexDirection: 'row',
+    marginTop: common.getH(20),
+    marginBottom: common.getH(10),
+  },
+  underLine: {
+    height: 0.5,
+    backgroundColor: common.placeholderColor,
+  },
+  headerName: {
+    width: common.getH(66),
+    fontSize: common.getH(12),
+    color: common.placeholderColor,
+    textAlign: 'left',
+  },
+  headerPrice: {
+    flex: 1,
+    fontSize: common.getH(12),
+    color: common.placeholderColor,
+    textAlign: 'right',
+  },
+  row: {
+    marginHorizontal: common.getH(10),
+  },
+  rowTextView: {
+    flexDirection: 'row',
+    height: common.getH(40),
+  },
+  rowNameView: {
+    width: common.getH(66),
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  rowName: {
+    fontSize: common.getH(12),
+    color: common.textColor,
+  },
+  rowNameMark: {
+    fontSize: common.getH(8),
+    color: common.textColor,
+    paddingBottom: common.getH(2),
+    alignSelf: 'flex-end',
+  },
+  rowPrice: {
+    flex: 1,
+    fontSize: common.getH(12),
+    color: common.textColor,
+    textAlign: 'right',
+    alignSelf: 'center',
+  },
+})
 
 export default class MarketList extends Component {
   constructor(props) {
@@ -18,63 +76,14 @@ export default class MarketList extends Component {
 
   renderHeader() {
     return (
-      <View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginHorizontal: common.w10,
-          }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'left',
-            }}
-          >名称</Text>
-          <Text
-            style={{
-              flex: 3,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'right',
-            }}
-          >成交量</Text>
-          <Text
-            style={{
-              flex: 3,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'right',
-            }}
-          >最新价</Text>
-          <Text
-            style={{
-              flex: 3,
-              paddingTop: common.margin20,
-              paddingBottom: common.margin5,
-              fontSize: common.font14,
-              color: common.placeholderColor,
-              textAlign: 'right',
-            }}
-          >24h涨跌</Text>
+      <View style={styles.header}>
+        <View style={styles.headerTextView}>
+          <Text style={styles.headerName}>名称</Text>
+          <Text style={styles.headerPrice}>成交量</Text>
+          <Text style={styles.headerPrice}>最新价</Text>
+          <Text style={styles.headerPrice}>24h涨跌</Text>
         </View>
-
-        <View
-          style={{
-            marginHorizontal: common.margin10,
-            height: 0.5,
-            backgroundColor: common.placeholderColor,
-          }}
-        />
-
+        <View style={styles.underLine} />
       </View>
     )
   }
@@ -100,76 +109,33 @@ export default class MarketList extends Component {
     })
 
     return (
-      <View>
-        <NextTouchableOpacity
-          onPress={() => {
-            if (this.props.onClickMarketItem) {
-              this.props.onClickMarketItem(rd, currencyName)
-            }
-          }}
-        >
-          <View
-            style={{
-              flexDirection: 'row',
-              marginHorizontal: common.w10,
-            }}
-          >
-            <Text
-              style={{
-                flex: 1,
-                paddingTop: common.margin5,
-                paddingBottom: common.margin5,
-                fontSize: common.font14,
-                color: common.textColor,
-                textAlign: 'left',
-                alignSelf: 'center',
-              }}
-            >{rd.name}</Text>
-            <Text
-              style={{
-                flex: 3,
-                paddingTop: common.margin5,
-                paddingBottom: common.margin5,
-                fontSize: common.font14,
-                color: common.textColor,
-                textAlign: 'right',
-                alignSelf: 'center',
-              }}
-            >{quantity}</Text>
-            <Text
-              style={{
-                flex: 3,
-                paddingTop: common.margin5,
-                paddingBottom: common.margin5,
-                fontSize: common.font14,
-                color: typeColor,
-                textAlign: 'right',
-                alignSelf: 'center',
-              }}
-            >{cprice}</Text>
-            <Text
-              style={{
-                flex: 3,
-                paddingTop: common.margin5,
-                paddingBottom: common.margin5,
-                fontSize: common.font14,
-                color: typeColor,
-                textAlign: 'right',
-                alignSelf: 'center',
-              }}
-            >{`${roseSymbol}${rose}%`}</Text>
+      <NextTouchableOpacity
+        style={styles.row}
+        onPress={() => {
+          if (this.props.onClickMarketItem) {
+            this.props.onClickMarketItem(rd, currencyName)
+          }
+        }}
+        activeOpacity={common.activeOpacity}
+      >
+        <View style={styles.rowTextView}>
+          <View style={styles.rowNameView}>
+            <Text style={styles.rowName}>{rd.name}</Text>
+            <Text style={styles.rowNameMark}>{`（${common.coinChinese[rd.name]}）`}</Text>
           </View>
+          <Text style={styles.rowPrice}>{quantity}</Text>
+          <Text style={[styles.rowPrice, {
+            color: typeColor,
+          }]}
+          >{cprice}</Text>
+          <Text style={[styles.rowPrice, {
+            color: typeColor,
+          }]}
+          >{`${roseSymbol}${rose}%`}</Text>
+        </View>
 
-          <View
-            style={{
-              marginLeft: common.margin10,
-              marginRight: common.margin10,
-              height: 0.5,
-              backgroundColor: common.placeholderColor,
-            }}
-          />
-        </NextTouchableOpacity>
-      </View>
+        <View style={styles.underLine} />
+      </NextTouchableOpacity>
     )
   }
 

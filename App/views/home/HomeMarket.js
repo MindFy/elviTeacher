@@ -39,14 +39,15 @@ const styles = StyleSheet.create({
     width: common.h40,
   },
   rowIconView: {
-    width: '30%',
+    width: '25%',
     justifyContent: 'center',
   },
   rowMiddleView: {
-    width: '40%',
+    width: '45%',
     justifyContent: 'center',
   },
   rowCoinView: {
+    flex: 1,
     marginTop: common.margin10,
     flexDirection: 'row',
     alignSelf: 'center',
@@ -54,14 +55,22 @@ const styles = StyleSheet.create({
   goods: {
     color: common.textColor,
     fontSize: common.font20,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  goodsMark: {
+    color: common.textColor,
+    fontSize: common.getH(10),
+    paddingBottom: common.getH(3),
+    alignSelf: 'flex-end',
+    textAlign: 'center',
   },
   currency: {
-    flex: 1,
     color: common.placeholderColor,
     fontSize: common.font16,
     paddingBottom: 0,
     alignSelf: 'flex-end',
-    textAlign: 'left',
+    textAlign: 'center',
   },
   cpriceView: {
     marginTop: common.margin5,
@@ -147,15 +156,9 @@ export default class HomeMarket extends Component {
 
         <View style={styles.rowMiddleView}>
           <View style={styles.rowCoinView}>
-            <Text style={[styles.goods, {
-              flex: 1,
-              textAlign: 'right',
-            }]}
-            >{rd.goods.name}</Text>
-            <Text style={styles.goods}>/</Text>
-            <Text style={styles.currency}>
-              {rd.currency.name}
-            </Text>
+            <Text style={styles.goods}>{rd.goods.name}</Text>
+            <Text style={styles.goodsMark}>{`（${common.coinChinese[rd.goods.name]}）`}</Text>
+            <Text style={styles.currency}>{`/${rd.currency.name}`}</Text>
           </View>
 
           <View style={styles.cpriceView}>
