@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   slider: {
-    marginTop: common.margin10,
+    marginTop: common.margin5,
     marginLeft: common.margin15,
     marginRight: common.margin15,
   },
