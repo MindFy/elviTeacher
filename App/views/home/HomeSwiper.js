@@ -44,6 +44,11 @@ export default class HomeSwiper extends Component {
     this.announcementsIndex = 0
   }
 
+  shouldComponentUpdate(nextProps) {
+    return this.props.banners !== nextProps.banners
+    || this.props.announcements !== nextProps.announcements
+  }
+
   render() {
     const { banners, announcements, onPress } = this.props
 
