@@ -129,6 +129,8 @@ const TabBar = TabNavigator(
         backgroundColor: common.navBgColor,
       },
       labelStyle: {
+        marginTop: 0,
+        marginBottom: common.IsIOS ? common.margin5 : 0,
         width: common.h50,
         fontSize: common.font12,
       },
