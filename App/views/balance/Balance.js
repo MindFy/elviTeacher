@@ -139,6 +139,7 @@ class Balance extends Component {
       availableCash: '0.00000000',
       freezed: '0.00000000',
       rmbValue: '0.00',
+      platformFreeze: '0.00000000',
       btcValue: '0.00000000',
     },
     {
@@ -150,6 +151,7 @@ class Balance extends Component {
       availableCash: '0.00000000',
       freezed: '0.00000000',
       rmbValue: '0.00',
+      platformFreeze: '0.00000000',
       btcValue: '0.00000000',
     },
     {
@@ -161,6 +163,7 @@ class Balance extends Component {
       availableCash: '0.00000000',
       freezed: '0.00000000',
       rmbValue: '0.00',
+      platformFreeze: '0.00000000',
       btcValue: '0.00000000',
     },
     {
@@ -172,6 +175,7 @@ class Balance extends Component {
       availableCash: '0.00000000',
       freezed: '0.00000000',
       rmbValue: '0.00',
+      platformFreeze: '0.00000000',
       btcValue: '0.00000000',
     },
     {
@@ -183,6 +187,7 @@ class Balance extends Component {
       availableCash: '0.00000000',
       freezed: '0.00000000',
       rmbValue: '0.00',
+      platformFreeze: '0.00000000',
       btcValue: '0.00000000',
     },
     {
@@ -194,6 +199,7 @@ class Balance extends Component {
       availableCash: '0.00000000',
       freezed: '0.00000000',
       rmbValue: '0.00',
+      platformFreeze: '0.00000000',
       btcValue: '0.00000000',
     }]
     const indexs = {
@@ -211,7 +217,7 @@ class Balance extends Component {
   }
 
   renderRow(rd) {
-    const amount = new BigNumber(rd.amount).plus(rd.freezed).toFixed(8, 1)
+    const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
     return (
       <BalanceCell
         leftImageSource={require('../../assets/111.png')}
@@ -244,7 +250,7 @@ class Balance extends Component {
     if (valuation && valuation.rates) {
       for (let i = 0; i < balanceList.length; i++) {
         const element = balanceList[i]
-        const amount = new BigNumber(element.amount).plus(new BigNumber(element.freezed))
+        const amount = new BigNumber(element.amount).plus(new BigNumber(element.freezed)).plus(new BigNumber(element.platformFreeze))
         const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
         const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
         const nextAmountBTC = amount.multipliedBy(scaleBTC).toFixed(8, 1)
