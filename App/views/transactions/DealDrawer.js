@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   slider: {
-    marginTop: common.margin10,
+    marginTop: common.margin5,
     marginLeft: common.margin15,
     marginRight: common.margin15,
   },
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     width: '15%',
     alignSelf: 'center',
   },
-  buttinStyle: {
+  buttonStyle: {
     fontSize: common.font16,
     color: 'white',
   },

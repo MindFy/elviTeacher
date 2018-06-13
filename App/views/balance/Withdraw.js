@@ -274,7 +274,7 @@ class WithDraw extends Component {
     if (bWithdrawAmount.gt(bMaxBalace)) {
       dispatch(updateForm({
         ...formState,
-        withdrawAmount: bMaxBalace.toString(),
+        withdrawAmount: bMaxBalace.toFixed(),
       }))
       return
     }
@@ -858,10 +858,6 @@ class WithDraw extends Component {
         keyboardShouldPersistTaps="handled"
       >
         <KeyboardAvoidingView
-          style={{
-            flex: 1,
-            backgroundColor: common.bgColor,
-          }}
           behavior="position"
         >
           {coinSelector}

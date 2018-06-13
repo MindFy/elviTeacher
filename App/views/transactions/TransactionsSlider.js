@@ -19,7 +19,7 @@ export default class TransactionsSlider extends Component {
       >
         <Slider
           style={{
-            height: common.h15,
+            height: common.h20,
           }}
           value={percentSlider}
           minimumValue={minimumValue}

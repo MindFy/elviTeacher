@@ -219,6 +219,7 @@ export default class TKViewCheckAuthorize extends Component {
         <NextTouchableOpacity
           style={[styles.cancelBtn, {
             backgroundColor: common.btnTextColor,
+            borderWidth: 0,
           }]}
           activeOpacity={common.activeOpacity}
           onPress={() => confirmPress()}

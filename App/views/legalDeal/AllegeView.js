@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react'
 import {
   Text,
   View,
+  Keyboard,
   TextInput,
   StyleSheet,
 } from 'react-native'
@@ -13,7 +14,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 const styles = StyleSheet.create({
   contant: {
     alignSelf: 'center',
-    marginTop: -200,
+    marginTop: -100,
     width: '80%',
     backgroundColor: 'white',
   },
@@ -110,7 +111,7 @@ export default class AllegeView extends PureComponent {
         <NextTouchableOpacity
           style={styles.contant}
           activeOpacity={1}
-          onPress={() => { }}
+          onPress={() => Keyboard.dismiss()}
         >
           <Text style={styles.title}>投诉</Text>
           <View style={styles.underline} />
