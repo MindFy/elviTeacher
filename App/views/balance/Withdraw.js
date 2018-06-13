@@ -858,10 +858,6 @@ class WithDraw extends Component {
         keyboardShouldPersistTaps="handled"
       >
         <KeyboardAvoidingView
-          style={{
-            flex: 1,
-            backgroundColor: common.bgColor,
-          }}
           behavior="position"
         >
           {coinSelector}
