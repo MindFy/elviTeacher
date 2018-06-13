@@ -118,7 +118,7 @@ class UpdateEmail extends Component {
   sendCodeEmail(count) {
     const { dispatch, email, user } = this.props
     if (!email.length || !common.regEmail.test(email)) {
-      Toast.message('请输入正确格式的邮箱')
+      Toast.fail('请输入正确格式的邮箱')
       return
     }
     this.count = count
@@ -134,15 +134,15 @@ class UpdateEmail extends Component {
 
     const { dispatch, email, codeEmail } = this.props
     if (!email.length) {
-      Toast.message('请输入邮箱地址')
+      Toast.fail('请输入邮箱地址')
       return
     }
     if (!codeEmail.length) {
-      Toast.message('请输入邮箱验证码')
+      Toast.fail('请输入邮箱验证码')
       return
     }
     if (!common.regEmail.test(email)) {
-      Toast.message('请输入正确格式的邮箱')
+      Toast.fail('请输入正确格式的邮箱')
       return
     }
     dispatch(actions.updateEmail({

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    marginTop: common.margin127 - common.navHeight,
+    marginTop: common.margin127,
     width: common.w150,
     height: common.h80,
     alignSelf: 'center',
@@ -63,37 +63,32 @@ class Login extends PureComponent {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
     return {
-      headerTitle: '登录',
       headerStyle: {
-        backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
       },
+      headerTransparent: true,
       headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
-      headerLeft:
-        (
-          <NextTouchableOpacity
+      headerLeft: (
+        <NextTouchableOpacity
+          style={{
+            height: common.w40,
+            width: common.w40,
+            justifyContent: 'center',
+          }}
+          activeOpacity={common.activeOpacity}
+          onPress={params.dismiss}
+        >
+          <Image
             style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
+              marginLeft: common.margin10,
+              width: common.w15,
+              height: common.h15,
             }}
-            activeOpacity={common.activeOpacity}
-            onPress={params.dismiss}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w15,
-                height: common.h15,
-              }}
-              resizeMode="contain"
-              source={require('../../assets/close_icon.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+            resizeMode="contain"
+            source={require('../../assets/close_icon.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
 
@@ -159,15 +154,15 @@ class Login extends PureComponent {
     }
 
     if (!formState.mobile.length) {
-      Toast.message('请输入账号')
+      Toast.fail('请输入账号')
       return
     }
     if (!common.regMobile.test(formState.mobile)) {
-      Toast.message(common.regMobileMsg)
+      Toast.fail(common.regMobileMsg)
       return
     }
     if (!formState.password.length) {
-      Toast.message('请输入密码')
+      Toast.fail('请输入密码')
       return
     }
     dispatch(actions.login(formState))

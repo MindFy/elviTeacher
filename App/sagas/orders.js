@@ -2,6 +2,7 @@ import {
   call,
   put,
   takeEvery,
+  takeLatest,
   select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
@@ -86,11 +87,11 @@ export function* requestCancelAllOrderWorker(action) {
 }
 
 export function* openOrderRequest() {
-  yield takeEvery('orders/open_order_request', openOrderRequestWorker)
+  yield takeLatest('orders/open_order_request', openOrderRequestWorker)
 }
 
 export function* orderHistoryRequest() {
-  yield takeEvery('orders/order_history_request', orderHistoryRequestWorker)
+  yield takeLatest('orders/order_history_request', orderHistoryRequestWorker)
 }
 
 export function* requestCancelOrder() {

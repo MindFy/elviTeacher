@@ -95,6 +95,15 @@ const common = {
     LTC: 'LTC',
   },
 
+  coinChinese: {
+    TK: 'TK币',
+    BTC: '比特币',
+    CNYT: '',
+    ETH: '以太坊',
+    ETC: '以太经典',
+    LTC: '莱特币',
+  },
+
   legalDeal: {
     limit: 10,
     token: 'CNYT',
@@ -149,6 +158,7 @@ const common = {
   loginBtnTitleColor: '#191B2B', // 登录/注册/下一步标题颜色
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
+  grayColor: 'rgba(97,105,137,0.5)',
   rgb242: 'rgb(242,242,242)',
   rgb223: 'rgb(223,223,223)',
 
@@ -156,6 +166,10 @@ const common = {
 
   sw,
   sh,
+
+  getH(value) {
+    return value / w * sw
+  },
 
   margin5: 5 / w * sw,
   margin8: 8 / w * sw,

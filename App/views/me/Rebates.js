@@ -185,7 +185,7 @@ class Rebates extends Component {
     const { prefixNo, recommendId } = user
     if (recommendId.length) {
       Clipboard.setString(prefixNo + recommendId)
-      Toast.message('复制成功')
+      Toast.fail('复制成功')
     }
   }
 
@@ -198,7 +198,7 @@ class Rebates extends Component {
     }
     if (rebatesLink.length) {
       Clipboard.setString(rebatesLink)
-      Toast.message('复制成功')
+      Toast.fail('复制成功')
     }
   }
 
@@ -208,9 +208,9 @@ class Rebates extends Component {
 
   _saveImage = (uri) => {
     CameraRoll.saveToCameraRoll(uri).then((() => {
-      Toast.message('保存成功')
+      Toast.fail('保存成功')
     })).catch(() => {
-      Toast.message('保存失败')
+      Toast.fail('保存失败')
     })
   }
 

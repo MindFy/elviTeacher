@@ -153,17 +153,25 @@ class Otc extends Component {
     } = this.props
 
     if (!loggedIn) {
-      navigation.navigate('LoginStack')
+      if (common.IsIOS) {
+        navigation.navigate('LoginStack')
+      } else if (navigation.state.params.tabBarVisible) {
+        navigation.navigate('LoginStack')
+      } else {
+        setTimeout(() => {
+          navigation.navigate('LoginStack')
+        }, 100)
+      }
       return
     }
 
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
-      Toast.message(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
+      Toast.fail(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
       return
     }
     if (q.lt(common.minQuantityLegalDeal)) {
-      Toast.message(`${type === common.buy ? '买入' : '卖出'}数量最少为${
+      Toast.fail(`${type === common.buy ? '买入' : '卖出'}数量最少为${
         common.minQuantityLegalDeal}`)
       return
     }
