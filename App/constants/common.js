@@ -95,6 +95,15 @@ const common = {
     LTC: 'LTC',
   },
 
+  coinChinese: {
+    TK: 'TK币',
+    BTC: '比特币',
+    CNYT: '',
+    ETH: '以太坊',
+    ETC: '以太经典',
+    LTC: '莱特币',
+  },
+
   legalDeal: {
     limit: 10,
     token: 'CNYT',
@@ -156,6 +165,10 @@ const common = {
 
   sw,
   sh,
+
+  getH(value) {
+    return value / w * sw
+  },
 
   margin5: 5 / w * sw,
   margin8: 8 / w * sw,
