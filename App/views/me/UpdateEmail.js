@@ -180,12 +180,15 @@ class UpdateEmail extends Component {
     const { email, codeEmail, updateEmailVisible, user } = this.props
 
     return (
-      <KeyboardAvoidingView
+      <ScrollView
         style={styles.container}
-        behavior="padding"
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
       >
-        <ScrollView
-          keyboardShouldPersistTaps="handled"
+        <KeyboardAvoidingView
+
+          contentContainerStyle={{ justifyContent: 'center' }}
+          behavior="padding"
         >
           <TKInputItem
             viewStyle={styles.email}
@@ -218,12 +221,13 @@ class UpdateEmail extends Component {
             caption={user.emailStatus === common.user.status.bind ? '邮箱已绑定' : '确定'}
             theme={'gray'}
           />
-        </ScrollView>
 
+        </KeyboardAvoidingView>
         <TKSpinner
           isVisible={updateEmailVisible}
         />
-      </KeyboardAvoidingView>
+      </ScrollView>
+
     )
   }
 }
