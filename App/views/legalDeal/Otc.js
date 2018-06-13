@@ -61,6 +61,10 @@ const styles = StyleSheet.create({
 class Otc extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
+    let tabBarVisible = true
+    if (!common.IsIOS) {
+      tabBarVisible = params.tabBarVisible
+    }
     return {
       headerTitle: '法币',
       headerStyle: {
@@ -85,11 +89,16 @@ class Otc extends Component {
           >明细</Text>
         </NextTouchableOpacity>
       ),
+      tabBarVisible,
     }
   }
 
   componentWillMount() {
-    this.props.navigation.setParams({ detailPress: this._detailPress })
+    this.props.navigation.setParams({ detailPress: this._detailPress, tabBarVisible: true })
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow',
+      event => this._keyboardDidShow(event))
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide',
+      event => this._keyboardDidHide(event))
   }
 
   componentWillReceiveProps(nextProps) {
@@ -125,6 +134,11 @@ class Otc extends Component {
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
     }
     dispatch(clearResponse())
+  }
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
   }
 
   onSubmit() {
@@ -174,6 +188,14 @@ class Otc extends Component {
     }
     if (qArr.length > 1 && qArr[1].length > 2) return // 4.小数长度限制
     dispatch(updateForm(text))
+  }
+
+  _keyboardDidShow() {
+    this.props.navigation.setParams({ tabBarVisible: false })
+  }
+
+  _keyboardDidHide() {
+    this.props.navigation.setParams({ tabBarVisible: true })
   }
 
   _detailPress = () => {
