@@ -153,7 +153,15 @@ class Otc extends Component {
     } = this.props
 
     if (!loggedIn) {
-      navigation.navigate('LoginStack')
+      if (common.IsIOS) {
+        navigation.navigate('LoginStack')
+      } else if (navigation.state.params.tabBarVisible) {
+        navigation.navigate('LoginStack')
+      } else {
+        setTimeout(() => {
+          navigation.navigate('LoginStack')
+        }, 100)
+      }
       return
     }
 
