@@ -24,6 +24,15 @@ import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  transparentView: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
   inputView: {
     marginTop: common.margin10,
     marginLeft: common.margin10,
@@ -439,18 +448,16 @@ class Authentication extends Component {
       user && user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting
     const contentView = !isShowWaitingTip && this.renderContentView()
     const waitingTip = isShowWaitingTip && this.renderWaitingTip()
+    let transparentView = null
+    if (idCardAuthVisible) {
+      transparentView = <View style={styles.transparentView} />
+    }
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-      >
+      <View style={styles.container}>
         {contentView}
         {waitingTip}
-        <TKSpinner
-          isVisible={idCardAuthVisible}
-        />
+        <TKSpinner isVisible={idCardAuthVisible} />
+        {transparentView}
       </View>
     )
   }
