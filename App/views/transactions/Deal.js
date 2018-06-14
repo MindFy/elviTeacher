@@ -383,14 +383,17 @@ class Deal extends Component {
   }
 
   renderDepthView = () => {
-    const { dispatch, kLineOrDepth, depthMap } = this.props
+    const { dispatch, kLineOrDepth, depthMap, selectedPair } = this.props
     let kLineBtnTitle = 'k线'
     if (kLineOrDepth === common.ui.kLine) {
       kLineBtnTitle = '深度'
     }
     const renderCharts = () => {
       if (kLineOrDepth === common.ui.kLine) {
-        return <KLine />
+        return (<KLine
+          goodsName={selectedPair.goods.name}
+          currencyName={selectedPair.currency.name}
+        />)
       }
       return <Depth depthMap={depthMap} />
     }
