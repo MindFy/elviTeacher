@@ -19,7 +19,7 @@ export default class TextInputTranscations extends Component {
   componentDidMount() { }
 
   render() {
-    const { textInputStyle, placeholder, value, onChange, keyboardType, editable, maxLength,
+    const { textInputStyle, placeholder, value, keyboardType, editable, maxLength,
     } = this.props
     return (
       <TextInput
@@ -30,7 +30,6 @@ export default class TextInputTranscations extends Component {
         placeholderTextColor={common.placeholderColor}
         autoCorrect={false}
         value={value}
-        onChangeText={onChange}
         editable={editable}
         maxLength={maxLength}
         underlineColorAndroid="transparent"

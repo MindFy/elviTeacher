@@ -232,7 +232,7 @@ class DealDrawer extends Component {
                 placeholder={`价格（${caculatedData.currencyName}）`}
                 keyboardType="numeric"
                 value={price}
-                onChange={(e) => {
+                onChangeText={(e) => {
                   if (changeAction) {
                     changeAction({
                       cmd: 'input',
@@ -245,7 +245,7 @@ class DealDrawer extends Component {
                   if (!common.IsIOS) {
                     Animated.timing(
                       this.state.keyboardHeight,
-                      { toValue: 240 },
+                      { toValue: 240, duration: 200 },
                     ).start()
                   }
                 }}
@@ -253,7 +253,7 @@ class DealDrawer extends Component {
                   if (!common.IsIOS) {
                     Animated.timing(
                       this.state.keyboardHeight,
-                      { toValue: 0 },
+                      { toValue: 0, duration: 200 },
                     ).start()
                   }
                 }}
@@ -300,7 +300,7 @@ class DealDrawer extends Component {
                 placeholder={`数量（${caculatedData.goodsName}）`}
                 keyboardType="numeric"
                 value={quantity}
-                onChange={(e) => {
+                onChangeText={(e) => {
                   if (changeAction) {
                     changeAction({
                       cmd: 'input',
@@ -313,7 +313,7 @@ class DealDrawer extends Component {
                   if (!common.IsIOS) {
                     Animated.timing(
                       this.state.keyboardHeight,
-                      { toValue: 240 },
+                      { toValue: 240, duration: 200 },
                     ).start()
                   }
                 }}
@@ -321,7 +321,7 @@ class DealDrawer extends Component {
                   if (!common.IsIOS) {
                     Animated.timing(
                       this.state.keyboardHeight,
-                      { toValue: 0 },
+                      { toValue: 0, duration: 200 },
                     ).start()
                   }
                 }}

@@ -213,7 +213,8 @@ class Deal extends Component {
           actions: {
             cmd: 'input',
             type: 'quantity',
-            val: new BigNumber(availQuantity).lte(sellQuantity) ? availQuantity : sellQuantity,
+            val: (new BigNumber(availQuantity).lte(new BigNumber(sellQuantity))
+              ? availQuantity : sellQuantity),
           },
           amountVisible,
           createOrderIndex: index,
