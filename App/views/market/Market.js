@@ -11,6 +11,7 @@ import {
 } from '../../actions/market'
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
+import cache from '../../utils/cache'
 
 class Market extends Component {
   static navigationOptions() {
@@ -28,11 +29,20 @@ class Market extends Component {
     }
   }
 
+  constructor(props) {
+    super(props)
+    props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'Market')
+    })
+  }
+
   componentDidMount() {
     const { dispatch } = this.props
     dispatch(requestPairInfo({}))
     this.timeId = setInterval(() => {
-      dispatch(requestPairInfo({}))
+      if (cache.getObject('currentComponentVisible') === 'Market') {
+        dispatch(requestPairInfo({}))
+      }
     }, common.refreshIntervalTime)
   }
 

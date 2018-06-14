@@ -96,12 +96,16 @@ class Balance extends Component {
     }
   }
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.dataSource = data => new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2,
     }).cloneWithRows(data)
+
+    props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'Balance')
+    })
   }
 
   componentWillMount() {

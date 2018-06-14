@@ -18,6 +18,7 @@ import TKButton from '../../components/TKButton'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import * as exchange from '../../actions/exchange'
+import cache from '../../utils/cache'
 
 global.Buffer = require('buffer').Buffer
 
@@ -29,14 +30,24 @@ const styles = StyleSheet.create({
 })
 
 class Home extends Component {
+  constructor(props) {
+    super(props)
+    props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'Home')
+    })
+  }
+
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide()
     }, 200)
+    cache.setObject('currentComponentVisible', 'Home')
     this.refreshData()
     const { dispatch } = this.props
     this.timeId = setInterval(() => {
-      dispatch(actions.requestMarket())
+      if (cache.getObject('currentComponentVisible') === 'Home') {
+        dispatch(actions.requestMarket())
+      }
     }, common.refreshIntervalTime)
 
     AppState.addEventListener('change',
@@ -69,7 +80,9 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
-      this.refreshData()
+      setTimeout(() => {
+        this.refreshData()
+      }, 0)
     }
   }
 
