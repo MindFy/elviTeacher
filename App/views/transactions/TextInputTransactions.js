@@ -19,20 +19,33 @@ export default class TextInputTranscations extends Component {
   componentDidMount() { }
 
   render() {
-    const { textInputStyle, placeholder, value, keyboardType, editable, maxLength,
+    const {
+      textInputStyle,
+      placeholder,
+      value,
+      onChangeText,
+      keyboardType,
+      editable,
+      maxLength,
+      onEndEditing,
+      onFocus,
+      onBlur,
     } = this.props
     return (
       <TextInput
-        {...this.props}
         style={[styles.textInput, textInputStyle]}
         keyboardType={keyboardType}
         placeholder={placeholder}
         placeholderTextColor={common.placeholderColor}
         autoCorrect={false}
         value={value}
+        onChangeText={onChangeText}
         editable={editable}
         maxLength={maxLength}
         underlineColorAndroid="transparent"
+        onEndEditing={onEndEditing}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
     )
   }

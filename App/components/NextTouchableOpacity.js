@@ -2,19 +2,14 @@ import React, { PureComponent } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 class NextTouchableOpacity extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.didPress = false
-  }
-
   press(onPress, delay = 500) {
-    if (this.didPress) {
+    if (global.didPress) {
       return
     }
-    this.didPress = true
+    global.didPress = true
     onPress()
     setTimeout(() => {
-      this.didPress = false
+      global.didPress = false
     }, delay)
   }
 
