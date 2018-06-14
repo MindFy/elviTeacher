@@ -24,6 +24,7 @@
     "react": "^16.0.0",
     "react-native": "0.51.0",
     "react-native-camera": "1.0.3",
+    "react-native-fast-image": "^4.0.14",
     "react-native-refresh-list-view": "^1.0.8",
     "react-native-spinkit": "1.1.1",
     "react-native-splash-screen": "^2.1.0",
