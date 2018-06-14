@@ -208,10 +208,6 @@ class DealDrawer extends Component {
           style={{ backgroundColor: common.blackColor }}
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
-          onPress={() => {
-            Keyboard.dismiss()
-            this.setState({ keyboardHeight: 0 })
-          }}
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
             <Text style={styles.amountVisibleTitle}>可用</Text>
