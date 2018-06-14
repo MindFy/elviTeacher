@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
+  Image,
   ScrollView,
   StyleSheet,
   KeyboardAvoidingView,
-  Image,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { common } from '../../constants/common'
@@ -422,7 +422,7 @@ class Register extends Component {
         onFocus={() => {
           if (!common.IsIOS) {
             this.setState({
-              topOffset: 216 - this.inputViewBottom - common.getH(110),
+              topOffset: 216 - this.inputViewBottom - common.getH(160),
             })
           }
         }}
@@ -455,7 +455,7 @@ class Register extends Component {
         onFocus={() => {
           if (!common.IsIOS) {
             this.setState({
-              topOffset: this.inputViewBottom - common.getH(30) - 216,
+              topOffset: this.inputViewBottom - common.getH(60) - 216,
             })
           }
         }}

@@ -3,6 +3,7 @@ import {
   Text,
   View,
   Image,
+  Animated,
   StyleSheet,
   KeyboardAvoidingView,
 } from 'react-native'
@@ -99,6 +100,7 @@ class DealDrawer extends Component {
     this.state = {
       visible: false,
       index: 0,
+      keyboardHeight: new Animated.Value(0),
     }
   }
 
@@ -239,6 +241,22 @@ class DealDrawer extends Component {
                     })
                   }
                 }}
+                onFocus={() => {
+                  if (!common.IsIOS) {
+                    Animated.timing(
+                      this.state.keyboardHeight,
+                      { toValue: 240 },
+                    ).start()
+                  }
+                }}
+                onEndEditing={() => {
+                  if (!common.IsIOS) {
+                    Animated.timing(
+                      this.state.keyboardHeight,
+                      { toValue: 0 },
+                    ).start()
+                  }
+                }}
               />
               <NextTouchableOpacity
                 style={styles.plusBtn}
@@ -289,6 +307,22 @@ class DealDrawer extends Component {
                       type: 'quantity',
                       val: e,
                     })
+                  }
+                }}
+                onFocus={() => {
+                  if (!common.IsIOS) {
+                    Animated.timing(
+                      this.state.keyboardHeight,
+                      { toValue: 240 },
+                    ).start()
+                  }
+                }}
+                onEndEditing={() => {
+                  if (!common.IsIOS) {
+                    Animated.timing(
+                      this.state.keyboardHeight,
+                      { toValue: 0 },
+                    ).start()
                   }
                 }}
               />
@@ -351,6 +385,11 @@ class DealDrawer extends Component {
               }
             }}
             disabled={caculatedData.delegateCreateVisible}
+          />
+          <Animated.View
+            style={{
+              height: this.state.keyboardHeight,
+            }}
           />
         </KeyboardAvoidingView>
       </View>
