@@ -166,6 +166,17 @@ class Authentication extends Component {
       Toast.fail('请上传手持身份证照片')
       return
     }
+
+    const hash = {}
+    hash[idCardImages.first.hash] = true
+    hash[idCardImages.second.hash] = true
+    hash[idCardImages.third.hash] = true
+    const hashArr = Object.keys(hash)
+    if (hashArr.length !== 3) {
+      Toast.fail('请勿上传相同照片')
+      return
+    }
+
     dispatch(actions.imgHash())
     this.imgHash = true
     PutObject.mulitPutObject({
@@ -205,7 +216,7 @@ class Authentication extends Component {
     })
   }
 
-  imagePicker(err, uri, tag) {
+  imagePicker(err, uri, hash, tag) {
     if (err) {
       Toast.fail(err)
       return
@@ -213,13 +224,13 @@ class Authentication extends Component {
     const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
     switch (tag) {
       case 'first':
-        idCardImages.first = { uri, hash: '' }
+        idCardImages.first = { uri, hash }
         break
       case 'second':
-        idCardImages.second = { uri, hash: '' }
+        idCardImages.second = { uri, hash }
         break
       case 'third':
-        idCardImages.third = { uri, hash: '' }
+        idCardImages.third = { uri, hash }
         break
       default:
         break
@@ -284,19 +295,19 @@ class Authentication extends Component {
           <SelectImage
             title={'请上传身份证正面照片'}
             onPress={() => Keyboard.dismiss()}
-            imagePickerBlock={(err, response) => this.imagePicker(err, response, 'first')}
+            imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'first')}
             avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
           />
           <SelectImage
             title={'请上传身份证反面照片'}
             onPress={() => Keyboard.dismiss()}
-            imagePickerBlock={(err, response) => this.imagePicker(err, response, 'second')}
+            imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'second')}
             avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
           />
           <SelectImage
             title={'请上传手持身份证照片'}
             onPress={() => Keyboard.dismiss()}
-            imagePickerBlock={(err, response) => this.imagePicker(err, response, 'third')}
+            imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'third')}
             avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
           />
 
