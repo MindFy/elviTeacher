@@ -751,7 +751,10 @@ class WithDraw extends Component {
                 marginRight: 5,
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.jumpToScanPage()}
+              onPress={() => {
+                Keyboard.dismiss()
+                this.jumpToScanPage()
+              }}
             >
               <Image
                 style={{
