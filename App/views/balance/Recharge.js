@@ -161,7 +161,7 @@ class Recharge extends Component {
   clipPress = (rechargeAddress) => {
     if (rechargeAddress) {
       Clipboard.setString(rechargeAddress)
-      Toast.fail('已复制到剪贴板')
+      Toast.success('已复制到剪贴板')
     }
   }
 
