@@ -250,7 +250,8 @@ class Balance extends Component {
     if (valuation && valuation.rates) {
       for (let i = 0; i < balanceList.length; i++) {
         const element = balanceList[i]
-        const amount = new BigNumber(element.amount).plus(new BigNumber(element.freezed)).plus(new BigNumber(element.platformFreeze))
+        const amount = new BigNumber(element.amount).plus(new BigNumber(element.freezed))
+          .plus(new BigNumber(element.platformFreeze))
         const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
         const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
         amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
