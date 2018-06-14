@@ -26,6 +26,7 @@ import OpenOrders from './component/OpenOrders'
 import { caculateExchangeFormData, slideAction } from '../../utils/caculateExchangeFormData'
 import findAssetList from '../../schemas/asset'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   container: {
@@ -70,12 +71,15 @@ class Deal extends Component {
   constructor(props) {
     super(props)
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+    cache.setObject('currentComponentVisible', 'Deal')
   }
 
   componentDidMount() {
     this.loadNecessaryData()
     this.timer = setInterval(() => {
-      this.loadNecessaryData()
+      if (cache.getObject('currentComponentVisible') === 'Deal') {
+        this.loadNecessaryData()
+      }
     }, common.refreshIntervalTime)
   }
 
@@ -108,6 +112,7 @@ class Deal extends Component {
       clearInterval(this.timer)
       this.timer = undefined
     }
+    cache.setObject('currentComponentVisible', 'Home')
   }
 
   errors = {
