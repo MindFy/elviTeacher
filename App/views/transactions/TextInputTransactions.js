@@ -23,6 +23,7 @@ export default class TextInputTranscations extends Component {
     } = this.props
     return (
       <TextInput
+        {...this.props}
         style={[styles.textInput, textInputStyle]}
         keyboardType={keyboardType}
         placeholder={placeholder}
