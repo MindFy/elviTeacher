@@ -229,6 +229,7 @@ class DealDrawer extends Component {
               </NextTouchableOpacity>
               <TextInputTransactions
                 placeholder={`价格（${caculatedData.currencyName}）`}
+                keyboardType="numeric"
                 value={price}
                 onChange={(e) => {
                   if (changeAction) {
@@ -280,6 +281,7 @@ class DealDrawer extends Component {
               </NextTouchableOpacity>
               <TextInputTransactions
                 placeholder={`数量（${caculatedData.goodsName}）`}
+                keyboardType="numeric"
                 value={quantity}
                 onChange={(e) => {
                   if (changeAction) {
