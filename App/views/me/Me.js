@@ -34,6 +34,9 @@ class Me extends Component {
     super(props)
 
     this.showLogoutResponse = false
+    props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'Me')
+    })
   }
 
   /* 跳转到登录页面 */

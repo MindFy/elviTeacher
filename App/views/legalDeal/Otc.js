@@ -25,6 +25,7 @@ import {
 } from '../../actions/balance'
 import findAssetList from '../../schemas/asset'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   container: {
@@ -86,6 +87,13 @@ class Otc extends Component {
         </NextTouchableOpacity>
       ),
     }
+  }
+
+  constructor(props) {
+    super(props)
+    props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'Home')
+    })
   }
 
   componentWillMount() {

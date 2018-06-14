@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  Image,
   StyleSheet,
 } from 'react-native'
 import Swiper from 'react-native-swiper'
+import FastImage from 'react-native-fast-image'
 import { common } from '../../constants/common'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -63,9 +63,9 @@ export default class HomeSwiper extends Component {
             element,
           })}
         >
-          <Image
+          <FastImage
             style={styles.bannersImage}
-            resizeMode="stretch"
+            // resizeMode="stretch"
             source={{ uri: `${imgHashApi}${element.imghash}` }}
           />
         </NextTouchableOpacity>
