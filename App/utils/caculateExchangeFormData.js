@@ -104,7 +104,8 @@ function textInputUpdate(
       if (splitArray.length > 1 && splitArray[1].length > q) {
         nextQuantity = new BigNumber(quantity).toFixed(q, 1)
       }
-      const temp = textInputLimit(price, nextQuantity, amount, p, q, a, tag, availble, createOrderIndex)
+      const temp = textInputLimit(
+        price, nextQuantity, amount, p, q, a, tag, availble, createOrderIndex)
       if (temp) {
         returnVal = {
           price: temp.p,

@@ -188,6 +188,10 @@ class WithDraw extends Component {
 
     this.codeTitles = ['短信验证码', '谷歌验证码']
     this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC']
+
+    this.state = {
+      topOffset: 0,
+    }
   }
 
   componentDidMount() {
@@ -724,6 +728,22 @@ class WithDraw extends Component {
           ...formState,
           withdrawAddress: withdrawAddress.trim(),
         }))}
+        onFocus={() => {
+          if (!common.IsIOS) {
+            this.setState({
+              topOffset: -100,
+            })
+          }
+        }}
+        textInputProps={{
+          onEndEditing: () => {
+            if (!common.IsIOS) {
+              this.setState({
+                topOffset: 0,
+              })
+            }
+          },
+        }}
         extra={() => (
           <View style={styles.extraBtnCover}>
             <NextTouchableOpacity
@@ -731,7 +751,10 @@ class WithDraw extends Component {
                 marginRight: 5,
               }}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.jumpToScanPage()}
+              onPress={() => {
+                Keyboard.dismiss()
+                this.jumpToScanPage()
+              }}
             >
               <Image
                 style={{
@@ -851,6 +874,10 @@ class WithDraw extends Component {
     const coinSelector = this.renderCoinSelector()
     const coinList = this.renderCoinList()
     const form = this.renderForm()
+    let topOffset = 0
+    if (!common.IsIOS) {
+      topOffset = this.state.topOffset
+    }
     return (
 
       <ScrollView
@@ -858,6 +885,9 @@ class WithDraw extends Component {
         keyboardShouldPersistTaps="handled"
       >
         <KeyboardAvoidingView
+          style={{
+            top: topOffset,
+          }}
           behavior="position"
         >
           {coinSelector}

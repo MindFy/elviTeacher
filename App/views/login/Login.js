@@ -4,10 +4,10 @@ import {
   Text,
   View,
   Image,
-  ScrollView,
-  KeyboardAvoidingView,
   Keyboard,
   StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
 import { common } from '../../constants/common'
@@ -96,6 +96,7 @@ class Login extends PureComponent {
     super()
     this.state = {
       showTip: false,
+      topOffset: 0,
     }
   }
 
@@ -223,7 +224,13 @@ class Login extends PureComponent {
     const { formState, dispatch } = this.props
 
     return (
-      <View style={styles.input}>
+      <View
+        style={styles.input}
+        onLayout={(event) => {
+          const { height, y } = event.nativeEvent.layout
+          this.inputViewBottom = common.sh - height - y
+        }}
+      >
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
@@ -256,7 +263,23 @@ class Login extends PureComponent {
           maxLength={common.textInputMaxLenPwd}
           secureTextEntry
           onChange={e => this.onChange(e, 'password')}
-          onFocus={() => { dispatch(actions.clearError()) }}
+          onFocus={() => {
+            if (!common.IsIOS) {
+              this.setState({
+                topOffset: 216 - this.inputViewBottom - common.getH(30),
+              })
+            }
+            dispatch(actions.clearError())
+          }}
+          textInputProps={{
+            onEndEditing: () => {
+              if (!common.IsIOS) {
+                this.setState({
+                  topOffset: 0,
+                })
+              }
+            },
+          }}
         />
       </View>
     )
@@ -282,6 +305,10 @@ class Login extends PureComponent {
 
   render() {
     const { loading } = this.props
+    let topOffset = 0
+    if (!common.IsIOS) {
+      topOffset = this.state.topOffset
+    }
 
     return (
       <ScrollView
@@ -290,6 +317,9 @@ class Login extends PureComponent {
         automaticallyAdjustContentInsets={false}
       >
         <KeyboardAvoidingView
+          style={{
+            top: topOffset,
+          }}
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
         >
