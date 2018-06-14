@@ -82,6 +82,7 @@ class Register extends Component {
     this.showGetVerificateCodeResponse = false
     this.state = {
       showTip: false,
+      topOffset: 0,
     }
   }
 
@@ -418,6 +419,22 @@ class Register extends Component {
         maxLength={common.textInputMaxLenPwd}
         secureTextEntry
         onChange={e => this.onChange(e, 'passwordAgain')}
+        onFocus={() => {
+          if (!common.IsIOS) {
+            this.setState({
+              topOffset: 216 - this.inputViewBottom - common.getH(110),
+            })
+          }
+        }}
+        textInputProps={{
+          onEndEditing: () => {
+            if (!common.IsIOS) {
+              this.setState({
+                topOffset: 0,
+              })
+            }
+          },
+        }}
       />
     )
   }
@@ -435,6 +452,22 @@ class Register extends Component {
         value={recommendNo}
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'recommendNo')}
+        onFocus={() => {
+          if (!common.IsIOS) {
+            this.setState({
+              topOffset: this.inputViewBottom - common.getH(30) - 216,
+            })
+          }
+        }}
+        textInputProps={{
+          onEndEditing: () => {
+            if (!common.IsIOS) {
+              this.setState({
+                topOffset: 0,
+              })
+            }
+          },
+        }}
       />
     )
   }
@@ -477,6 +510,10 @@ class Register extends Component {
       canRegister = true
     }
     const registerBtnBackgroundColor = canRegister ? {} : { backgroundColor: common.grayColor }
+    let topOffset = 0
+    if (!common.IsIOS) {
+      topOffset = this.state.topOffset
+    }
     return (
       <ScrollView
         style={styles.cover}
@@ -484,10 +521,19 @@ class Register extends Component {
         keyboardShouldPersistTaps="handled"
       >
         <KeyboardAvoidingView
+          style={{
+            top: topOffset,
+          }}
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior={behavior}
         >
-          <View style={styles.contentContainer}>
+          <View
+            style={styles.contentContainer}
+            onLayout={(event) => {
+              const { height, y } = event.nativeEvent.layout
+              this.inputViewBottom = common.sh - height - y
+            }}
+          >
             {this.renderAccount()}
 
             {this.renderAccountTip()}

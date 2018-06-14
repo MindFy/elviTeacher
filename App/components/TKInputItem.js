@@ -150,8 +150,14 @@ class TKInputItem extends Component {
   }
 
   render() {
+    const {
+      onLayout,
+    } = this.props
     return (
-      <View style={[styles.container, this.props.viewStyle]}>
+      <View
+        style={[styles.container, this.props.viewStyle]}
+        onLayout={onLayout}
+      >
         {this.renderTitle()}
         {this.renderInput()}
         {this.renderExtra()}
