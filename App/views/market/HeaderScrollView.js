@@ -21,8 +21,12 @@ const styles = StyleSheet.create({
 })
 
 class HeaderScrollView extends Component {
-  state = {
-    indexSelected: 0,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      indexSelected: props.indexSelected || 0,
+    }
   }
 
   renderHeaderItem = (item, index, selected, onClickItem) => {

@@ -115,9 +115,11 @@ class Market extends Component {
     const { currPair, pairs } = this.props
 
     const items = ['CNYT', 'BTC', 'TK']
+    let index = 0
     let marketData = []
     if (pairs && pairs[currPair]) {
       marketData = pairs[currPair].sub
+      index = items.indexOf(currPair)
     }
     return (
       <View
@@ -127,6 +129,7 @@ class Market extends Component {
         }}
       >
         <HeaderScrollView
+          initialIndexSelected={index}
           titles={items}
           onClickItem={this.onClickItem}
         />
