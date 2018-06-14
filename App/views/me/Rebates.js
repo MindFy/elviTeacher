@@ -17,6 +17,7 @@ import {
   ActionSheet,
 } from 'teaset'
 import BigNumber from 'bignumber.js'
+import FS from 'rn-fs-d3j'
 import { common } from '../../constants/common'
 import * as actions from '../../actions/rebates'
 import * as api from '../../services/api'
@@ -207,11 +208,23 @@ class Rebates extends Component {
   }
 
   _saveImage = (uri) => {
-    CameraRoll.saveToCameraRoll(uri).then((() => {
-      Toast.success('保存成功')
-    })).catch(() => {
-      Toast.fail('保存失败')
-    })
+    if (common.IsIOS) {
+      CameraRoll.saveToCameraRoll(uri).then(() => {
+        Toast.success('保存成功')
+      }).catch(() => {
+        Toast.fail('保存失败')
+      })
+    } else {
+      FS.downloadOlineImage({
+        uri,
+      }, (r) => {
+        if (r.result) {
+          Toast.success('保存成功')
+        } else {
+          Toast.fail('保存失败')
+        }
+      })
+    }
   }
 
   _tapLinkQRImage = (uri) => {
