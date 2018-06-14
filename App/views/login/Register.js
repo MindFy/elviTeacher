@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginHorizontal: common.margin38,
-    marginTop: common.getH(90),
+    marginTop: common.getH(90) - common.navHeight,
   },
   mobileTip: {
     position: 'absolute',
