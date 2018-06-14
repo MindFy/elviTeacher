@@ -25,7 +25,7 @@ class HeaderScrollView extends Component {
     super(props)
 
     this.state = {
-      indexSelected: props.indexSelected || 0,
+      indexSelected: props.initialIndexSelected || 0,
     }
   }
 
