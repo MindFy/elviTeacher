@@ -49,9 +49,9 @@ class Register extends Component {
   static navigationOptions(props) {
     return {
       headerStyle: {
+        backgroundColor: common.bgColor,
         borderBottomWidth: 0,
       },
-      headerTransparent: true,
       headerTintColor: 'white',
       headerLeft: (
         <NextTouchableOpacity

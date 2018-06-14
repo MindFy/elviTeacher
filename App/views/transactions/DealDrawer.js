@@ -3,8 +3,8 @@ import {
   Text,
   View,
   Image,
-  Animated,
   StyleSheet,
+  Keyboard,
   KeyboardAvoidingView,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
@@ -100,7 +100,7 @@ class DealDrawer extends Component {
     this.state = {
       visible: false,
       index: 0,
-      keyboardHeight: new Animated.Value(0),
+      keyboardHeight: 0,
     }
   }
 
@@ -189,17 +189,29 @@ class DealDrawer extends Component {
     if (this.state.visible === false) {
       return null
     }
+    let keyboardHeight = 0
+    if (!common.IsIOS) {
+      keyboardHeight = this.state.keyboardHeight
+    }
     return (
       <View style={styles.cover}>
         <NextTouchableOpacity
           activeOpacity={1}
           style={styles.press}
-          onPress={() => this.hide()}
+          onPress={() => {
+            Keyboard.dismiss()
+            this.setState({ keyboardHeight: 0 })
+            this.hide()
+          }}
         />
         <KeyboardAvoidingView
           style={{ backgroundColor: common.blackColor }}
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
+          onPress={() => {
+            Keyboard.dismiss()
+            this.setState({ keyboardHeight: 0 })
+          }}
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
             <Text style={styles.amountVisibleTitle}>可用</Text>
@@ -232,7 +244,7 @@ class DealDrawer extends Component {
                 placeholder={`价格（${caculatedData.currencyName}）`}
                 keyboardType="numeric"
                 value={price}
-                onChange={(e) => {
+                onChangeText={(e) => {
                   if (changeAction) {
                     changeAction({
                       cmd: 'input',
@@ -243,18 +255,16 @@ class DealDrawer extends Component {
                 }}
                 onFocus={() => {
                   if (!common.IsIOS) {
-                    Animated.timing(
-                      this.state.keyboardHeight,
-                      { toValue: 240 },
-                    ).start()
+                    this.setState({
+                      keyboardHeight: 240,
+                    })
                   }
                 }}
                 onEndEditing={() => {
                   if (!common.IsIOS) {
-                    Animated.timing(
-                      this.state.keyboardHeight,
-                      { toValue: 0 },
-                    ).start()
+                    this.setState({
+                      keyboardHeight: 0,
+                    })
                   }
                 }}
               />
@@ -300,7 +310,7 @@ class DealDrawer extends Component {
                 placeholder={`数量（${caculatedData.goodsName}）`}
                 keyboardType="numeric"
                 value={quantity}
-                onChange={(e) => {
+                onChangeText={(e) => {
                   if (changeAction) {
                     changeAction({
                       cmd: 'input',
@@ -311,18 +321,16 @@ class DealDrawer extends Component {
                 }}
                 onFocus={() => {
                   if (!common.IsIOS) {
-                    Animated.timing(
-                      this.state.keyboardHeight,
-                      { toValue: 240 },
-                    ).start()
+                    this.setState({
+                      keyboardHeight: 240,
+                    })
                   }
                 }}
                 onEndEditing={() => {
                   if (!common.IsIOS) {
-                    Animated.timing(
-                      this.state.keyboardHeight,
-                      { toValue: 0 },
-                    ).start()
+                    this.setState({
+                      keyboardHeight: 0,
+                    })
                   }
                 }}
               />
@@ -386,11 +394,7 @@ class DealDrawer extends Component {
             }}
             disabled={caculatedData.delegateCreateVisible}
           />
-          <Animated.View
-            style={{
-              height: this.state.keyboardHeight,
-            }}
-          />
+          <View style={{ height: keyboardHeight }} />
         </KeyboardAvoidingView>
       </View>
     )
