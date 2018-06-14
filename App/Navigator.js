@@ -11,7 +11,6 @@ import {
 } from './constants/common'
 
 import Home from './views/home/Home'
-import Buttons from './views/home/Buttons'
 import Banner from './views/home/Banner'
 import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
@@ -185,7 +184,6 @@ const TabBarStack = StackNavigator(
     Rebates: {
       screen: Rebates,
     },
-    Buttons,
   }, {
     headerMode: 'screen',
     transitionConfig: TransitionConfiguration,

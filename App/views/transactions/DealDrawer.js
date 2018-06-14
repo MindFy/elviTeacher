@@ -4,7 +4,6 @@ import {
   View,
   Image,
   StyleSheet,
-  Modal,
   KeyboardAvoidingView,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
