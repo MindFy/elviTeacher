@@ -175,9 +175,9 @@ class WithDraw extends Component {
     this.withdrawErrorDic = {
       4000414: '地址已存在',
       4000415: '仅支持BTC、ETH添加地址',
-      4000416: '提币地址格式错误',
+      4000416: '提现地址有误',
       4000156: '授权验证失败',
-      4000606: '提币地址格式错误',
+      4000606: '提现地址有误',
       4000608: '修改密码后，24小时内禁止提币操作',
     }
     this.verificationCodeErrorDic = {
