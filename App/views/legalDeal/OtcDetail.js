@@ -395,7 +395,7 @@ class OtcDetail extends Component {
     if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
       const { googleCodeResponse, dispatch, formState } = nextProps
       if (googleCodeResponse.success) {
-        dispatch(dispatch(requestConfirmPay({ id: this.id, googleCode: formState.googleCode })))
+        dispatch(requestConfirmPay({ id: this.id, googleCode: formState.googleCode }))
       } else {
         const errCode = googleCodeResponse.error.code
         if (errCode === 4000171) {
