@@ -200,7 +200,7 @@ class UpdateBank extends Component {
     const { dispatch, formState } = this.props
     dispatch(actions.updateAuthCodeType(e.title))
 
-    if (e.title === '短信验证码') {
+    if (e.title === '谷歌验证码') {
       dispatch(actions.updateForm({
         ...formState,
         code: '',
