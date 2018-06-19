@@ -39,6 +39,7 @@
     "rn-image-picker-d3j": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-image-picker-d3j.git#0.2.1",
     "rn-put-object": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-put-object.git#0.2.6",
     "teaset": "0.5.6",
+    "rn-hotupdate-d3j": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-hotupdate-d3j.git#0.2.0",
     "wallet-address-validator": "^0.1.6"
   },
   "devDependencies": {
@@ -58,5 +59,6 @@
   },
   "jest": {
     "preset": "react-native"
-  }
+  },
+  "jsVersion": "1.0.0"
 }
