@@ -616,6 +616,7 @@ class WithDraw extends Component {
       <NextTouchableOpacity
         activeOpacity={common.activeOpacity}
         onPress={() => this.showForm()}
+        delay={100}
       >
         <View
           style={styles.coinSelector}
@@ -655,6 +656,7 @@ class WithDraw extends Component {
         onPress={() => {
           this.tapCoinListCell(ele)
         }}
+        delay={100}
       >
         <Text
           style={styles.coinText}

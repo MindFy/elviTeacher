@@ -133,7 +133,7 @@ export function* requestGetCode() {
 }
 
 export function* requestConfirmPay() {
-  yield takeEvery('otcDetail/request_confirm_pay', requestConfirmPayWorker)
+  yield takeLatest('otcDetail/request_confirm_pay', requestConfirmPayWorker)
 }
 
 export function* requestHavedPay() {
