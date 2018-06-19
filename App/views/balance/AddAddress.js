@@ -311,7 +311,7 @@ class AddAddress extends Component {
     }))
     const overlayView = (
       <Overlay.View
-        style={{ top: '25%' }}
+        style={{ top: '40%' }}
         modal={false}
         overlayOpacity={0}
       >

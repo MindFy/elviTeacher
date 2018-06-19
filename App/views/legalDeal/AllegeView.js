@@ -14,77 +14,80 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 const styles = StyleSheet.create({
   contant: {
     alignSelf: 'center',
-    marginTop: -100,
+    marginTop: -common.getH(140),
     width: '80%',
     backgroundColor: 'white',
+    borderRadius: common.radius6,
   },
   title: {
-    marginTop: common.margin20,
+    marginTop: common.getH(10),
     textAlign: 'center',
     color: common.blackColor,
     fontSize: common.font12,
   },
   underline: {
-    marginTop: common.margin10,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
-    backgroundColor: 'rgb(216,216,216)',
-    height: 1,
+    marginTop: common.getH(10),
+    marginLeft: common.getH(10),
+    marginRight: common.getH(10),
+    backgroundColor: common.lineColor,
+    height: common.getH(1),
   },
   inputView: {
-    marginTop: common.margin10,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
+    marginTop: common.getH(10),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
     flexDirection: 'row',
   },
   inputTitle: {
-    marginTop: common.margin5,
     color: common.blackColor,
     fontSize: common.font12,
   },
   input: {
     padding: 0,
-    paddingLeft: common.margin5,
-    paddingBottom: common.margin5,
-    paddingRight: common.margin5,
-    paddingTop: common.margin5,
-    height: common.h60,
+    marginLeft: common.getH(10),
+    paddingLeft: common.getH(5),
+    paddingBottom: common.getH(5),
+    paddingRight: common.getH(5),
+    paddingTop: common.getH(5),
+    height: common.getH(70),
     flex: 1,
-    borderColor: 'rgb(216,216,216)',
-    borderWidth: 1,
+    borderColor: common.lineColor,
+    borderWidth: common.getH(1),
     color: common.placeholderColor,
     fontSize: common.font10,
   },
   tip: {
-    marginTop: common.margin10,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
-    color: 'black',
+    marginTop: common.getH(10),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
+    color: common.blackColor,
     fontSize: common.font10,
+    lineHeight: common.getH(13),
+    letterSpacing: common.getH(0.5),
   },
   cancelBtnView: {
-    marginTop: common.margin10,
-    marginBottom: common.margin10,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
+    marginTop: common.getH(10),
+    marginBottom: common.getH(10),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
   cancelBtn: {
-    height: common.h30,
-    width: common.h70,
-    borderColor: 'rgb(216,216,216)',
-    borderWidth: 1,
+    height: common.getH(30),
+    width: common.getH(70),
+    borderColor: common.lineColor,
+    borderWidth: common.getH(1),
     justifyContent: 'center',
   },
   confirmBtn: {
-    height: common.h30,
-    width: common.h70,
+    height: common.getH(30),
+    width: common.getH(70),
     backgroundColor: common.btnTextColor,
     justifyContent: 'center',
   },
   cancelTitle: {
-    color: 'black',
+    color: common.blackColor,
     fontSize: common.font12,
     alignSelf: 'center',
   },
@@ -121,14 +124,16 @@ export default class AllegeView extends PureComponent {
               style={styles.input}
               multiline
               placeholder={placeholder}
-              placeholderTextColor={'rgb(216,216,216)'}
+              placeholderTextColor={common.lineColor}
               value={inputValue}
               onChangeText={onChangeText}
               underlineColorAndroid="transparent"
             />
           </View>
           <Text style={styles.tip}>
-            投诉后，请耐心等待客服联络。若仍有其他信息需要反馈，请发送邮件至客服邮箱:service@tok.com，客服将尽快为您处理。
+            <Text>投诉后，请耐心等待客服联络。若仍有其他信息需要反馈，请发送邮件至客服邮箱:</Text>
+            <Text style={{ letterSpacing: common.getH(0) }}>service@tok.com</Text>
+            <Text>，客服将尽快为您处理。</Text>
           </Text>
           <View style={styles.underline} />
           <View style={styles.cancelBtnView}>

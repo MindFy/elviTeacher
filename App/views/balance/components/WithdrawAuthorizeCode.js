@@ -14,85 +14,84 @@ import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    marginLeft: common.margin48,
-    marginRight: common.margin48,
-    marginTop: -50,
+    marginLeft: common.getH(48),
+    marginRight: common.getH(48),
+    marginTop: -common.getH(60),
+    borderRadius: common.radius6,
   },
-  phoneContainer: {
-    marginTop: common.margin20,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
-    flexDirection: 'row',
-  },
-  phoneTip: {
-    color: common.blackColor,
-    fontSize: common.font12,
-    width: '40%',
-  },
-  phone: {
-    color: common.blackColor,
-    fontSize: common.font12,
-    width: '50%',
-  },
-  inputContainer: {
-    marginTop: common.margin10,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
+  mobileContainer: {
+    marginTop: common.getH(10),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  codeTip: {
+  mobileTip: {
     color: common.blackColor,
     fontSize: common.font12,
     alignSelf: 'center',
-    width: '40%',
   },
-  inputInnerContainer: {
-    borderColor: common.placeholderColor,
-    borderWidth: 1,
-    height: common.h30,
+  mobile: {
+    color: common.blackColor,
+    fontSize: common.font14,
+    width: '62%',
+  },
+  inputContainer: {
+    marginTop: common.getH(12),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
+    marginBottom: common.getH(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '60%',
+  },
+  inputInnerContainer: {
+    borderColor: common.lineColor,
+    borderWidth: common.getH(1),
+    height: common.getH(30),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '62%',
   },
   textInput: {
     padding: 0,
-    marginLeft: common.margin5,
+    marginLeft: common.getH(5),
     color: common.blackColor,
-    fontSize: common.font12,
+    fontSize: common.font14,
     width: '50%',
   },
   codeContainer: {
-    marginRight: common.margin5,
+    marginRight: common.getH(5),
     alignSelf: 'center',
   },
+  fetchCodeTitle: {
+    fontSize: common.font10,
+  },
   btnsContainer: {
-    marginTop: common.margin10,
-    marginLeft: common.margin20,
-    marginBottom: common.margin15,
-    marginRight: common.margin20,
+    marginTop: common.getH(10),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
+    marginBottom: common.getH(10),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   googleCodeContainer: {
-    marginTop: common.margin10,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
+    marginTop: common.getH(25),
+    marginBottom: common.getH(24),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignContent: 'center',
-    height: 65,
   },
   googleCode: {
     color: common.blackColor,
     fontSize: common.font12,
   },
   googleInputContainer: {
-    borderColor: common.placeholderColor,
-    borderWidth: 1,
-    width: '60%',
+    borderColor: common.lineColor,
+    borderWidth: common.getH(1),
+    width: '62%',
+    height: common.getH(30),
     justifyContent: 'center',
-    marginVertical: 20,
   },
   googleInput: {
     marginLeft: common.margin5,
@@ -101,21 +100,16 @@ const styles = StyleSheet.create({
     width: '50%',
   },
   line: {
-    marginTop: common.margin5,
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
-    height: 0.3,
-    backgroundColor: common.bgColor,
-  },
-  titles: {
-    marginLeft: common.margin20,
-    marginRight: common.margin20,
+    marginLeft: common.getH(10),
+    marginRight: common.getH(10),
+    height: common.getH(1),
+    backgroundColor: common.lineColor,
   },
   cancelBtn: {
-    width: common.h70,
-    height: common.h30,
-    borderColor: common.placeholderColor,
-    borderWidth: 1,
+    width: common.getH(70),
+    height: common.getH(30),
+    borderColor: common.lineColor,
+    borderWidth: common.getH(1),
     justifyContent: 'center',
   },
   cancelBtnText: {
@@ -131,17 +125,15 @@ export default class TKViewCheckAuthorize extends Component {
   renderTitles = () => {
     const { titles, segmentValueChanged } = this.props
     return (
-      <View style={styles.titlesView}>
-        <WithdrawAuthSelecionBar
-          titles={titles}
-          onPress={(e) => {
-            if (segmentValueChanged) {
-              segmentValueChanged(e)
-            }
-          }}
-          renderItem={this.renderContent}
-        />
-      </View>
+      <WithdrawAuthSelecionBar
+        titles={titles}
+        onPress={(e) => {
+          if (segmentValueChanged) {
+            segmentValueChanged(e)
+          }
+        }}
+        renderItem={this.renderContent}
+      />
     )
   }
 
@@ -150,12 +142,12 @@ export default class TKViewCheckAuthorize extends Component {
     const index = titles.indexOf('短信验证码')
     return (
       <View>
-        <View style={styles.phoneContainer}>
-          <Text style={styles.phoneTip}>手机号</Text>
-          <Text style={styles.phone}>{mobile}</Text>
+        <View style={styles.mobileContainer}>
+          <Text style={styles.mobileTip}>手机号</Text>
+          <Text style={styles.mobile}>{mobile}</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.codeTip}>短信验证码</Text>
+          <Text style={styles.mobileTip}>短信验证码</Text>
           <View style={styles.inputInnerContainer}>
             <TextInput
               style={styles.textInput}
@@ -168,6 +160,7 @@ export default class TKViewCheckAuthorize extends Component {
             />
             <View style={styles.codeContainer}>
               <TKCheckCodeBtn
+                titleStyle={styles.fetchCodeTitle}
                 onPress={() => {
                   if (smsCodePress) {
                     smsCodePress()
@@ -185,21 +178,18 @@ export default class TKViewCheckAuthorize extends Component {
     const { onChangeText, titles } = this.props
     const index = titles.indexOf('谷歌验证码')
     return (
-      <View>
-        <View style={styles.googleCodeContainer}>
-          <Text style={styles.codeTip}>谷歌验证码</Text>
-          <View style={styles.googleInputContainer}>
-            <TextInput
-              style={styles.textInput}
-              maxLength={6}
-              onChangeText={text => onChangeText({
-                title: '',
-                index,
-              }, text)}
-              underlineColorAndroid="transparent"
-            />
-            <View style={styles.codeContainer} />
-          </View>
+      <View style={styles.googleCodeContainer}>
+        <Text style={styles.mobileTip}>谷歌验证码</Text>
+        <View style={styles.googleInputContainer}>
+          <TextInput
+            style={styles.textInput}
+            maxLength={6}
+            onChangeText={text => onChangeText({
+              title: '',
+              index,
+            }, text)}
+            underlineColorAndroid="transparent"
+          />
         </View>
       </View>
     )
@@ -214,9 +204,7 @@ export default class TKViewCheckAuthorize extends Component {
           activeOpacity={common.activeOpacity}
           onPress={cancelPress}
         >
-          <Text
-            style={styles.cancelBtnText}
-          >取消</Text>
+          <Text style={styles.cancelBtnText}>取消</Text>
         </NextTouchableOpacity>
         <NextTouchableOpacity
           style={[styles.cancelBtn, {
@@ -246,9 +234,9 @@ export default class TKViewCheckAuthorize extends Component {
   render() {
     return (
       <NextTouchableOpacity
+        style={styles.container}
         activeOpacity={1}
         onPress={() => Keyboard.dismiss()}
-        style={styles.container}
       >
         {this.renderTitles()}
         <View style={styles.line} />

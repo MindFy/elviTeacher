@@ -9,9 +9,24 @@ import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: common.margin10,
-    height: common.h36,
     flexDirection: 'row',
+    justifyContent: 'center',
+    marginLeft: common.getH(10),
+    marginRight: common.getH(10),
+    borderBottomColor: common.lineColor,
+    borderBottomWidth: common.getH(1),
+  },
+  titlesMiddleLine: {
+    position: 'absolute',
+    width: common.getH(1),
+    top: common.getH(4),
+    bottom: common.getH(4),
+    backgroundColor: common.lineColor,
+    alignSelf: 'center',
+  },
+  titleView: {
+    marginTop: common.getH(10),
+    marginBottom: common.getH(10),
     justifyContent: 'center',
   },
 })
@@ -36,27 +51,21 @@ class BalanceAuthSelectionBar extends Component {
     })
   }
 
-  item(index, title, width, selected) {
+  item(index, title, selected) {
     const { barItemStyle } = this.props
-    const borderRightWidth = (index === 0) ? 0.2 : 0
     return (
       <NextTouchableOpacity
         key={index}
-        style={[{
-          marginRight: 1,
-          flex: 1,
-          backgroundColor: '#fff',
-          justifyContent: 'center',
-          borderRightWidth,
-          borderBottomWidth: 0.2,
-        }, barItemStyle]}
+        style={[styles.titleView, barItemStyle]}
         activeOpacity={common.activeOpacity}
         onPress={() => this.itemOnPress(index)}
       >
         <Text
           style={{
-            fontSize: common.font14,
-            color: selected ? common.btnTextColor : common.textColor,
+            color: selected ? common.btnTextColor : common.blackColor,
+            marginRight: index === 0 ? common.getH(28) : 0,
+            marginLeft: index === 1 ? common.getH(28) : 0,
+            fontSize: common.font12,
             alignSelf: 'center',
           }}
         >{title}</Text>
@@ -66,12 +75,12 @@ class BalanceAuthSelectionBar extends Component {
 
   renderTitles = () => {
     const { titles } = this.props
-    const width = (common.sw - 2 * common.margin15) / titles.length
     return (
       <View style={styles.container}>
         {titles.map((title, index) => (
-          this.item(index, title, width, this.state.selectedIdx === index)
+          this.item(index, title, this.state.selectedIdx === index)
         ))}
+        <View style={styles.titlesMiddleLine} />
       </View>
     )
   }

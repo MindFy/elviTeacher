@@ -75,6 +75,7 @@ class Deal extends Component {
   }
 
   componentDidMount() {
+    this.props.dispatch(exchange.updateSegmentIndex(0))
     this.loadNecessaryData()
     this.timer = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Deal') {
