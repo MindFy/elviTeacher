@@ -47,6 +47,7 @@ class TKInputItemCheckCode extends Component {
         editable={this.props.editable}
         title={this.props.title}
         extra={this.renderCheckCodeBtn}
+        onFocus={this.props.onFocus}
       />
     )
   }
