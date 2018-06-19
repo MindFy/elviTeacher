@@ -8,6 +8,7 @@ import {
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import packageJson from '../../../package.json'
 
 class Settings extends Component {
   static navigationOptions(props) {
@@ -73,7 +74,7 @@ class Settings extends Component {
           leftImageHide
           rightImageHide
           onPress={() => { }}
-          title="V 1.0.0"
+          title={`V ${packageJson.jsVersion}`}
         />
 
       </ScrollView>

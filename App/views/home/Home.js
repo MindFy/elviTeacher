@@ -7,7 +7,9 @@ import {
   ScrollView,
   StyleSheet,
   RefreshControl,
+  Alert,
 } from 'react-native'
+import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
 import {
   common,
@@ -19,6 +21,7 @@ import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
+import packageJson from '../../../package.json'
 
 global.Buffer = require('buffer').Buffer
 
@@ -51,6 +54,8 @@ class Home extends Component {
       }
     }, common.refreshIntervalTime)
 
+    this.checkUpdate()
+
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
   }
@@ -81,10 +86,41 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
-      setTimeout(() => {
-        this.refreshData()
-      }, 0)
+      this.refreshData()
     }
+  }
+
+  checkUpdate() {
+    const currentVersion = packageJson.jsVersion
+    HotUpdate.setValueToUserStand(currentVersion, 'build', () => { })
+    const url = `http://192.168.1.165:8989/update/${currentVersion}/${common.IsIOS ? 'ios' : 'android'}`
+    fetch(url)
+      .then(r => r.json())
+      .then((r) => {
+        if (r.version.toString() !== currentVersion.toString()) {
+          const options = {
+            zipPath: r.url,
+            isAbort: false,
+          }
+          HotUpdate.downLoadBundleZipWithOption(options, () => {
+            Alert.alert(
+              `${r.version}:${currentVersion}`,
+              '',
+              [
+                {
+                  text: '立即更新',
+                  onPress: () => HotUpdate.killApp(),
+                },
+                {
+                  text: '取消',
+                  onPress: () => {},
+                },
+              ],
+            )
+          })
+        }
+      })
+      .catch((e) => { })
   }
 
   refreshData() {
