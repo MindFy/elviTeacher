@@ -83,8 +83,9 @@ const styles = StyleSheet.create({
     color: common.textColor,
     alignSelf: 'center',
   },
-  form: {
-
+  showAddressImage: {
+    position: 'absolute',
+    left: common.getH(10),
   },
   balanceTip: {
     marginTop: common.margin22,
@@ -105,13 +106,14 @@ const styles = StyleSheet.create({
     marginTop: common.margin35,
     marginLeft: common.margin10,
     marginRight: common.margin10,
+    justifyContent: 'center',
     height: common.h35,
   },
   amountInput: {
     textAlign: 'center',
   },
   addressInput: {
-    marginLeft: common.h60,
+    marginLeft: common.getH(40),
     textAlign: 'center',
   },
   withdrawAddress: {
@@ -140,6 +142,10 @@ const styles = StyleSheet.create({
     fontSize: common.font16,
     color: common.blackColor,
     alignSelf: 'center',
+  },
+  codeImage: {
+    width: common.w20,
+    height: common.w20,
   },
 })
 
@@ -715,21 +721,34 @@ class WithDraw extends Component {
     const { dispatch, formState } = this.props
 
     return (
-      <TKInputItem
-        viewStyle={styles.amountView}
-        inputStyle={styles.addressInput}
-        placeholder="地址"
-        value={formState.withdrawAddress}
-        onChangeText={(withdrawAddress = '') => dispatch(updateForm({
-          ...formState,
-          withdrawAddress: withdrawAddress.trim(),
-        }))}
-        extra={() => (
-          <View style={styles.extraBtnCover}>
+      <View style={styles.amountView}>
+        <TKInputItem
+          inputStyle={styles.addressInput}
+          placeholder="地址"
+          value={formState.withdrawAddress}
+          onChangeText={(withdrawAddress = '') => dispatch(updateForm({
+            ...formState,
+            withdrawAddress: withdrawAddress.trim(),
+          }))}
+          onFocus={() => {
+            if (!common.IsIOS) {
+              this.setState({
+                topOffset: -100,
+              })
+            }
+          }}
+          textInputProps={{
+            onEndEditing: () => {
+              if (!common.IsIOS) {
+                this.setState({
+                  topOffset: 0,
+                })
+              }
+            },
+          }}
+          extra={() => (
             <NextTouchableOpacity
-              style={{
-                marginRight: 5,
-              }}
+              style={styles.extraBtnCover}
               activeOpacity={common.activeOpacity}
               onPress={() => {
                 Keyboard.dismiss()
@@ -737,29 +756,24 @@ class WithDraw extends Component {
               }}
             >
               <Image
-                style={{
-                  width: common.w20,
-                  height: common.w20,
-                }}
+                style={styles.codeImage}
                 source={require('../../assets/qrcode_white.png')}
               />
             </NextTouchableOpacity>
-            <NextTouchableOpacity
-              activeOpacity={common.activeOpacity}
-              onPress={() => this.tapAddAddress()}
-            >
-              <Image
-                style={{
-                  width: common.w20,
-                  height: common.w20,
-                }}
-                resizeMode="contain"
-                source={require('../../assets/arrow_down.png')}
-              />
-            </NextTouchableOpacity>
-          </View>
-        )}
-      />
+          )}
+        />
+        <NextTouchableOpacity
+          style={styles.showAddressImage}
+          activeOpacity={common.activeOpacity}
+          onPress={() => this.tapAddAddress()}
+        >
+          <Image
+            style={styles.codeImage}
+            resizeMode="contain"
+            source={require('../../assets/arrow_down.png')}
+          />
+        </NextTouchableOpacity>
+      </View>
     )
   }
 
