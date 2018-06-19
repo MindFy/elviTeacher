@@ -4,6 +4,7 @@ import {
   View,
   Text,
   Image,
+  Alert,
   Clipboard,
   ScrollView,
   CameraRoll,
@@ -165,6 +166,18 @@ class Recharge extends Component {
     }
   }
 
+  showAlert() {
+    Alert.alert(
+      '无法保存',
+      '请在iPhone的“设置-隐私-照片”选项中，允许TOK访问你的照片。',
+      [{
+        text: '好',
+        onPress: () => { },
+      }],
+      { cancelable: false },
+    )
+  }
+
   _saveImageToCameraRoll = (rechargeAddress, qrApi) => {
     if (rechargeAddress.length === 0) {
       return
@@ -174,9 +187,13 @@ class Recharge extends Component {
       CameraRoll.saveToCameraRoll(uri).then(() => {
         Overlay.hide(this.overlayViewKey)
         Toast.success('保存成功')
-      }).catch(() => {
+      }).catch((error) => {
         Overlay.hide(this.overlayViewKey)
-        Toast.fail('保存失败')
+        if (error.message && error.message === 'User denied access') {
+          this.showAlert()
+        } else {
+          Toast.fail('保存失败')
+        }
       })
     } else {
       FS.downloadOlineImage({
