@@ -104,7 +104,7 @@ class Home extends Component {
           }
           HotUpdate.downLoadBundleZipWithOption(options, () => {
             Alert.alert(
-              `${r.version}:${currentVersion}`,
+              '检测到新版本',
               '',
               [
                 {
