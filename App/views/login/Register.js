@@ -80,8 +80,16 @@ class Register extends Component {
     super()
     this.showRegisterResponse = false
     this.showGetVerificateCodeResponse = false
-    this.state = {
-      showTip: false,
+
+    if (common.IsIOS) {
+      this.state = {
+        showTip: false,
+        offset: 0,
+      }
+    } else {
+      this.state = {
+        showTip: false,
+      }
     }
   }
 
@@ -150,6 +158,12 @@ class Register extends Component {
         break
     }
   }
+
+  accountOffest = -50
+  authCodeOffset = -50
+  passwordOffset = -8
+  passwordConfirmOffset = -8
+  recommendNoOffset = 100
 
   codePress() {
     const { dispatch, mobile, mobileIsExist } = this.props
@@ -303,6 +317,13 @@ class Register extends Component {
         value={mobile}
         maxLength={11}
         onChange={e => this.onChange(e, 'mobile')}
+        onFocus={() => {
+          if (common.IsIOS) {
+            this.setState({
+              offset: this.accountOffest,
+            })
+          }
+        }}
       />
     )
   }
@@ -346,6 +367,13 @@ class Register extends Component {
         extraDisable={!mobile || !common.regMobile.test(mobile) || mobileIsExist}
         textInputProps={{
           keyboardType: 'numeric',
+        }}
+        onFocus={() => {
+          if (common.IsIOS) {
+            this.setState({
+              offset: this.authCodeOffset,
+            })
+          }
         }}
       />
     )
@@ -400,6 +428,13 @@ class Register extends Component {
         maxLength={common.textInputMaxLenPwd}
         secureTextEntry
         onChange={e => this.onChange(e, 'password')}
+        onFocus={() => {
+          if (common.IsIOS) {
+            this.setState({
+              offset: this.passwordOffset,
+            })
+          }
+        }}
       />
     )
   }
@@ -418,6 +453,13 @@ class Register extends Component {
         maxLength={common.textInputMaxLenPwd}
         secureTextEntry
         onChange={e => this.onChange(e, 'passwordAgain')}
+        onFocus={() => {
+          if (common.IsIOS) {
+            this.setState({
+              offset: this.passwordConfirmOffset,
+            })
+          }
+        }}
       />
     )
   }
@@ -435,6 +477,13 @@ class Register extends Component {
         value={recommendNo}
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'recommendNo')}
+        onFocus={() => {
+          if (common.IsIOS) {
+            this.setState({
+              offset: this.recommendNoOffset,
+            })
+          }
+        }}
       />
     )
   }
@@ -471,7 +520,14 @@ class Register extends Component {
       passwordAgain,
     } = this.props
 
-    const behavior = common.IsIOS ? 'position' : 'padding'
+    let behavior = null
+    let offset = 0
+    if (common.IsIOS) {
+      behavior = 'position'
+      offset = this.state.offset
+    } else {
+      behavior = 'padding'
+    }
     let canRegister = false
     if (!this.state.showTip && mobile && code && password && passwordAgain && true) {
       canRegister = true
@@ -486,6 +542,7 @@ class Register extends Component {
         <KeyboardAvoidingView
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior={behavior}
+          keyboardVerticalOffset={offset}
         >
           <View style={styles.contentContainer}>
             {this.renderAccount()}
