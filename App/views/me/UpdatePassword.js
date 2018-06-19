@@ -88,16 +88,22 @@ class UpdatePassword extends Component {
   onChange(event, tag) {
     const { text } = event.nativeEvent
     const { dispatch, oldPassword, newPassword, newPasswordAgain } = this.props
-
+    const newText = text.trim()
     switch (tag) {
       case 'oldPassword':
-        dispatch(actions.updatePasswordUpdate({ oldPassword: text, newPassword, newPasswordAgain }))
+        dispatch(actions.updatePasswordUpdate({
+          oldPassword: newText, newPassword, newPasswordAgain,
+        }))
         break
       case 'newPassword':
-        dispatch(actions.updatePasswordUpdate({ oldPassword, newPassword: text, newPasswordAgain }))
+        dispatch(actions.updatePasswordUpdate({
+          oldPassword, newPassword: newText, newPasswordAgain,
+        }))
         break
       case 'newPasswordAgain':
-        dispatch(actions.updatePasswordUpdate({ oldPassword, newPassword, newPasswordAgain: text }))
+        dispatch(actions.updatePasswordUpdate({
+          oldPassword, newPassword, newPasswordAgain: newText,
+        }))
         break
       default:
         break
