@@ -330,7 +330,7 @@ class Register extends Component {
   }
 
   renderCheckCode = () => {
-    const { code, mobile } = this.props
+    const { code, mobile, mobileIsExist } = this.props
     return (
       <TKInputItemCheckCode
         viewStyle={{ flex: undefined }}
@@ -343,7 +343,7 @@ class Register extends Component {
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'code')}
         onPressCheckCodeBtn={() => { this.codePress() }}
-        extraDisable={!mobile || !common.regMobile.test(mobile)}
+        extraDisable={!mobile || !common.regMobile.test(mobile) || mobileIsExist}
         textInputProps={{
           keyboardType: 'numeric',
         }}
