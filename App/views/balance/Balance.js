@@ -105,6 +105,9 @@ class Balance extends Component {
 
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Balance')
+      const { loggedInResult, dispatch } = this.props
+      dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
+      dispatch(requestBalanceValuation())
     })
   }
 
@@ -112,11 +115,6 @@ class Balance extends Component {
     this.props.navigation.setParams({ historyPress: this._historyPress })
   }
 
-  componentDidMount() {
-    const { loggedInResult, dispatch } = this.props
-    dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
-    dispatch(requestBalanceValuation())
-  }
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.loggedIn && nextProps.loggedIn) {
