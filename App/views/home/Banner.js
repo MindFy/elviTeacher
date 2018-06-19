@@ -47,7 +47,10 @@ export default class Banner extends Component {
 
   render() {
     const { navigation } = this.props
-    const uri = navigation.state.params.element.hyperlink
+    let uri = navigation.state.params.element.hyperlink
+    if (uri.indexOf('/fileProc/') > -1) {
+      uri = `${uri}.wt${common.sw}.jpg`
+    }
     return (
       <WebView
         source={{ uri }}
