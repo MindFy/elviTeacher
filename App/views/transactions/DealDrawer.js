@@ -384,8 +384,6 @@ class DealDrawer extends Component {
             theme={'gray'}
             caption={!index ? '买入' : '卖出'}
             onPress={() => {
-              Keyboard.dismiss()
-              this.setState({ keyboardHeight: 0 })
               if (buttonAction) {
                 buttonAction(index)
               }
