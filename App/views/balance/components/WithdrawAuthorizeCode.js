@@ -16,7 +16,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginLeft: common.getH(48),
     marginRight: common.getH(48),
-    marginTop: -common.getH(60),
     borderRadius: common.radius6,
   },
   mobileContainer: {
