@@ -1,9 +1,17 @@
 import React, { Component } from 'react'
 import {
   Text,
+  StyleSheet,
 } from 'react-native'
 import NextTouchableOpacity from './NextTouchableOpacity'
 import { common } from '../constants/common'
+
+const styles = StyleSheet.create({
+  titleStyle: {
+    color: common.btnTextColor,
+    fontSize: common.font12,
+  },
+})
 
 class TKCheckCodeBtn extends Component {
   state = {
@@ -50,15 +58,13 @@ class TKCheckCodeBtn extends Component {
   count = 60
 
   render() {
+    const { titleStyle } = this.props
     return (
       <NextTouchableOpacity
         onPress={this.onPress}
       >
         <Text
-          style={{
-            color: common.btnTextColor,
-            fontSize: common.font12,
-          }}
+          style={[styles.titleStyle, titleStyle]}
         >{this.state.title}</Text>
       </NextTouchableOpacity>
     )

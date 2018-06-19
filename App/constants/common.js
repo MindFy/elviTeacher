@@ -159,6 +159,7 @@ const common = {
   loginBtnBgColor: 'rgb(255,213,1)', // 较宽按钮背景色
   placeholderColor: 'rgb(97,105,137)',
   grayColor: 'rgba(97,105,137,0.5)',
+  lineColor: 'rgb(216,216,216)',
   rgb242: 'rgb(242,242,242)',
   rgb223: 'rgb(223,223,223)',
 
