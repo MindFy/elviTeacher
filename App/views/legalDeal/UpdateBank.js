@@ -17,6 +17,7 @@ import TKInputItem from '../../components/TKInputItem'
 import * as actions from '../../actions/updateBank'
 import { findUserUpdate } from '../../actions/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import WithdrawAuthorizeCode from '../balance/components/WithdrawAuthorizeCode'
 
 const styles = StyleSheet.create({
   container: {
@@ -87,12 +88,14 @@ class UpdateBank extends Component {
       subbankName: user.subbankName,
       bankNo: user.bankNo,
       code: '',
+      googleCode: '',
     }))
   }
 
   componentWillReceiveProps(nextProps) {
     this.handleRequestGetCode(nextProps)
     this.handleRequestUpdateBank(nextProps)
+    this.handleRequestCheck2GoogleCode(nextProps)
   }
 
   componentWillUnmount() {
@@ -141,21 +144,107 @@ class UpdateBank extends Component {
     }
     if (!navigation.state.params || !user.bankName.length) {
       // 如果第一次绑定银行卡，则不需要二次验证；走法币交易、我的页面进入
-      dispatch(actions.requestUpdateBank(formState))
+      dispatch(actions.requestUpdateBank({
+        bankName: formState.bankName,
+        subbankName: formState.subbankName,
+        bankNo: formState.bankNo,
+        code: formState.googleCode,
+      }))
     } else {
-      this.showOverlay()
+      this.showAuthCode()
     }
   }
 
   updateBank() {
-    const { dispatch, formState } = this.props
-    const { code } = formState
-    if (!code) {
-      Toast.fail('请输入验证码')
-      return
-    }
+    Keyboard.dismiss()
+    Overlay.hide(this.overlayViewKeyID)
 
-    dispatch(actions.requestUpdateBank(formState))
+    const { authCodeType, formState, dispatch } = this.props
+    if (authCodeType === '短信验证码') {
+      const { code } = formState
+      if (!code) {
+        Toast.fail('请输入验证码')
+        return
+      }
+      dispatch(actions.requestUpdateBank({
+        bankName: formState.bankName,
+        subbankName: formState.subbankName,
+        bankNo: formState.bankNo,
+        code: formState.code,
+      }))
+    } else {
+      if (!formState.googleCode.length) {
+        Toast.fail('请输入谷歌验证码')
+        return
+      }
+      dispatch(actions.check2GoogleAuth({ googleCode: formState.googleCode }))
+    }
+  }
+
+  authCodeChanged = (e, code) => {
+    const { dispatch, formState, authCodeType } = this.props
+    if (authCodeType === '短信验证码') {
+      dispatch(actions.updateForm({
+        ...formState,
+        code,
+      }))
+    } else {
+      dispatch(actions.updateForm({
+        ...formState,
+        googleCode: code,
+      }))
+    }
+  }
+
+  segmentValueChanged = (e) => {
+    const { dispatch, formState } = this.props
+    dispatch(actions.updateAuthCodeType(e.title))
+
+    if (e.title === '短信验证码') {
+      dispatch(actions.updateForm({
+        ...formState,
+        code: '',
+      }))
+    } else {
+      dispatch(actions.updateForm({
+        ...formState,
+        googleCode: '',
+      }))
+    }
+  }
+
+  SMSCodePress = (count) => {
+    this.count = count
+    const { user, dispatch } = this.props
+    dispatch(actions.requestGetCode({ mobile: user.mobile, service: 'auth' }))
+  }
+
+  showAuthCode = () => {
+    const { dispatch, user, formState } = this.props
+    dispatch(actions.updateAuthCodeType('短信验证码'))
+    dispatch(actions.updateForm({
+      ...formState,
+      code: '',
+      googleCode: '',
+    }))
+    const overlayView = (
+      <Overlay.View
+        style={{ top: '25%' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <WithdrawAuthorizeCode
+          titles={['短信验证码', '谷歌验证码']}
+          mobile={user.mobile}
+          onChangeText={this.authCodeChanged}
+          segmentValueChanged={this.segmentValueChanged}
+          smsCodePress={this.SMSCodePress}
+          confirmPress={() => this.updateBank()}
+          cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+        />
+      </Overlay.View>
+    )
+    this.overlayViewKeyID = Overlay.show(overlayView)
   }
 
   showOverlay() {
@@ -237,6 +326,28 @@ class UpdateBank extends Component {
       const msg = this.errors[updateBankError.code]
       if (msg) Toast.fail(msg)
       else Toast.fail('银行卡绑定失败，请稍后重试')
+    }
+  }
+
+  handleRequestCheck2GoogleCode(nextProps) {
+    if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
+      const { googleCodeResponse, dispatch, formState } = nextProps
+      if (googleCodeResponse.success) {
+        dispatch(actions.requestUpdateBank({
+          bankName: formState.bankName,
+          subbankName: formState.subbankName,
+          bankNo: formState.bankNo,
+          googleCode: formState.googleCode,
+        }))
+      } else {
+        const errCode = googleCodeResponse.error.code
+        if (errCode === 4000171) {
+          Toast.fail('请先绑定谷歌验证码!')
+        } else {
+          Toast.fail('谷歌验证码错误!')
+        }
+      }
+      dispatch(actions.check2GoogleAuthSetResponse(null))
     }
   }
 
