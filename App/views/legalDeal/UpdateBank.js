@@ -247,32 +247,6 @@ class UpdateBank extends Component {
     this.overlayViewKeyID = Overlay.show(overlayView)
   }
 
-  showOverlay() {
-    const { dispatch, loggedInResult } = this.props
-    const overlayView = (
-      <Overlay.View
-        style={{ justifyContent: 'center' }}
-        modal={false}
-        overlayOpacity={0}
-      >
-        <TKViewCheckAuthorize
-          containerStyle={{ marginTop: -70 }}
-          mobile={loggedInResult.mobile}
-          onChangeText={e => this.onChangeText(e, 'code')}
-          codePress={() => {
-            dispatch(actions.requestGetCode({
-              mobile: this.props.loggedInResult.mobile,
-              service: 'auth',
-            }))
-          }}
-          confirmPress={() => this.updateBank()}
-          cancelPress={() => Overlay.hide(this.overlayViewKey)}
-        />
-      </Overlay.View>
-    )
-    this.overlayViewKey = Overlay.show(overlayView)
-  }
-
   errors = {
     4000101: '验证码不能为空',
     4000102: '一分钟内不能重复发送验证码',
