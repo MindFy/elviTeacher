@@ -5,7 +5,11 @@ const initialState = {
     address: '',
     remark: '',
     authCode: '',
+    googleCode: '',
   },
+  authCodeType: '短信验证码',
+  googleCodeLoading: false,
+  googleCodeResponse: null,
 }
 
 export default function addressAdd(state = initialState, action) {
@@ -41,6 +45,25 @@ export default function addressAdd(state = initialState, action) {
       nextState = {
         ...state,
         error: null,
+      }
+      break
+    case 'addressAdd/update_auth_code_type':
+      nextState = {
+        ...state,
+        authCodeType: payload,
+      }
+      break
+    case 'addressAdd/check2_google_auth':
+      nextState = {
+        ...state,
+        googleCodeLoading: true,
+      }
+      break
+    case 'addressAdd/check2_google_auth_set_response':
+      nextState = {
+        ...state,
+        googleCodeLoading: false,
+        googleCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':
