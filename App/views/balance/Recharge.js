@@ -189,7 +189,7 @@ class Recharge extends Component {
         Toast.success('保存成功')
       }).catch((error) => {
         Overlay.hide(this.overlayViewKey)
-        if (error.message && error.message === 'User denied access') {
+        if (error.code === 'E_UNABLE_TO_SAVE') {
           this.showAlert()
         } else {
           Toast.fail('保存失败')

@@ -118,7 +118,7 @@ class Otc extends Component {
       } else if (error.code === 4001417) {
         Toast.fail('商家未提供银行卡信息')
       } else if (error.code === 4001418) {
-        Toast.fail('请先实名认证')
+        navigation.navigate('Authentication')
       } else if (error.message === common.badNet) {
         Toast.fail('网络连接失败，请稍后重试')
       } else if (error.code === 4031601) {

@@ -92,6 +92,13 @@ const OOCStyles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'right',
   },
+  tips: {
+    width: '100%',
+    marginTop: 8,
+    textAlign: 'center',
+    color: '#fff',
+    fontSize: 15,
+  },
 })
 
 class OpenOrders extends Component {
@@ -176,6 +183,11 @@ class OpenOrders extends Component {
 
   render() {
     const { dataSource } = this.props
+    if (dataSource.length === 0) {
+      return (
+        <Text style={OOCStyles.tips}>暂无委托单</Text>
+      )
+    }
     return (
       <ListView
         dataSource={this.dataSource.cloneWithRows(dataSource)}

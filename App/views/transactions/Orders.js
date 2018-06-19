@@ -250,9 +250,9 @@ class Orders extends Component {
   componentWillReceiveProps(nexProps) {
     if (this.props.openOrderLoading && !nexProps.openOrderLoading) {
       this.isRefresh = false
-      const openOrderLength = (nexProps.openOrders.length / this.limit) > this.openOrderPage
+      const openOrderLength = nexProps.openOrders.length < (this.openOrderPage + 1) * this.limit
       this.setState({
-        openOrderReState: openOrderLength ? RefreshState.Idle : RefreshState.NoMoreData,
+        openOrderReState: !openOrderLength ? RefreshState.Idle : RefreshState.NoMoreData,
       })
     }
 
@@ -265,9 +265,9 @@ class Orders extends Component {
 
     if (this.props.orderHistoryLoading && !nexProps.orderHistoryLoading) {
       this.isRefresh = false
-      const orderHistoryLength = (nexProps.orderHistory.length / this.limit) > this.orderHistoryPage
+      const orderHistoryLength = nexProps.orderHistory.length < (this.orderHistoryPage + 1) * this.limit
       this.setState({
-        orderHistoryReState: orderHistoryLength ? RefreshState.Idle : RefreshState.NoMoreData,
+        orderHistoryReState: !orderHistoryLength ? RefreshState.Idle : RefreshState.NoMoreData,
       })
     }
 
