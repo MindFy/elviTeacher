@@ -45,7 +45,8 @@ class Home extends Component {
     this.refreshData()
     const { dispatch } = this.props
     this.timeId = setInterval(() => {
-      if (cache.getObject('currentComponentVisible') === 'Home') {
+      const page = cache.getObject('currentComponentVisible')
+      if (page === 'Home' || page === 'Deal') {
         dispatch(actions.requestMarket())
       }
     }, common.refreshIntervalTime)

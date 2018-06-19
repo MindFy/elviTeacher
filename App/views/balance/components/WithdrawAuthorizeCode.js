@@ -4,6 +4,7 @@ import {
   View,
   TextInput,
   StyleSheet,
+  Keyboard,
 } from 'react-native'
 import { common } from '../../../constants/common'
 import TKCheckCodeBtn from '../../../components/TKCheckCodeBtn'
@@ -15,6 +16,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginLeft: common.margin48,
     marginRight: common.margin48,
+    marginTop: -50,
   },
   phoneContainer: {
     marginTop: common.margin20,
@@ -243,11 +245,15 @@ export default class TKViewCheckAuthorize extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <NextTouchableOpacity
+        activeOpacity={1}
+        onPress={() => Keyboard.dismiss()}
+        style={styles.container}
+      >
         {this.renderTitles()}
         <View style={styles.line} />
         {this.renderBtns()}
-      </View>
+      </NextTouchableOpacity>
     )
   }
 }

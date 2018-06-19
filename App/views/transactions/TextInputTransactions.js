@@ -7,6 +7,7 @@ import { common } from '../../constants/common'
 const styles = {
   textInput: {
     flex: 1,
+    height: 27,
     fontSize: common.font12,
     color: common.placeholderColor,
     alignSelf: 'center',

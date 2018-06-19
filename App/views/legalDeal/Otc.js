@@ -92,7 +92,7 @@ class Otc extends Component {
   constructor(props) {
     super(props)
     props.navigation.addListener('didFocus', () => {
-      cache.setObject('currentComponentVisible', 'Home')
+      cache.setObject('currentComponentVisible', 'Otc')
     })
   }
 

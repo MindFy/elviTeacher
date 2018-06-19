@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   Text,
   View,
+  Modal,
   Image,
   StyleSheet,
   Keyboard,
@@ -16,12 +17,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   cover: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: common.sw,
-    height: common.IsIOS ? common.sh : (common.sh - 20),
-    zIndex: 10,
+    flex: 1,
   },
   press: {
     flexDirection: 'row',
@@ -100,7 +96,6 @@ class DealDrawer extends Component {
     this.state = {
       visible: false,
       index: 0,
-      keyboardHeight: 0,
     }
   }
 
@@ -189,18 +184,18 @@ class DealDrawer extends Component {
     if (this.state.visible === false) {
       return null
     }
-    let keyboardHeight = 0
-    if (!common.IsIOS) {
-      keyboardHeight = this.state.keyboardHeight
-    }
     return (
-      <View style={styles.cover}>
+      <Modal
+        style={styles.cover}
+        animationType="none"
+        transparent
+        onRequestClose={() => {}}
+      >
         <NextTouchableOpacity
           activeOpacity={1}
           style={styles.press}
           onPress={() => {
             Keyboard.dismiss()
-            this.setState({ keyboardHeight: 0 })
             this.hide()
           }}
         />
@@ -208,6 +203,7 @@ class DealDrawer extends Component {
           style={{ backgroundColor: common.blackColor }}
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
+          keyboardVerticalOffset={common.IsIOS ? 0 : -220}
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
             <Text style={styles.amountVisibleTitle}>可用</Text>
@@ -246,20 +242,6 @@ class DealDrawer extends Component {
                       cmd: 'input',
                       type: 'price',
                       val: e,
-                    })
-                  }
-                }}
-                onFocus={() => {
-                  if (!common.IsIOS) {
-                    this.setState({
-                      keyboardHeight: 240,
-                    })
-                  }
-                }}
-                onEndEditing={() => {
-                  if (!common.IsIOS) {
-                    this.setState({
-                      keyboardHeight: 0,
                     })
                   }
                 }}
@@ -312,20 +294,6 @@ class DealDrawer extends Component {
                       cmd: 'input',
                       type: 'quantity',
                       val: e,
-                    })
-                  }
-                }}
-                onFocus={() => {
-                  if (!common.IsIOS) {
-                    this.setState({
-                      keyboardHeight: 240,
-                    })
-                  }
-                }}
-                onEndEditing={() => {
-                  if (!common.IsIOS) {
-                    this.setState({
-                      keyboardHeight: 0,
                     })
                   }
                 }}
@@ -390,9 +358,8 @@ class DealDrawer extends Component {
             }}
             disabled={caculatedData.delegateCreateVisible}
           />
-          <View style={{ height: keyboardHeight }} />
         </KeyboardAvoidingView>
-      </View>
+      </Modal>
     )
   }
 }
