@@ -211,8 +211,12 @@ class Rebates extends Component {
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
         Toast.success('保存成功')
-      }).catch(() => {
-        Toast.fail('保存失败')
+      }).catch((error) => {
+        if (error.code === 'E_UNABLE_TO_SAVE') {
+          this.showAlert()
+        } else {
+          Toast.fail('保存失败')
+        }
       })
     } else {
       FS.downloadOlineImage({
@@ -239,6 +243,18 @@ class Rebates extends Component {
     ]
     const cancelItem = { title: '取消', type: 'cancel' }
     ActionSheet.show(items, cancelItem)
+  }
+
+  showAlert() {
+    Alert.alert(
+      '无法保存',
+      '请在iPhone的“设置-隐私-照片”选项中，允许TOK访问你的照片。',
+      [{
+        text: '好',
+        onPress: () => { },
+      }],
+      { cancelable: false },
+    )
   }
 
   showLinkQr() {
