@@ -81,3 +81,24 @@ export function updateOtcList(payload) {
     payload,
   }
 }
+
+export function updateAuthCodeType(payload) {
+  return {
+    type: 'otcDetail/update_auth_code_type',
+    payload,
+  }
+}
+
+export function check2GoogleAuth(payload) {
+  return {
+    type: 'otcDetail/check2_google_auth',
+    payload,
+  }
+}
+
+export function check2GoogleAuthSetResponse(payload) {
+  return {
+    type: 'otcDetail/check2_google_auth_set_response',
+    payload,
+  }
+}

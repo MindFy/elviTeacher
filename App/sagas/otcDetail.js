@@ -2,6 +2,7 @@ import {
   call,
   put,
   takeEvery,
+  takeLatest,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
@@ -107,6 +108,22 @@ export function* requestAllegeWorker(action) {
   }
 }
 
+export function* requsetCheck2GoogleAuthWorker(action) {
+  const { payload } = action
+  const response = yield call(api.check2GoogleAuth, payload)
+  if (response.success) {
+    yield put({
+      type: 'otcDetail/check2_google_auth_set_response',
+      payload: response,
+    })
+  } else {
+    yield put({
+      type: 'otcDetail/check2_google_auth_set_response',
+      payload: response,
+    })
+  }
+}
+
 export function* requestOtcList() {
   yield takeEvery('otcDetail/request_otc_list', requestOtcListWorker)
 }
@@ -129,4 +146,8 @@ export function* requestCancel() {
 
 export function* requestAllege() {
   yield takeEvery('otcDetail/request_allege', requestAllegeWorker)
+}
+
+export function* requsetCheck2GoogleAuthWatcher() {
+  yield takeLatest('otcDetail/check2_google_auth', requsetCheck2GoogleAuthWorker)
 }
