@@ -32,3 +32,24 @@ export function requestAddressClearError(payload) {
     payload,
   }
 }
+
+export function updateAuthCodeType(payload) {
+  return {
+    type: 'addressAdd/update_auth_code_type',
+    payload,
+  }
+}
+
+export function check2GoogleAuth(payload) {
+  return {
+    type: 'addressAdd/check2_google_auth',
+    payload,
+  }
+}
+
+export function check2GoogleAuthSetResponse(payload) {
+  return {
+    type: 'addressAdd/check2_google_auth_set_response',
+    payload,
+  }
+}

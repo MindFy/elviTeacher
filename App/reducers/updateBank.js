@@ -4,6 +4,7 @@ const initialState = {
     subbankName: '',
     bankNo: '',
     code: '',
+    googleCode: '',
   },
   mobile: '',
   loading: false,
@@ -11,6 +12,8 @@ const initialState = {
   getCodeError: null,
   updateBankResult: null,
   getCodeResult: null,
+  googleCodeLoading: false,
+  googleCodeResponse: null,
 }
 
 export default function updateBank(state = initialState, action) {
@@ -70,6 +73,25 @@ export default function updateBank(state = initialState, action) {
         loading: false,
         getCodeError: payload,
         getCodeResult: null,
+      }
+      break
+    case 'updateBank/update_auth_code_type':
+      nextState = {
+        ...state,
+        authCodeType: payload,
+      }
+      break
+    case 'updateBank/check2_google_auth':
+      nextState = {
+        ...state,
+        googleCodeLoading: true,
+      }
+      break
+    case 'updateBank/check2_google_auth_set_response':
+      nextState = {
+        ...state,
+        googleCodeLoading: false,
+        googleCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

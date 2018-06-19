@@ -3,6 +3,7 @@ const initialState = {
   formState: {
     code: '',
     allegeText: '',
+    googleCode: '',
   },
   getCodeLoading: false,
   getCodeResult: null,
@@ -21,6 +22,9 @@ const initialState = {
   allegeError: null,
   otcListLoading: false,
   otcListError: null,
+
+  googleCodeLoading: false,
+  googleCodeResponse: null,
 }
 
 export default function otcDetail(state = initialState, action) {
@@ -180,6 +184,25 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         otcList: payload,
+      }
+      break
+    case 'otcDetail/update_auth_code_type':
+      nextState = {
+        ...state,
+        authCodeType: payload,
+      }
+      break
+    case 'otcDetail/check2_google_auth':
+      nextState = {
+        ...state,
+        googleCodeLoading: true,
+      }
+      break
+    case 'otcDetail/check2_google_auth_set_response':
+      nextState = {
+        ...state,
+        googleCodeLoading: false,
+        googleCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

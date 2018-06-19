@@ -20,6 +20,9 @@ import {
   updateForm,
   requestAddressAdd,
   requestAddressClearError,
+  updateAuthCodeType,
+  check2GoogleAuth,
+  check2GoogleAuthSetResponse,
 } from '../../actions/addressAdd'
 import { requestWithdrawAddress } from '../../actions/withdraw'
 import { getVerificateCode } from '../../actions/user'
@@ -27,6 +30,7 @@ import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
+import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -105,6 +109,7 @@ class AddAddress extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.handleRequestCheck2GoogleCode(nextProps)
     if (nextProps.error) {
       Overlay.hide(this.overlayViewKey)
       const errCode = nextProps.error.code
@@ -132,6 +137,7 @@ class AddAddress extends Component {
       address: '',
       remark: '',
       authCode: '',
+      googleCode: '',
     }))
   }
 
@@ -140,6 +146,29 @@ class AddAddress extends Component {
     4000414: '提币地址已存在！',
     4000416: '提币地址格式错误',
     4000156: '授权验证失败',
+  }
+
+  handleRequestCheck2GoogleCode(nextProps) {
+    if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
+      const { googleCodeResponse, dispatch, formState } = nextProps
+      if (googleCodeResponse.success) {
+        const { navigation } = this.props
+        dispatch(requestAddressAdd({
+          token_id: navigation.state.params.tokenId,
+          withdrawaddr: formState.address,
+          remark: formState.remark,
+          googleCode: formState.googleCode,
+        }))
+      } else {
+        const errCode = googleCodeResponse.error.code
+        if (errCode === 4000171) {
+          Toast.fail('请先绑定谷歌验证码!')
+        } else {
+          Toast.fail('谷歌验证码错误!')
+        }
+      }
+      dispatch(check2GoogleAuthSetResponse(null))
+    }
   }
 
   handleChangeAddress = (address = '') => {
@@ -204,25 +233,100 @@ class AddAddress extends Component {
       Toast.fail('请填写备注')
       return
     }
-    this.showOverlay()
+    // this.showOverlay()
+    this.showAuthCode()
   }
 
   addPress() {
     Keyboard.dismiss()
+    Overlay.hide(this.overlayViewKeyID)
 
-    const { formState } = this.props
-    if (!formState.authCode.length) {
-      Toast.fail('请输入验证码')
-      return
+    const { authCodeType, formState, dispatch } = this.props
+    if (authCodeType === '短信验证码') {
+      if (!formState.authCode.length) {
+        Toast.fail('请输入验证码')
+        return
+      }
+      const { navigation } = this.props
+      dispatch(requestAddressAdd({
+        token_id: navigation.state.params.tokenId,
+        withdrawaddr: formState.address,
+        remark: formState.remark,
+        code: formState.authCode,
+      }))
+    } else {
+      if (!formState.googleCode.length) {
+        Toast.fail('请输入谷歌验证码')
+        return
+      }
+      dispatch(check2GoogleAuth({ googleCode: formState.googleCode }))
     }
+  }
 
-    const { dispatch, navigation } = this.props
-    dispatch(requestAddressAdd({
-      token_id: navigation.state.params.tokenId,
-      withdrawaddr: formState.address,
-      remark: formState.remark,
-      code: formState.authCode,
+  authCodeChanged = (e, code) => {
+    const { dispatch, formState, authCodeType } = this.props
+    if (authCodeType === '短信验证码') {
+      dispatch(updateForm({
+        ...formState,
+        authCode: code,
+      }))
+    } else {
+      dispatch(updateForm({
+        ...formState,
+        googleCode: code,
+      }))
+    }
+  }
+
+  segmentValueChanged = (e) => {
+    const { dispatch, formState } = this.props
+    dispatch(updateAuthCodeType(e.title))
+
+    if (e.title === '短信验证码') {
+      dispatch(updateForm({
+        ...formState,
+        authCode: '',
+      }))
+    } else {
+      dispatch(updateForm({
+        ...formState,
+        googleCode: '',
+      }))
+    }
+  }
+
+  SMSCodePress = (count) => {
+    this.count = count
+    const { user, dispatch } = this.props
+    dispatch(getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+  }
+
+  showAuthCode = () => {
+    const { dispatch, user, formState } = this.props
+    dispatch(updateAuthCodeType('短信验证码'))
+    dispatch(updateForm({
+      ...formState,
+      authCode: '',
+      googleCode: '',
     }))
+    const overlayView = (
+      <Overlay.View
+        style={{ top: '25%' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <WithdrawAuthorizeCode
+          titles={['短信验证码', '谷歌验证码']}
+          mobile={user.mobile}
+          onChangeText={this.authCodeChanged}
+          segmentValueChanged={this.segmentValueChanged}
+          smsCodePress={this.SMSCodePress}
+          confirmPress={() => this.addPress()}
+          cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+        />
+      </Overlay.View>
+    )
+    this.overlayViewKeyID = Overlay.show(overlayView)
   }
 
   showOverlay() {

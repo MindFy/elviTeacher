@@ -46,3 +46,24 @@ export function requestGetCodeFailed(payload) {
     payload,
   }
 }
+
+export function updateAuthCodeType(payload) {
+  return {
+    type: 'updateBank/update_auth_code_type',
+    payload,
+  }
+}
+
+export function check2GoogleAuth(payload) {
+  return {
+    type: 'updateBank/check2_google_auth',
+    payload,
+  }
+}
+
+export function check2GoogleAuthSetResponse(payload) {
+  return {
+    type: 'updateBank/check2_google_auth_set_response',
+    payload,
+  }
+}

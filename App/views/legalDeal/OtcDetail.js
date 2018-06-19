@@ -13,7 +13,6 @@ import {
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import RefreshListView, { RefreshState } from 'react-native-refresh-list-view'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import {
   common,
 } from '../../constants/common'
@@ -26,10 +25,14 @@ import {
   requestAllege,
   updateForm,
   updateOtcList,
+  updateAuthCodeType,
+  check2GoogleAuth,
+  check2GoogleAuthSetResponse,
 } from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
 import AllegeView from './AllegeView'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import WithdrawAuthorizeCode from '../../views/balance/components/WithdrawAuthorizeCode'
 
 const styles = StyleSheet.create({
   row: {
@@ -139,6 +142,7 @@ class OtcDetail extends Component {
       skip: 0,
       showAllegeView: false,
     }
+    this.codeTitles = ['短信验证码', '谷歌验证码']
   }
 
   componentDidMount() {
@@ -157,6 +161,7 @@ class OtcDetail extends Component {
     this.handleRequestHavedPay(nextProps)
     this.handleRequestOtcList(nextProps)
     this.handleRequestAllege(nextProps)
+    this.handleRequestCheck2GoogleCode(nextProps)
   }
 
   componentWillUnmount() {
@@ -175,13 +180,27 @@ class OtcDetail extends Component {
   }
 
   confirmPayPress(id) {
-    const { dispatch, formState } = this.props
-    const { code } = formState
-    if (!code.length) {
-      Toast.fail('请输入验证码')
-      return
+    Keyboard.dismiss()
+    Overlay.hide(this.overlayViewKeyID)
+    const { dispatch, formState, authCodeType } = this.props
+    if (authCodeType === '短信验证码') {
+      const { code } = formState
+      if (!code.length) {
+        Toast.fail('请输入验证码')
+        return
+      }
+      dispatch(requestConfirmPay({ id, code }))
+    } else {
+      const { googleCode } = formState
+      if (!googleCode.length) {
+        Toast.fail('请输入谷歌验证码')
+        return
+      }
+      this.id = id
+      dispatch(check2GoogleAuth({
+        googleCode: formState.googleCode,
+      }))
     }
-    dispatch(requestConfirmPay({ id, code }))
   }
 
   cancelPress(title, id) {
@@ -202,7 +221,7 @@ class OtcDetail extends Component {
     if (title === '我已付款') {
       dispatch(requestHavedPay({ id }))
     } else if (title === '确认收款') {
-      this.showOverlay(id)
+      this.showAuthCode(id)
     }
   }
 
@@ -219,26 +238,70 @@ class OtcDetail extends Component {
     })
   }
 
-  showOverlay(id) {
-    const { dispatch, loggedInResult } = this.props
+  authCodeChanged = (e, code) => {
+    const { dispatch, formState, authCodeType } = this.props
+    if (authCodeType === '短信验证码') {
+      dispatch(updateForm({
+        ...formState,
+        code,
+      }))
+    } else {
+      dispatch(updateForm({
+        ...formState,
+        googleCode: code,
+      }))
+    }
+  }
+
+  segmentValueChanged = (e) => {
+    const { dispatch, formState } = this.props
+    dispatch(updateAuthCodeType(e.title))
+
+    if (e.title === '谷歌验证码') {
+      dispatch(updateForm({
+        ...formState,
+        code: '',
+      }))
+    } else {
+      dispatch(updateForm({
+        ...formState,
+        googleCode: '',
+      }))
+    }
+  }
+
+  SMSCodePress = (count) => {
+    this.count = count
+    const { loggedInResult, dispatch } = this.props
+    dispatch(requestGetCode({ mobile: loggedInResult.mobile, service: 'auth' }))
+  }
+
+  showAuthCode = (id) => {
+    const { dispatch, loggedInResult, formState } = this.props
+    dispatch(updateAuthCodeType('短信验证码'))
+    dispatch(updateForm({
+      ...formState,
+      SMSCode: '',
+      googleCode: '',
+    }))
     const overlayView = (
       <Overlay.View
-        style={{ justifyContent: 'center' }}
+        style={{ top: '25%' }}
         modal={false}
         overlayOpacity={0}
       >
-        <TKViewCheckAuthorize
+        <WithdrawAuthorizeCode
+          titles={this.codeTitles}
           mobile={loggedInResult.mobile}
-          onChangeText={e => this.onChangeText(e, 'code')}
-          codePress={() => {
-            dispatch(requestGetCode({ mobile: loggedInResult.mobile, service: 'auth' }))
-          }}
+          onChangeText={this.authCodeChanged}
+          segmentValueChanged={this.segmentValueChanged}
+          smsCodePress={this.SMSCodePress}
           confirmPress={() => this.confirmPayPress(id)}
-          cancelPress={() => Overlay.hide(this.overlayViewKey)}
+          cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
         />
       </Overlay.View>
     )
-    this.overlayViewKey = Overlay.show(overlayView)
+    this.overlayViewKeyID = Overlay.show(overlayView)
   }
 
   errors = {
@@ -325,6 +388,23 @@ class OtcDetail extends Component {
         if (msg) Toast.fail(msg)
         else Toast.fail('操作失败，请稍后重试')
       }
+    }
+  }
+
+  handleRequestCheck2GoogleCode(nextProps) {
+    if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
+      const { googleCodeResponse, dispatch, formState } = nextProps
+      if (googleCodeResponse.success) {
+        dispatch(dispatch(requestConfirmPay({ id: this.id, googleCode: formState.googleCode })))
+      } else {
+        const errCode = googleCodeResponse.error.code
+        if (errCode === 4000171) {
+          Toast.fail('请先绑定谷歌验证码!')
+        } else {
+          Toast.fail('谷歌验证码错误!')
+        }
+      }
+      dispatch(check2GoogleAuthSetResponse(null))
     }
   }
 

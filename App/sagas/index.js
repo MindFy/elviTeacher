@@ -22,7 +22,8 @@ import {
   requestWithdrawAddress,
   requsetCheck2GoogleAuth,
 } from './withdraw'
-import { requestAddressAdd } from './addressAdd'
+// import { requestAddressAdd } from './addressAdd'
+import * as addressAdd from './addressAdd'
 import * as home from './home'
 import { requestPairInfo } from './market'
 import { submitRequest } from './otc'
@@ -88,7 +89,6 @@ export default function* rootSaga() {
     fork(address.addAddress),
     fork(address.findAddress),
 
-    fork(requestAddressAdd),
     fork(requestCoinList),
     fork(requestBalance),
     fork(requestValuation),
@@ -116,6 +116,7 @@ export default function* rootSaga() {
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
+    updateBank.requsetCheck2GoogleAuthWatcher(),
 
     otcDetail.requestOtcList(),
     otcDetail.requestGetCode(),
@@ -123,9 +124,13 @@ export default function* rootSaga() {
     otcDetail.requestHavedPay(),
     otcDetail.requestCancel(),
     otcDetail.requestAllege(),
+    otcDetail.requsetCheck2GoogleAuthWatcher(),
 
     recharge.requestCoinList(),
     recharge.requestRechargeAddress(),
     recharge.requestCreateAddress(),
+
+    addressAdd.requestAddressAdd(),
+    addressAdd.requsetCheck2GoogleAuthWatcher(),
   ]
 }
