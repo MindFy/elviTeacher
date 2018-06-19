@@ -96,7 +96,6 @@ class Login extends PureComponent {
     super()
     this.state = {
       showTip: false,
-      topOffset: 0,
     }
   }
 
@@ -224,13 +223,7 @@ class Login extends PureComponent {
     const { formState, dispatch } = this.props
 
     return (
-      <View
-        style={styles.input}
-        onLayout={(event) => {
-          const { height, y } = event.nativeEvent.layout
-          this.inputViewBottom = common.sh - height - y
-        }}
-      >
+      <View style={styles.input}>
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
@@ -263,23 +256,6 @@ class Login extends PureComponent {
           maxLength={common.textInputMaxLenPwd}
           secureTextEntry
           onChange={e => this.onChange(e, 'password')}
-          onFocus={() => {
-            if (!common.IsIOS) {
-              this.setState({
-                topOffset: 216 - this.inputViewBottom - common.getH(30),
-              })
-            }
-            dispatch(actions.clearError())
-          }}
-          textInputProps={{
-            onEndEditing: () => {
-              if (!common.IsIOS) {
-                this.setState({
-                  topOffset: 0,
-                })
-              }
-            },
-          }}
         />
       </View>
     )
@@ -305,11 +281,6 @@ class Login extends PureComponent {
 
   render() {
     const { loading } = this.props
-    let topOffset = 0
-    if (!common.IsIOS) {
-      topOffset = this.state.topOffset
-    }
-
     return (
       <ScrollView
         style={styles.container}
@@ -317,9 +288,6 @@ class Login extends PureComponent {
         automaticallyAdjustContentInsets={false}
       >
         <KeyboardAvoidingView
-          style={{
-            top: topOffset,
-          }}
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
         >

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import {
-  WebView,
-} from 'react-native'
+import { WebView } from 'react-native'
 import { common } from '../../constants/common'
+import * as api from '../../services/api'
 
 export default class KLine extends Component {
   shouldComponentUpdate(nextProps) {
@@ -23,18 +22,7 @@ export default class KLine extends Component {
           height: common.sw * common.sw / common.sh,
           backgroundColor: 'transparent',
         }}
-        source={{ uri: `http://192.168.1.126:8000/mobile_black.html#${goodsName}/${currencyName}` }}
-      // bounces={false}
-      // contentInset={{
-      //   top: 0,
-      //   left: 0,
-      //   bottom: 0,
-      //   right: 0,
-      // }}
-      // scalesPageToFit={false}
-      // scrollEnabled={false}
-      // source={require('./build/index.html')}
-      // source={{ uri: 'https://demo_chart.tradingview.com/' }}
+        source={{ uri: `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}` }}
       />
     )
   }
