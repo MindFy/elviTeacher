@@ -120,7 +120,7 @@ class Home extends Component {
           })
         }
       })
-      .catch((e) => { })
+      .catch(() => { })
   }
 
   refreshData() {

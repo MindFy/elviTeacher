@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import { Toast, Overlay } from 'teaset'
 import { common } from '../../constants/common'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
