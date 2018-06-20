@@ -102,7 +102,10 @@ class Login extends PureComponent {
   componentWillMount() {
     const { screenProps, navigation } = this.props
     navigation.setParams({
-      dismiss: () => screenProps.dismiss(),
+      dismiss: () => {
+        Keyboard.dismiss()
+        screenProps.dismiss()
+      },
     })
   }
 
