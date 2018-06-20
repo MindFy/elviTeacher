@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   View,
   Text,
@@ -36,9 +36,16 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class MeCell extends Component {
-  componentDidMount() { }
+export default class MeCell extends PureComponent {
   render() {
+    const { rightImage } = this.props
+    let customRightImage = (<Image
+      style={styles.rightDir}
+      source={require('../../assets/arrow_right.png')}
+    />)
+    if (rightImage) {
+      customRightImage = rightImage
+    }
     return (
       <NextTouchableOpacity
         style={[styles.viewStyle, this.props.viewStyle]}
@@ -62,13 +69,7 @@ export default class MeCell extends Component {
             style={[styles.titleStyle, this.props.titleStyle]}
           >{this.props.title}</Text>
         </View>
-        {
-          this.props.rightImageHide ? null :
-            (<Image
-              style={styles.rightDir}
-              source={require('../../assets/arrow_right.png')}
-            />)
-        }
+        {this.props.rightImageHide ? null : customRightImage}
       </NextTouchableOpacity>
     )
   }

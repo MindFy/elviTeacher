@@ -105,6 +105,7 @@ class Balance extends Component {
 
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Balance')
+      this.hasLoaded = false
       const { loggedInResult, dispatch } = this.props
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
       dispatch(requestBalanceValuation())
@@ -121,6 +122,9 @@ class Balance extends Component {
       const { loggedInResult, dispatch } = nextProps
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
       dispatch(requestBalanceValuation())
+    }
+    if (this.props.loading && !nextProps.loading) {
+      this.hasLoaded = true
     }
   }
 
@@ -239,7 +243,7 @@ class Balance extends Component {
           dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
           dispatch(requestBalanceValuation())
         }}
-        refreshing={loading}
+        refreshing={loading && this.hasLoaded}
       />
     )
   }

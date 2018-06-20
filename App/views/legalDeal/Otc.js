@@ -189,8 +189,11 @@ class Otc extends Component {
     Keyboard.dismiss()
 
     const { loggedIn, navigation } = this.props
-    if (loggedIn) navigation.navigate('OtcDetail')
-    else navigation.navigate('LoginStack')
+    if (loggedIn) { navigation.navigate('OtcDetail') } else {
+      setTimeout(() => {
+        navigation.navigate('LoginStack')
+      }, 50)
+    }
   }
 
   prices = {

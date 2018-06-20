@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import { Toast, Overlay } from 'teaset'
 import { common } from '../../constants/common'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
@@ -142,17 +141,17 @@ class UpdateBank extends Component {
       Toast.fail('请输入银行卡号, 16-19位数字')
       return
     }
-    // if (!navigation.state.params || !user.bankName.length) {
-    //   // 如果第一次绑定银行卡，则不需要二次验证；走法币交易、我的页面进入
-    //   dispatch(actions.requestUpdateBank({
-    //     bankName: formState.bankName,
-    //     subbankName: formState.subbankName,
-    //     bankNo: formState.bankNo,
-    //     code: formState.googleCode,
-    //   }))
-    // } else {
-    this.showAuthCode()
-    // }
+    if (!navigation.state.params || !user.bankName.length) {
+      // 如果第一次绑定银行卡，则不需要二次验证；走法币交易、我的页面进入
+      dispatch(actions.requestUpdateBank({
+        bankName: formState.bankName,
+        subbankName: formState.subbankName,
+        bankNo: formState.bankNo,
+        code: formState.googleCode,
+      }))
+    } else {
+      this.showAuthCode()
+    }
   }
 
   updateBank() {
@@ -257,7 +256,7 @@ class UpdateBank extends Component {
   handleRequestGetCode(nextProps) {
     const { getCodeResult, getCodeError } = nextProps
     if (getCodeResult && (getCodeResult !== this.props.getCodeResult)) {
-      Toast.success(getCodeResult.message, 2000, 'top')
+      Toast.success(getCodeResult.message)
       return
     }
     if (getCodeError && (getCodeError !== this.props.getCodeError)) {
