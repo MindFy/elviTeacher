@@ -8,6 +8,7 @@ const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
 const w = 375
 const IsIOS = Platform.OS.toLowerCase() === 'ios'
+const Is5Series = (IsIOS && sw === 320 && sh === 568)
 const isIphoneX = (IsIOS && sw === 375 && sh === 812)
 let navHeight
 let paddingTop
@@ -52,6 +53,7 @@ const common = {
   btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
 
   IsIOS,
+  Is5Series,
 
   payment: {
     charge: {

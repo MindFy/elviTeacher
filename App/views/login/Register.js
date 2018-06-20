@@ -159,10 +159,10 @@ class Register extends Component {
     }
   }
 
-  accountOffest = -50
-  authCodeOffset = -50
-  passwordOffset = -8
-  passwordConfirmOffset = -8
+  accountOffest = common.Is5Series ? -75 : -50
+  authCodeOffset = common.Is5Series ? -75 : -50
+  passwordOffset = common.Is5Series ? -12 : -8
+  passwordConfirmOffset = common.Is5Series ? -12 : -8
   recommendNoOffset = 100
 
   codePress() {

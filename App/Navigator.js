@@ -232,6 +232,7 @@ const RootStack = StackNavigator(
       screen: LoginStack,
       navigationOptions: {
         header: null,
+        gesturesEnabled: false,
       },
     },
   }, {
