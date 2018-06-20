@@ -58,14 +58,13 @@ class TKCheckCodeBtn extends Component {
   count = 60
 
   render() {
-    const { titleStyle } = this.props
+    const { style, titleStyle } = this.props
     return (
       <NextTouchableOpacity
+        style={style}
         onPress={this.onPress}
       >
-        <Text
-          style={[styles.titleStyle, titleStyle]}
-        >{this.state.title}</Text>
+        <Text style={[styles.titleStyle, titleStyle]}>{this.state.title}</Text>
       </NextTouchableOpacity>
     )
   }

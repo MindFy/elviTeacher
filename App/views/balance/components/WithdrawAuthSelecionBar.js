@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     marginLeft: common.getH(10),
     marginRight: common.getH(10),
     borderBottomColor: common.lineColor,
-    borderBottomWidth: common.getH(1),
+    borderBottomWidth: 1,
   },
   titlesMiddleLine: {
     position: 'absolute',
