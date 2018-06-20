@@ -51,6 +51,7 @@ export default class MeCell extends PureComponent {
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
+        target="global"
       >
         <View
           style={{

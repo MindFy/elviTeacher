@@ -46,6 +46,7 @@ const initialState = {
   valuation: undefined,
   currPair: 'CNTY',
   pairs: {},
+  kLineIndex: 3,
 }
 
 export default function exchange(state = initialState, action) {
@@ -245,6 +246,12 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         pairs: payload,
+      }
+      break
+    case 'exchange/update_kLine_index':
+      nextState = {
+        ...state,
+        kLineIndex: payload,
       }
       break
     case 'notify/clear_reducer':

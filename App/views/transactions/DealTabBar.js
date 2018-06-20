@@ -47,6 +47,7 @@ export default class DealTabBar extends PureComponent {
           style={[styles.barItem, { backgroundColor }]}
           activeOpacity={common.activeOpacity}
           onPress={() => onPress(index)}
+          target="global"
         >
           <Text style={styles.barItemTitle}>
             {title}

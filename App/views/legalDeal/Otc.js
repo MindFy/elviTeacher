@@ -311,6 +311,7 @@ class Otc extends Component {
         style={{ marginTop: common.margin10, marginLeft: 0, marginRight: 0 }}
         titleStyle={{ color: titleColor }}
         theme="gray"
+        target="global"
         caption={caption}
         onPress={() => this.onSubmit()}
         disabled={disabled}
