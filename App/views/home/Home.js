@@ -183,21 +183,16 @@ class Home extends Component {
     )
   }
 
-  renderRefreshControl = () => {
-    const { announcementsLoading, bannersLoading } = this.props
-    return (
-      <RefreshControl
-        onRefresh={() => this.refreshData()}
-        refreshing={
-          !!((bannersLoading || announcementsLoading))
-        }
-        colors={[common.textColor]}
-        progressBackgroundColor={common.navBgColor}
-        progressViewOffset={0}
-        tintColor={common.textColor}
-      />
-    )
-  }
+  renderRefreshControl = () => (
+    <RefreshControl
+      onRefresh={() => this.refreshData()}
+      refreshing={false}
+      colors={[common.textColor]}
+      progressBackgroundColor={common.navBgColor}
+      progressViewOffset={0}
+      tintColor={common.textColor}
+    />
+  )
 
   render() {
     const { announcements, banners, market, navigation } = this.props
