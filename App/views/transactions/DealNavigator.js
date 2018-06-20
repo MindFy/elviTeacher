@@ -10,7 +10,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
-    height: common.navHeight,
+    height: common.IsIOS ? common.navHeight : 64,
     backgroundColor: common.navBgColor,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   leftBtn: {
     position: 'absolute',
-    top: common.margin20,
+    top: common.paddingTop,
     left: 0,
     height: common.w40,
     width: common.w40,
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     height: common.h20,
   },
   titleView: {
-    marginTop: common.margin20,
+    marginTop: common.paddingTop,
     height: common.h44,
     alignSelf: 'center',
     flexDirection: 'row',
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   rightBtn: {
     position: 'absolute',
-    top: common.margin20,
+    top: common.paddingTop,
     right: common.margin10,
     height: common.h44,
     justifyContent: 'center',

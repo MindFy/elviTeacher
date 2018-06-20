@@ -53,8 +53,8 @@ export default class KLine extends Component {
       solution = array[kLineIndex]
       type = 1
     }
-    this.webView.injectJavaScript(`setResolution(${solution})`)
     this.webView.injectJavaScript(`setChartType(${type})`)
+    this.webView.injectJavaScript(`setResolution(${solution})`)
   }
 
   render() {
