@@ -317,7 +317,7 @@ class OtcDetail extends Component {
     const { getCodeResult, getCodeError } = nextProps
 
     if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
-      Toast.success(getCodeResult.message, 2000, 'top')
+      Toast.success(getCodeResult.message)
     }
     if (getCodeError && getCodeError !== this.props.getCodeError) {
       if (getCodeError.message === common.badNet) {

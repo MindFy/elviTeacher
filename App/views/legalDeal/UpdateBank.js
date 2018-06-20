@@ -256,7 +256,7 @@ class UpdateBank extends Component {
   handleRequestGetCode(nextProps) {
     const { getCodeResult, getCodeError } = nextProps
     if (getCodeResult && (getCodeResult !== this.props.getCodeResult)) {
-      Toast.success(getCodeResult.message, 2000, 'top')
+      Toast.success(getCodeResult.message)
       return
     }
     if (getCodeError && (getCodeError !== this.props.getCodeError)) {
