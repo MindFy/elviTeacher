@@ -27,6 +27,7 @@ import SecurityCenter from './views/me/SecurityCenter'
 import Rebates from './views/me/Rebates'
 import UpdateEmail from './views/me/UpdateEmail'
 import Settings from './views/me/Settings'
+import Language from './views/me/Language'
 import UpdatePassword from './views/me/UpdatePassword'
 import Otc from './views/legalDeal/Otc'
 import OtcDetail from './views/legalDeal/OtcDetail'
@@ -172,6 +173,7 @@ const TabBarStack = StackNavigator(
     AddAddress,
     Authentication,
     Settings,
+    Language,
     UpdatePassword,
     Otc,
     OtcDetail,
