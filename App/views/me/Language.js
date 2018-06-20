@@ -1,40 +1,42 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import {
   Image,
-  StatusBar,
   ScrollView,
   StyleSheet,
 } from 'react-native'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
-import packageJson from '../../../package.json'
 
 const styles = StyleSheet.create({
   headerLeft: {
-    height: common.w40,
-    width: common.w40,
+    height: common.getH(40),
+    width: common.getH(40),
     justifyContent: 'center',
   },
   headerLeftImge: {
-    marginLeft: common.margin10,
-    width: common.w10,
-    height: common.h20,
+    marginLeft: common.getH(10),
+    width: common.getH(10),
+    height: common.getH(20),
   },
   container: {
     flex: 1,
     backgroundColor: common.bgColor,
   },
   topCell: {
-    marginTop: common.margin10,
+    marginTop: common.getH(10),
+  },
+  checkBox: {
+    marginRight: common.getH(10),
+    width: common.getH(20),
+    height: common.getH(14),
   },
 })
 
-class Settings extends Component {
+export default class Language extends Component {
   static navigationOptions(props) {
     return {
-      headerTitle: '设置',
+      headerTitle: '语言',
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -57,45 +59,41 @@ class Settings extends Component {
       ),
     }
   }
+  constructor() {
+    super()
+    this.state = {
+      languageIndex: 0,
+    }
+  }
+
+  setLanguage(languageIndex) {
+    this.setState({ languageIndex })
+  }
 
   render() {
-    const { navigation, loggedIn } = this.props
+    const { languageIndex } = this.state
+    const rightImage = (<Image
+      style={styles.checkBox}
+      source={require('../../assets/check_box.png')}
+    />)
     return (
       <ScrollView style={styles.container}>
-        <StatusBar barStyle={'light-content'} />
-
-        {/* <MeCell
+        <MeCell
           viewStyle={styles.topCell}
           leftImageHide
-          onPress={() => navigation.navigate('Language')}
-          title="语言"
-        /> */}
-        <MeCell
-          leftImageHide
-          onPress={() => {
-            if (loggedIn) navigation.navigate('UpdatePassword')
-            else navigation.navigate('LoginStack')
-          }}
-          title="修改密码"
+          rightImageHide={languageIndex}
+          rightImage={!languageIndex ? rightImage : null}
+          onPress={() => this.setLanguage(0)}
+          title="中文"
         />
         <MeCell
           leftImageHide
-          rightImageHide
-          onPress={() => { }}
-          title={`V ${packageJson.jsVersion}`}
+          rightImageHide={!languageIndex}
+          rightImage={languageIndex ? rightImage : null}
+          onPress={() => this.setLanguage(1)}
+          title="English"
         />
-
       </ScrollView>
     )
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    loggedIn: state.authorize.loggedIn,
-  }
-}
-
-export default connect(
-  mapStateToProps,
-)(Settings)
