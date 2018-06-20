@@ -44,6 +44,7 @@ export default class MeCell extends Component {
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
+        target="global"
       >
         <View
           style={{

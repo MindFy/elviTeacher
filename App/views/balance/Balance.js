@@ -278,6 +278,7 @@ class Balance extends Component {
           <TKButton
             theme={'balance'}
             caption={'充值'}
+            target="global"
             icon={require('../../assets/recharge.png')}
             onPress={() => {
               if (loggedIn) navigation.navigate('Recharge')
@@ -287,6 +288,7 @@ class Balance extends Component {
           <TKButton
             theme={'balance'}
             caption={'提现'}
+            target="global"
             icon={require('../../assets/recharge2.png')}
             onPress={() => {
               if (loggedIn) navigation.navigate('Withdraw')

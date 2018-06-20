@@ -168,6 +168,7 @@ class Home extends Component {
       menuBtns.push(
         <TKButton
           key={i}
+          target="global"
           titleStyle={{ color: common.textColor }}
           theme={'home-balance'}
           caption={btnTitles[i]}
