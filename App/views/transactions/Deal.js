@@ -51,17 +51,41 @@ const styles = StyleSheet.create({
     backgroundColor: common.blackColor,
     width: '100%',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 2,
+    paddingHorizontal: 10,
+  },
   kLineBtn: {
-    position: 'absolute',
-    top: 5,
-    right: 10,
-    height: common.h20,
+    height: common.getH(17),
     width: common.h30,
     backgroundColor: common.navBgColor,
     justifyContent: 'center',
   },
   kLineBtnTitle: {
     color: common.textColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+  },
+  scrollView: {
+    flex: 1,
+    marginRight: 10,
+  },
+  scrollViewContentStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  scrollViewLineBtn: {
+    height: common.getH(17),
+    paddingHorizontal: 5,
+    backgroundColor: common.navBgColor,
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  kLineBtnTitleSelected: {
+    color: '#FFD502',
     fontSize: common.font12,
     alignSelf: 'center',
   },
@@ -76,6 +100,7 @@ class Deal extends Component {
 
   componentDidMount() {
     this.props.dispatch(exchange.updateSegmentIndex(0))
+    this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
     this.timer = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Deal') {
@@ -383,8 +408,48 @@ class Deal extends Component {
     )
   }
 
+  renderKlineBtnIfNeeded(kLineOrDepth) {
+    if (kLineOrDepth === common.ui.kLine) {
+      const array = ['分时', '1min', '5min', '15min', '30min', '1hour', '4hour', '1day', '1week', '1month']
+      const { kLineIndex } = this.props
+      return (
+        <ScrollView
+          horizontal
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollViewContentStyle}
+        >
+          {
+            array.map((e, idx) => (
+              <NextTouchableOpacity
+                key={e}
+                style={styles.scrollViewLineBtn}
+                activeOpacity={common.activeOpacity}
+                onPress={() => {
+                  const { dispatch } = this.props
+                  if (idx !== kLineIndex) {
+                    dispatch(exchange.updateKLineIndex(idx))
+                  }
+                }}
+              >
+                <Text style={
+                  idx === kLineIndex ?
+                    styles.kLineBtnTitleSelected :
+                    styles.kLineBtnTitle}
+                >{e}</Text>
+              </NextTouchableOpacity>
+            ))
+          }
+        </ScrollView>
+      )
+    }
+    return null
+  }
+
   renderDepthView = () => {
-    const { dispatch, kLineOrDepth, depthMap, selectedPair } = this.props
+    const { dispatch, kLineOrDepth, depthMap, selectedPair, kLineIndex } = this.props
     let kLineBtnTitle = 'k线'
     if (kLineOrDepth === common.ui.kLine) {
       kLineBtnTitle = '深度'
@@ -392,6 +457,7 @@ class Deal extends Component {
     const renderCharts = () => {
       if (kLineOrDepth === common.ui.kLine) {
         return (<KLine
+          kLineIndex={kLineIndex}
           goodsName={selectedPair.goods.name}
           currencyName={selectedPair.currency.name}
         />)
@@ -400,22 +466,25 @@ class Deal extends Component {
     }
     return (
       <View style={styles.kLineView}>
+        <View style={styles.header}>
+          {this.renderKlineBtnIfNeeded(kLineOrDepth)}
+          <NextTouchableOpacity
+            style={styles.kLineBtn}
+            activeOpacity={common.activeOpacity}
+            onPress={() => {
+              if (kLineOrDepth === common.ui.kLine) {
+                dispatch(actions.kLineOrDepthUpdate(common.ui.depth))
+              } else {
+                dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
+              }
+            }}
+          >
+            <Text style={styles.kLineBtnTitle}>
+              {kLineBtnTitle}
+            </Text>
+          </NextTouchableOpacity>
+        </View>
         {renderCharts()}
-        <NextTouchableOpacity
-          style={styles.kLineBtn}
-          activeOpacity={common.activeOpacity}
-          onPress={() => {
-            if (kLineOrDepth === common.ui.kLine) {
-              dispatch(actions.kLineOrDepthUpdate(common.ui.depth))
-            } else {
-              dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
-            }
-          }}
-        >
-          <Text style={styles.kLineBtnTitle}>
-            {kLineBtnTitle}
-          </Text>
-        </NextTouchableOpacity>
       </View>
     )
   }

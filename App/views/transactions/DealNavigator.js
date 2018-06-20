@@ -10,10 +10,11 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
-    height: 64,
+    height: common.navHeight,
     backgroundColor: common.navBgColor,
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   leftBtn: {
     position: 'absolute',

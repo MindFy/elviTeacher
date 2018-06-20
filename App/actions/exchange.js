@@ -155,3 +155,10 @@ export function updateCurrentPair(payload) {
     payload,
   }
 }
+
+export function updateKLineIndex(payload) {
+  return {
+    type: 'exchange/update_kLine_index',
+    payload,
+  }
+}
