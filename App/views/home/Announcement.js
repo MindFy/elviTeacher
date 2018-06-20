@@ -42,7 +42,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   picture: {
-    height: common.getH(234),
     marginTop: common.getH(30),
     marginLeft: common.getH(20),
     marginRight: common.getH(20),
@@ -83,7 +82,23 @@ export default class Announcement extends Component {
       ),
     }
   }
-  componentDidMount() { }
+  constructor() {
+    super()
+    this.state = {
+      pictureHeight: 0,
+    }
+  }
+
+  componentDidMount() {
+    const { navigation } = this.props
+    const imghash = navigation.state.params.element.imghash
+    if (imghash && imghash.length) {
+      const uri = `${imgHashApi}${imghash}`
+      Image.getSize(uri, (w, h) => {
+        this.setState({ pictureHeight: (common.sw - common.getH(40)) / w * h })
+      })
+    }
+  }
 
   render() {
     const { navigation } = this.props
@@ -92,11 +107,16 @@ export default class Announcement extends Component {
     const title = navigation.state.params.element.title
     const content = `        ${navigation.state.params.element.content}`
     const imghash = navigation.state.params.element.imghash
+    const { pictureHeight } = this.state
     let picture = null
     if (imghash && imghash.length) {
+      const uri = `${imgHashApi}${imghash}`
       picture = (<FastImage
-        style={styles.picture}
-        source={{ uri: `${imgHashApi}${imghash}` }}
+        style={[styles.picture, {
+          height: pictureHeight,
+        }]}
+        resizeMode={'contain'}
+        source={{ uri }}
       />)
     }
     return (
