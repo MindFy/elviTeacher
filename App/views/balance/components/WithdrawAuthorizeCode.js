@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   inputInnerContainer: {
     borderColor: common.lineColor,
-    borderWidth: common.getH(1),
+    borderWidth: 1,
     height: common.getH(30),
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   googleInputContainer: {
     borderColor: common.lineColor,
-    borderWidth: common.getH(1),
+    borderWidth: 1,
     width: '62%',
     height: common.getH(30),
     justifyContent: 'center',
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     width: common.getH(70),
     height: common.getH(30),
     borderColor: common.lineColor,
-    borderWidth: common.getH(1),
+    borderWidth: 1,
     justifyContent: 'center',
   },
   cancelBtnText: {
@@ -157,16 +157,15 @@ export default class TKViewCheckAuthorize extends Component {
               }, text)}
               underlineColorAndroid="transparent"
             />
-            <View style={styles.codeContainer}>
-              <TKCheckCodeBtn
-                titleStyle={styles.fetchCodeTitle}
-                onPress={() => {
-                  if (smsCodePress) {
-                    smsCodePress()
-                  }
-                }}
-              />
-            </View>
+            <TKCheckCodeBtn
+              style={styles.codeContainer}
+              titleStyle={styles.fetchCodeTitle}
+              onPress={() => {
+                if (smsCodePress) {
+                  smsCodePress()
+                }
+              }}
+            />
           </View>
         </View>
       </View>

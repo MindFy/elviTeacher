@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     height: common.getH(70),
     flex: 1,
     borderColor: common.lineColor,
-    borderWidth: common.getH(1),
+    borderWidth: 1,
     color: common.placeholderColor,
     fontSize: common.font10,
   },
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     height: common.getH(30),
     width: common.getH(70),
     borderColor: common.lineColor,
-    borderWidth: common.getH(1),
+    borderWidth: 1,
     justifyContent: 'center',
   },
   confirmBtn: {
