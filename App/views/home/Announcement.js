@@ -3,11 +3,59 @@ import {
   Text,
   Image,
   ScrollView,
+  StyleSheet,
 } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import {
   common,
 } from '../../constants/common'
+import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+
+const styles = StyleSheet.create({
+  headerLeft: {
+    height: common.getH(40),
+    width: common.getH(40),
+    justifyContent: 'center',
+  },
+  headerLeftImage: {
+    marginLeft: common.getH(10),
+    width: common.getH(10),
+    height: common.getH(20),
+  },
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+  title: {
+    marginTop: common.getH(20),
+    color: common.textColor,
+    fontSize: common.font14,
+    textAlign: 'center',
+    width: '100%',
+  },
+  createdAt: {
+    marginTop: common.getH(10),
+    color: common.textColor,
+    fontSize: common.font14,
+    textAlign: 'center',
+    width: '100%',
+  },
+  picture: {
+    height: common.getH(234),
+    marginTop: common.getH(30),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
+  },
+  content: {
+    marginTop: common.getH(20),
+    marginLeft: common.getH(20),
+    marginRight: common.getH(20),
+    color: common.textColor,
+    fontSize: common.font14,
+    textAlign: 'left',
+  },
+})
 
 export default class Announcement extends Component {
   static navigationOptions(props) {
@@ -21,27 +69,18 @@ export default class Announcement extends Component {
       headerTitleStyle: {
         fontSize: common.font16,
       },
-      headerLeft:
-        (
-          <NextTouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+      headerLeft: (
+        <NextTouchableOpacity
+          style={styles.headerLeft}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={styles.headerLeftImage}
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
   }
   componentDidMount() { }
@@ -51,41 +90,21 @@ export default class Announcement extends Component {
 
     const createdAt = common.dfFullDate(navigation.state.params.element.createdAt)
     const title = navigation.state.params.element.title
-    const content = navigation.state.params.element.content
+    const content = `        ${navigation.state.params.element.content}`
+    const imghash = navigation.state.params.element.imghash
+    let picture = null
+    if (imghash && imghash.length) {
+      picture = (<FastImage
+        style={styles.picture}
+        source={{ uri: `${imgHashApi}${imghash}` }}
+      />)
+    }
     return (
-      <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-      >
-        <Text
-          style={{
-            marginTop: common.margin60,
-            color: common.textColor,
-            fontSize: common.font14,
-            textAlign: 'center',
-            width: '100%',
-          }}
-        >{title}</Text>
-        <Text
-          style={{
-            marginTop: common.margin10,
-            color: common.textColor,
-            fontSize: common.font14,
-            textAlign: 'center',
-            width: '100%',
-          }}
-        >{createdAt}</Text>
-        <Text
-          style={{
-            marginTop: common.margin20,
-            color: common.textColor,
-            fontSize: common.font14,
-            textAlign: 'center',
-            width: '100%',
-          }}
-        >{content}</Text>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.createdAt}>{createdAt}</Text>
+        {picture}
+        <Text style={styles.content}>{content}</Text>
       </ScrollView>
     )
   }
