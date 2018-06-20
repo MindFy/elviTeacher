@@ -293,7 +293,7 @@ class Otc extends Component {
   }
 
   renderSubmit = () => {
-    const { type, formState } = this.props
+    const { type, formState, loading } = this.props
     const { quantity } = formState
     const caption = type === common.buy ? '买入' : '卖出'
     const q = new BigNumber(quantity)
@@ -314,7 +314,7 @@ class Otc extends Component {
         target="global"
         caption={caption}
         onPress={() => this.onSubmit()}
-        disabled={disabled}
+        disabled={disabled || loading}
       />
     )
   }
