@@ -224,6 +224,8 @@ class Rebates extends Component {
       }, (r) => {
         if (r.result) {
           Toast.success('保存成功')
+        } else if (r.error === '保存出错') {
+          this.showAlert()
         } else {
           Toast.fail('保存失败')
         }
@@ -248,7 +250,7 @@ class Rebates extends Component {
   showAlert() {
     Alert.alert(
       '无法保存',
-      '请在iPhone的“设置-隐私-照片”选项中，允许TOK访问你的照片。',
+      '请在设置中,为本应用开放相册权限',
       [{
         text: '好',
         onPress: () => { },
