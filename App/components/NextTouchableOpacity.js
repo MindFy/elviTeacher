@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 class NextTouchableOpacity extends PureComponent {
-  press(onPress, delay = 500) {
+  press(onPress, delay = 1000) {
     let { target = 'self' } = this.props
     if (target === 'self') {
       target = this
