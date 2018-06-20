@@ -144,10 +144,7 @@ class Me extends Component {
             title="超级返利"
           />
           <MeCell
-            onPress={() => {
-              if (loggedIn) navigation.navigate('Settings')
-              else navigation.navigate('LoginStack')
-            }}
+            onPress={() => navigation.navigate('Settings')}
             leftImageSource={require('../../assets/setting.png')}
             title="设置"
           />

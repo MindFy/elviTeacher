@@ -10,7 +10,6 @@ import {
 } from 'react-native'
 import { Toast, Overlay } from 'teaset'
 import { common } from '../../constants/common'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
@@ -257,7 +256,7 @@ class UpdateBank extends Component {
   handleRequestGetCode(nextProps) {
     const { getCodeResult, getCodeError } = nextProps
     if (getCodeResult && (getCodeResult !== this.props.getCodeResult)) {
-      Toast.success(getCodeResult.message, 2000, 'top')
+      Toast.success(getCodeResult.message)
       return
     }
     if (getCodeError && (getCodeError !== this.props.getCodeError)) {

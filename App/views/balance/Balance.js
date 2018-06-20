@@ -229,20 +229,17 @@ class Balance extends Component {
     )
   }
 
-  renderRefreshControl = () => {
-    const { loading } = this.props
-    return (
-      <RefreshControl
-        onRefresh={() => {
-          const { dispatch, loggedInResult, loggedIn } = this.props
-          if (!loggedIn) return
-          dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
-          dispatch(requestBalanceValuation())
-        }}
-        refreshing={loading}
-      />
-    )
-  }
+  renderRefreshControl = () => (
+    <RefreshControl
+      onRefresh={() => {
+        const { dispatch, loggedInResult, loggedIn } = this.props
+        if (!loggedIn) return
+        dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
+        dispatch(requestBalanceValuation())
+      }}
+      refreshing={false}
+    />
+  )
 
   render() {
     const { loggedIn, navigation, valuation } = this.props
