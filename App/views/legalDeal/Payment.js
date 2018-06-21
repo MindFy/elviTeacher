@@ -16,14 +16,6 @@ export default class Payment extends Component {
     const { navigation } = props
     return {
       headerTitle: navigation.state.params.data.direct === common.buy ? '收款方信息' : '付款方信息',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft:
         (
           <NextTouchableOpacity

@@ -12,14 +12,6 @@ class Market2 extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '市场',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft:
         (
           <NextTouchableOpacity

@@ -60,14 +60,6 @@ export default class Announcement extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '公告中心',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}

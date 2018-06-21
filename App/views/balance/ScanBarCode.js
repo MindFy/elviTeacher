@@ -9,14 +9,6 @@ class ScanBarCode extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '扫一扫',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft:
         (
           <NextTouchableOpacity

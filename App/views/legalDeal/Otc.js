@@ -64,14 +64,6 @@ class Otc extends Component {
     const params = props.navigation.state.params || {}
     return {
       headerTitle: '法币',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerRight: (
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}

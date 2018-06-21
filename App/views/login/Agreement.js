@@ -13,14 +13,6 @@ export default class Agreement extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '用户协议',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft:
         (
           <NextTouchableOpacity
