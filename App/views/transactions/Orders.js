@@ -188,14 +188,6 @@ class Orders extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '我的委托',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft:
         (
           <NextTouchableOpacity
