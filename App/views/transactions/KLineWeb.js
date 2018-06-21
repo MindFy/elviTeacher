@@ -1,12 +1,36 @@
 import React, { Component } from 'react'
-import { WebView } from 'react-native'
+import { WebView, PanResponder, View } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 
 export default class KLine extends Component {
+  componentWillMount() {
+    if (common.IsIOS) {
+      this.panResponder = {
+        panHandlers: {},
+      }
+    } else {
+      this.panResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => {
+          const { scrolViewHandler } = this.props
+          if (scrolViewHandler) {
+            scrolViewHandler(false)
+          }
+          return true
+        },
+        onPanResponderRelease: () => {
+          const { scrolViewHandler } = this.props
+          if (scrolViewHandler) {
+            scrolViewHandler(true)
+          }
+        },
+      })
+    }
+  }
+
   componentDidMount() {
     const { kLineIndex } = this.props
-    this.setLine(kLineIndex, 200)
+    this.setLine(kLineIndex, 500)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -74,18 +98,21 @@ export default class KLine extends Component {
   render() {
     const { goodsName, currencyName } = this.props
     return (
-      <WebView
-        ref={(e) => { this.webView = e }}
-        javaScriptEnabled
-        domStorageEnabled
-        automaticallyAdjustContentInsets={false}
-        style={{
-          width: common.sw,
-          height: common.getH(263),
-          backgroundColor: 'transparent',
-        }}
-        source={{ uri: `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}` }}
-      />
+      <View {...this.panResponder.panHandlers}>
+        <WebView
+          ref={(e) => { this.webView = e }}
+          javaScriptEnabled
+          domStorageEnabled
+          scalesPageToFit={false}
+          automaticallyAdjustContentInsets={false}
+          style={{
+            width: common.sw,
+            height: common.getH(263),
+            backgroundColor: 'transparent',
+          }}
+          source={{ uri: `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}` }}
+        />
+      </View>
     )
   }
 }

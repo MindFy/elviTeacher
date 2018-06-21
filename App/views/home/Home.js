@@ -77,7 +77,10 @@ class Home extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return !equal(nextProps.market, this.props.market)
+    if (nextProps.market.length && this.props.market.length) {
+      return !equal(nextProps.market, this.props.market)
+    }
+    return true
   }
 
   componentWillUnmount() {
