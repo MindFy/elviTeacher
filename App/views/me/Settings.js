@@ -35,14 +35,6 @@ class Settings extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '设置',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}

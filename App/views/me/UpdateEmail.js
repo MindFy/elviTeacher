@@ -46,14 +46,6 @@ class UpdateEmail extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '绑定邮箱',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}

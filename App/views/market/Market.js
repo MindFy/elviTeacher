@@ -17,15 +17,6 @@ class Market extends Component {
   static navigationOptions() {
     return {
       headerTitle: '市场',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
-      headerLeft: null,
     }
   }
 
