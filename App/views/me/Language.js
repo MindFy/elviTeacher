@@ -77,6 +77,7 @@ export default class Language extends Component {
           rightImage={!languageIndex ? rightImage : null}
           onPress={() => this.setLanguage(0)}
           title="中文"
+          target={'self'}
         />
         <MeCell
           leftImageHide
@@ -84,6 +85,7 @@ export default class Language extends Component {
           rightImage={languageIndex ? rightImage : null}
           onPress={() => this.setLanguage(1)}
           title="English"
+          target={'self'}
         />
       </ScrollView>
     )
