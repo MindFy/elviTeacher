@@ -303,7 +303,8 @@ export default class Depth extends Component {
       <Echarts
         option={opts}
         width={common.sw}
-        height={common.sw * common.sw / common.sh}
+        height={common.getH(263)}
+        backgroundColor={"transparent"}
       />
     )
   }

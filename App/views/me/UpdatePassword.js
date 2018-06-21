@@ -44,14 +44,6 @@ class UpdatePassword extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '修改密码',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}

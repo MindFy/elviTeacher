@@ -18,14 +18,6 @@ class History extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '历史记录',
-      headerStyle: {
-        backgroundColor: common.navBgColor,
-        borderBottomWidth: 0,
-      },
-      headerTintColor: 'white',
-      headerTitleStyle: {
-        fontSize: common.font16,
-      },
       headerLeft:
         (
           <NextTouchableOpacity

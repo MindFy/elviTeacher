@@ -4,6 +4,7 @@ import {
   Image,
   Animated,
   StyleSheet,
+  View,
 } from 'react-native'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import {
@@ -187,6 +188,21 @@ const TabBarStack = StackNavigator(
       screen: Rebates,
     },
   }, {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        flex: 1,
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontSize: common.font16,
+      },
+      headerLeft: <View />,
+      headerRight: <View />,
+    },
     headerMode: 'screen',
     transitionConfig: TransitionConfiguration,
   },
@@ -200,6 +216,21 @@ const LoginStack = DismissableStackNavigator(
     ConfirmPwd,
     Agreement,
   }, {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        flex: 1,
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontSize: common.font16,
+      },
+      headerLeft: <View />,
+      headerRight: <View />,
+    },
     headerMode: 'screen',
     transitionConfig: TransitionConfiguration,
   })

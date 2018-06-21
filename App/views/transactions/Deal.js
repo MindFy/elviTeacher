@@ -460,6 +460,13 @@ class Deal extends Component {
           kLineIndex={kLineIndex}
           goodsName={selectedPair.goods.name}
           currencyName={selectedPair.currency.name}
+          scrolViewHandler={(val) => {
+            if (this.scrollView) {
+              this.scrollView.setNativeProps({
+                scrollEnabled: val,
+              })
+            }
+          }}
         />)
       }
       return <Depth depthMap={depthMap} />
@@ -477,6 +484,7 @@ class Deal extends Component {
               } else {
                 dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
               }
+              dispatch(exchange.updateKLineIndex(3))
             }}
           >
             <Text style={styles.kLineBtnTitle}>
@@ -561,6 +569,7 @@ class Deal extends Component {
       <View style={styles.container}>
         {this.renderNavigationBar()}
         <ScrollView
+          ref={(e) => { this.scrollView = e }}
           automaticallyAdjustContentInsets={false}
           contentContainerStyle={styles.contentStyle}
         >

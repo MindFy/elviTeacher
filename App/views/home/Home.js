@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native'
+import equal from 'deep-equal'
 import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
 import {
@@ -73,6 +74,13 @@ class Home extends Component {
         break
       }
     }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.market.length && this.props.market.length) {
+      return !equal(nextProps.market, this.props.market)
+    }
+    return true
   }
 
   componentWillUnmount() {
