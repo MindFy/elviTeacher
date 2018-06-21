@@ -151,6 +151,10 @@ class Authentication extends Component {
       Toast.fail('请输入姓名')
       return
     }
+    if (name.length < 2) {
+      Toast.fail('姓名过短')
+      return
+    }
     if (!idNo.length || !idcard.verify(idNo)) {
       Toast.fail('请输入正确的身份证号')
       return
