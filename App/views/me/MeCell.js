@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
 export default class MeCell extends PureComponent {
   render() {
-    const { rightImage } = this.props
+    const { rightImage, target = 'global' } = this.props
     let customRightImage = (<Image
       style={styles.rightDir}
       source={require('../../assets/arrow_right.png')}
@@ -51,7 +51,7 @@ export default class MeCell extends PureComponent {
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
-        target="global"
+        target={target}
       >
         <View
           style={{
