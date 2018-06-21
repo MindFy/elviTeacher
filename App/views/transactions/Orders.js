@@ -154,33 +154,22 @@ const OHCStyles = StyleSheet.create({
   headerRight: {
     fontSize: common.font12,
   },
-  cellContainer: {
-    marginTop: common.margin10,
-    marginLeft: common.margin10,
-    marginRight: common.margin10,
+  status: {
+    position: 'absolute',
+    right: common.margin5,
+    alignSelf: 'center',
+    fontSize: common.font10,
+    color: common.textColor,
+  },
+  priceView: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    borderBottomColor: common.borderColor,
+    borderBottomWidth: 1,
   },
-  goodsCurrency: {
+  amountView: {
     flex: 1,
-    fontSize: common.font10,
-    color: common.textColor,
-    alignSelf: 'center',
-    textAlign: 'left',
-  },
-  averagePriceOrPrice: {
-    flex: 1,
-    fontSize: common.font10,
-    color: common.textColor,
-    alignSelf: 'center',
-    textAlign: 'center',
-  },
-  dealledOrdealAmount: {
-    flex: 1,
-    fontSize: common.font10,
-    color: common.textColor,
-    alignSelf: 'center',
-    textAlign: 'right',
+    flexDirection: 'row',
   },
 })
 
@@ -546,55 +535,61 @@ class Orders extends Component {
 
   renderOrderHistoryCell = (item) => {
     const goodsCurrency = `${item.goods.name}/${item.currency.name}`
-    let averagePriceOrPrice
-    let dealledOrdealAmount
-
-    const { isShowTotalPrice, isShowDealAmount } = this.props
-    if (!isShowTotalPrice) {
-      let averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
+    const buySell = item.direct === 'buy' ? '买入' : '卖出'
+    const buySellColor =
+      item.direct === 'sell' ? { color: common.greenColor } : { color: common.redColor }
+    const createdAt = common.dfFullDate(item.createdAt)
+    let status = ''
+    let price = ''
+    let averagePrice = ''
+    let dealled = ''
+    let dealamount = ''
+    if (item.status === common.delegate.status.complete) {
+      status = '已完成'
+    } else if (item.status === common.delegate.status.cancel) {
+      status = '已取消'
+    }
+    common.precision(item.goods.name, item.currency.name, (p, q, a) => {
+      price = new BigNumber(item.price).toFixed(p, 1)
+      averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
       if (averagePrice.isNaN()) {
-        averagePrice = 0
+        averagePrice = '0'
+      } else {
+        averagePrice = averagePrice.toFixed(p, 1)
       }
-      common.precision(item.goods.name, item.currency.name, (p) => {
-        averagePriceOrPrice = averagePrice.toFixed(p, 1)
-      })
-    } else {
-      common.precision(item.goods.name, item.currency.name, (p) => {
-        averagePriceOrPrice = new BigNumber(item.price).toFixed(p, 1)
-      })
-    }
-    if (!isShowDealAmount) {
-      common.precision(item.goods.name, item.currency.name, (p, q) => {
-        dealledOrdealAmount = new BigNumber(item.dealled).toFixed(q, 1)
-      })
-    } else {
-      common.precision(item.goods.name, item.currency.name, (p, q, a) => {
-        dealledOrdealAmount = new BigNumber(item.dealamount).toFixed(a, 1)
-      })
-    }
+      dealled = new BigNumber(item.dealled).toFixed(q, 1)
+      dealamount = new BigNumber(item.dealamount).toFixed(a, 1)
+    })
     return (
-      <View style={OHCStyles.cellContainer}>
-        <Text style={OHCStyles.goodsCurrency}>
-          {goodsCurrency}
-        </Text>
-        <Text style={OHCStyles.averagePriceOrPrice}>
-          {averagePriceOrPrice}
-        </Text>
-        <Text style={OHCStyles.dealledOrdealAmount}>
-          {dealledOrdealAmount}
-        </Text>
-      </View>
+      <View style={OOCStyles.cellContainer}>
+        <View style={OOCStyles.cellContentContainer}>
+          <Text style={OOCStyles.goodsCurrency}>
+            {goodsCurrency}
+          </Text>
+          <Text style={[OOCStyles.buySell, buySellColor]}>
+            {buySell}
+          </Text>
+          <Text style={OOCStyles.createTime}>
+            {createdAt}
+          </Text>
+          <Text style={OHCStyles.status}>
+            {status}
+          </Text>
+        </View>
+        <View style={OHCStyles.priceView}>
+          <Text style={OOCStyles.price}>{`价格: ${price}`}</Text>
+          <Text style={OOCStyles.quantity}>{`均价: ${averagePrice}`}</Text>
+          <Text style={OOCStyles.dealled}>{`成交数量: ${dealled}`}</Text>
+        </View>
+        <View style={OHCStyles.amountView}>
+          <Text style={OOCStyles.price}>{`成交金额: ${dealamount}`}</Text>
+          <Text style={OOCStyles.dealled}>{''}</Text>
+        </View>
+      </View >
     )
   }
 
-  renderHeader = () => {
-    const { titleSeleted } = this.props
-
-    if (titleSeleted === '当前委托') {
-      return null
-    }
-    return this.renderOrderHistoryHeader()
-  }
+  renderHeader = () => null
 
   renderCell = ({ item, index }) => {
     const { titleSeleted } = this.props
