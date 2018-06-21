@@ -64,12 +64,12 @@ class Settings extends Component {
       <ScrollView style={styles.container}>
         <StatusBar barStyle={'light-content'} />
 
-        {/* <MeCell
+        <MeCell
           viewStyle={styles.topCell}
           leftImageHide
           onPress={() => navigation.navigate('Language')}
           title="语言"
-        /> */}
+        />
         <MeCell
           leftImageHide
           onPress={() => {
