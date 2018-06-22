@@ -104,7 +104,7 @@ class OtcDetail extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
     return {
-      headerTitle: transfer(params.lang, 'OtcDetail'),
+      headerTitle: transfer(params.language, 'OtcDetail'),
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -141,7 +141,7 @@ class OtcDetail extends Component {
 
   componentWillMount() {
     const { language } = this.props
-    this.props.navigation.setParams({ lang: language })
+    this.props.navigation.setParams({ language })
   }
 
   componentDidMount() {

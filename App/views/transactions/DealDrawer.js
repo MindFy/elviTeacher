@@ -215,7 +215,7 @@ class DealDrawer extends Component {
             <Text style={styles.amountVisible}>
               {caculatedData.newamountVisible}
             </Text>
-            <Text style={styles.amountVisibleTitle}>{`手续费: ${charge}`}</Text>
+            <Text style={styles.amountVisibleTitle}>{`${transfer(language, 'withdrawal_fee')}: ${charge}`}</Text>
           </View>
 
           <View style={styles.inputView}>
