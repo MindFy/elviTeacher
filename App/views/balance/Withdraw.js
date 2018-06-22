@@ -152,8 +152,12 @@ const styles = StyleSheet.create({
 
 class WithDraw extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '提现',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -190,7 +194,10 @@ class WithDraw extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, user, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'balances_withdraw'),
+    })
     dispatch(requestValuation())
     dispatch(requestWithdrawAddress(findAddress(user.id)))
   }

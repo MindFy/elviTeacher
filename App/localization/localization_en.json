@@ -238,6 +238,7 @@
   "recharge_copyed": "",
   "recharge_address": "",
   "recharge_saveQRCode": "",
+  "recharge_historyList": "",
 
   "balances": "Balances",
   "balances_history": "History",

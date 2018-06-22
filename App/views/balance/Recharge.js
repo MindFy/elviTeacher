@@ -121,8 +121,10 @@ const styles = StyleSheet.create({
 class Recharge extends Component {
   static navigationOptions(props) {
     let title = ''
+    let right = ''
     if (props.navigation.state.params) {
       title = props.navigation.state.params.title
+      right = props.navigation.state.params.right
     }
     return {
       headerTitle: title,
@@ -145,7 +147,7 @@ class Recharge extends Component {
         >
           <Text
             style={styles.headerRightText}
-          >历史记录</Text>
+          >{right}</Text>
         </NextTouchableOpacity>
       ),
     }
@@ -155,6 +157,7 @@ class Recharge extends Component {
     const { navigation, language } = this.props
     navigation.setParams({
       title: transfer(language, 'home_deposit'),
+      right: transfer(language, 'recharge_historyList'),
     })
   }
 

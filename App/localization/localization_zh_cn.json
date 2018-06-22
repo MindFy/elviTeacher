@@ -238,6 +238,7 @@
   "recharge_copyed": "已复制到剪贴板",
   "recharge_address": "充值地址",
   "recharge_saveQRCode": "保存二维码",
+  "recharge_historyList": "历史记录",
 
   "balances": "资金",
   "balances_history": "历史记录",
