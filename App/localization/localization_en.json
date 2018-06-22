@@ -9,5 +9,37 @@
   "login_forget_password": "Forgot Password?",
   "login_login": "Log in",
   "login_code": "Code",
-  "login_phoneRegisted": ""
+  "login_phoneRegisted": "",
+
+  "balances": "Balances",
+  "balances_history": "History",
+  "balances_total_value": "Total Value",
+  "balances_deposit": "Deposit",
+  "balances_withdraw": "Withdraw",
+
+  "deposit_address": "Deposit Address",
+  "deposit_copy_address": "Copy address",
+  "deposit_QA_code": "QA Code",
+  "deposit_save_QR_code": "Save QR Code",
+  "deposit_please_note": "Please Note:",
+  "deposit_note_1_1": "1. Please send only",
+  "deposit_note_1_2": " to this deposit address. Or it may result in the loss of your deposit.",
+  "deposit_note_2": "2. After making a deposit to above address, it requires the confirmations from the entire network. It will be deposited after 1 network confirmation, and will be available to withdraw after 6 network confirmations.",
+  "deposit_note_3_1": "3. Minimum deposit amount: 0.001 ",
+  "deposit_note_3_2": ". The deposit less than minimum amount could not be deposited to the balance.",
+  "deposit_note_4": "4. Your deposit address will not change frequently. If it changes, we will notify you through the website announcement or email with our best.",
+  "deposit_note_5": "5. Please make sure the safty f your computer and browser, to prevent the modification or the leak of information.",
+  "deposit_select_coin": "Select Coin",
+
+  "withdrawal_available": "Available",
+  "withdrawal_amount": "Withdrawal Amount",
+  "withdrawal_fee": "Fee",
+  "withdrawal_you_will_get": "You will get",
+  "withdrawal_address": "Address",
+  "withdrawal": "Withdrawal",
+  "withdrawal_note_1": "1. Minimum withdrawal: ",
+  "withdrawal_note_2": "2. Maximum withdrawal amount: No ID Verification: 1 BTC in 24h or other coin with same value. Passed ID Verification: 50 BTC in 24h or other coins with same value.",
+
+  "address_remark": "Remark",
+  "address_add": "Add"
 }

@@ -8,5 +8,37 @@
   "login_forget_password": "忘记密码?",
   "login_login": "登录",
   "login_code": "验证码",
-  "login_phoneRegisted": "手机号已被注册"
+  "login_phoneRegisted": "手机号已被注册",
+
+  "balances": "资金",
+  "balances_history": "历史记录",
+  "balances_total_value": "总资产",
+  "balances_deposit": "充值",
+  "balances_withdraw": "提现",
+
+  "deposit_address": "充值地址",
+  "deposit_copy_address": "复制地址",
+  "deposit_QA_code": "显示二维码",
+  "deposit_save_QR_code": "保存二维码",
+  "deposit_please_note": "温馨提示:",
+  "deposit_note_1_1": "1. 请勿向上述地址充值任何非",
+  "deposit_note_1_2": "资产，否则资产将不可找回。",
+  "deposit_note_2": "2. 您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。",
+  "deposit_note_3_1": "3. 最小充值金额: 0.001 ",
+  "deposit_note_3_2": "，小于最小金额的充值将不会上账。",
+  "deposit_note_4": "4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。",
+  "deposit_note_5": "5. 请务必确认电脑及浏览器安全，防止信息被篡改或泄露。",
+  "deposit_select_coin": "选择币种",
+
+  "withdrawal_available": "可用",
+  "withdrawal_amount": "提现金额",
+  "withdrawal_fee": "手续费",
+  "withdrawal_you_will_get": "实际到账",
+  "withdrawal_address": "地址",
+  "withdrawal": "提现",
+  "withdrawal_note_1": "1. 最小提币数量为: ",
+  "withdrawal_note_2": "2. 最大提币数量为: 未身份认证: 单日限1 BTC或等额其他币种，已身份认证: 单日限50 BTC或等额其他币种",
+
+  "address_remark": "备注",
+  "address_add": "添加"
 }

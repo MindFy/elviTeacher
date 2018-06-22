@@ -25,6 +25,7 @@ import {
 } from '../../actions/recharge'
 import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -214,7 +215,9 @@ class Recharge extends Component {
         overlayOpacity={0}
       >
         <View style={styles.qrContainer}>
-          <Text style={styles.qrRecharge}>{`${coinName}充值地址`}</Text>
+          <Text style={styles.qrRecharge}>
+            {`${coinName} ${transfer(this.props.language, 'deposit_address')}`}
+          </Text>
           <Image
             style={styles.qrImage}
             source={{ uri: `${qrApi}${rechargeAddress}` }}
@@ -235,7 +238,7 @@ class Recharge extends Component {
                 fontSize: common.font14,
                 color: common.btnTextColor,
               }}
-            >保存二维码</Text>
+            >{transfer(this.props.language, 'deposit_save_QR_code')}</Text>
           </NextTouchableOpacity>
         </View>
       </Overlay.View>
@@ -265,6 +268,7 @@ class Recharge extends Component {
   canRechargeAddress = ['BTC', 'ETH', 'ETC', 'LTC']
 
   renderCoinSelector = (currCoin, listToggled, showForm) => {
+    const { language } = this.props
     const arrow = listToggled ? (
       <Image
         style={{ marginRight: common.margin10, width: common.h20, height: common.w10 }}
@@ -286,7 +290,10 @@ class Recharge extends Component {
         }}
       >
         <View style={styles.coinSelector}>
-          <Text style={styles.coin}>{currCoin.name}</Text>
+          <Text style={styles.coin}>
+            {currCoin.name === '选择币种'
+              ? transfer(language, 'deposit_select_coin') : currCoin.name}
+          </Text>
           <View style={{ alignSelf: 'center' }}>
             {arrow}
           </View>
@@ -330,21 +337,25 @@ class Recharge extends Component {
     return coinListView
   }
 
-  renderTip = tokenName => (
-    <View>
-      <Text style={styles.tip}>温馨提示:</Text>
-      <Text style={styles.tip}>{`1. 请勿向上述地址充值任何非${tokenName}资产，否则资产将不可找回。
-2. 您充值至上述地址后，需要整个网络节点的确认，1次网络确认后到账，6次网络确认后可提币。
-3. 最小充值金额：0.00000001 ${tokenName}，小于最小金额的充值将不会上账。
-4. 您的充值地址不会经常改变，可以重复充值；如有更改，我们会尽量通过网站公告或邮件通知您。
-5. 请务必确认电脑及浏览器安全，防止信息被篡改或泄露。`}</Text>
-    </View>
-  )
+  renderTip = (tokenName) => {
+    const { language } = this.props
+    return (
+      <View>
+        <Text style={styles.tip}>{transfer(language, 'deposit_please_note')}</Text>
+        <Text style={styles.tip}>{`${transfer(language, 'deposit_note_1_1')}${tokenName}${transfer(language, 'deposit_note_1_2')}
+${transfer(language, 'deposit_note_2')}
+${transfer(language, 'deposit_note_3_1')}${tokenName}${transfer(language, 'deposit_note_3_2')}
+${transfer(language, 'deposit_note_4')}
+${transfer(language, 'deposit_note_5')}`}</Text>
+      </View>
+    )
+  }
 
   renderRechargeAddress = (rechargeAddress, coinName, qrApi) => {
+    const { language } = this.props
     const addressContent = (
       <View>
-        <Text style={styles.addressTip}>充值地址</Text>
+        <Text style={styles.addressTip}>{transfer(language, 'deposit_address')}</Text>
         <Text style={styles.address}>{rechargeAddress}</Text>
       </View>
     )
@@ -356,13 +367,13 @@ class Recharge extends Component {
             activeOpacity={common.activeOpacity}
             onPress={() => this.clipPress(rechargeAddress)}
           >
-            <Text style={styles.copyAddressBtn}>复制地址</Text>
+            <Text style={styles.copyAddressBtn}>{transfer(language, 'deposit_copy_address')}</Text>
           </NextTouchableOpacity>
           <NextTouchableOpacity
             activeOpacity={common.activeOpacity}
             onPress={() => this.qrPress(rechargeAddress, coinName, qrApi)}
           >
-            <Text style={styles.copyAddressBtn}>显示二维码</Text>
+            <Text style={styles.copyAddressBtn}>{transfer(language, 'deposit_QA_code')}</Text>
           </NextTouchableOpacity>
         </View>
       </View>
@@ -418,6 +429,7 @@ function mapStateToProps(state) {
   return {
     ...state.recharge,
     user: state.user.user,
+    language: state.system.language,
   }
 }
 

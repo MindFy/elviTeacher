@@ -31,6 +31,7 @@ import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -345,7 +346,7 @@ class AddAddress extends Component {
   }
 
   render() {
-    const { navigation, formState } = this.props
+    const { navigation, formState, language } = this.props
 
     return (
       <View
@@ -363,7 +364,7 @@ class AddAddress extends Component {
             inputStyle={{
               fontSize: common.font14,
             }}
-            placeholder="地址"
+            placeholder={transfer(language, 'withdrawal_address')}
             value={formState.address}
             onChangeText={this.handleChangeAddress}
           />
@@ -371,7 +372,7 @@ class AddAddress extends Component {
           <TKInputItem
             viewStyle={styles.remarkContainer}
             inputStyle={{ fontSize: common.font14 }}
-            placeholder="备注"
+            placeholder={transfer(language, 'address_remark')}
             value={formState.remark}
             onChangeText={this.handleRemarkAddress}
           />
@@ -379,7 +380,7 @@ class AddAddress extends Component {
           <TKButton
             style={styles.addContainer}
             onPress={() => this.confirmPress()}
-            caption={'添加'}
+            caption={transfer(language, 'address_add')}
             theme={'gray'}
           />
         </ScrollView>
@@ -388,10 +389,11 @@ class AddAddress extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    ...store.addressAdd,
-    user: store.user.user,
+    ...state.addressAdd,
+    user: state.user.user,
+    language: state.system.language,
   }
 }
 

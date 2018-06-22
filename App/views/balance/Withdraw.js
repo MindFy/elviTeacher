@@ -41,6 +41,7 @@ import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -602,7 +603,7 @@ class WithDraw extends Component {
   }
 
   renderCoinSelector() {
-    const { currCoin, listToggled } = this.props
+    const { currCoin, listToggled, language } = this.props
 
     return (
       <NextTouchableOpacity
@@ -615,7 +616,7 @@ class WithDraw extends Component {
         >
           <Text
             style={styles.currCoin}
-          >{currCoin}</Text>
+          >{currCoin === '选择币种' ? transfer(language, 'deposit_select_coin') : currCoin}</Text>
           <View style={{ alignSelf: 'center' }}>
             <Image
               style={listToggled ? {
@@ -658,12 +659,12 @@ class WithDraw extends Component {
   }
 
   renderFormWithdrawAmount = () => {
-    const { formState } = this.props
+    const { formState, language } = this.props
     return (
       <TKInputItem
         viewStyle={styles.amountView}
         inputStyle={styles.amountInput}
-        placeholder="提现金额"
+        placeholder={transfer(language, 'withdrawal_amount')}
         value={formState.withdrawAmount}
         onChangeText={this.onChangeWithdrawAmount}
       />
@@ -671,7 +672,7 @@ class WithDraw extends Component {
   }
 
   renderFormFeeOrBalanceReceived = () => {
-    const { currCoin, formState } = this.props
+    const { currCoin, formState, language } = this.props
     const fee = this.coinsIdDic[currCoin].fee
     let bAalanceReceived = '0'
     if (formState.withdrawAmount) {
@@ -697,7 +698,7 @@ class WithDraw extends Component {
             fontSize: common.font12,
             alignSelf: 'center',
           }}
-        >{`手续费：${fee}${currCoin}`}</Text>
+        >{`${transfer(language, 'withdrawal_fee')}: ${fee}${currCoin}`}</Text>
         <Text
           style={{
             marginRight: common.margin10,
@@ -706,19 +707,19 @@ class WithDraw extends Component {
             fontSize: common.font12,
             alignSelf: 'center',
           }}
-        >{`实际到账：${bAalanceReceived}`}</Text>
+        >{`${transfer(language, 'withdrawal_you_will_get')}: ${bAalanceReceived}`}</Text>
       </View>
     )
   }
 
   renderFormWithdrawAddress = () => {
-    const { dispatch, formState } = this.props
+    const { dispatch, formState, language } = this.props
 
     return (
       <View style={styles.amountView}>
         <TKInputItem
           inputStyle={styles.addressInput}
-          placeholder="地址"
+          placeholder={transfer(language, 'withdrawal_address')}
           value={formState.withdrawAddress}
           onChangeText={(withdrawAddress = '') => dispatch(updateForm({
             ...formState,
@@ -772,7 +773,7 @@ class WithDraw extends Component {
   }
 
   renderFormWithdrawBtn = () => {
-    const { formState } = this.props
+    const { formState, language } = this.props
     const { withdrawAmount } = formState
     let disabled = false
     let captionColor = common.btnTextColor
@@ -786,14 +787,14 @@ class WithDraw extends Component {
         titleStyle={{ color: captionColor }}
         onPress={() => this.withdrawPress()}
         theme={'gray'}
-        caption={'提现'}
+        caption={transfer(language, 'withdrawal')}
         disabled={disabled}
       />
     )
   }
 
   renderFormTip = () => {
-    const { currCoin } = this.props
+    const { currCoin, language } = this.props
     const minAmount = this.coinsIdDic[currCoin].minAmount
     return (
       <View>
@@ -806,7 +807,7 @@ class WithDraw extends Component {
             fontSize: common.font12,
             lineHeight: common.h15,
           }}
-        >温馨提示:</Text>
+        >{transfer(language, 'deposit_please_note')}</Text>
         <Text
           style={{
             marginTop: common.margin10,
@@ -816,8 +817,8 @@ class WithDraw extends Component {
             fontSize: common.font10,
             lineHeight: common.h15,
           }}
-        >{`1. 最小提币数量为：${minAmount} ${currCoin}
-2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种`}
+        >{`${transfer(language, 'withdrawal_note_1')}${minAmount} ${currCoin}
+${transfer(language, 'withdrawal_note_2')}`}
         </Text>
       </View>
     )
@@ -828,6 +829,7 @@ class WithDraw extends Component {
       balance,
       currCoin,
       listToggled,
+      language,
     } = this.props
 
     const bBalance = new BigNumber(balance)
@@ -841,7 +843,7 @@ class WithDraw extends Component {
     return (currCoin !== '选择币种' && !listToggled) ? (
       (
         <View>
-          <Text style={styles.balanceTip}>可用</Text>
+          <Text style={styles.balanceTip}>{transfer(language, 'withdrawal_available')}</Text>
           <Text style={styles.balance}>{balanceString}</Text>
           {
             (this.canWithdrawCoins.includes(currCoin)) &&
@@ -879,10 +881,11 @@ class WithDraw extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    ...store.withdraw,
-    user: store.user.user,
+    ...state.withdraw,
+    user: state.user.user,
+    language: state.system.language,
   }
 }
 
