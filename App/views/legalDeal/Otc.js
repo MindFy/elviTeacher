@@ -26,6 +26,7 @@ import {
 import findAssetList from '../../schemas/asset'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -63,7 +64,7 @@ class Otc extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
     return {
-      headerTitle: '法币',
+      headerTitle: transfer(params.language, 'Otc'),
       headerRight: (
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -75,7 +76,7 @@ class Otc extends Component {
               fontSize: common.font16,
               color: 'white',
             }}
-          >明细</Text>
+          >{transfer(params.language, 'Otc_detail')}</Text>
         </NextTouchableOpacity>
       ),
     }
@@ -89,40 +90,41 @@ class Otc extends Component {
   }
 
   componentWillMount() {
-    this.props.navigation.setParams({ detailPress: this._detailPress })
+    const { language } = this.props
+    this.props.navigation.setParams({ detailPress: this._detailPress, language })
   }
 
   componentWillReceiveProps(nextProps) {
     const { response } = nextProps
-    const { navigation, dispatch, type, loggedInResult } = this.props
+    const { navigation, dispatch, type, loggedInResult, language } = this.props
 
     if (!response) return
 
     if (response.error) {
       const { error } = response
       if (error.code === 4001414) {
-        Toast.fail('余额不足')
+        Toast.fail(transfer(language, 'Otc_insufficient_balance'))
       } else if (error.code === 4001415) {
-        Toast.fail('请先绑定银行卡')
+        Toast.fail(transfer(language, 'Otc_please_bind_bank_card_first'))
         navigation.navigate('UpdateBank')
       } else if (error.code === 4001416) {
-        Toast.fail('系统未提供可交易的商家')
+        Toast.fail(Toast.fail(transfer(language, 'Otc_system_does_not_provide_tradable_merchants')))
       } else if (error.code === 4001417) {
-        Toast.fail('商家未提供银行卡信息')
+        Toast.fail(transfer(language, 'Otc_merchant_does_not_provide_bank_card_information'))
       } else if (error.code === 4001418) {
         navigation.navigate('Authentication')
-        Toast.fail('请先进行身份认证')
+        Toast.fail(transfer(language, 'Otc_please_perform_authentication_first'))
       } else if (error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'Otc_net_error'))
       } else if (error.code === 4031601) {
-        Toast.fail('请登录后进行操作')
+        Toast.fail(transfer(language, 'Otc_please_login_to_operate'))
       } else {
-        Toast.fail('挂单失败，请重试')
+        Toast.fail(transfer(language, 'Otc_order_pending'))
       }
     } else if (type === 'buy') {
-      Toast.success('买入成功, 请在1小时内按要求完成付款并确认, 逾期订单将被取消!', 5000)
+      Toast.success(transfer(language, 'Otc_buy_success'), 5000)
     } else {
-      Toast.success('卖出成功')
+      Toast.success(transfer(language, 'Otc_sell_success'))
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
     }
     dispatch(clearResponse())
@@ -137,6 +139,7 @@ class Otc extends Component {
       formState: { quantity },
       type,
       navigation,
+      language,
     } = this.props
 
     if (!loggedIn) {
@@ -146,11 +149,17 @@ class Otc extends Component {
 
     const q = new BigNumber(quantity)
     if (!quantity.length || q.eq(0)) {
-      Toast.fail(`请输入${type === common.buy ? '买入' : '卖出'}数量`)
+      const errorMsg = type === common.buy ?
+        transfer(language, 'Otc_enter_the_number_of_purchases') :
+        transfer(language, 'Otc_enter_the_quantity_sold')
+      Toast.fail(errorMsg)
       return
     }
     if (q.lt(common.minQuantityLegalDeal)) {
-      Toast.fail(`${type === common.buy ? '买入' : '卖出'}数量最少为${
+      const errorMsg = type === common.buy ?
+        transfer(language, 'Otc_minimum_purchase_amount') :
+        transfer(language, 'Otc_minimum_quantity_sold')
+      Toast.fail(`${errorMsg}${
         common.minQuantityLegalDeal}`)
       return
     }
@@ -191,10 +200,13 @@ class Otc extends Component {
   prices = {
     buy: '1.00',
     sell: '0.99',
+    买入: '1.00',
+    卖出: '0.99',
   }
 
   renderSelectionBar = () => {
-    const titles = ['买入', '卖出']
+    const { language } = this.props
+    const titles = [transfer(language, 'Otc_buy'), transfer(language, 'Otc_sell')]
     const { dispatch, type } = this.props
     const width = (common.sw - 2 * common.margin10) / titles.length
 
@@ -212,29 +224,30 @@ class Otc extends Component {
   }
 
   renderPrice = () => {
-    const { type } = this.props
+    const { type, language } = this.props
     const price = this.prices[type]
 
     return (
       <TKInputItem
         viewStyle={styles.priceInput}
         value={price.toString()}
-        extra="元"
+        extra={transfer(language, 'Otc_yuan')}
         editable={false}
       />
     )
   }
 
   renderQuantity = () => {
-    const { formState: { quantity }, type } = this.props
-    const placeholder = `${type === common.buy ? '买入' : '卖出'}数量`
-
+    const { formState: { quantity }, type, language } = this.props
+    // const placeholder = `${type === common.buy ? '买入' : '卖出'}数量`
+    const placeholder =
+      transfer(language, type === common.buy ? 'Otc_buy_amount' : 'Otc_sell_amount')
     return (
       <TKInputItem
         viewStyle={styles.quantityInput}
         placeholder={placeholder}
         value={quantity}
-        extra="CNYT"
+        extra={transfer(language, 'Otc_CNYT')}
         onChangeText={e => this.onQuantityChange(e)}
         keyboardType="numeric"
       />
@@ -242,7 +255,7 @@ class Otc extends Component {
   }
 
   renderTotal = () => {
-    const { type, balanceList, amountVisible } = this.props
+    const { type, balanceList, amountVisible, language } = this.props
     let { formState: { quantity } } = this.props
     if (quantity.length === 0) quantity = 0
 
@@ -251,9 +264,9 @@ class Otc extends Component {
     const price = this.prices[type]
     const total = new BigNumber(price).times(new BigNumber(quantity)).toFixed(2, 1)
     if (type === common.buy) {
-      showTotal = `买入总计:${total}元`
+      showTotal = `${transfer(language, 'Otc_buy_total')}:${total}${transfer(language, 'Otc_yuan')}`
     } else {
-      showTotal = `卖出总计:${total}元`
+      showTotal = `${transfer(language, 'Otc_sell_total')}:${total}${transfer(language, 'Otc_yuan')}`
       let cnytVisible = '0.00'
       if (balanceList && balanceList.length !== 0) {
         balanceList.forEach((element) => {
@@ -266,7 +279,7 @@ class Otc extends Component {
         && amountVisible[common.token.CNYT]) {
         cnytVisible = new BigNumber(amountVisible[common.token.CNYT]).toFixed(8, 1)
       }
-      const cnytVisibleTitle = `可用:${cnytVisible}CNYT`
+      const cnytVisibleTitle = `${transfer(language, 'Otc_available')}:${cnytVisible}CNYT`
       showVisible = (
         <Text style={styles.total}>
           {cnytVisibleTitle}
@@ -285,9 +298,11 @@ class Otc extends Component {
   }
 
   renderSubmit = () => {
-    const { type, formState, loading } = this.props
+    const { type, formState, loading, language } = this.props
     const { quantity } = formState
-    const caption = type === common.buy ? '买入' : '卖出'
+    const caption =
+      transfer(language, type === common.buy ? 'Otc_buy' : 'Otc_sell')
+    // const caption = type === common.buy ? '买入' : '卖出'
     const q = new BigNumber(quantity)
     let disabled = false
     let titleColor = common.btnTextColor
@@ -316,12 +331,12 @@ class Otc extends Component {
       <Text
         style={styles.tipsContainer}
       >
-        温馨提示
+        {transfer(this.props.language, 'Otc_pleaes_note')}
       </Text>
       <Text
         style={styles.tipsContent}
       >
-        {'1. 买卖商户均为实地考察认证商户，并提供100万CNYT保证金，您每次兑换会冻结商户资产，商户资产不够时，不能接单，可放心兑换；\n2. 买卖商户均为实名认证商户，可放心兑换；\n3. 请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会退款。（禁止微信和支付宝）\n4. 买入成功后，请在1小时内完成付款并确认“我已付款”，逾期订单将被取消。\n5. 卖出时，商家付款后您将会收到短信提示，请在24小时内“确认收款”，否则订单将会被自动确认。'}
+        {transfer(this.props.language, 'Otc_please_note_content')}
       </Text>
     </View>
   )
@@ -358,6 +373,7 @@ function mapStateToProps(state) {
     loggedInResult: state.authorize.loggedInResult,
     balanceList: state.balance.balanceList,
     amountVisible: state.asset.amountVisible,
+    language: state.system.language,
   }
 }
 

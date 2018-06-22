@@ -17,6 +17,7 @@ import * as actions from '../../actions/updateBank'
 import { findUserUpdate } from '../../actions/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import WithdrawAuthorizeCode from '../balance/components/WithdrawAuthorizeCode'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -113,24 +114,24 @@ class UpdateBank extends Component {
   confirmPress(title) {
     Keyboard.dismiss()
 
-    const { dispatch, formState, navigation, user } = this.props
+    const { dispatch, formState, navigation, user, language } = this.props
     if (title === '重新添加') {
       this.editable = true
       dispatch(actions.updateForm({ bankName: '', subbankName: '', bankNo: '', code: '' }))
       return
     }
     if (!formState.bankName.length || formState.bankName.length < 4) {
-      Toast.fail('请输入开户银行, 至少四位')
+      Toast.fail(transfer(language, 'updateBank_enter_bank_account'))
       return
     }
     if (!formState.subbankName.length || formState.subbankName.length < 4) {
-      Toast.fail('请输入开户支行名称, 至少四位')
+      Toast.fail(transfer(language, 'updateBank_enter_branch_account'))
       return
     }
     if (!formState.bankNo.length
       || !common.regBankNo.test(formState.bankNo)
       || !common.regSpace.test(formState.bankNo)) {
-      Toast.fail('请输入银行卡号, 16-19位数字')
+      Toast.fail(transfer(language, 'updateBank_enter_bank_card_no_at_least'))
       return
     }
     if (!navigation.state.params || !user.bankName.length) {
@@ -150,11 +151,11 @@ class UpdateBank extends Component {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
 
-    const { authCodeType, formState, dispatch } = this.props
+    const { authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码') {
       const { code } = formState
       if (!code) {
-        Toast.fail('请输入验证码')
+        Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
         return
       }
       dispatch(actions.requestUpdateBank({
@@ -165,7 +166,7 @@ class UpdateBank extends Component {
       }))
     } else {
       if (!formState.googleCode.length) {
-        Toast.fail('请输入谷歌验证码')
+        Toast.fail(transfer(language, 'AuthCode_enter_gv_code'))
         return
       }
       dispatch(actions.check2GoogleAuth({ googleCode: formState.googleCode }))
@@ -189,9 +190,10 @@ class UpdateBank extends Component {
 
   segmentValueChanged = (e) => {
     const { dispatch, formState } = this.props
-    dispatch(actions.updateAuthCodeType(e.title))
+    const title = this.codeTitles[e.index]
+    dispatch(actions.updateAuthCodeType(title))
 
-    if (e.title === '谷歌验证码') {
+    if (e.index === 1) {
       dispatch(actions.updateForm({
         ...formState,
         code: '',
@@ -211,7 +213,7 @@ class UpdateBank extends Component {
   }
 
   showAuthCode = () => {
-    const { dispatch, user, formState } = this.props
+    const { dispatch, user, formState, language } = this.props
     dispatch(actions.updateAuthCodeType('短信验证码'))
     dispatch(actions.updateForm({
       ...formState,
@@ -225,7 +227,7 @@ class UpdateBank extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
-          titles={['短信验证码', '谷歌验证码']}
+          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
           mobile={user.mobile}
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
@@ -238,27 +240,29 @@ class UpdateBank extends Component {
     this.overlayViewKeyID = Overlay.show(overlayView)
   }
 
+  codeTitles = ['短信验证码', '谷歌验证码']
+
   errors = {
-    4000101: '验证码不能为空',
-    4000102: '一分钟内不能重复发送验证码',
-    4000104: '手机号码已注册',
-    4000156: '授权验证失败',
+    4000101: 'AuthCode_verification_code_must_be_filled',
+    4000102: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4000104: 'AuthCode_mobile_phone_number_registered',
+    4000156: 'AuthCode_authorization_verification_failed',
   }
 
   handleRequestGetCode(nextProps) {
-    const { getCodeResult, getCodeError } = nextProps
+    const { getCodeResult, getCodeError, language } = nextProps
     if (getCodeResult && (getCodeResult !== this.props.getCodeResult)) {
       Toast.success(getCodeResult.message)
       return
     }
     if (getCodeError && (getCodeError !== this.props.getCodeError)) {
       if (getCodeError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'AuthCode_net_error'))
         return
       }
-      const msg = this.errors[getCodeError.code]
+      const msg = transfer(language, this.errors[getCodeError.code])
       if (msg) Toast.fail(msg)
-      else Toast.fail('获取验证码失败，请重试')
+      else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
     }
   }
 
@@ -274,7 +278,7 @@ class UpdateBank extends Component {
   }
 
   handleRequestUpdateBank(nextProps) {
-    const { updateBankResult, updateBankError, navigation } = nextProps
+    const { updateBankResult, updateBankError, navigation, language } = nextProps
     if (updateBankResult && (updateBankResult !== this.props.updateBankResult)) {
       this.userUpdate(nextProps)
       Toast.success(updateBankResult)
@@ -285,18 +289,18 @@ class UpdateBank extends Component {
     if (updateBankError && (updateBankError !== this.props.updateBankError)) {
       Overlay.hide(this.overlayViewKey)
       if (updateBankError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'UpdateBank_net_error'))
         return
       }
       const msg = this.errors[updateBankError.code]
       if (msg) Toast.fail(msg)
-      else Toast.fail('银行卡绑定失败，请稍后重试')
+      else Toast.fail(transfer(language, 'UpdateBank_blind_card_failed'))
     }
   }
 
   handleRequestCheck2GoogleCode(nextProps) {
     if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
-      const { googleCodeResponse, dispatch, formState } = nextProps
+      const { googleCodeResponse, dispatch, formState, language } = nextProps
       if (googleCodeResponse.success) {
         dispatch(actions.requestUpdateBank({
           bankName: formState.bankName,
@@ -307,9 +311,9 @@ class UpdateBank extends Component {
       } else {
         const errCode = googleCodeResponse.error.code
         if (errCode === 4000171) {
-          Toast.fail('请先绑定谷歌验证码!')
+          Toast.fail(transfer(language, 'AuthCode_bind_gv_code_first'))
         } else {
-          Toast.fail('谷歌验证码错误!')
+          Toast.fail(transfer(language, 'AuthCode_gv_code_error'))
         }
       }
       dispatch(actions.check2GoogleAuthSetResponse(null))
@@ -319,16 +323,16 @@ class UpdateBank extends Component {
   renderTip = () => (
     <View style={styles.tipView}>
       <Text style={styles.tipTitle}>
-        温馨提示
+        {transfer(this.props.language, 'UpdateBank_please_note')}
       </Text>
       <Text style={styles.tipDetail}>
-        1、添加的银行卡必须用于法币交易买卖转账，若使用其他银行卡，可能导致交易失败，请谨慎添加！
+        {transfer(this.props.language, 'UpdateBank_please_note_content')}
       </Text>
     </View>
   )
 
   render() {
-    const { loading, formState, navigation, user } = this.props
+    const { loading, formState, navigation, user, language } = this.props
     let bankName = ''
     if (user) {
       bankName = user.bankName
@@ -352,9 +356,9 @@ class UpdateBank extends Component {
             width: common.h97,
             fontSize: common.font14,
           }}
-          title={'开户银行'}
+          title={transfer(language, 'UpdateBank_account_bank')}
           value={formState.bankName}
-          placeholder={'请输入开户银行'}
+          placeholder={transfer(language, 'UpdateBank_account_bank_placeholder')}
           onChangeText={e => this.onChangeText(e, 'bankName')}
           editable={editable}
         />
@@ -369,9 +373,9 @@ class UpdateBank extends Component {
             width: common.h97,
             fontSize: common.font14,
           }}
-          title={'开户支行'}
+          title={transfer(language, 'UpdateBank_branch')}
           value={formState.subbankName}
-          placeholder={'请输入正确的开户支行名称'}
+          placeholder={transfer(language, 'UpdateBank_branch_placeholder')}
           onChangeText={e => this.onChangeText(e, 'subbankName')}
           editable={editable}
         />
@@ -386,8 +390,8 @@ class UpdateBank extends Component {
             width: common.h97,
             fontSize: common.font14,
           }}
-          title={'银行卡号'}
-          placeholder={'请输入正确的银行卡号'}
+          title={transfer(language, 'UpdateBank_account_No')}
+          placeholder={transfer(language, 'UpdateBank_account_No_placeholder')}
           value={formState.bankNo}
           onChangeText={e => this.onChangeText(e, 'bankNo')}
           keyboardType={'numeric'}
@@ -400,7 +404,7 @@ class UpdateBank extends Component {
         <TKButton
           theme={'gray'}
           style={{ marginTop: common.margin20 }}
-          caption={editable ? '确认' : '重新添加'}
+          caption={transfer(language, editable ? 'UpdateBank_confirm' : 'UpdateBank_addAgain')}
           onPress={() => {
             const title = editable ? '确认' : '重新添加'
             this.confirmPress(title)
@@ -418,6 +422,7 @@ function mapStateToProps(store) {
     ...store.updateBank,
     user: store.user.user,
     loggedInResult: store.authorize.loggedInResult,
+    language: store.system.language,
   }
 }
 
