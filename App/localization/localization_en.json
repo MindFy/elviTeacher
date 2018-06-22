@@ -1,3 +1,10 @@
 {
-  "language": "en"
+  "language": "English",
+  "login/id": "ID",
+  "login/idPlaceholder": "Please enter mobile number with  11 digits",
+  "login/password": "Password",
+  "login/passwordPlaceholder": "Please enter password",
+  "login/newUser": "New User",
+  "login/forget_password": "Forgot Password?",
+  "login/login": "Log in"
 }

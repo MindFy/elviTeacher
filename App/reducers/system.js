@@ -1,5 +1,5 @@
 const initialState = {
-  language: 'zh_ch',
+  language: 'zh_cn',
 }
 
 export default function system(state = initialState, action) {
