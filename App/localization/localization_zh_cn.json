@@ -48,5 +48,11 @@
   "login_hasAccount": "已有账号？去登录",
   "login_registText": "注册",
   "login_verificateFailed": "验证失败，请重试",
-  "login_nextStep": "下一步"
+  "login_nextStep": "下一步",
+  "login_passwordDidMatch": "两次密码输入不一致",
+  "login_resetPasswordSuccess": "重置密码成功",
+  "login_resetPasswordFailed": "重置密码失败，请稍后再试",
+  "login_reEnterPassword": "再次输入新密码",
+  "login_pleaseReEnterPass": "请再次输入新密码",
+  "login_submit": "确定"
 }

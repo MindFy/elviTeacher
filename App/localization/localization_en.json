@@ -48,5 +48,11 @@
   "login_hasAccount": "",
   "login_registText": "",
   "login_verificateFailed": "",
-  "login_nextStep": "Next Step"
+  "login_nextStep": "Next Step",
+  "login_passwordDidMatch": "",
+  "login_resetPasswordSuccess": "",
+  "login_resetPasswordFailed": "",
+  "login_reEnterPassword": "Confirm",
+  "login_pleaseReEnterPass": "Re-enter password",
+  "login_submit": "Submit"
 }
