@@ -13,6 +13,7 @@ import HistoryList from './HistoryList'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 class History extends Component {
   static navigationOptions(props) {
@@ -82,7 +83,26 @@ class History extends Component {
   render() {
     const { dispatch, rechargeOrWithdraw, paymentRecharge, paymentWithdraw, legalDeal, user,
       skipLegalDeal, skipRecharge, skipWithdraw, refreshStateLegalDeal, refreshStateRecharge,
-      refreshStateWithdraw } = this.props
+      refreshStateWithdraw,
+      language,
+    } = this.props
+
+    const listLanguage = {
+      date: transfer(language, 'history_date'),
+      coin: transfer(language, 'history_coin'),
+      amount: transfer(language, 'history_amount'),
+      type: transfer(language, 'history_type'),
+      status: transfer(language, 'history_status'),
+      action: transfer(language, 'history_action'),
+      buy: transfer(language, 'history_buy'),
+      sell: transfer(language, 'history_sell'),
+      cancel: transfer(language, 'history_cancel'),
+      deposited: transfer(language, 'history_deposited'),
+      withdrawed: transfer(language, 'history_withdrawed'),
+      cancelled: transfer(language, 'history_cancelled'),
+      withdrawing: transfer(language, 'history_withdrawing'),
+      pending: transfer(language, 'history_pending'),
+    }
 
     return (
       <View
@@ -96,17 +116,19 @@ class History extends Component {
         />
 
         <TKSelectionBar
-          titles={['充值记录', '提现记录', '法币交易记录']}
+          titles={[transfer(language, 'history_deposit'),
+            transfer(language, 'history_withdrawal'),
+            transfer(language, 'history_otc')]}
           onPress={(e) => {
-            if (e.title === '充值记录') {
+            if (e.title === transfer(language, 'history_deposit')) {
               dispatch(actions.rechargeOrWithdrawUpdate({
                 rechargeOrWithdraw: common.payment.recharge,
               }))
-            } else if (e.title === '提现记录') {
+            } else if (e.title === transfer(language, 'history_withdrawal')) {
               dispatch(actions.rechargeOrWithdrawUpdate({
                 rechargeOrWithdraw: common.payment.withdraw,
               }))
-            } else if (e.title === '法币交易记录') {
+            } else if (e.title === transfer(language, 'history_otc')) {
               dispatch(actions.rechargeOrWithdrawUpdate({
                 rechargeOrWithdraw: common.payment.legalDeal,
               }))
@@ -117,6 +139,7 @@ class History extends Component {
         {
           rechargeOrWithdraw === common.payment.recharge
             ? <HistoryList
+              language={listLanguage}
               data={paymentRecharge}
               rechargeOrWithdraw={rechargeOrWithdraw}
               refreshState={refreshStateRecharge}
@@ -149,6 +172,7 @@ class History extends Component {
         {
           rechargeOrWithdraw === common.payment.withdraw
             ? <HistoryList
+              language={listLanguage}
               data={paymentWithdraw}
               rechargeOrWithdraw={rechargeOrWithdraw}
               refreshState={refreshStateWithdraw}
@@ -186,6 +210,7 @@ class History extends Component {
         {
           rechargeOrWithdraw === common.payment.legalDeal
             ? <HistoryList
+              language={listLanguage}
               data={legalDeal}
               rechargeOrWithdraw={rechargeOrWithdraw}
               refreshState={refreshStateLegalDeal}
@@ -236,6 +261,7 @@ function mapStateToProps(store) {
     legalDeal: store.legalDeal.legalDeal,
     skipLegalDeal: store.legalDeal.skip,
     refreshStateLegalDeal: store.legalDeal.refreshState,
+    language: store.system.language,
   }
 }
 

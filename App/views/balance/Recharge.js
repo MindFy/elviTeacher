@@ -153,18 +153,20 @@ class Recharge extends Component {
   }
 
   clipPress = (rechargeAddress) => {
+    const { language } = this.props
     if (rechargeAddress) {
       Clipboard.setString(rechargeAddress)
-      Toast.success('已复制到剪贴板')
+      Toast.success(transfer(language, 'deposit_copied'))
     }
   }
 
   showAlert() {
+    const { language } = this.props
     Alert.alert(
-      '无法保存',
-      '请在设置中,为本应用开放相册权限',
+      transfer(language, 'deposit_save_QR_code_failed'),
+      transfer(language, 'deposit_save_QR_code_error'),
       [{
-        text: '好',
+        text: transfer(language, 'deposit_ok'),
         onPress: () => { },
       }],
       { cancelable: false },
@@ -172,6 +174,7 @@ class Recharge extends Component {
   }
 
   _saveImageToCameraRoll = (rechargeAddress, qrApi) => {
+    const { language } = this.props
     if (rechargeAddress.length === 0) {
       return
     }
@@ -179,13 +182,13 @@ class Recharge extends Component {
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
         Overlay.hide(this.overlayViewKey)
-        Toast.success('保存成功')
+        Toast.success(transfer(language, 'deposit_save_QR_code_succeed'))
       }).catch((error) => {
         Overlay.hide(this.overlayViewKey)
         if (error.code === 'E_UNABLE_TO_SAVE') {
           this.showAlert()
         } else {
-          Toast.fail('保存失败')
+          Toast.fail(transfer(language, 'deposit_save_QR_code_failed'))
         }
       })
     } else {
@@ -194,11 +197,11 @@ class Recharge extends Component {
       }, (r) => {
         Overlay.hide(this.overlayViewKey)
         if (r.result) {
-          Toast.success('保存成功')
+          Toast.success(transfer(language, 'deposit_save_QR_code_succeed'))
         } else if (r.error === '保存出错') {
           this.showAlert()
         } else {
-          Toast.fail('保存失败')
+          Toast.fail(transfer(language, 'deposit_save_QR_code_failed'))
         }
       })
     }
@@ -356,7 +359,10 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
     const addressContent = (
       <View>
         <Text style={styles.addressTip}>{transfer(language, 'deposit_address')}</Text>
-        <Text style={styles.address}>{rechargeAddress}</Text>
+        <Text style={styles.address}>
+          {rechargeAddress === '暂无可充值地址'
+            ? transfer(language, 'deposit_no_address') : rechargeAddress}
+        </Text>
       </View>
     )
     const isHide = rechargeAddress === '暂无可充值地址'

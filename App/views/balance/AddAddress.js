@@ -198,9 +198,9 @@ class AddAddress extends Component {
   }
 
   confirmPress() {
-    const { formState } = this.props
+    const { formState, language } = this.props
     if (!formState.address.length) {
-      Toast.fail('请填写提币地址')
+      Toast.fail(transfer(language, 'withdrawal_address_required'))
       return
     }
 
@@ -211,10 +211,10 @@ class AddAddress extends Component {
     if (this.checkWithdrawAddressIsIneligible(address, title)) {
       Alert.alert(
         '提示',
-        `请填写正确的${title}提币地址！`,
+        `${transfer(language, 'withdrawal_address_correct_required_1')}${title}${transfer(language, 'withdrawal_address_correct_required_2')}`,
         [
           {
-            text: '确定',
+            text: transfer(language, 'withdrawal_confirm'),
             onPress: () => {},
           },
         ],
@@ -223,7 +223,7 @@ class AddAddress extends Component {
     }
 
     if (!formState.remark.length) {
-      Toast.fail('请填写备注')
+      Toast.fail(transfer(language, 'address_remark_required'))
       return
     }
     // this.showOverlay()

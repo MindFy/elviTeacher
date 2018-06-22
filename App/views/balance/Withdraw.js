@@ -196,9 +196,9 @@ class WithDraw extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading } = this.props
+    const { dispatch, withdrawLoading, language } = this.props
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
-      Toast.success('提现成功')
+      Toast.success(transfer(language, 'withdrawal_succeed'))
     }
 
     if (nextProps.withdrawError) {
@@ -206,7 +206,7 @@ class WithDraw extends Component {
       if (errMsg) {
         Toast.fail(errMsg)
       } else {
-        Toast.fail('添加失败')
+        Toast.fail(transfer(language, 'withdrawal_failed'))
       }
       dispatch(requestWithdrawClearError())
     }
@@ -393,16 +393,16 @@ class WithDraw extends Component {
       return
     }
 
-    const { formState } = this.props
+    const { formState, language } = this.props
 
     if (!formState.withdrawAmount) {
-      Toast.fail('请输入提现金额')
+      Toast.fail(transfer(language, 'withdrawal_amount_required'))
       return
     }
 
     const bAmount = new BigNumber(formState.withdrawAmount)
     if (bAmount.eq(0)) {
-      Toast.fail('请输入提现金额')
+      Toast.fail(transfer(language, 'withdrawal_amount_required'))
       return
     }
 
@@ -417,10 +417,10 @@ class WithDraw extends Component {
     const limitNumber = bQuotaCount.minus(bWithdrawedCount)
 
     const minAmount = this.coinsIdDic[currCoin].minAmount
-    const minAmountMsg = `最小提币金额为${minAmount}`
+    const minAmountMsg = `${transfer(language, 'minimum_withdrawal')}${minAmount}`
 
     if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
-      Toast.fail('提现金额已超过当日限额！')
+      Toast.fail(transfer(language, 'withdrawal_exceed_limit'))
       return
     }
     if (bAmount.lt(minAmount)) {
@@ -429,17 +429,17 @@ class WithDraw extends Component {
     }
 
     if (!formState.withdrawAddress) {
-      Toast.fail('请输入提现地址')
+      Toast.fail(transfer(language, 'withdrawal_address_required'))
       return
     }
 
     if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, currCoin)) {
       Alert.alert(
         '提示',
-        `请填写正确的${currCoin}提币地址！`,
+        `${transfer(language, 'withdrawal_address_correct_required_1')}${currCoin}${transfer(language, 'withdrawal_address_correct_required_2')}`,
         [
           {
-            text: '确定',
+            text: transfer(language, 'withdrawal_confirm'),
             onPress: () => { },
           },
         ],
@@ -583,7 +583,7 @@ class WithDraw extends Component {
   tapAddAddress = () => {
     Keyboard.dismiss()
 
-    const { address = [], currCoin } = this.props
+    const { address = [], currCoin, language } = this.props
     const items = []
     for (let i = 0; i < address.length; i++) {
       const element = address[i]
@@ -595,10 +595,10 @@ class WithDraw extends Component {
       }
     }
     items.push({
-      title: '+添加新地址',
+      title: transfer(language, 'withdrawal_add_address'),
       onPress: () => this.addAddressPress(),
     })
-    const cancelItem = { title: '取消' }
+    const cancelItem = { title: transfer(language, 'withdrawal_cancel') }
     ActionSheet.show(items, cancelItem)
   }
 
