@@ -19,6 +19,7 @@ import {
 } from '../../actions/balance'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -241,7 +242,7 @@ class Balance extends Component {
   }
 
   render() {
-    const { loggedIn, navigation, valuation } = this.props
+    const { loggedIn, navigation, valuation, language } = this.props
     const balanceList = this.filterDataSource()
     let amountBTC = new BigNumber(0)
     let amountRMB = new BigNumber(0)
@@ -268,12 +269,14 @@ class Balance extends Component {
       >
         <Text style={styles.balance}>{amountBTC}</Text>
         <Text style={styles.balanceRMB}>{`(¥${amountRMB})`}</Text>
-        <Text style={styles.balanceTip}>总资产(BTC)</Text>
+        <Text style={styles.balanceTip}>
+          {`${transfer(language, 'balances_total_value')} (BTC)`}
+        </Text>
 
         <View style={styles.btnContainer}>
           <TKButton
             theme={'balance'}
-            caption={'充值'}
+            caption={transfer(language, 'balances_deposit')}
             target="global"
             icon={require('../../assets/recharge.png')}
             onPress={() => {
@@ -283,7 +286,7 @@ class Balance extends Component {
           />
           <TKButton
             theme={'balance'}
-            caption={'提现'}
+            caption={transfer(language, 'balances_withdraw')}
             target="global"
             icon={require('../../assets/recharge2.png')}
             onPress={() => {
@@ -324,6 +327,7 @@ function mapStateToProps(state) {
     balanceList: state.balance.balanceList,
     valuation: state.balance.valuation,
     loading: state.balance.loading,
+    language: state.system.language,
   }
 }
 

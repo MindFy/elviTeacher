@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
+  Alert,
   ScrollView,
   StyleSheet,
   ListView,
@@ -199,6 +200,40 @@ class Deal extends Component {
         transfer(language, 'exchange_enterRightBuyQuality') :
         transfer(language, 'exchange_enterRightSellQuality'))
       this.drawer.hide()
+      return
+    }
+    if ((!idx && new BigNumber(selectedPair.lastprice)
+      .multipliedBy('1.3').isLessThanOrEqualTo(price))
+      || (idx && new BigNumber(selectedPair.lastprice)
+        .multipliedBy('0.7').isGreaterThanOrEqualTo(price))
+    ) {
+      Alert.alert(
+        `您委托的价格${!idx ? '超过' : '低于'}了当前价格的30%，是否确认委托？`,
+        '',
+        [{
+          text: '取消',
+          onPress: () => {},
+          style: 'cancel',
+        }, {
+          text: '确定',
+          onPress: () => {
+            if (this.drawer) {
+              this.drawer.hide()
+            }
+            if (selectedPair) {
+              dispatch(exchange.createOrder({
+                goods_id: selectedPair.goods.id,
+                currency_id: selectedPair.currency.id,
+                direct: !idx ? 'buy' : 'sell',
+                price: p.toFixed(),
+                quantity: q.toFixed(),
+                total_money: a.toFixed(),
+              }))
+            }
+          },
+        }],
+        { cancelable: false },
+      )
       return
     }
     if (this.drawer) {

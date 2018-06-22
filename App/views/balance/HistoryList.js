@@ -12,7 +12,7 @@ export default class HistoryList extends Component {
   componentDidMount() { }
 
   renderHeader() {
-    const { rechargeOrWithdraw } = this.props
+    const { rechargeOrWithdraw, language } = this.props
     if (rechargeOrWithdraw === common.payment.legalDeal) {
       return (
         <View style={{
@@ -30,7 +30,7 @@ export default class HistoryList extends Component {
               alignSelf: 'center',
               textAlign: 'left',
             }}
-          >时间</Text>
+          >{language.date}</Text>
           <Text
             style={{
               color: common.textColor,
@@ -39,7 +39,7 @@ export default class HistoryList extends Component {
               textAlign: 'center',
               alignSelf: 'center',
             }}
-          >币种</Text>
+          >{language.coin}</Text>
           <Text
             style={{
               color: common.textColor,
@@ -48,7 +48,7 @@ export default class HistoryList extends Component {
               textAlign: 'center',
               alignSelf: 'center',
             }}
-          >类型</Text>
+          >{language.type}</Text>
           <Text
             style={{
               flex: 1,
@@ -57,7 +57,7 @@ export default class HistoryList extends Component {
               textAlign: 'right',
               alignSelf: 'center',
             }}
-          >数量</Text>
+          >{language.amount}</Text>
         </View>
       )
     }
@@ -77,7 +77,7 @@ export default class HistoryList extends Component {
             alignSelf: 'center',
             textAlign: 'left',
           }}
-        >时间</Text>
+        >{language.date}</Text>
         <Text
           style={{
             color: common.textColor,
@@ -86,7 +86,7 @@ export default class HistoryList extends Component {
             textAlign: 'center',
             alignSelf: 'center',
           }}
-        >币种</Text>
+        >{language.coin}</Text>
         <Text
           style={{
             flex: 1,
@@ -95,34 +95,34 @@ export default class HistoryList extends Component {
             textAlign: 'center',
             alignSelf: 'center',
           }}
-        >数量</Text>
+        >{language.amount}</Text>
         <Text
           style={{
             color: common.textColor,
             fontSize: common.font12,
-            width: '15%',
+            width: '17%',
             textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
             alignSelf: 'center',
           }}
-        >状态</Text>
+        >{language.status}</Text>
         {
           rechargeOrWithdraw === common.payment.withdraw ?
             <Text
               style={{
                 color: common.textColor,
                 fontSize: common.font12,
-                width: '10%',
+                width: '12%',
                 textAlign: 'right',
                 alignSelf: 'center',
               }}
-            >操作</Text> : null
+            >{language.action}</Text> : null
         }
       </View>
     )
   }
 
   renderItem(rd, rid) {
-    const { rechargeOrWithdraw, cancelWithdraw } = this.props
+    const { rechargeOrWithdraw, cancelWithdraw, language } = this.props
     if (rechargeOrWithdraw === common.payment.legalDeal) {
       const createdAt = common.dfFullDate(rd.createdAt)
       let direct = ''
@@ -130,10 +130,10 @@ export default class HistoryList extends Component {
       const quantity = new BigNumber(rd.quantity).toFixed(2)
       if (rd.direct === common.buy) {
         directColor = common.redColor
-        direct = '买入'
+        direct = language.buy
       } else if (rd.direct === common.sell) {
         directColor = common.greenColor
-        direct = '卖出'
+        direct = language.sell
       }
       return (
         <View style={{
@@ -185,6 +185,24 @@ export default class HistoryList extends Component {
     const btnDisabled = rd.status !== '待审核'
     const createdAt = common.dfFullDate(rd.createdAt)
     const amount = new BigNumber(rd.amount).toFixed(8, 1)
+    let status = ''
+    switch (rd.status) {
+      case '已完成':
+        status = rechargeOrWithdraw === common.payment.recharge
+          ? language.deposited : language.withdrawed
+        break
+      case '已取消':
+        status = language.cancelled
+        break
+      case '提币中':
+        status = language.withdrawing
+        break
+      case '待审核':
+        status = language.pending
+        break
+      default:
+        break
+    }
     return (
       <View style={{
         marginTop: common.margin10,
@@ -224,16 +242,16 @@ export default class HistoryList extends Component {
           style={{
             color: common.textColor,
             fontSize: common.font12,
-            width: '15%',
+            width: '17%',
             textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
             alignSelf: 'center',
           }}
-        >{rd.status}</Text>
+        >{status}</Text>
         {
           rechargeOrWithdraw === common.payment.withdraw ?
             <NextTouchableOpacity
               style={{
-                width: '10%',
+                width: '12%',
                 alignSelf: 'center',
               }}
               onPress={() => cancelWithdraw(rd, rid)}
@@ -245,7 +263,7 @@ export default class HistoryList extends Component {
                   fontSize: common.font12,
                   textAlign: 'right',
                 }}
-              >撤单</Text>
+              >{language.cancel}</Text>
             </NextTouchableOpacity> : null
         }
       </View>
@@ -253,7 +271,7 @@ export default class HistoryList extends Component {
   }
 
   render() {
-    const { data, refreshState, onHeaderRefresh, onFooterRefresh } = this.props
+    const { data, refreshState, onHeaderRefresh, onFooterRefresh, language } = this.props
     return (
       <RefreshListView
         keyExtractor={item => item.id}
@@ -267,6 +285,10 @@ export default class HistoryList extends Component {
           color: common.textColor,
           fontSize: common.font14,
         }}
+        footerRefreshingText={language.loading}
+        footerFailureText={language.reload}
+        footerNoMoreDataText={language.noMoreData}
+        footerEmptyDataText={'暂时没有相关数据'}
       />
     )
   }
