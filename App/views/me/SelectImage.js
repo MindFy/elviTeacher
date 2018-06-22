@@ -9,16 +9,17 @@ import {
 import ImagePicker from 'rn-image-picker-d3j'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 export default class SelectImage extends Component {
   componentDidMount() { }
 
   showImagePicker() {
-    const { imagePickerBlock } = this.props
+    const { imagePickerBlock, language } = this.props
 
     const items = [
       {
-        title: '拍照',
+        title: transfer(language, 'me_takePhoto'),
         onPress: () => {
           ImagePicker.launchCamera({
             cameraType: 'back',
@@ -29,13 +30,13 @@ export default class SelectImage extends Component {
               // const uri = response.uri.replace('file://', '')
               imagePickerBlock(undefined, uri, response.hash)
             } else if (response.error) {
-              imagePickerBlock('获取相机权限失败，请在设置中打开相机权限')
+              imagePickerBlock(transfer(language, 'me_noCameraPower'))
             }
           })
         },
       },
       {
-        title: '从相册选择',
+        title: transfer(language, 'me_takeLibrary'),
         onPress: () => {
           ImagePicker.launchImageLibrary({
             allowsEditing: false,
@@ -45,13 +46,13 @@ export default class SelectImage extends Component {
               // const uri = response.uri.replace('file://', '')
               imagePickerBlock(undefined, uri, response.hash)
             } else if (response.error) {
-              imagePickerBlock('获取相册权限失败，请在设置中打开相册权限')
+              imagePickerBlock(transfer(language, 'me_noLibraryPower'))
             }
           })
         },
       },
     ]
-    const cancelItem = { title: '取消' }
+    const cancelItem = { title: transfer(language, 'home_updateCancel') }
     ActionSheet.show(items, cancelItem)
   }
 

@@ -25,6 +25,7 @@ import {
 } from '../../actions/recharge'
 import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -119,8 +120,12 @@ const styles = StyleSheet.create({
 
 class Recharge extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '充值',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}
@@ -146,24 +151,33 @@ class Recharge extends Component {
     }
   }
 
+  componentDidMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'home_deposit'),
+    })
+  }
+
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(resetNexus())
   }
 
   clipPress = (rechargeAddress) => {
+    const { language } = this.props
     if (rechargeAddress) {
       Clipboard.setString(rechargeAddress)
-      Toast.success('已复制到剪贴板')
+      Toast.success(transfer(language, 'recharge_copyed'))
     }
   }
 
   showAlert() {
+    const { language } = this.props
     Alert.alert(
-      '无法保存',
-      '请在设置中,为本应用开放相册权限',
+      transfer(language, 'me_super_savePhotoFailed'),
+      transfer(language, 'me_super_savePhotoReminder'),
       [{
-        text: '好',
+        text: transfer(language, 'me_super_savePhotoOK'),
         onPress: () => { },
       }],
       { cancelable: false },
@@ -174,17 +188,18 @@ class Recharge extends Component {
     if (rechargeAddress.length === 0) {
       return
     }
+    const { language } = this.props
     const uri = `${qrApi}${rechargeAddress}`
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
         Overlay.hide(this.overlayViewKey)
-        Toast.success('保存成功')
+        Toast.success(transfer(language, 'me_super_saveSuccess'))
       }).catch((error) => {
         Overlay.hide(this.overlayViewKey)
         if (error.code === 'E_UNABLE_TO_SAVE') {
           this.showAlert()
         } else {
-          Toast.fail('保存失败')
+          Toast.fail(transfer(language, 'me_super_saveFailed'))
         }
       })
     } else {
@@ -193,17 +208,18 @@ class Recharge extends Component {
       }, (r) => {
         Overlay.hide(this.overlayViewKey)
         if (r.result) {
-          Toast.success('保存成功')
+          Toast.success(transfer(language, 'me_super_saveSuccess'))
         } else if (r.error === '保存出错') {
           this.showAlert()
         } else {
-          Toast.fail('保存失败')
+          Toast.fail(transfer(language, 'me_super_saveFailed'))
         }
       })
     }
   }
 
   qrPress = (rechargeAddress, coinName, qrApi) => {
+    const { language } = this.props
     const overlayView = (
       <Overlay.View
         style={{
@@ -214,7 +230,7 @@ class Recharge extends Component {
         overlayOpacity={0}
       >
         <View style={styles.qrContainer}>
-          <Text style={styles.qrRecharge}>{`${coinName}充值地址`}</Text>
+          <Text style={styles.qrRecharge}>{`${coinName}${transfer(language, 'recharge_address')}`}</Text>
           <Image
             style={styles.qrImage}
             source={{ uri: `${qrApi}${rechargeAddress}` }}
@@ -235,7 +251,7 @@ class Recharge extends Component {
                 fontSize: common.font14,
                 color: common.btnTextColor,
               }}
-            >保存二维码</Text>
+            >{transfer(language, 'recharge_saveQRCode')}</Text>
           </NextTouchableOpacity>
         </View>
       </Overlay.View>
@@ -418,6 +434,7 @@ function mapStateToProps(state) {
   return {
     ...state.recharge,
     user: state.user.user,
+    language: state.system.language,
   }
 }
 
