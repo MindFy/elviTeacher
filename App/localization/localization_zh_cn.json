@@ -77,4 +77,8 @@
   "history_withdrawing": "提币中",
   "history_cancelled": "已取消",
   "history_pending": "待审核",
+
+  "history_list_loading": "数据加载中…",
+  "history_list_noMoreData": "已加载全部数据",
+  "history_list_reload": "点击重新加载"
 }

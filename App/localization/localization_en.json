@@ -78,4 +78,8 @@
   "history_withdrawing": "Withdrawing",
   "history_cancelled": "Cancelled",
   "history_pending": "Pending",
+
+  "history_list_loading": "Loading…",
+  "history_list_noMoreData": "No More Data",
+  "history_list_reload": "Click To Reload"
 }

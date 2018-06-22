@@ -271,7 +271,7 @@ export default class HistoryList extends Component {
   }
 
   render() {
-    const { data, refreshState, onHeaderRefresh, onFooterRefresh } = this.props
+    const { data, refreshState, onHeaderRefresh, onFooterRefresh, language } = this.props
     return (
       <RefreshListView
         keyExtractor={item => item.id}
@@ -285,6 +285,10 @@ export default class HistoryList extends Component {
           color: common.textColor,
           fontSize: common.font14,
         }}
+        footerRefreshingText={language.loading}
+        footerFailureText={language.reload}
+        footerNoMoreDataText={language.noMoreData}
+        footerEmptyDataText={'暂时没有相关数据'}
       />
     )
   }
