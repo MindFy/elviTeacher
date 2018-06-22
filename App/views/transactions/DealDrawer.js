@@ -74,14 +74,12 @@ const styles = StyleSheet.create({
   amountVisible: {
     color: common.textColor,
     fontSize: common.font10,
-    width: '85%',
-    textAlign: 'right',
+    flex: 1,
     alignSelf: 'center',
   },
   amountVisibleTitle: {
     color: common.textColor,
     fontSize: common.font10,
-    width: '15%',
     alignSelf: 'center',
   },
   buttonStyle: {
@@ -184,6 +182,10 @@ class DealDrawer extends Component {
     if (this.state.visible === false) {
       return null
     }
+    let charge = '0.2%'
+    if (caculatedData.currencyName === common.token.TK) {
+      charge = '0%'
+    }
     return (
       <Modal
         style={styles.cover}
@@ -206,10 +208,11 @@ class DealDrawer extends Component {
           keyboardVerticalOffset={common.IsIOS ? 0 : -220}
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
-            <Text style={styles.amountVisibleTitle}>可用</Text>
+            <Text style={styles.amountVisibleTitle}>可用: </Text>
             <Text style={styles.amountVisible}>
               {caculatedData.newamountVisible}
             </Text>
+            <Text style={styles.amountVisibleTitle}>{`手续费: ${charge}`}</Text>
           </View>
 
           <View style={styles.inputView}>
