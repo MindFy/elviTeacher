@@ -45,8 +45,12 @@ const styles = StyleSheet.create({
 
 class UpdateEmail extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '绑定邮箱',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}
@@ -68,8 +72,10 @@ class UpdateEmail extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, navigation, codeEmail } = this.props
-
+    const { dispatch, user, navigation, codeEmail, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_linkEmail'),
+    })
     dispatch(actions.findUser(schemas.findUser(user.id)))
     if (user.email) {
       dispatch(actions.updateEmailUpdate({ email: user.email, codeEmail }))
@@ -197,6 +203,7 @@ class UpdateEmail extends Component {
           {
             user.emailStatus === common.user.status.bind ? null
               : <TextInputPwd
+                language={language}
                 placeholder={transfer(language, 'me_enter_EmailVerification')}
                 value={codeEmail}
                 codeEmail={'code'}

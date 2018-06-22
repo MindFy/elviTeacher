@@ -47,8 +47,12 @@ const styles = StyleSheet.create({
 
 class UpdateBank extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '银行卡管理',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -72,8 +76,16 @@ class UpdateBank extends Component {
     }
   }
 
+  constructor(props) {
+    super(props)
+    this.codeTitles = ['短信验证码', '谷歌验证码']
+  }
+
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, user, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_bankCards_management'),
+    })
     if (!user) return
     dispatch(actions.updateForm({
       bankName: user.bankName,
@@ -399,14 +411,14 @@ class UpdateBank extends Component {
           editable={editable}
         />
 
-        {this.renderTip()}
+        {this.renderTip(language)}
 
         <TKButton
           theme={'gray'}
           style={{ marginTop: common.margin20 }}
           caption={transfer(language, editable ? 'UpdateBank_confirm' : 'UpdateBank_addAgain')}
           onPress={() => {
-            const title = editable ? '确认' : '重新添加'
+            const title = editable ? transfer(language, 'me_ID_confirm') : transfer(language, 'me_reAddBankCard')
             this.confirmPress(title)
           }}
         />

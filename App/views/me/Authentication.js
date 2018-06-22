@@ -56,8 +56,12 @@ const styles = StyleSheet.create({
 
 class Authentication extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '身份认证',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -88,7 +92,10 @@ class Authentication extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, authenticationAgain, loggedInResult } = this.props
+    const { dispatch, user, authenticationAgain, loggedInResult, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_identity_authentication'),
+    })
     dispatch(actions.findUser(schemas.findUser(loggedInResult.id)))
     dispatch(actions.findAuditmanage(schemas.findAuditmanage(loggedInResult.id)))
     this.listener = DeviceEventEmitter.addListener(common.noti.idCardAuth, () => {
@@ -302,18 +309,21 @@ class Authentication extends Component {
           <SelectImage
             title={transfer(language, 'me_ID_uploadIDcard_FrontPhoto')}
             onPress={() => Keyboard.dismiss()}
+            language={language}
             imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'first')}
             avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
           />
           <SelectImage
             title={transfer(language, 'me_ID_uploadIDcard_BackPhoto')}
             onPress={() => Keyboard.dismiss()}
+            language={language}
             imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'second')}
             avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
           />
           <SelectImage
             title={transfer(language, 'me_ID_uploadIDcard_HandPhoto')}
             onPress={() => Keyboard.dismiss()}
+            language={language}
             imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'third')}
             avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
           />
@@ -407,46 +417,48 @@ class Authentication extends Component {
     }
   }
 
-  renderWaitingTip = () => (
-    <View
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'transparent',
-      }}
-    >
+  renderWaitingTip(language) {
+    return (
       <View
         style={{
           position: 'absolute',
-          alignSelf: 'center',
-          justifyContent: 'center',
-          top: common.margin30,
-          width: '50%',
-          height: common.h60,
-          backgroundColor: 'white',
-          borderRadius: common.radius6,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'transparent',
         }}
       >
-        <Text
+        <View
           style={{
-            color: common.blackColor,
-            fontSize: common.font16,
+            position: 'absolute',
             alignSelf: 'center',
-            textAlign: 'center',
-            lineHeight: common.margin20,
+            justifyContent: 'center',
+            top: common.margin30,
+            width: '50%',
+            paddingVertical: common.getH(8),
+            backgroundColor: 'white',
+            borderRadius: common.radius6,
           }}
-        >{'提交成功\n请耐心等待后台审核'}</Text>
+        >
+          <Text
+            style={{
+              color: common.blackColor,
+              fontSize: common.font16,
+              alignSelf: 'center',
+              textAlign: 'center',
+              lineHeight: common.margin20,
+            }}
+          >{transfer(language, 'me_submitAuthSuccess')}</Text>
+        </View>
       </View>
-    </View>
-  )
+    )
+  }
 
   render() {
-    const { idCardAuthVisible, user } = this.props
+    const { idCardAuthVisible, user, language } = this.props
     const isShowWaitingTip =
       user && user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting
     const contentView = !isShowWaitingTip && this.renderContentView()
-    const waitingTip = isShowWaitingTip && this.renderWaitingTip()
+    const waitingTip = isShowWaitingTip && this.renderWaitingTip(language)
     let transparentView = null
     if (idCardAuthVisible) {
       transparentView = <View style={styles.transparentView} />

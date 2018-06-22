@@ -8,6 +8,7 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   header: {
@@ -75,13 +76,22 @@ export default class MarketList extends Component {
   }
 
   renderHeader() {
+    const { language } = this.props
     return (
       <View style={styles.header}>
         <View style={styles.headerTextView}>
-          <Text style={styles.headerName}>名称</Text>
-          <Text style={styles.headerPrice}>成交量</Text>
-          <Text style={styles.headerPrice}>最新价</Text>
-          <Text style={styles.headerPrice}>24h涨跌</Text>
+          <Text style={styles.headerName}>
+            {transfer(language, 'market_marketName')}
+          </Text>
+          <Text style={styles.headerPrice}>
+            {transfer(language, 'market_marketVolume')}
+          </Text>
+          <Text style={styles.headerPrice}>
+            {transfer(language, 'market_marketLastPrice')}
+          </Text>
+          <Text style={styles.headerPrice}>
+            {transfer(language, 'market_24hourChange')}
+          </Text>
         </View>
         <View style={styles.underLine} />
       </View>
@@ -107,7 +117,7 @@ export default class MarketList extends Component {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
       quantity = new BigNumber(rd.quantity).toFixed(q, 1)
     })
-
+    const { language } = this.props
     return (
       <NextTouchableOpacity
         style={styles.row}
@@ -121,7 +131,9 @@ export default class MarketList extends Component {
         <View style={styles.rowTextView}>
           <View style={styles.rowNameView}>
             <Text style={styles.rowName}>{rd.name}</Text>
-            <Text style={styles.rowNameMark}>{`（${common.coinChinese[rd.name]}）`}</Text>
+            <Text style={styles.rowNameMark}>
+              {`（${transfer(language, `home_${rd.name}Name`)}）`}
+            </Text>
           </View>
           <Text style={styles.rowPrice}>{quantity}</Text>
           <Text style={[styles.rowPrice, {

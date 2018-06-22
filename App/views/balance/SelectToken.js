@@ -9,6 +9,7 @@ import {
 import { common } from '../../constants/common'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 class SelectToken extends Component {
   constructor() {
@@ -107,7 +108,7 @@ class SelectToken extends Component {
     return null
   }
   render() {
-    const { selectedToken, tokenListSelected } = this.props
+    const { selectedToken, tokenListSelected, language } = this.props
     return (
       <View>
         <NextTouchableOpacity
@@ -132,7 +133,7 @@ class SelectToken extends Component {
               }}
             >{
                 selectedToken === common.selectedTokenDefault ?
-                  common.selectedTokenDefault : selectedToken.token.name
+                  transfer(language, 'deposit_select_coin') : selectedToken.token.name
               }</Text>
             <View
               style={{
@@ -160,12 +161,13 @@ class SelectToken extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    selectedToken: store.address.selectedToken,
-    selectedIndex: store.address.selectedIndex,
-    asset: store.asset.asset,
-    selectTokenList: store.asset.selectTokenList,
+    selectedToken: state.address.selectedToken,
+    selectedIndex: state.address.selectedIndex,
+    asset: state.asset.asset,
+    selectTokenList: state.asset.selectTokenList,
+    language: state.system.language,
   }
 }
 

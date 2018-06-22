@@ -16,9 +16,13 @@ import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
 
 class Me extends Component {
-  static navigationOptions() {
+  static navigationOptions({ navigation }) {
+    let title = ''
+    if (navigation.state.params) {
+      title = navigation.state.params.title
+    }
     return {
-      headerTitle: '我的',
+      headerTitle: title,
     }
   }
 
@@ -28,6 +32,13 @@ class Me extends Component {
     this.showLogoutResponse = false
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Me')
+    })
+  }
+
+  componentDidMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_me'),
     })
   }
 

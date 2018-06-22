@@ -13,6 +13,7 @@ import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -95,7 +96,7 @@ class ConfirmPwd extends Component {
   }
 
   confirmPress() {
-    const { dispatch, mobile, code, password, passwordAgain } = this.props
+    const { dispatch, mobile, code, password, passwordAgain, language } = this.props
     if (!password.length || !common.regPassword.test(password)
       || !common.regSpace.test(password)) {
       Toast.show({
@@ -103,17 +104,17 @@ class ConfirmPwd extends Component {
           paddingLeft: common.margin20,
           paddingRight: common.margin20,
         },
-        text: common.regPasswordMsg,
+        text: transfer(language, 'login_passFormatterError'),
         position: 'bottom',
       })
       return
     }
     if (!passwordAgain.length) {
-      Toast.fail('请再次设置密码')
+      Toast.fail(transfer(language, 'login_resetPass'))
       return
     }
     if (password !== passwordAgain) {
-      Toast.fail('两次密码输入不一致')
+      Toast.fail(transfer(language, 'login_passwordDidMatch'))
       return
     }
     dispatch(actions.resetPassword({
@@ -124,7 +125,8 @@ class ConfirmPwd extends Component {
   }
 
   HandleResetPasswordRequest(nextProps) {
-    const { dispatch, resetPasswordVisible, resetPasswordResponse, navigation } = nextProps
+    const { dispatch, resetPasswordVisible, resetPasswordResponse,
+      navigation, language } = nextProps
     if (!resetPasswordVisible && !this.showResetPasswordResponse) return
 
     if (resetPasswordVisible) {
@@ -132,25 +134,26 @@ class ConfirmPwd extends Component {
     } else {
       this.showResetPasswordResponse = false
       if (resetPasswordResponse.success) {
-        Toast.success('重置密码成功')
+        Toast.success(transfer(language, 'login_resetPasswordSuccess'))
         dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
         navigation.goBack('Login')
       } else if (resetPasswordResponse.error.code === 4000104) {
-        Toast.fail('手机号未注册')
+        Toast.fail(transfer(language, 'login_phoneUnRegist'))
       } else if (resetPasswordResponse.error.code === 4000101) {
-        Toast.fail('验证码不能为空')
+        Toast.fail(transfer(language, 'login_codeNotNull'))
       } else if (resetPasswordResponse.error.code === 4000102) {
-        Toast.fail('验证码错误')
+        Toast.fail(transfer(language, 'login_codeError'))
       } else if (resetPasswordResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'login_networdError'))
       } else {
-        Toast.fail('重置密码失败，请稍后再试')
+        Toast.fail(transfer(language, 'login_resetPasswordFailed'))
       }
     }
   }
 
   render() {
-    const { password, passwordAgain, resetPasswordVisible } = this.props
+    const { password, passwordAgain,
+      resetPasswordVisible, language } = this.props
     return (
 
       <ScrollView
@@ -166,8 +169,8 @@ class ConfirmPwd extends Component {
             viewStyle={styles.inputView}
             inputStyle={styles.input}
             titleStyle={styles.inputText}
-            title="密码"
-            placeholder="请输入密码"
+            title={transfer(language, 'login_password')}
+            placeholder={transfer(language, 'login_passwordPlaceholder')}
             value={password}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'password')}
@@ -178,8 +181,8 @@ class ConfirmPwd extends Component {
             viewStyle={[styles.inputView, { marginTop: common.margin40 }]}
             inputStyle={styles.input}
             titleStyle={styles.inputText}
-            title="再次输入新密码"
-            placeholder="请再次输入新密码"
+            title={transfer(language, 'login_reEnterPassword')}
+            placeholder={transfer(language, 'login_pleaseReEnterPass')}
             value={passwordAgain}
             maxLength={common.textInputMaxLenPwd}
             onChange={e => this.onChange(e, 'passwordAgain')}
@@ -189,7 +192,7 @@ class ConfirmPwd extends Component {
           <TKButton
             style={{ marginTop: common.getH(227) }}
             theme={'yellow'}
-            caption="确定"
+            caption={transfer(language, 'login_submit')}
             onPress={() => this.confirmPress()}
             disabled={resetPasswordVisible}
           />
@@ -211,6 +214,7 @@ function mapStateToProps(store) {
 
     resetPasswordVisible: store.user.resetPasswordVisible,
     resetPasswordResponse: store.user.resetPasswordResponse,
+    language: store.system.language,
   }
 }
 

@@ -226,7 +226,7 @@ class Rebates extends Component {
       }, (r) => {
         if (r.result) {
           Toast.success(transfer(language, 'me_super_saveSuccess'))
-        } else if (r.error === transfer(language, 'me_super_saveWrong')) {
+        } else if (r.error === '保存出错') {
           this.showAlert()
         } else {
           Toast.fail(transfer(language, 'me_super_saveFailed'))
