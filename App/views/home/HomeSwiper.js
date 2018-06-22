@@ -66,7 +66,7 @@ export default class HomeSwiper extends Component {
           <FastImage
             style={styles.bannersImage}
             // resizeMode="stretch"
-            source={{ uri: `${imgHashApi}${element.imghash}.t${common.sw * 2}x468.jpg` }}
+            source={{ uri: `${imgHashApi}${element.imghash}.t${parseInt(common.sw * 2, 0)}x468.jpg` }}
           />
         </NextTouchableOpacity>
       ))
