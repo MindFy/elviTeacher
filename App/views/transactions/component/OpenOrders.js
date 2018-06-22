@@ -133,9 +133,9 @@ class OpenOrders extends Component {
     })
 
     const goodsCurrency = `${goodsName}/${currencyName}`
-    const buySell = item.direct
+    const buySell = item.direct === 'buy' ? transfer(language, 'exchange_buy') : transfer(language, 'exchange_sell')
     const buySellColor =
-      item.direct === transfer(language, 'exchange_sell') ? { color: common.greenColor } : { color: common.redColor }
+      item.direct === 'sell' ? { color: common.greenColor } : { color: common.redColor }
     const cancelColor =
       cancelDisabled ? { color: common.placeholderColor } : { color: common.btnTextColor }
 

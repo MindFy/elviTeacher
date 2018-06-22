@@ -122,5 +122,12 @@
   "exchange_canceled": "",
   "exchange_changed": "",
   "exchange_lastTime": "Date",
-  "exchange_24changed": "24h Volume"
+  "exchange_24changed": "24h Volume",
+  "exchange_averagePrice": "",
+  "exchange_changedAmount": "",
+  "exchange_money": "",
+  "exchange_dataInLoading": "",
+  "exchange_dataFailureText": "",
+  "excgange_dataNoMoreData": "",
+  "exchcnge_noData": ""
 }

@@ -52,6 +52,14 @@ class Market extends Component {
         title: 'CNYT',
       }))
     }
+    if (nextProp.language !== this.props.language) {
+      const { navigation, language } = nextProp
+      setTimeout(() => {
+        navigation.setParams({
+          title: transfer(language, 'market_market'),
+        })
+      }, 2000)
+    }
   }
 
   componentWillUnmount() {

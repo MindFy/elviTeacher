@@ -122,5 +122,12 @@
   "exchange_canceled": "已取消",
   "exchange_changed": "已成交",
   "exchange_lastTime": "时间",
-  "exchange_24changed": "24小时成交量"
+  "exchange_24changed": "24小时成交量",
+  "exchange_averagePrice": "均价",
+  "exchange_changedAmount": "成交数量",
+  "exchange_money": "金额",
+  "exchange_dataInLoading": "数据加载中…",
+  "exchange_dataFailureText": "点击重新加载",
+  "exchange_dataNoMoreData": "已加载全部数据",
+  "exchcnge_noData": "暂时没有相关数据"
 }
