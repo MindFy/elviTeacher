@@ -218,7 +218,7 @@ class Login extends PureComponent {
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            {transfer(language, 'login/idPlaceholder')}
+            {transfer(language, 'login_idError')}
           </Text> : null}
       </View>
     )
@@ -232,8 +232,8 @@ class Login extends PureComponent {
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
-          title={transfer(language, 'login/id')}
-          placeholder="请输入11位手机号"
+          title={transfer(language, 'login_id')}
+          placeholder={transfer(language, 'login_idPlaceholder')}
           value={formState.mobile}
           maxLength={11}
           textInputProps={{
@@ -255,8 +255,8 @@ class Login extends PureComponent {
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
-          title="密码"
-          placeholder="请输入密码"
+          title={transfer(language, 'login_password')}
+          placeholder={transfer(language, 'login_passwordPlaceholder')}
           value={formState.password}
           maxLength={common.textInputMaxLenPwd}
           secureTextEntry
@@ -267,17 +267,17 @@ class Login extends PureComponent {
   }
 
   renderExtraBtns = () => {
-    const { navigation } = this.props
+    const { navigation, language } = this.props
     return (
       <View style={styles.extraBtns}>
         <TKButton
           theme="small"
-          caption="新用户注册"
+          caption={transfer(language, 'login_newUser')}
           onPress={() => navigation.navigate('Register')}
         />
         <TKButton
           theme="small"
-          caption="忘记密码?"
+          caption={transfer(language, 'login_forget_password')}
           onPress={() => navigation.navigate('ForgotPwd')}
         />
       </View>
@@ -285,7 +285,7 @@ class Login extends PureComponent {
   }
 
   render() {
-    const { loading } = this.props
+    const { loading, language } = this.props
     return (
       <ScrollView
         style={styles.container}
@@ -302,7 +302,7 @@ class Login extends PureComponent {
           <TKButton
             style={{ marginTop: common.margin40 }}
             theme="yellow"
-            caption="登录"
+            caption={transfer(language, 'login_login')}
             onPress={this.loginPress}
             disabled={this.loading}
           />
