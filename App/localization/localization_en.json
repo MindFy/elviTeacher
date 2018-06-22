@@ -1,0 +1,13 @@
+{
+  "language": "English",
+  "login_id": "ID",
+  "login_idPlaceholder": "11 digits mobile number",
+  "login_idError": "Please enter mobile number with  11 digits",
+  "login_password": "Password",
+  "login_passwordPlaceholder": "Please enter password",
+  "login_newUser": "New User",
+  "login_forget_password": "Forgot Password?",
+  "login_login": "Log in",
+  "login_code": "Code",
+  "login_phoneRegisted": ""
+}

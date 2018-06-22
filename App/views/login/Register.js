@@ -16,6 +16,7 @@ import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import TKButton from '../../components/TKButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import TKSpinner from '../../components/TKSpinner'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   cover: {
@@ -290,15 +291,15 @@ class Register extends Component {
   }
 
   renderAccount = () => {
-    const { mobile } = this.props
+    const { mobile, language } = this.props
     return (
       <TKInputItem
         viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
-        title="账号"
-        placeholder="请输入11位手机号"
+        title={transfer(language, 'login_id')}
+        placeholder={transfer(language, 'login_idPlaceholder')}
         textInputProps={{
           keyboardType: 'phone-pad',
           onBlur: () => {
@@ -330,12 +331,12 @@ class Register extends Component {
 
   renderAccountTip = () => {
     const { showTip } = this.state
-    const { mobileIsExist } = this.props
+    const { mobileIsExist, language } = this.props
     if (mobileIsExist) {
       return (
         <View style={{ height: 40 }}>
           <Text style={styles.mobileTip}>
-            手机号已被注册
+            {transfer(language, 'login_phoneRegisted')}
           </Text>
         </View>
       )
@@ -344,14 +345,14 @@ class Register extends Component {
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            请输入正确的11位手机号
+            {transfer(language, 'login_idError')}
           </Text> : null}
       </View>
     )
   }
 
   renderCheckCode = () => {
-    const { code, mobile, mobileIsExist } = this.props
+    const { code, mobile, mobileIsExist, language } = this.props
     return (
       <TKInputItemCheckCode
         viewStyle={{ flex: undefined }}
@@ -599,6 +600,8 @@ function mapStateToProps(state) {
 
     getVerificateCodeVisible: state.user.getVerificateCodeVisible,
     getVerificateCodeResponse: state.user.getVerificateCodeResponse,
+
+    language: state.system.language,
   }
 }
 

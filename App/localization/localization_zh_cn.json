@@ -1,0 +1,12 @@
+{
+  "language": "中文",
+  "login_id": "账号",
+  "login_idPlaceholder": "请输入11位手机号",
+  "login_password": "密码",
+  "login_passwordPlaceholder": "请输入密码",
+  "login_newUser": "新用户注册",
+  "login_forget_password": "忘记密码?",
+  "login_login": "登录",
+  "login_code": "验证码",
+  "login_phoneRegisted": "手机号已被注册"
+}
