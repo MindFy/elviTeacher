@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
 
 export default class MeCell extends PureComponent {
   render() {
-    const { rightImage, target = 'global' } = this.props
+    const { rightImage } = this.props
     let customRightImage = (<Image
       style={styles.rightDir}
       source={require('../../assets/arrow_right.png')}
@@ -48,10 +48,10 @@ export default class MeCell extends PureComponent {
     }
     return (
       <NextTouchableOpacity
+        {...this.props}
         style={[styles.viewStyle, this.props.viewStyle]}
         activeOpacity={common.activeOpacity}
         onPress={this.props.onPress}
-        target={target}
       >
         <View
           style={{

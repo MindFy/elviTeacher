@@ -18,6 +18,7 @@ import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -212,25 +213,26 @@ class Login extends PureComponent {
 
   renderMobileTip = () => {
     const { showTip } = this.state
+    const { language } = this.props
     return (
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            请输入正确的11位手机号
+            {transfer(language, 'login/idPlaceholder')}
           </Text> : null}
       </View>
     )
   }
 
   renderInput = () => {
-    const { formState, dispatch } = this.props
+    const { formState, dispatch, language } = this.props
 
     return (
       <View style={styles.input}>
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
-          title="账号"
+          title={transfer(language, 'login/id')}
           placeholder="请输入11位手机号"
           value={formState.mobile}
           maxLength={11}
@@ -320,6 +322,7 @@ function mapStateToProps(store) {
     loading: store.authorize.loading,
     loggedIn: store.authorize.loggedIn,
     loggedInResult: store.authorize.loggedInResult,
+    language: store.system.language,
   }
 }
 

@@ -98,6 +98,7 @@ class Me extends Component {
             }}
             title={!loggedIn ? '请登录' : this.maskPhone(loggedInResult.mobile)}
             rightImageHide
+            target="global"
           />
           <MeCell
             viewStyle={{
@@ -109,6 +110,7 @@ class Me extends Component {
             }}
             leftImageSource={require('../../assets/phone_right.png')}
             title="身份认证"
+            target="global"
           />
           <MeCell
             onPress={() => {
@@ -117,6 +119,7 @@ class Me extends Component {
             }}
             leftImageSource={require('../../assets/phone_down.png')}
             title="安全中心"
+            target="global"
           />
           <MeCell
             onPress={() => {
@@ -125,6 +128,7 @@ class Me extends Component {
             }}
             leftImageSource={require('../../assets/bank_card.png')}
             title="银行卡管理"
+            target="global"
           />
           <MeCell
             onPress={() => {
@@ -133,6 +137,7 @@ class Me extends Component {
             }}
             leftImageSource={require('../../assets/gift.png')}
             title="超级返利"
+            target="global"
           />
           <MeCell
             onPress={() => navigation.navigate('Settings')}

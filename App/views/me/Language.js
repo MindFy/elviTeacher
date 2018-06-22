@@ -4,9 +4,11 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
+import { connect } from 'react-redux'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import * as system from '../../actions/system'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -33,7 +35,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Language extends Component {
+class Language extends Component {
   static navigationOptions(props) {
     return {
       headerTitle: '语言',
@@ -53,17 +55,18 @@ export default class Language extends Component {
   }
   constructor() {
     super()
-    this.state = {
-      languageIndex: 0,
+    this.language = ['zh_cn', 'en']
+  }
+
+  setLanguage(launageEvt) {
+    const { dispatch, language } = this.props
+    if (launageEvt !== language) {
+      dispatch(system.updateLanguage(launageEvt))
     }
   }
 
-  setLanguage(languageIndex) {
-    this.setState({ languageIndex })
-  }
-
   render() {
-    const { languageIndex } = this.state
+    const languageIndex = this.language.indexOf(this.props.language)
     const rightImage = (<Image
       style={styles.checkBox}
       source={require('../../assets/check_box.png')}
@@ -75,19 +78,27 @@ export default class Language extends Component {
           leftImageHide
           rightImageHide={languageIndex}
           rightImage={!languageIndex ? rightImage : null}
-          onPress={() => this.setLanguage(0)}
+          onPress={() => this.setLanguage('zh_cn')}
           title="中文"
-          target={'self'}
+          delay={500}
         />
         <MeCell
           leftImageHide
           rightImageHide={!languageIndex}
           rightImage={languageIndex ? rightImage : null}
-          onPress={() => this.setLanguage(1)}
+          onPress={() => this.setLanguage('en')}
           title="English"
-          target={'self'}
+          delay={500}
         />
       </ScrollView>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    language: state.system.language,
+  }
+}
+
+export default connect(mapStateToProps)(Language)
