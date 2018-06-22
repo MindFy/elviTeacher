@@ -172,7 +172,7 @@ class UpdateEmail extends Component {
   }
 
   render() {
-    const { email, codeEmail, updateEmailVisible, user } = this.props
+    const { email, codeEmail, updateEmailVisible, user, language } = this.props
 
     return (
       <ScrollView
@@ -195,6 +195,7 @@ class UpdateEmail extends Component {
           {
             user.emailStatus === common.user.status.bind ? null
               : <TextInputPwd
+                language={language}
                 placeholder={'请输入邮箱验证码'}
                 value={codeEmail}
                 codeEmail={'code'}
@@ -236,6 +237,7 @@ function mapStateToProps(store) {
     updateEmailVisible: store.user.updateEmailVisible,
     getVerificateSmtpCodeVisible: store.user.getVerificateSmtpCodeVisible,
     getVerificateSmtpCodeResponse: store.user.getVerificateSmtpCodeResponse,
+    language: store.system.language,
   }
 }
 

@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js'
 import { ListView, View, Text, StyleSheet } from 'react-native'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import { common } from '../../../constants/common'
-
+import transfer from '../../../localization/utils'
 
 const OOCStyles = StyleSheet.create({
   headerContainer: {
@@ -107,16 +107,16 @@ class OpenOrders extends Component {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  renderOpenOrderCell = (item) => {
+  renderOpenOrderCell = (item, language) => {
     const createdAt = common.dfFullDate(item.createdAt)
     let cancelBtnTitle = ''
     let cancelDisabled = true
     if ((item.status === common.delegate.status.dealing)
         || (item.status === common.delegate.status.waiting)) {
-      cancelBtnTitle = '撤单'
+      cancelBtnTitle = transfer(language, 'exchange_cancelOrder')
       cancelDisabled = false
     } else if (item.status === common.delegate.status.cancel) {
-      cancelBtnTitle = '已取消'
+      cancelBtnTitle = transfer(language, 'exchange_canceled')
       cancelDisabled = true
     }
 
@@ -133,9 +133,9 @@ class OpenOrders extends Component {
     })
 
     const goodsCurrency = `${goodsName}/${currencyName}`
-    const buySell = item.direct === 'buy' ? '买入' : '卖出'
+    const buySell = item.direct
     const buySellColor =
-      item.direct === 'sell' ? { color: common.greenColor } : { color: common.redColor }
+      item.direct === transfer(language, 'exchange_sell') ? { color: common.greenColor } : { color: common.redColor }
     const cancelColor =
       cancelDisabled ? { color: common.placeholderColor } : { color: common.btnTextColor }
 
@@ -173,25 +173,35 @@ class OpenOrders extends Component {
             flexDirection: 'row',
           }}
         >
-          <Text style={OOCStyles.price}>{`价格: ${price}`}</Text>
-          <Text style={OOCStyles.quantity}>{`数量: ${quantity}`}</Text>
-          <Text style={OOCStyles.dealled}>{`已成交: ${dealled}`}</Text>
+          <Text style={OOCStyles.price}>{`${transfer(language, 'exchange_price')}: ${price}`}</Text>
+          <Text style={OOCStyles.quantity}>{`${transfer(language, 'exchange_quality')}: ${quantity}`}</Text>
+          <Text style={OOCStyles.dealled}>{`${transfer(language, 'exchange_changed')}: ${dealled}`}</Text>
         </View>
       </View >
     )
   }
 
   render() {
-    const { dataSource } = this.props
+    const { dataSource, language } = this.props
+    if (dataSource === undefined) {
+      return (
+        <Text style={OOCStyles.tips}>
+          {transfer(language, 'exchange_loadingData')}
+        </Text>
+      )
+    }
     if (dataSource.length === 0) {
       return (
-        <Text style={OOCStyles.tips}>暂无委托单</Text>
+        <Text style={OOCStyles.tips}>
+          {transfer(language, 'exchange_noOrders')}
+        </Text>
       )
     }
     return (
       <ListView
         dataSource={this.dataSource.cloneWithRows(dataSource)}
-        renderRow={(rd, sid, rid) => this.renderOpenOrderCell(rd, rid, common.buy)}
+        renderRow={(rd, sid, rid) => this.renderOpenOrderCell(rd, rid,
+          transfer(language, 'exchange_buy'), language)}
         enableEmptySections
         removeClippedSubviews={false}
       />

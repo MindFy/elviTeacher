@@ -12,11 +12,16 @@ import {
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
+import transfer from '../../localization/utils'
 
 class Market extends Component {
-  static navigationOptions() {
+  static navigationOptions({ navigation }) {
+    let title = ''
+    if (navigation.state.params) {
+      title = navigation.state.params.title
+    }
     return {
-      headerTitle: '市场',
+      headerTitle: title,
     }
   }
 
@@ -28,7 +33,10 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
+    const { dispatch, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'market_market'),
+    })
     dispatch(requestPairInfo({}))
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
@@ -103,7 +111,7 @@ class Market extends Component {
   }
 
   render() {
-    const { currPair, pairs } = this.props
+    const { currPair, pairs, language } = this.props
 
     const items = ['CNYT', 'BTC', 'TK']
     let index = 0
@@ -125,6 +133,7 @@ class Market extends Component {
           onClickItem={this.onClickItem}
         />
         <MarketList
+          language={language}
           data={marketData}
           currencyName={currPair}
           onClickMarketItem={this.onClickMarketItem}
@@ -138,6 +147,7 @@ function mapStateToProps(store) {
   return {
     currPair: store.market.currPair,
     pairs: store.market.pairs,
+    language: store.system.language,
   }
 }
 

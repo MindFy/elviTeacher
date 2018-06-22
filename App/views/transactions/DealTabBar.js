@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -32,13 +33,13 @@ const styles = StyleSheet.create({
 
 export default class DealTabBar extends PureComponent {
   render() {
-    const { titles, onPress } = this.props
+    const { titles, onPress, language } = this.props
 
     const item = (title, index) => {
       let backgroundColor = common.textColor
-      if (title === '买入') {
+      if (title === transfer(language, 'exchange_buy')) {
         backgroundColor = common.redColor
-      } else if (title === '卖出') {
+      } else if (title === transfer(language, 'exchange_sell')) {
         backgroundColor = common.greenColor
       }
       return (

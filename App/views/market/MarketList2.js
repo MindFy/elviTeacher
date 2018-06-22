@@ -8,6 +8,7 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   header: {
@@ -74,21 +75,29 @@ export default class MarketList2 extends Component {
     }).cloneWithRows(data)
   }
 
-  renderHeader() {
+  renderHeader(language) {
     return (
       <View style={styles.header}>
         <View style={styles.headerTextView}>
-          <Text style={styles.headerName}>名称</Text>
-          <Text style={styles.headerPrice}>成交量</Text>
-          <Text style={styles.headerPrice}>最新价</Text>
-          <Text style={styles.headerPrice}>24h涨跌</Text>
+          <Text style={styles.headerName}>
+            {transfer(language, 'market_marketName')}
+          </Text>
+          <Text style={styles.headerPrice}>
+            {transfer(language, 'market_marketVolume')}
+          </Text>
+          <Text style={styles.headerPrice}>
+            {transfer(language, 'market_marketLastPrice')}
+          </Text>
+          <Text style={styles.headerPrice}>
+            {transfer(language, 'market_24hourChange')}
+          </Text>
         </View>
         <View style={styles.underLine} />
       </View>
     )
   }
 
-  renderRow(rd, currencyName) {
+  renderRow(rd, currencyName, language) {
     let typeColor = common.textColor
     let rose = new BigNumber(rd.rose).multipliedBy(100)
     let quantity
@@ -121,7 +130,9 @@ export default class MarketList2 extends Component {
         <View style={styles.rowTextView}>
           <View style={styles.rowNameView}>
             <Text style={styles.rowName}>{rd.name}</Text>
-            <Text style={styles.rowNameMark}>{`（${common.coinChinese[rd.name]}）`}</Text>
+            <Text style={styles.rowNameMark}>
+              {`（${transfer(language, `home_${rd.name}Name`)}）`}
+            </Text>
           </View>
           <Text style={styles.rowPrice}>{quantity}</Text>
           <Text style={[styles.rowPrice, {
@@ -140,12 +151,12 @@ export default class MarketList2 extends Component {
   }
 
   render() {
-    const { data, currencyName } = this.props
+    const { data, currencyName, language } = this.props
     return (
       <ListView
         dataSource={this.listDS(data)}
-        renderRow={rd => this.renderRow(rd, currencyName)}
-        renderHeader={() => this.renderHeader()}
+        renderRow={rd => this.renderRow(rd, currencyName, language)}
+        renderHeader={() => this.renderHeader(language)}
         enableEmptySections
         removeClippedSubviews={false}
       />

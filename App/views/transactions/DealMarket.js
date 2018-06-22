@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -54,6 +55,7 @@ export default class DealMarket extends PureComponent {
       cprice,
       quantity,
       rmb,
+      language,
     } = this.props
     let cpriceColor
     let dirImageSource
@@ -90,7 +92,7 @@ export default class DealMarket extends PureComponent {
 
         <View style={{ flexDirection: 'row' }}>
           <Text style={styles.quantityTitle}>
-            24小时成交量
+            {transfer(language, 'exchange_24changed')}
           </Text>
           <Text style={styles.quantity}>
             {quantity}

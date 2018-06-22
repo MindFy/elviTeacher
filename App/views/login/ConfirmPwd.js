@@ -104,7 +104,7 @@ class ConfirmPwd extends Component {
           paddingLeft: common.margin20,
           paddingRight: common.margin20,
         },
-        text: common.regPasswordMsg,
+        text: transfer(language, 'login_passFormatterError'),
         position: 'bottom',
       })
       return

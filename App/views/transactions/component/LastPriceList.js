@@ -8,6 +8,7 @@ import {
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../../constants/common'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import transfer from '../../../localization/utils'
 
 const styles = StyleSheet.create({
   shelvesList: {
@@ -40,12 +41,12 @@ class LastPriceList extends Component {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  renderHeader(type) {
+  renderHeader(type, language) {
     let text = ''
-    if (type === common.buy) {
-      text = '买'
-    } else if (type === common.sell) {
-      text = '卖'
+    if (type === transfer(language, 'exchange_buy')) {
+      text = transfer(language, 'exchange_buy2')
+    } else if (type === transfer(language, 'exchange_sell')) {
+      text = transfer(language, 'exchange_sell2')
     }
     return (
       <View style={styles.shelvesListHeaderView}>
@@ -58,7 +59,7 @@ class LastPriceList extends Component {
 
 
   renderShelvesRow(rd, rid, type) {
-    const { selectedPair } = this.props
+    const { selectedPair, language } = this.props
     let price
     let sumQuantity
     let title
@@ -69,12 +70,12 @@ class LastPriceList extends Component {
       price = new BigNumber(rd.price).toFixed(p, 1)
       sumQuantity = new BigNumber(rd.sum_quantity).toFixed(q, 1)
     })
-    if (type === common.buy) {
+    if (type === transfer(language, 'exchange_buy')) {
       title = sumQuantity
       titleColor = common.textColor
       detail = price
       detailColor = common.redColor
-    } else if (type === common.sell) {
+    } else if (type === transfer(language, 'exchange_sell')) {
       title = price
       titleColor = common.greenColor
       detail = sumQuantity
@@ -111,22 +112,24 @@ class LastPriceList extends Component {
   }
 
   render() {
-    const { dataSource } = this.props
+    const { dataSource, language } = this.props
     return (
       <View style={styles.shelvesList}>
         <ListView
           style={{ width: '50%' }}
           dataSource={this.dataSource.cloneWithRows((dataSource.buy || []).slice(0, 5))}
-          renderHeader={() => this.renderHeader(common.buy)}
-          renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.buy)}
+          renderHeader={() => this.renderHeader(
+            transfer(language, 'exchange_buy'), language)}
+          renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, transfer(language, 'exchange_buy'))}
           enableEmptySections
           removeClippedSubviews={false}
         />
         <ListView
           style={{ width: '50%' }}
           dataSource={this.dataSource.cloneWithRows((dataSource.sell || []).slice(0, 5))}
-          renderHeader={() => this.renderHeader(common.sell)}
-          renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, common.sell)}
+          renderHeader={() => this.renderHeader(
+            transfer(language, 'exchange_sell'), language)}
+          renderRow={(rd, sid, rid) => this.renderShelvesRow(rd, rid, transfer(language, 'exchange_sell'))}
           enableEmptySections
           removeClippedSubviews={false}
         />

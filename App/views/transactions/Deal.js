@@ -27,6 +27,7 @@ import { caculateExchangeFormData, slideAction } from '../../utils/caculateExcha
 import findAssetList from '../../schemas/asset'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
   },
   kLineBtn: {
     height: common.getH(17),
-    width: common.h30,
+    width: common.h36,
     backgroundColor: common.navBgColor,
     justifyContent: 'center',
   },
@@ -102,33 +103,47 @@ class Deal extends Component {
     this.props.dispatch(exchange.updateSegmentIndex(0))
     this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
-    this.timer = setInterval(() => {
-      if (cache.getObject('currentComponentVisible') === 'Deal') {
-        this.loadNecessaryData()
-      }
-    }, common.refreshIntervalTime)
+    // this.timer = setInterval(() => {
+    //   if (cache.getObject('currentComponentVisible') === 'Deal') {
+    //     this.loadNecessaryData()
+    //   }
+    // }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, createOrderIndex } = this.props
+    const { dispatch, createOrderIndex, language } = this.props
     const { createResponse } = nextProps
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
-      Toast.success('撤单成功')
+      Toast.success(transfer(language, 'exchange_withdrawalSuccess'))
     }
     if (nextProps.cancelOrderError) {
-      Toast.fail('撤单失败')
+      Toast.fail(transfer(language, 'exchange_withdrawalFailed'))
       dispatch(exchange.requestCancelOrderSetError(null))
     }
 
     if (!createResponse) return
     if (createResponse.id) {
-      Toast.success(`${createOrderIndex === 0 ? '买入' : '卖出'}成功`)
+      Toast.success(
+        `${createOrderIndex === 0 ?
+          transfer(language, 'exchange_buySuccess') :
+          transfer(language, 'exchange_sellSuccess')}`)
       this.loadNecessaryData()
     } else if (createResponse.code) {
-      const msg = this.errors[createResponse.code]
+      const errors = {
+        4000311: transfer(language, 'exchange_goodsNotExist'),
+        4000312: transfer(language, 'exchange_listFailedForCreated'),
+        4000510: transfer(language, 'exchange_paramsNull'),
+        4000511: transfer(language, 'exchange_listFailedForNull'),
+        4000513: transfer(language, 'exchange_listFailedForLessCredit'),
+        4000514: transfer(language, 'exchange_listFailedForLessCredit'),
+      }
+      const msg = errors[createResponse.code]
       if (msg) Toast.fail(msg)
     } else {
-      Toast.fail(`${createOrderIndex === 0 ? '买入' : '卖出'}失败`)
+      Toast.fail(
+        `${createOrderIndex === 0 ?
+          transfer(language, 'exchange_buyFailed') :
+          transfer(language, 'exchange_sellFailed')}`)
     }
     dispatch(exchange.clearResponse())
   }
@@ -139,15 +154,6 @@ class Deal extends Component {
       this.timer = undefined
     }
     cache.setObject('currentComponentVisible', 'Home')
-  }
-
-  errors = {
-    4000311: '货币或商品不存在',
-    4000312: '挂单失败，订单已经创建',
-    4000510: '参数为空',
-    4000511: '挂单失败，价格或数量为空',
-    4000513: '挂单失败，余额不足',
-    4000514: '挂单失败，余额不足',
   }
 
   cancelOrder(id) {
@@ -172,7 +178,7 @@ class Deal extends Component {
   }
 
   tapBuySellBtn(idx) {
-    const { dispatch, navigation, formData, loggedIn, selectedPair } = this.props
+    const { dispatch, navigation, formData, loggedIn, selectedPair, language } = this.props
     const { price, quantity } = formData
     if (!loggedIn) {
       navigation.navigate('LoginStack')
@@ -182,12 +188,16 @@ class Deal extends Component {
     const q = new BigNumber(quantity)
     const a = new BigNumber(p).multipliedBy(q)
     if (!price.length || BigNumber(p).eq(0)) {
-      Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}价格`)
+      Toast.fail(!idx ?
+        transfer(language, 'exchange_enterRightBuyPrice') :
+        transfer(language, 'exchange_enterRightSellPrice'))
       this.drawer.hide()
       return
     }
     if (!quantity.length || BigNumber(q).eq(0)) {
-      Toast.fail(`请输入正确的${!idx ? '买入' : '卖出'}数量`)
+      Toast.fail(!idx ?
+        transfer(language, 'exchange_enterRightBuyQuality') :
+        transfer(language, 'exchange_enterRightSellQuality'))
       this.drawer.hide()
       return
     }
@@ -222,12 +232,12 @@ class Deal extends Component {
   }
 
   lastPriceCellAction(rd, type) {
-    const { dispatch, loggedIn, navigation, amountVisible, selectedPair } = this.props
+    const { dispatch, loggedIn, navigation, amountVisible, selectedPair, language } = this.props
     if (!loggedIn) {
       navigation.navigate('LoginStack')
       return
     }
-    const index = type === common.buy ? 1 : 0
+    const index = type === transfer(language, 'exchange_buy') ? 1 : 0
     if (this.drawer) {
       dispatch(exchange.updateCreateOrderIndex(index))
       if (index === 0) {
@@ -324,8 +334,10 @@ class Deal extends Component {
   }
 
   menuPress() {
-    const { navigation } = this.props
-    navigation.navigate('Market2')
+    const { navigation, language } = this.props
+    navigation.navigate('Market2', {
+      language,
+    })
   }
 
   tabBarPress(index) {
@@ -357,12 +369,15 @@ class Deal extends Component {
   }
 
   renderNavigationBar = () => {
-    const { navigation, selectedPair, loggedIn } = this.props
+    const { navigation, selectedPair, loggedIn, language } = this.props
     const goodsName = selectedPair.goods.name
     const currencyName = selectedPair.currency.name
     return (
       <DealNavigator
-        titles={[`${goodsName}/${currencyName}`, '我的委托']}
+        titles={[
+          `${goodsName}/${currencyName}`,
+          transfer(language, 'exchange_myOrder'),
+        ]}
         onPress={(type) => {
           if (type === 'leftBtn') {
             navigation.goBack()
@@ -371,7 +386,7 @@ class Deal extends Component {
           } else if (type === 'rightBtn') {
             if (loggedIn) {
               navigation.navigate('Orders', {
-                title: '当前委托',
+                title: transfer(language, 'home_currentDelegate'),
               })
             } else navigation.navigate('LoginStack')
           }
@@ -381,7 +396,7 @@ class Deal extends Component {
   }
 
   renderMarketView = () => {
-    const { selectedPair, valuation } = this.props
+    const { selectedPair, valuation, language } = this.props
     const currencyName = selectedPair.currency.name
     let quantity = ''
     let cprice = ''
@@ -400,6 +415,7 @@ class Deal extends Component {
     }
     return (
       <DealMarket
+        language={language}
         quantity={quantity}
         cprice={cprice}
         rose={rose}
@@ -408,9 +424,20 @@ class Deal extends Component {
     )
   }
 
-  renderKlineBtnIfNeeded(kLineOrDepth) {
+  renderKlineBtnIfNeeded(kLineOrDepth, language) {
     if (kLineOrDepth === common.ui.kLine) {
-      const array = ['分时', '1min', '5min', '15min', '30min', '1hour', '4hour', '1day', '1week', '1month']
+      const array = [
+        transfer(language, 'exchange_time'),
+        transfer(language, 'exchange_1min'),
+        transfer(language, 'exchange_5min'),
+        transfer(language, 'exchange_15min'),
+        transfer(language, 'exchange_30min'),
+        transfer(language, 'exchange_1hour'),
+        transfer(language, 'exchange_4hour'),
+        transfer(language, 'exchange_1day'),
+        transfer(language, 'exchange_1week'),
+        transfer(language, 'exchange_1month'),
+      ]
       const { kLineIndex } = this.props
       return (
         <ScrollView
@@ -449,10 +476,11 @@ class Deal extends Component {
   }
 
   renderDepthView = () => {
-    const { dispatch, kLineOrDepth, depthMap, selectedPair, kLineIndex } = this.props
-    let kLineBtnTitle = 'k线'
+    const { dispatch, kLineOrDepth, depthMap,
+      selectedPair, kLineIndex, language } = this.props
+    let kLineBtnTitle = transfer(language, 'exchange_kLine')
     if (kLineOrDepth === common.ui.kLine) {
-      kLineBtnTitle = '深度'
+      kLineBtnTitle = transfer(language, 'exchange_deep')
     }
     const renderCharts = () => {
       if (kLineOrDepth === common.ui.kLine) {
@@ -474,7 +502,7 @@ class Deal extends Component {
     return (
       <View style={styles.kLineView}>
         <View style={styles.header}>
-          {this.renderKlineBtnIfNeeded(kLineOrDepth)}
+          {this.renderKlineBtnIfNeeded(kLineOrDepth, language)}
           <NextTouchableOpacity
             style={styles.kLineBtn}
             activeOpacity={common.activeOpacity}
@@ -499,18 +527,20 @@ class Deal extends Component {
 
   renderShelvesListChildren(index) {
     if (index === 0) {
-      const { lastPrice, selectedPair } = this.props
+      const { lastPrice, selectedPair, language } = this.props
       return (
         <LastPriceList
+          language={language}
           selectedPair={selectedPair}
           dataSource={lastPrice}
           cellPressAction={(rd, type) => this.lastPriceCellAction(rd, type)}
         />
       )
     }
-    const { openOrders } = this.props
+    const { openOrders, language } = this.props
     return (
       <OpenOrders
+        language={language}
         dataSource={openOrders}
         cancelOrder={id => this.cancelOrder({ id })}
       />
@@ -518,10 +548,13 @@ class Deal extends Component {
   }
 
   renderDetailList = () => {
-    const { navigation, segmentIndex } = this.props
+    const { navigation, segmentIndex, language } = this.props
     return (
       <ShelvesList
-        titles={['盘口五档', '当前委托']}
+        titles={[
+          transfer(language, 'exchange_fifthOrder'),
+          transfer(language, 'home_currentDelegate'),
+        ]}
         segmentIndex={segmentIndex}
         segmentValueChanged={(e) => {
           if (segmentIndex !== e) {
@@ -535,7 +568,7 @@ class Deal extends Component {
   }
 
   renderOrderHistory = () => {
-    const { orderHistory, selectedPair } = this.props
+    const { orderHistory, selectedPair, language } = this.props
     const nextOrderHistory = (orderHistory || []).slice(0, 5)
     const data = nextOrderHistory.map((item) => {
       let price
@@ -553,18 +586,24 @@ class Deal extends Component {
         createdAt,
       }
     })
-    return <LatestDealList data={data} />
+    return <LatestDealList language={language} data={data} />
   }
 
-  renderToolBar = () => (
-    <DealTabBar
-      titles={['买入', '卖出']}
-      onPress={index => this.tabBarPress(index)}
-    />
-  )
+  renderToolBar(language) {
+    return (
+      <DealTabBar
+        language={language}
+        titles={[
+          transfer(language, 'exchange_buy'),
+          transfer(language, 'exchange_sell'),
+        ]}
+        onPress={index => this.tabBarPress(index)}
+      />
+    )
+  }
 
   render() {
-    const { selectedPair, formData, amountVisible } = this.props
+    const { selectedPair, formData, amountVisible, language } = this.props
     return (
       <View style={styles.container}>
         {this.renderNavigationBar()}
@@ -576,11 +615,14 @@ class Deal extends Component {
           {this.renderMarketView()}
           {this.renderDepthView()}
           {this.renderDetailList()}
-          <Text style={styles.latestDealHeader}>最新成交</Text>
+          <Text style={styles.latestDealHeader}>
+            {transfer(language, 'exchange_latest')}
+          </Text>
           {this.renderOrderHistory()}
         </ScrollView>
-        {this.renderToolBar()}
+        {this.renderToolBar(language)}
         <DealDrawer
+          language={language}
           ref={(e) => { this.drawer = e }}
           index={0}
           formData={formData}
@@ -603,6 +645,7 @@ function mapStateToProps(state) {
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,
     kLineOrDepth: state.ui.kLineOrDepth,
+    language: state.system.language,
   }
 }
 

@@ -11,6 +11,7 @@ import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   header: {
@@ -106,17 +107,18 @@ export default class HomeMarket extends Component {
   }
 
   renderHeader() {
+    const { language } = this.props
     return (
       <View style={styles.header}>
         <Text style={{ width: '30%' }} />
-        <Text style={[styles.headerTitle, { width: '40%' }]}>    市场/最新价</Text>
-        <Text style={[styles.headerTitle, { width: '30%' }]}>涨跌幅</Text>
+        <Text style={[styles.headerTitle, { width: '40%' }]}>    {transfer(language, 'home_pairLastPrice')}</Text>
+        <Text style={[styles.headerTitle, { width: '30%' }]}>{transfer(language, 'home_change')}</Text>
       </View>
     )
   }
 
   renderRow(rd) {
-    const { onPress } = this.props
+    const { onPress, language } = this.props
     let dirImageSource
     let priceColor = null
     let rangeColor = null
@@ -157,7 +159,7 @@ export default class HomeMarket extends Component {
         <View style={styles.rowMiddleView}>
           <View style={styles.rowCoinView}>
             <Text style={styles.goods}>{rd.goods.name}</Text>
-            <Text style={styles.goodsMark}>{`（${common.coinChinese[rd.goods.name]}）`}</Text>
+            <Text style={styles.goodsMark}>{`（${transfer(language, `home_${rd.goods.name}Name`)}）`}</Text>
             <Text style={styles.currency}>{`/${rd.currency.name}`}</Text>
           </View>
 

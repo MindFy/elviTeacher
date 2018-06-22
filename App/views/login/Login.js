@@ -162,7 +162,7 @@ class Login extends PureComponent {
       return
     }
     if (!common.regMobile.test(formState.mobile)) {
-      Toast.fail(common.regMobileMsg)
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     if (!formState.password.length) {
