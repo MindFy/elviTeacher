@@ -29,7 +29,9 @@ export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
     const { placeholder, onChange, maxLength, keyboardType, type, value, codeEmail, onPress,
-      secureTextEntry, newPassword, newPasswordAgain, editable } = this.props
+      secureTextEntry, newPassword, newPasswordAgain, editable,
+      inputTip,
+    } = this.props
     return (
       <View
         style={{
@@ -86,7 +88,7 @@ export default class TextInputPwd extends Component {
                 fontSize: common.font12,
                 textAlign: 'left',
               }}
-            >请确保两次输入密码一致</Text> : null
+            >{inputTip}</Text> : null
         }
       </View>
     )

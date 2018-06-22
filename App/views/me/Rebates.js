@@ -23,6 +23,7 @@ import * as actions from '../../actions/rebates'
 import * as api from '../../services/api'
 import * as schemas from '../../schemas/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -182,16 +183,16 @@ class Rebates extends Component {
   }
 
   clipUID() {
-    const { user } = this.props
+    const { user, language } = this.props
     const { prefixNo, recommendId } = user
     if (recommendId.length) {
       Clipboard.setString(prefixNo + recommendId)
-      Toast.success('复制成功')
+      Toast.success(transfer(language, 'me_super_copySuccess'))
     }
   }
 
   clipLink() {
-    const { user } = this.props
+    const { user, language } = this.props
     const { prefixNo, recommendId } = user
     let rebatesLink = ''
     if (recommendId.length) {
@@ -199,23 +200,24 @@ class Rebates extends Component {
     }
     if (rebatesLink.length) {
       Clipboard.setString(rebatesLink)
-      Toast.success('复制成功')
+      Toast.success(transfer(language, 'me_super_copySuccess'))
     }
   }
 
   _shareImage = () => {
-    Alert.alert('暂时不用做')
+    // Alert.alert('暂时不用做')
   }
 
   _saveImage = (uri) => {
+    const { language } = this.props
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
-        Toast.success('保存成功')
+        Toast.success(transfer(language, 'me_super_saveSuccess'))
       }).catch((error) => {
         if (error.code === 'E_UNABLE_TO_SAVE') {
           this.showAlert()
         } else {
-          Toast.fail('保存失败')
+          Toast.fail(transfer(language, 'me_super_saveFailed'))
         }
       })
     } else {
@@ -223,36 +225,38 @@ class Rebates extends Component {
         uri,
       }, (r) => {
         if (r.result) {
-          Toast.success('保存成功')
-        } else if (r.error === '保存出错') {
+          Toast.success(transfer(language, 'me_super_saveSuccess'))
+        } else if (r.error === transfer(language, 'me_super_saveWrong')) {
           this.showAlert()
         } else {
-          Toast.fail('保存失败')
+          Toast.fail(transfer(language, 'me_super_saveFailed'))
         }
       })
     }
   }
 
   _tapLinkQRImage = (uri) => {
+    const { language } = this.props
     const items = [
       {
-        title: '保存图片',
+        title: transfer(language, 'me_super_savePhoto'),
 
         onPress: () => {
           this._saveImage(uri)
         },
       },
     ]
-    const cancelItem = { title: '取消', type: 'cancel' }
+    const cancelItem = { title: transfer(language, 'me_super_savePhotoCancel'), type: 'cancel' }
     ActionSheet.show(items, cancelItem)
   }
 
   showAlert() {
+    const { language } = this.props
     Alert.alert(
-      '无法保存',
-      '请在设置中,为本应用开放相册权限',
+      transfer(language, 'me_super_savePhotoFailed'),
+      transfer(language, 'me_super_savePhotoReminder'),
       [{
-        text: '好',
+        text: transfer(language, 'me_super_savePhotoOK'),
         onPress: () => { },
       }],
       { cancelable: false },
@@ -307,6 +311,7 @@ class Rebates extends Component {
       totalCountBTC,
       invitationCount,
       user,
+      language,
     } = this.props
     const { levelName, prefixNo, recommendId } = user
     let rebatesLink = ''
@@ -318,7 +323,7 @@ class Rebates extends Component {
     const tkItem = (
       <View style={styles.textOutContainer}>
         <Text style={styles.textTitle}>
-          已获得的收益TK
+          {transfer(language, 'me_super_totalCashbackTK')}
         </Text>
         <View style={styles.textContainer}>
           <Text style={styles.textInner}>
@@ -334,7 +339,7 @@ class Rebates extends Component {
       btcItem = (
         <View style={styles.textOutContainer}>
           <Text style={styles.textTitle}>
-            已获得的收益BTC
+            {transfer(language, 'me_super_totalCashbackBTC')}
           </Text>
           <View style={styles.textContainer}>
             <Text style={styles.textInner}>
@@ -358,7 +363,7 @@ class Rebates extends Component {
           />
 
           <Text style={styles.uidTitle}>
-            我的UID
+            {transfer(language, 'me_super_myUID')}
           </Text>
           <View style={[styles.prefixNoView, {
             width: '60%',
@@ -373,10 +378,10 @@ class Rebates extends Component {
               activeOpacity={common.activeOpacity}
               onPress={() => this.clipUID()}
             >
-              <Text style={styles.copy}>复制</Text>
+              <Text style={styles.copy}>{transfer(language, 'me_super_copy')}</Text>
             </NextTouchableOpacity>
           </View>
-          <Text style={styles.uidTitle}>推荐链接</Text>
+          <Text style={styles.uidTitle}>{transfer(language, 'me_super_referalLink')}</Text>
           <View style={[styles.prefixNoView, {
             width: '85%',
           }]}
@@ -389,7 +394,7 @@ class Rebates extends Component {
               activeOpacity={common.activeOpacity}
               onPress={() => this.clipLink()}
             >
-              <Text style={styles.copy}>复制</Text>
+              <Text style={styles.copy}>{transfer(language, 'me_super_copy')}</Text>
             </NextTouchableOpacity>
           </View>
           <NextTouchableOpacity
@@ -402,13 +407,13 @@ class Rebates extends Component {
               source={require('../../assets/qrcode_yellow.png')}
             />
             <Text style={styles.prefixNo}>
-              推荐二维码
+              {transfer(language, 'me_super_referalQR')}
             </Text>
           </NextTouchableOpacity>
 
           <View style={styles.textOutContainer}>
             <Text style={styles.textTitle}>
-              已推荐好友
+              {transfer(language, 'me_super_invitedFriends')}
             </Text>
             <View style={styles.textContainer}>
               <Text style={styles.textInner}>
@@ -421,7 +426,7 @@ class Rebates extends Component {
 
           {btcItem}
           <Text style={styles.tipStyle}>
-            若需了解更多返利详情，请前往币图官网-超级返利中查看
+            {transfer(language, 'me_super_moreDetial')}
           </Text>
           <View style={{ height: 44 }} />
           <View style={styles.headerShadow} />
@@ -435,6 +440,7 @@ function mapStateToProps(state) {
   return {
     ...state.rebates,
     loggedInResult: state.authorize.loggedInResult,
+    language: state.system.language,
   }
 }
 
