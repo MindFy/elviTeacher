@@ -52,6 +52,7 @@ export default class Payment extends Component {
     let bankNo = ''
     let remark = ''
     const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity).toFixed(2, 1)
+    let pleaseNote = ''
     if (rd.direct === common.buy) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
@@ -60,6 +61,7 @@ export default class Payment extends Component {
       titleName = '收款方户名'
       titleBankName = '收款方开户行'
       titleBankNo = '收款方账号'
+      pleaseNote = '1.请按信息向卖家汇款\n2.汇款时一定要填写转账备注\n3.卖家确认收到款后，货币将自动充值到您的账户上\n4.请务必使用本人绑定的银行卡进行汇款,否则卖家可能不会确认收款'
     } else if (rd.direct === common.sell) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
@@ -68,6 +70,7 @@ export default class Payment extends Component {
       titleName = '付款方户名'
       titleBankName = '付款方开户行'
       titleBankNo = '付款方账号'
+      pleaseNote = '1.请核对买家付款信息\n2.请核对转账备注\n3.如信息无误请点击确认收款'
     }
     return (
       <ScrollView
@@ -199,7 +202,7 @@ export default class Payment extends Component {
             fontSize: common.font10,
             lineHeight: 14,
           }}
-        >{'1.请按信息向卖家汇款\n2.汇款时一定要填写转账备注\n3.卖家确认收到款后，货币将自动充值到您的账户上\n4.请务必使用本人绑定的银行卡进行汇款,否则卖家可能不会确认收款'}</Text>
+        >{pleaseNote}</Text>
       </ScrollView>
     )
   }
