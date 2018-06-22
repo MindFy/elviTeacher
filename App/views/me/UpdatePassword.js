@@ -16,6 +16,7 @@ import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -105,9 +106,9 @@ class UpdatePassword extends Component {
   confirmPress() {
     Keyboard.dismiss()
 
-    const { oldPassword, newPassword, newPasswordAgain } = this.props
+    const { oldPassword, newPassword, newPasswordAgain, language } = this.props
     if (!oldPassword.length) {
-      Toast.fail('请输入旧密码')
+      Toast.fail(transfer(language, 'me_settings_PWold'))
       return
     }
     if (!newPassword.length || !common.regPassword.test(newPassword)
@@ -117,21 +118,21 @@ class UpdatePassword extends Component {
           paddingLeft: common.margin15,
           paddingRight: common.margin15,
         },
-        text: `新${common.regPasswordMsg}`,
+        text: transfer(language, 'me_settings_PWillegal'),
         position: 'bottom',
       })
       return
     }
     if (oldPassword === newPassword) {
-      Toast.fail('新密码和旧密码不能一样')
+      Toast.fail(transfer(language, 'me_settings_PWunchange'))
       return
     }
     if (!newPasswordAgain.length) {
-      Toast.fail('请再次输入新密码')
+      Toast.fail(transfer(language, 'me_settings_PWnewAgain'))
       return
     }
     if (newPassword !== newPasswordAgain) {
-      Toast.fail('新密码输入不一致')
+      Toast.fail(transfer(language, 'me_settings_PWreminder'))
       return
     }
     this.updatePassword()
@@ -146,7 +147,7 @@ class UpdatePassword extends Component {
   }
 
   handlePasswordRequest(nextProps) {
-    const { updatePasswordVisible, updatePasswordResponse, navigation } = nextProps
+    const { updatePasswordVisible, updatePasswordResponse, navigation, language } = nextProps
     if (!updatePasswordVisible && !this.showUpdatePasswordResponse) return
 
     if (updatePasswordVisible) {
@@ -157,21 +158,27 @@ class UpdatePassword extends Component {
         Toast.success(updatePasswordResponse.result.message)
         navigation.goBack()
       } else if (updatePasswordResponse.error.code === 4030501) {
-        Toast.fail('原密码错误')
+        Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
       } else if (updatePasswordResponse.error.code === 4000120) {
-        Toast.fail('原密码错误')
+        Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
       } else if (updatePasswordResponse.error.code === 4000121) {
-        Toast.fail('原密码错误')
+        Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
       } else if (updatePasswordResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'me_settings_PWinternetFailed'))
       } else {
-        Toast.fail('密码修改失败，请重试')
+        Toast.fail(transfer(language, 'me_settings_PWchangeFailed'))
       }
     }
   }
 
   render() {
-    const { oldPassword, newPassword, newPasswordAgain, updatePasswordVisible } = this.props
+    const {
+      oldPassword,
+      newPassword,
+      newPasswordAgain,
+      updatePasswordVisible,
+      language,
+    } = this.props
     return (
       <ScrollView
         style={styles.container}
@@ -184,7 +191,7 @@ class UpdatePassword extends Component {
         >
           <TextInputPwd
             viewStyle={styles.input}
-            placeholder={'旧密码'}
+            placeholder={transfer(language, 'me_settings_PWold')}
             value={oldPassword}
             onChange={e => this.onChange(e, 'oldPassword')}
             maxLength={common.textInputMaxLenPwd}
@@ -192,22 +199,24 @@ class UpdatePassword extends Component {
           />
           <TextInputPwd
             viewStyle={styles.input}
-            placeholder={'输入密码'}
+            placeholder={transfer(language, 'me_settings_PWnew')}
             value={newPassword}
             type={'newPassword'}
             secureTextEntry
             onChange={e => this.onChange(e, 'newPassword')}
             maxLength={common.textInputMaxLenPwd}
+            inputTip={transfer(language, 'me_settings_PWreminder')}
           />
           <TextInputPwd
             viewStyle={styles.input}
-            placeholder={'再次输入密码'}
+            placeholder={transfer(language, 'me_settings_PWnewAgain')}
             value={newPasswordAgain}
             type={'newPasswordAgain'}
             newPassword={newPassword}
             newPasswordAgain={newPasswordAgain}
             onChange={e => this.onChange(e, 'newPasswordAgain')}
             maxLength={common.textInputMaxLenPwd}
+            inputTip={transfer(language, 'me_settings_PWreminder')}
             secureTextEntry
           />
 
@@ -215,7 +224,7 @@ class UpdatePassword extends Component {
             style={styles.confirmBtn}
             onPress={() => this.confirmPress()}
             disabled={updatePasswordVisible}
-            caption="确认"
+            caption={transfer(language, 'me_ID_confirm')}
             theme={'gray'}
           />
         </KeyboardAvoidingView>
@@ -228,14 +237,15 @@ class UpdatePassword extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    oldPassword: store.user.oldPassword,
-    newPassword: store.user.newPassword,
-    newPasswordAgain: store.user.newPasswordAgain,
+    oldPassword: state.user.oldPassword,
+    newPassword: state.user.newPassword,
+    newPasswordAgain: state.user.newPasswordAgain,
 
-    updatePasswordVisible: store.user.updatePasswordVisible,
-    updatePasswordResponse: store.user.updatePasswordResponse,
+    updatePasswordVisible: state.user.updatePasswordVisible,
+    updatePasswordResponse: state.user.updatePasswordResponse,
+    language: state.system.language,
   }
 }
 

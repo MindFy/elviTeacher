@@ -9,6 +9,7 @@ import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import * as system from '../../actions/system'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -67,6 +68,7 @@ class Language extends Component {
 
   render() {
     const languageIndex = this.language.indexOf(this.props.language)
+    const { language } = this.props
     const rightImage = (<Image
       style={styles.checkBox}
       source={require('../../assets/check_box.png')}
@@ -79,7 +81,7 @@ class Language extends Component {
           rightImageHide={languageIndex}
           rightImage={!languageIndex ? rightImage : null}
           onPress={() => this.setLanguage('zh_cn')}
-          title="中文"
+          title={transfer(language, 'me_settings_languageChinese')}
           delay={500}
         />
         <MeCell
@@ -87,7 +89,7 @@ class Language extends Component {
           rightImageHide={!languageIndex}
           rightImage={languageIndex ? rightImage : null}
           onPress={() => this.setLanguage('en')}
-          title="English"
+          title={transfer(language, 'me_settings_languageEnglish')}
           delay={500}
         />
       </ScrollView>
