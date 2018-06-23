@@ -49,12 +49,12 @@ class Home extends Component {
     cache.setObject('currentComponentVisible', 'Home')
     this.refreshData()
     const { dispatch } = this.props
-    // this.timeId = setInterval(() => {
-    //   const page = cache.getObject('currentComponentVisible')
-    //   if (page === 'Home' || page === 'Deal') {
-    //     dispatch(actions.requestMarket())
-    //   }
-    // }, common.refreshIntervalTime)
+    this.timeId = setInterval(() => {
+      const page = cache.getObject('currentComponentVisible')
+      if (page === 'Home' || page === 'Deal') {
+        dispatch(actions.requestMarket())
+      }
+    }, common.refreshIntervalTime)
 
     // this.checkUpdate()
 
