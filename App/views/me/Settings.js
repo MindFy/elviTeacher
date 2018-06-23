@@ -34,8 +34,12 @@ const styles = StyleSheet.create({
 
 class Settings extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '设置',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -51,18 +55,25 @@ class Settings extends Component {
     }
   }
 
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_settings'),
+    })
+  }
+
   render() {
     const { navigation, loggedIn, language } = this.props
     return (
       <ScrollView style={styles.container}>
         <StatusBar barStyle={'light-content'} />
 
-        <MeCell
+        {/* <MeCell
           viewStyle={styles.topCell}
           leftImageHide
           onPress={() => navigation.navigate('Language')}
           title={transfer(language, 'me_settings_language')}
-        />
+        /> */}
         <MeCell
           leftImageHide
           onPress={() => {

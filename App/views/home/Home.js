@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native'
+import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
 import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
@@ -24,6 +25,7 @@ import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
 import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
+import * as system from '../../actions/system'
 
 global.Buffer = require('buffer').Buffer
 
@@ -42,6 +44,18 @@ class Home extends Component {
     })
   }
 
+  componentWillMount() {
+    const { language, dispatch } = this.props
+    let systemLanguage = 'zh_cn'
+    const evt = deviceInfo.getDeviceLocale()
+    if (evt.indexOf('en') > -1) {
+      systemLanguage = 'en'
+    }
+    if (language !== systemLanguage) {
+      dispatch(system.updateLanguage(systemLanguage))
+    }
+  }
+
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide()
@@ -49,12 +63,12 @@ class Home extends Component {
     cache.setObject('currentComponentVisible', 'Home')
     this.refreshData()
     const { dispatch } = this.props
-    // this.timeId = setInterval(() => {
-    //   const page = cache.getObject('currentComponentVisible')
-    //   if (page === 'Home' || page === 'Deal') {
-    //     dispatch(actions.requestMarket())
-    //   }
-    // }, common.refreshIntervalTime)
+    this.timeId = setInterval(() => {
+      const page = cache.getObject('currentComponentVisible')
+      if (page === 'Home' || page === 'Deal') {
+        dispatch(actions.requestMarket())
+      }
+    }, common.refreshIntervalTime)
 
     // this.checkUpdate()
 

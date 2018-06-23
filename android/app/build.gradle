@@ -146,6 +146,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':rn-hotupdate-d3j')
     compile project(':react-native-fast-image')
     compile project(':rn-fs-d3j')

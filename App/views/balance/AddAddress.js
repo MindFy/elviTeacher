@@ -134,6 +134,8 @@ class AddAddress extends Component {
     }))
   }
 
+  codeTitles = ['短信验证码', '谷歌验证码']
+
   errMsgs = {
     4000413: '提币地址长度有误！',
     4000414: '提币地址已存在！',
@@ -273,9 +275,10 @@ class AddAddress extends Component {
 
   segmentValueChanged = (e) => {
     const { dispatch, formState } = this.props
-    dispatch(updateAuthCodeType(e.title))
+    const title = this.codeTitles[e.index]
+    dispatch(updateAuthCodeType(title))
 
-    if (e.title === '谷歌验证码') {
+    if (title === '谷歌验证码') {
       dispatch(updateForm({
         ...formState,
         authCode: '',
@@ -295,7 +298,7 @@ class AddAddress extends Component {
   }
 
   showAuthCode = () => {
-    const { dispatch, user, formState } = this.props
+    const { dispatch, user, formState, language } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
@@ -309,13 +312,14 @@ class AddAddress extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
-          titles={['短信验证码', '谷歌验证码']}
+          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
           mobile={user.mobile}
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
           confirmPress={() => this.addPress()}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+          language={language}
         />
       </Overlay.View>
     )

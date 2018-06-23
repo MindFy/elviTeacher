@@ -60,7 +60,7 @@ class Balance extends Component {
     const { navigation } = props
     const params = navigation.state.params || {}
     return {
-      headerTitle: '资产',
+      headerTitle: (params.title || ''),
       headerRight: (
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -72,7 +72,7 @@ class Balance extends Component {
               fontSize: common.font16,
               color: 'white',
             }}
-          >历史记录</Text>
+          >{params.right || ''}</Text>
         </NextTouchableOpacity>
       ),
       tabBarOnPress: ({ scene, jumpToIndex }) => {
@@ -106,9 +106,13 @@ class Balance extends Component {
   }
 
   componentWillMount() {
-    this.props.navigation.setParams({ historyPress: this._historyPress })
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'balances_pageTitle'),
+      historyPress: this._historyPress,
+      right: transfer(language, 'recharge_historyList'),
+    })
   }
-
 
   componentWillReceiveProps(nextProps) {
     if (!this.props.loggedIn && nextProps.loggedIn) {

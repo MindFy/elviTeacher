@@ -48,11 +48,15 @@ class SecurityCenter extends Component {
         ),
     }
   }
-  componentDidMount() {
+
+  componentWillMount() {
     const { navigation, language } = this.props
     navigation.setParams({
       title: transfer(language, 'me_security_center'),
     })
+  }
+
+  componentDidMount() {
     this.listener = DeviceEventEmitter.addListener(common.noti.googleAuth, () => {
       this.showOverlay()
     })

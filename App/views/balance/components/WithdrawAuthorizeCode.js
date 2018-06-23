@@ -10,6 +10,7 @@ import { common } from '../../../constants/common'
 import TKCheckCodeBtn from '../../../components/TKCheckCodeBtn'
 import WithdrawAuthSelecionBar from './WithdrawAuthSelecionBar'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
+import transfer from '../../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -137,16 +138,16 @@ export default class TKViewCheckAuthorize extends Component {
   }
 
   renderSMSCode = () => {
-    const { mobile, titles, smsCodePress, onChangeText } = this.props
-    const index = titles.indexOf('短信验证码')
+    const { mobile, titles, smsCodePress, onChangeText, language } = this.props
+    const index = titles.indexOf(transfer(language, 'AuthCode_SMS_code'))
     return (
       <View>
         <View style={styles.mobileContainer}>
-          <Text style={styles.mobileTip}>手机号</Text>
+          <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_mobile_tip')}</Text>
           <Text style={styles.mobile}>{mobile}</Text>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.mobileTip}>短信验证码</Text>
+          <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_sms_tip')}</Text>
           <View style={styles.inputInnerContainer}>
             <TextInput
               style={styles.textInput}
@@ -160,6 +161,7 @@ export default class TKViewCheckAuthorize extends Component {
             <TKCheckCodeBtn
               style={styles.codeContainer}
               titleStyle={styles.fetchCodeTitle}
+              language={language}
               onPress={() => {
                 if (smsCodePress) {
                   smsCodePress()
@@ -173,11 +175,11 @@ export default class TKViewCheckAuthorize extends Component {
   }
 
   renderGoogleCode = () => {
-    const { onChangeText, titles } = this.props
-    const index = titles.indexOf('谷歌验证码')
+    const { onChangeText, titles, language } = this.props
+    const index = titles.indexOf(transfer(language, 'AuthCode_GV_code'))
     return (
       <View style={styles.googleCodeContainer}>
-        <Text style={styles.mobileTip}>谷歌验证码</Text>
+        <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_GV_code')}</Text>
         <View style={styles.googleInputContainer}>
           <TextInput
             style={styles.textInput}
@@ -194,7 +196,7 @@ export default class TKViewCheckAuthorize extends Component {
   }
 
   renderBtns = () => {
-    const { confirmPress, cancelPress } = this.props
+    const { confirmPress, cancelPress, language } = this.props
     return (
       <View style={styles.btnsContainer}>
         <NextTouchableOpacity
@@ -202,7 +204,7 @@ export default class TKViewCheckAuthorize extends Component {
           activeOpacity={common.activeOpacity}
           onPress={cancelPress}
         >
-          <Text style={styles.cancelBtnText}>取消</Text>
+          <Text style={styles.cancelBtnText}>{transfer(language, 'AuthCode_cancel')}</Text>
         </NextTouchableOpacity>
         <NextTouchableOpacity
           style={[styles.cancelBtn, {
@@ -216,7 +218,7 @@ export default class TKViewCheckAuthorize extends Component {
             style={[styles.cancelBtnText, {
               color: 'white',
             }]}
-          >确定</Text>
+          >{transfer(language, 'AuthCode_confirm')}</Text>
         </NextTouchableOpacity>
       </View>
     )

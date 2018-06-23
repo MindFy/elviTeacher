@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
+import { Toast } from 'teaset'
 import { connect } from 'react-redux'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
@@ -38,8 +39,12 @@ const styles = StyleSheet.create({
 
 class Language extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '语言',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -57,6 +62,23 @@ class Language extends Component {
   constructor() {
     super()
     this.language = ['zh_cn', 'en']
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_settings_language'),
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language !== this.props.language) {
+      const { navigation, language } = nextProps
+      Toast.success(transfer(language, 'me_changeLanguageSuccess'))
+      navigation.setParams({
+        title: transfer(language, 'me_settings_language'),
+      })
+    }
   }
 
   setLanguage(launageEvt) {

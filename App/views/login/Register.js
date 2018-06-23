@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     left: common.w100,
     fontSize: common.font12,
     color: common.redColor,
+    width: common.sw * 0.8 - common.getH(80),
   },
 })
 
@@ -392,6 +393,7 @@ class Register extends Component {
         style={{
           color: common.redColor,
           fontSize: common.font12,
+          width: common.sw * 0.8 - common.getH(80),
         }}
       >
         {transfer(this.props.language, 'login_passFormatterError')}
@@ -401,6 +403,7 @@ class Register extends Component {
       <View style={{
         alignItems: 'flex-end',
         height: common.w40,
+        width: common.sw * 0.8 - common.getH(80),
       }}
       >
         <View>

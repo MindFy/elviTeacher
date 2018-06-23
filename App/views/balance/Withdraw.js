@@ -511,9 +511,10 @@ class WithDraw extends Component {
 
   segmentValueChanged = (e) => {
     const { dispatch, formState } = this.props
-    dispatch(updateAuthCodeType(e.title))
+    const title = this.codeTitles[e.index]
+    dispatch(updateAuthCodeType(title))
 
-    if (e.title === '谷歌验证码') {
+    if (title === '谷歌验证码') {
       dispatch(updateForm({
         ...formState,
         verificationCode: '',
@@ -527,7 +528,7 @@ class WithDraw extends Component {
   }
 
   showVerificationCode = () => {
-    const { dispatch, user, formState } = this.props
+    const { dispatch, user, formState, language } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
@@ -541,7 +542,7 @@ class WithDraw extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
-          titles={this.codeTitles}
+          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
           mobile={user.mobile}
           onChangeText={this.onChangeAuthCode}
           segmentValueChanged={this.segmentValueChanged}
@@ -551,6 +552,7 @@ class WithDraw extends Component {
           }}
           confirmPress={() => this.confirmPress()}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+          language={language}
         />
       </Overlay.View>
     )
