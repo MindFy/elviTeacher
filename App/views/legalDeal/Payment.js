@@ -10,12 +10,15 @@ import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 export default class Payment extends Component {
   static navigationOptions(props) {
     const { navigation } = props
     return {
-      headerTitle: navigation.state.params.data.direct === common.buy ? '收款方信息' : '付款方信息',
+      headerTitle: navigation.state.params.data.direct === common.buy ?
+        transfer(navigation.state.params.lang, 'payment_b') :
+        transfer(navigation.state.params.lang, 'payment_s'),
       headerLeft:
         (
           <NextTouchableOpacity
@@ -44,6 +47,7 @@ export default class Payment extends Component {
   render() {
     const { navigation } = this.props
     const rd = navigation.state.params.data
+    const lang = navigation.state.params.lang
     let titleName = ''
     let titleBankName = ''
     let titleBankNo = ''
@@ -52,25 +56,22 @@ export default class Payment extends Component {
     let bankNo = ''
     let remark = ''
     const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity).toFixed(2, 1)
-    let pleaseNote = ''
     if (rd.direct === common.buy) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
       bankNo = rd.traderPayinfo.bankNo
       remark = rd.traderPayinfo.remark
-      titleName = '收款方户名'
-      titleBankName = '收款方开户行'
-      titleBankNo = '收款方账号'
-      pleaseNote = '1.请按信息向卖家汇款\n2.汇款时一定要填写转账备注\n3.卖家确认收到款后，货币将自动充值到您的账户上\n4.请务必使用本人绑定的银行卡进行汇款,否则卖家可能不会确认收款'
+      titleName = transfer(lang, 'payment_b_account_name')
+      titleBankName = transfer(lang, 'payment_b_bank')
+      titleBankNo = transfer(lang, 'payment_b_account_No')
     } else if (rd.direct === common.sell) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
       bankNo = rd.traderPayinfo.bankNo
       remark = rd.traderPayinfo.remark
-      titleName = '付款方户名'
-      titleBankName = '付款方开户行'
-      titleBankNo = '付款方账号'
-      pleaseNote = '1.请核对买家付款信息\n2.请核对转账备注\n3.如信息无误请点击确认收款'
+      titleName = transfer(lang, 'payment_s_account_name')
+      titleBankName = transfer(lang, 'payment_s_bank')
+      titleBankNo = transfer(lang, 'payment_s_account_No')
     }
     return (
       <ScrollView
@@ -86,7 +87,7 @@ export default class Payment extends Component {
             color: common.placeholderColor,
             alignSelf: 'center',
           }}
-        >转账金额</Text>
+        >{transfer(lang, 'payment_transaction_amount')}</Text>
         <Text
           style={{
             marginTop: common.margin20,
@@ -175,14 +176,14 @@ export default class Payment extends Component {
               color: common.placeholderColor,
               fontSize: common.font12,
             }}
-          >备注信息</Text>
+          >{transfer(lang, 'payment_remark')}</Text>
           <Text
             style={{
               marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font12,
             }}
-          >{`${remark}（请务必填写）`}</Text>
+          >{`${remark}（${transfer(lang, 'payment_please_fill_in')}）`}</Text>
         </View>
 
         <Text
@@ -192,7 +193,7 @@ export default class Payment extends Component {
             color: common.textColor,
             fontSize: common.font12,
           }}
-        >温馨提示</Text>
+        >{transfer(lang, 'payment_s_please_note')}</Text>
         <Text
           style={{
             marginTop: common.margin10,
@@ -202,7 +203,7 @@ export default class Payment extends Component {
             fontSize: common.font10,
             lineHeight: 14,
           }}
-        >{pleaseNote}</Text>
+        >{transfer(lang, 'payment_s_please_note_content')}</Text>
       </ScrollView>
     )
   }

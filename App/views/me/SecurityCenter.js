@@ -15,11 +15,16 @@ import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 class SecurityCenter extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '安全中心',
+      headerTitle: title,
       headerLeft:
         (
           <NextTouchableOpacity
@@ -43,6 +48,14 @@ class SecurityCenter extends Component {
         ),
     }
   }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_security_center'),
+    })
+  }
+
   componentDidMount() {
     this.listener = DeviceEventEmitter.addListener(common.noti.googleAuth, () => {
       this.showOverlay()
@@ -54,6 +67,7 @@ class SecurityCenter extends Component {
   }
 
   showOverlay() {
+    const { language } = this.props
     const overlayView = (
       <Overlay.View
         style={{
@@ -79,7 +93,7 @@ class SecurityCenter extends Component {
               color: common.blackColor,
               alignSelf: 'center',
             }}
-          >{this.props.googleAuth ? '谷歌认证已绑定' : '请前去官网完成绑定'}</Text>
+          >{this.props.googleAuth ? transfer(language, 'me_googleBinded') : transfer(language, 'me_googleBindReminder')}</Text>
         </View>
       </Overlay.View>
     )
@@ -90,7 +104,7 @@ class SecurityCenter extends Component {
   }
 
   render() {
-    const { navigation, loggedIn, dispatch } = this.props
+    const { navigation, loggedIn, dispatch, language } = this.props
     return (
       <ScrollView
         style={{
@@ -111,7 +125,7 @@ class SecurityCenter extends Component {
             if (loggedIn) navigation.navigate('UpdateEmail')
             else navigation.navigate('LoginStack')
           }}
-          title="邮箱绑定"
+          title={transfer(language, 'me_linkEmail')}
         />
         <MeCell
           leftImageHide
@@ -119,7 +133,7 @@ class SecurityCenter extends Component {
             if (loggedIn) dispatch(actions.getGoogleAuth())
             else navigation.navigate('LoginStack')
           }}
-          title="谷歌验证码"
+          title={transfer(language, 'me_google_authenticator')}
         />
 
       </ScrollView>
@@ -131,6 +145,7 @@ function mapStateToProps(state) {
   return {
     googleAuth: state.user.googleAuth,
     loggedIn: state.authorize.loggedIn,
+    language: state.system.language,
   }
 }
 

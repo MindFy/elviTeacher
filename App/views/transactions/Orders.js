@@ -33,6 +33,7 @@ import {
   findDelegateSelfCurrent,
   findDelegateSelfHistory,
 } from '../../schemas/delegate'
+import transfer from '../../localization/utils'
 
 // openOrderCellStyles
 const OOCStyles = StyleSheet.create({
@@ -186,8 +187,12 @@ const OHCStyles = StyleSheet.create({
 
 class Orders extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '我的委托',
+      headerTitle: title,
       headerLeft:
         (
           <NextTouchableOpacity
@@ -229,10 +234,13 @@ class Orders extends Component {
   }
 
   componentDidMount() {
-    const { navigation, dispatch } = this.props
+    const { navigation, dispatch, language } = this.props
     const { title } = navigation.state.params
+    navigation.setParams({
+      title: transfer(language, 'exchange_myOrder'),
+    })
     dispatch(updateSelectedTitle(title))
-    if (title === '当前委托') {
+    if (title === transfer(language, 'home_currentDelegate')) {
       this.requestOpenOrder()
     } else {
       this.requestOrderHistory()
@@ -271,10 +279,10 @@ class Orders extends Component {
     }
 
     if (this.props.cancelOrderLoading && !nexProps.cancelOrderLoading) {
-      Toast.success('撤单成功')
+      Toast.success(transfer(this.props.language, 'exchange_withdrawalSuccess'))
     }
     if (nexProps.cancelOrderError) {
-      Toast.fail('撤单失败')
+      Toast.fail(transfer(this.props.language, 'exchange_withdrawalFailed'))
       this.props.dispatch(requestCancelOrderSetError(null))
     }
   }
@@ -289,8 +297,8 @@ class Orders extends Component {
     }
     this.isRefresh = true
 
-    const { titleSeleted } = this.props
-    if (titleSeleted === '当前委托') {
+    const { titleSeleted, language } = this.props
+    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
       this.openOrderPage = 0
       this.props.dispatch(updateOpenOrderPage(this.openOrderPage))
       this.requestOpenOrder()
@@ -306,9 +314,9 @@ class Orders extends Component {
       return
     }
     this.isRefresh = true
-    const { titleSeleted } = this.props
+    const { titleSeleted, language } = this.props
 
-    if (titleSeleted === '当前委托') {
+    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
       this.openOrderPage++
       this.props.dispatch(updateOpenOrderPage(this.openOrderPage))
       this.requestOpenOrder()
@@ -320,18 +328,18 @@ class Orders extends Component {
   }
 
   getDataSource = () => {
-    const { titleSeleted } = this.props
+    const { titleSeleted, language } = this.props
 
-    if (titleSeleted === '当前委托') {
+    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
       return this.props.openOrders || []
     }
     return this.props.orderHistory || []
   }
 
   getRefreshState = () => {
-    const { titleSeleted } = this.props
+    const { titleSeleted, language } = this.props
 
-    if (titleSeleted === '当前委托') {
+    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
       return this.state.openOrderReState
     }
     return this.state.orderHistoryReState
@@ -419,7 +427,7 @@ class Orders extends Component {
 
 
   renderOrderHistoryHeader = () => {
-    const { isShowTotalPrice, isShowDealAmount } = this.props
+    const { isShowTotalPrice, isShowDealAmount, language } = this.props
 
     const rightColor =
       isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
@@ -433,7 +441,9 @@ class Orders extends Component {
 
     return (
       <View style={OHCStyles.headerContainer}>
-        <Text style={OHCStyles.headerMarket}>市场</Text>
+        <Text style={OHCStyles.headerMarket}>
+          {transfer(language, 'market_market')}
+        </Text>
         <View style={OHCStyles.headerSConatiner}>
           <NextTouchableOpacity
             style={{ flex: 1 }}
@@ -441,7 +451,9 @@ class Orders extends Component {
             activeOpacity={common.activeOpacity}
             onPress={() => { this.handleClickShowTotalPrice('totalPrice') }}
           >
-            <Text style={[OHCStyles.headerLeft, leftColor]}>均价</Text>
+            <Text style={[OHCStyles.headerLeft, leftColor]}>
+              {transfer(language, 'exchange_averagePrice')}
+            </Text>
           </NextTouchableOpacity>
           <Text style={OHCStyles.Slash}> / </Text>
           <NextTouchableOpacity
@@ -450,7 +462,9 @@ class Orders extends Component {
             activeOpacity={common.activeOpacity}
             onPress={() => { this.handleClickShowTotalPrice('totalPrice') }}
           >
-            <Text style={[OHCStyles.headerRight, rightColor]}>价格</Text>
+            <Text style={[OHCStyles.headerRight, rightColor]}>
+              {transfer(language, 'exchange_price')}
+            </Text>
           </NextTouchableOpacity>
         </View>
         <View style={OHCStyles.headerSConatiner}>
@@ -460,7 +474,9 @@ class Orders extends Component {
             activeOpacity={common.activeOpacity}
             onPress={() => { this.handleClickShowTotalPrice('dealAmount') }}
           >
-            <Text style={[OHCStyles.headerLeft, daLeftColor]}>成交数量</Text>
+            <Text style={[OHCStyles.headerLeft, daLeftColor]}>
+              {transfer(language, 'exchange_changedAmount')}
+            </Text>
           </NextTouchableOpacity>
           <Text style={OHCStyles.Slash}> / </Text>
           <NextTouchableOpacity
@@ -468,23 +484,25 @@ class Orders extends Component {
             activeOpacity={common.activeOpacity}
             onPress={() => { this.handleClickShowTotalPrice('dealAmount') }}
           >
-            <Text style={[OHCStyles.headerRight, daRightColor]}>金额</Text>
+            <Text style={[OHCStyles.headerRight, daRightColor]}>
+              {transfer(language, 'exchange_money')}
+            </Text>
           </NextTouchableOpacity>
         </View>
       </View>
     )
   }
 
-  renderOpenOrderCell = (item) => {
+  renderOpenOrderCell = (item, idx, language) => {
     const createdAt = common.dfFullDate(item.createdAt)
     let cancelBtnTitle = ''
     let cancelDisabled = true
     if ((item.status === common.delegate.status.dealing)
       || (item.status === common.delegate.status.waiting)) {
-      cancelBtnTitle = '撤单'
+      cancelBtnTitle = transfer(language, 'exchange_cancelOrder')
       cancelDisabled = false
     } else if (item.status === common.delegate.status.cancel) {
-      cancelBtnTitle = '已取消'
+      cancelBtnTitle = transfer(language, 'exchange_canceled')
       cancelDisabled = true
     }
 
@@ -501,7 +519,7 @@ class Orders extends Component {
     })
 
     const goodsCurrency = `${goodsName}/${currencyName}`
-    const buySell = item.direct === 'buy' ? '买入' : '卖出'
+    const buySell = item.direct === 'buy' ? transfer(language, 'exchange_buy') : transfer(language, 'exchange_sell')
     const buySellColor =
       item.direct === 'sell' ? { color: common.greenColor } : { color: common.redColor }
     const cancelColor =
@@ -536,9 +554,9 @@ class Orders extends Component {
             flexDirection: 'row',
           }}
         >
-          <Text style={OOCStyles.price}>{`价格: ${price}`}</Text>
-          <Text style={OOCStyles.quantity}>{`数量: ${quantity}`}</Text>
-          <Text style={OOCStyles.dealled}>{`已成交: ${dealled}`}</Text>
+          <Text style={OOCStyles.price}>{`${transfer(language, 'exchange_price')}: ${price}`}</Text>
+          <Text style={OOCStyles.quantity}>{`${transfer(language, 'exchange_quality')}: ${quantity}`}</Text>
+          <Text style={OOCStyles.dealled}>{`${transfer(language, 'exchange_changed')}: ${dealled}`}</Text>
         </View>
       </View >
     )
@@ -588,27 +606,27 @@ class Orders extends Component {
   }
 
   renderHeader = () => {
-    const { titleSeleted } = this.props
+    const { titleSeleted, language } = this.props
 
-    if (titleSeleted === '当前委托') {
+    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
       return null
     }
     return this.renderOrderHistoryHeader()
   }
 
   renderCell = ({ item, index }) => {
-    const { titleSeleted } = this.props
+    const { titleSeleted, language } = this.props
 
-    if (titleSeleted === '当前委托') {
-      return this.renderOpenOrderCell(item, index)
+    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
+      return this.renderOpenOrderCell(item, index, language)
     }
-    return this.renderOrderHistoryCell(item, index)
+    return this.renderOrderHistoryCell(item, index, language)
   }
 
   renderContent = () => {
     const datas = this.getDataSource()
     const refreshState = this.getRefreshState()
-
+    const { language } = this.props
     return (
       <RefreshListView
         data={datas}
@@ -622,15 +640,21 @@ class Orders extends Component {
           fontSize: common.font14,
           color: common.textColor,
         }}
+        footerRefreshingText={transfer(language, 'exchange_dataInLoading')}
+        footerFailureText={transfer(language, 'exchange_dataFailureText')}
+        footerNoMoreDataText={transfer(language, 'exchange_dataNoMoreData')}
       />
     )
   }
 
   render() {
-    const { navigation } = this.props
+    const { navigation, language } = this.props
     const { title } = navigation.state.params
 
-    const titles = ['当前委托', '历史委托']
+    const titles = [
+      transfer(language, 'home_currentDelegate'),
+      transfer(language, 'home_historyDelegate'),
+    ]
     const indexSelected = titles.indexOf(title) === -1 ? 0 : titles.indexOf(title)
 
     return (
@@ -654,6 +678,7 @@ function mapStateToProps(store) {
   return {
     ...store.orders,
     user: store.user.user,
+    language: store.system.language,
   }
 }
 

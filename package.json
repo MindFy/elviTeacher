@@ -41,7 +41,8 @@
     "rn-put-object": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-put-object.git#0.2.6",
     "teaset": "0.5.6",
     "rn-hotupdate-d3j": "git+ssh://git@gitlab.d3j.io:RN-Modules/rn-hotupdate-d3j.git#0.2.0",
-    "wallet-address-validator": "^0.1.6"
+    "wallet-address-validator": "^0.1.6",
+    "react-native-device-info": "0.21.5"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.3",

@@ -41,6 +41,7 @@ import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -151,8 +152,12 @@ const styles = StyleSheet.create({
 
 class WithDraw extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '提现',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -189,15 +194,18 @@ class WithDraw extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, user, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'balances_withdraw'),
+    })
     dispatch(requestValuation())
     dispatch(requestWithdrawAddress(findAddress(user.id)))
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading } = this.props
+    const { dispatch, withdrawLoading, language } = this.props
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
-      Toast.success('提现成功')
+      Toast.success(transfer(language, 'withdrawal_succeed'))
     }
 
     if (nextProps.withdrawError) {
@@ -205,7 +213,7 @@ class WithDraw extends Component {
       if (errMsg) {
         Toast.fail(errMsg)
       } else {
-        Toast.fail('添加失败')
+        Toast.fail(transfer(language, 'withdrawal_failed'))
       }
       dispatch(requestWithdrawClearError())
     }
@@ -392,16 +400,16 @@ class WithDraw extends Component {
       return
     }
 
-    const { formState } = this.props
+    const { formState, language } = this.props
 
     if (!formState.withdrawAmount) {
-      Toast.fail('请输入提现金额')
+      Toast.fail(transfer(language, 'withdrawal_amount_required'))
       return
     }
 
     const bAmount = new BigNumber(formState.withdrawAmount)
     if (bAmount.eq(0)) {
-      Toast.fail('请输入提现金额')
+      Toast.fail(transfer(language, 'withdrawal_amount_required'))
       return
     }
 
@@ -416,10 +424,10 @@ class WithDraw extends Component {
     const limitNumber = bQuotaCount.minus(bWithdrawedCount)
 
     const minAmount = this.coinsIdDic[currCoin].minAmount
-    const minAmountMsg = `最小提币金额为${minAmount}`
+    const minAmountMsg = `${transfer(language, 'minimum_withdrawal')}${minAmount}`
 
     if (bAmount.multipliedBy(bToBTC).gt(limitNumber)) {
-      Toast.fail('提现金额已超过当日限额！')
+      Toast.fail(transfer(language, 'withdrawal_exceed_limit'))
       return
     }
     if (bAmount.lt(minAmount)) {
@@ -428,17 +436,17 @@ class WithDraw extends Component {
     }
 
     if (!formState.withdrawAddress) {
-      Toast.fail('请输入提现地址')
+      Toast.fail(transfer(language, 'withdrawal_address_required'))
       return
     }
 
     if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, currCoin)) {
       Alert.alert(
         '提示',
-        `请填写正确的${currCoin}提币地址！`,
+        `${transfer(language, 'withdrawal_address_correct_required_1')}${currCoin}${transfer(language, 'withdrawal_address_correct_required_2')}`,
         [
           {
-            text: '确定',
+            text: transfer(language, 'withdrawal_confirm'),
             onPress: () => { },
           },
         ],
@@ -503,9 +511,10 @@ class WithDraw extends Component {
 
   segmentValueChanged = (e) => {
     const { dispatch, formState } = this.props
-    dispatch(updateAuthCodeType(e.title))
+    const title = this.codeTitles[e.index]
+    dispatch(updateAuthCodeType(title))
 
-    if (e.title === '谷歌验证码') {
+    if (title === '谷歌验证码') {
       dispatch(updateForm({
         ...formState,
         verificationCode: '',
@@ -519,7 +528,7 @@ class WithDraw extends Component {
   }
 
   showVerificationCode = () => {
-    const { dispatch, user, formState } = this.props
+    const { dispatch, user, formState, language } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
@@ -533,7 +542,7 @@ class WithDraw extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
-          titles={this.codeTitles}
+          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
           mobile={user.mobile}
           onChangeText={this.onChangeAuthCode}
           segmentValueChanged={this.segmentValueChanged}
@@ -543,6 +552,7 @@ class WithDraw extends Component {
           }}
           confirmPress={() => this.confirmPress()}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+          language={language}
         />
       </Overlay.View>
     )
@@ -582,7 +592,7 @@ class WithDraw extends Component {
   tapAddAddress = () => {
     Keyboard.dismiss()
 
-    const { address = [], currCoin } = this.props
+    const { address = [], currCoin, language } = this.props
     const items = []
     for (let i = 0; i < address.length; i++) {
       const element = address[i]
@@ -594,15 +604,15 @@ class WithDraw extends Component {
       }
     }
     items.push({
-      title: '+添加新地址',
+      title: transfer(language, 'withdrawal_add_address'),
       onPress: () => this.addAddressPress(),
     })
-    const cancelItem = { title: '取消' }
+    const cancelItem = { title: transfer(language, 'withdrawal_cancel') }
     ActionSheet.show(items, cancelItem)
   }
 
   renderCoinSelector() {
-    const { currCoin, listToggled } = this.props
+    const { currCoin, listToggled, language } = this.props
 
     return (
       <NextTouchableOpacity
@@ -615,7 +625,7 @@ class WithDraw extends Component {
         >
           <Text
             style={styles.currCoin}
-          >{currCoin}</Text>
+          >{currCoin === '选择币种' ? transfer(language, 'deposit_select_coin') : currCoin}</Text>
           <View style={{ alignSelf: 'center' }}>
             <Image
               style={listToggled ? {
@@ -658,12 +668,12 @@ class WithDraw extends Component {
   }
 
   renderFormWithdrawAmount = () => {
-    const { formState } = this.props
+    const { formState, language } = this.props
     return (
       <TKInputItem
         viewStyle={styles.amountView}
         inputStyle={styles.amountInput}
-        placeholder="提现金额"
+        placeholder={transfer(language, 'withdrawal_amount')}
         value={formState.withdrawAmount}
         onChangeText={this.onChangeWithdrawAmount}
       />
@@ -671,7 +681,7 @@ class WithDraw extends Component {
   }
 
   renderFormFeeOrBalanceReceived = () => {
-    const { currCoin, formState } = this.props
+    const { currCoin, formState, language } = this.props
     const fee = this.coinsIdDic[currCoin].fee
     let bAalanceReceived = '0'
     if (formState.withdrawAmount) {
@@ -697,7 +707,7 @@ class WithDraw extends Component {
             fontSize: common.font12,
             alignSelf: 'center',
           }}
-        >{`手续费：${fee}${currCoin}`}</Text>
+        >{`${transfer(language, 'withdrawal_fee')}: ${fee}${currCoin}`}</Text>
         <Text
           style={{
             marginRight: common.margin10,
@@ -706,19 +716,19 @@ class WithDraw extends Component {
             fontSize: common.font12,
             alignSelf: 'center',
           }}
-        >{`实际到账：${bAalanceReceived}`}</Text>
+        >{`${transfer(language, 'withdrawal_you_will_get')}: ${bAalanceReceived}`}</Text>
       </View>
     )
   }
 
   renderFormWithdrawAddress = () => {
-    const { dispatch, formState } = this.props
+    const { dispatch, formState, language } = this.props
 
     return (
       <View style={styles.amountView}>
         <TKInputItem
           inputStyle={styles.addressInput}
-          placeholder="地址"
+          placeholder={transfer(language, 'withdrawal_address')}
           value={formState.withdrawAddress}
           onChangeText={(withdrawAddress = '') => dispatch(updateForm({
             ...formState,
@@ -772,7 +782,7 @@ class WithDraw extends Component {
   }
 
   renderFormWithdrawBtn = () => {
-    const { formState } = this.props
+    const { formState, language } = this.props
     const { withdrawAmount } = formState
     let disabled = false
     let captionColor = common.btnTextColor
@@ -786,14 +796,14 @@ class WithDraw extends Component {
         titleStyle={{ color: captionColor }}
         onPress={() => this.withdrawPress()}
         theme={'gray'}
-        caption={'提现'}
+        caption={transfer(language, 'withdrawal')}
         disabled={disabled}
       />
     )
   }
 
   renderFormTip = () => {
-    const { currCoin } = this.props
+    const { currCoin, language } = this.props
     const minAmount = this.coinsIdDic[currCoin].minAmount
     return (
       <View>
@@ -806,7 +816,7 @@ class WithDraw extends Component {
             fontSize: common.font12,
             lineHeight: common.h15,
           }}
-        >温馨提示:</Text>
+        >{transfer(language, 'deposit_please_note')}</Text>
         <Text
           style={{
             marginTop: common.margin10,
@@ -816,8 +826,8 @@ class WithDraw extends Component {
             fontSize: common.font10,
             lineHeight: common.h15,
           }}
-        >{`1. 最小提币数量为：${minAmount} ${currCoin}
-2. 最大提币数量为：未身份认证：单日限1 BTC或等额其他币种， 已身份认证：单日限50 BTC或等额其他币种`}
+        >{`${transfer(language, 'withdrawal_note_1')}${minAmount} ${currCoin}
+${transfer(language, 'withdrawal_note_2')}`}
         </Text>
       </View>
     )
@@ -828,6 +838,7 @@ class WithDraw extends Component {
       balance,
       currCoin,
       listToggled,
+      language,
     } = this.props
 
     const bBalance = new BigNumber(balance)
@@ -841,7 +852,7 @@ class WithDraw extends Component {
     return (currCoin !== '选择币种' && !listToggled) ? (
       (
         <View>
-          <Text style={styles.balanceTip}>可用</Text>
+          <Text style={styles.balanceTip}>{transfer(language, 'withdrawal_available')}</Text>
           <Text style={styles.balance}>{balanceString}</Text>
           {
             (this.canWithdrawCoins.includes(currCoin)) &&
@@ -879,10 +890,11 @@ class WithDraw extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    ...store.withdraw,
-    user: store.user.user,
+    ...state.withdraw,
+    user: state.user.user,
+    language: state.system.language,
   }
 }
 

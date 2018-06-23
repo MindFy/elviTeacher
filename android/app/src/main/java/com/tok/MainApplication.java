@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.hotupdate.HotUpdateManager;
 import com.facebook.react.ReactApplication;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.example.hotupdate.HotUpdatePackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -35,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNDeviceInfo(),
             new HotUpdatePackage(),
             new FastImageViewPackage(),
             new FSPackage(),
@@ -51,12 +53,12 @@ public class MainApplication extends Application implements ReactApplication {
       return "index";
     }
 
-    @Nullable
-    @Override
-    protected String getJSBundleFile() {
-      ReactApplicationContext reactCtx = new ReactApplicationContext(getApplicationContext());
-      return new HotUpdateManager(reactCtx).getBundlePath();
-    }
+//    @Nullable
+//    @Override
+//    protected String getJSBundleFile() {
+//      ReactApplicationContext reactCtx = new ReactApplicationContext(getApplicationContext());
+//      return new HotUpdateManager(reactCtx).getBundlePath();
+//    }
   };
 
   @Override

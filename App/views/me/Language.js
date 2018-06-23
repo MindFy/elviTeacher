@@ -4,9 +4,13 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
+import { Toast } from 'teaset'
+import { connect } from 'react-redux'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import * as system from '../../actions/system'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -33,10 +37,14 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Language extends Component {
+class Language extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '语言',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -53,17 +61,36 @@ export default class Language extends Component {
   }
   constructor() {
     super()
-    this.state = {
-      languageIndex: 0,
+    this.language = ['zh_cn', 'en']
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_settings_language'),
+    })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language !== this.props.language) {
+      const { navigation, language } = nextProps
+      Toast.success(transfer(language, 'me_changeLanguageSuccess'))
+      navigation.setParams({
+        title: transfer(language, 'me_settings_language'),
+      })
     }
   }
 
-  setLanguage(languageIndex) {
-    this.setState({ languageIndex })
+  setLanguage(launageEvt) {
+    const { dispatch, language } = this.props
+    if (launageEvt !== language) {
+      dispatch(system.updateLanguage(launageEvt))
+    }
   }
 
   render() {
-    const { languageIndex } = this.state
+    const languageIndex = this.language.indexOf(this.props.language)
+    const { language } = this.props
     const rightImage = (<Image
       style={styles.checkBox}
       source={require('../../assets/check_box.png')}
@@ -75,19 +102,27 @@ export default class Language extends Component {
           leftImageHide
           rightImageHide={languageIndex}
           rightImage={!languageIndex ? rightImage : null}
-          onPress={() => this.setLanguage(0)}
-          title="中文"
-          target={'self'}
+          onPress={() => this.setLanguage('zh_cn')}
+          title={transfer(language, 'me_settings_languageChinese')}
+          delay={500}
         />
         <MeCell
           leftImageHide
           rightImageHide={!languageIndex}
           rightImage={languageIndex ? rightImage : null}
-          onPress={() => this.setLanguage(1)}
-          title="English"
-          target={'self'}
+          onPress={() => this.setLanguage('en')}
+          title={transfer(language, 'me_settings_languageEnglish')}
+          delay={500}
         />
       </ScrollView>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    language: state.system.language,
+  }
+}
+
+export default connect(mapStateToProps)(Language)

@@ -3,7 +3,7 @@ const initialState = {
     buy: [],
     sell: [],
   },
-  openOrders: [],
+  openOrders: undefined,
   orderHistory: [],
   selectedPair: {
     cprice: '',

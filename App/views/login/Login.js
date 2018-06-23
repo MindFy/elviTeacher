@@ -18,6 +18,7 @@ import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
     left: common.h80,
     fontSize: common.font12,
     color: common.redColor,
+    width: common.sw * 0.8 - common.getH(80),
   },
 })
 
@@ -144,7 +146,7 @@ class Login extends PureComponent {
 
   loginPress = () => {
     Keyboard.dismiss()
-    const { dispatch, formState } = this.props
+    const { dispatch, formState, language } = this.props
 
     // TODO 上线需要清理掉
     if (process.env.NODE_ENV === 'development'
@@ -157,32 +159,25 @@ class Login extends PureComponent {
     }
 
     if (!formState.mobile.length) {
-      Toast.fail('请输入账号')
+      Toast.fail(transfer(language, 'login_inputId'))
       return
     }
     if (!common.regMobile.test(formState.mobile)) {
-      Toast.fail(common.regMobileMsg)
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     if (!formState.password.length) {
-      Toast.fail('请输入密码')
+      Toast.fail(transfer(language, 'login_inputPass'))
       return
     }
     dispatch(actions.login(formState))
   }
 
-  errs = {
-    4000114: '手机号不存在或者错误',
-    4000115: '密码不正确',
-    4000116: '手机号码未注册',
-    4000117: '账号或密码错误',
-  }
-
   loginHandle(nextProps) {
-    const { dispatch, loggedIn, error, loggedInResult, screenProps } = nextProps
+    const { dispatch, loggedIn, error, loggedInResult, screenProps, language } = nextProps
 
     if (loggedIn !== this.props.loggedIn) {
-      Toast.success('登录成功')
+      Toast.success(transfer(language, 'login_success'))
       const user = loggedInResult
       dispatch(actions.findUser(schemas.findUser(user.id)))
       dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
@@ -190,14 +185,21 @@ class Login extends PureComponent {
       screenProps.dismiss()
     }
 
+    const errs = {
+      4000114: transfer(language, 'login_idNotExist'),
+      4000115: transfer(language, 'login_passError'),
+      4000116: transfer(language, 'login_phoneUnRegist'),
+      4000117: transfer(language, 'login_idOrPassError'),
+    }
+
     if (nextProps.error && (error !== this.props.error)) {
-      const msg = this.errs[error.code]
+      const msg = errs[error.code]
       if (msg) {
         Toast.fail(msg)
       } else if (error.code === 4000118) {
         Toast.fail(error.message)
       } else {
-        Toast.fail('登录失败, 请您稍后重试')
+        Toast.fail(transfer(language, 'login_tryAgain'))
       }
     }
   }
@@ -212,26 +214,27 @@ class Login extends PureComponent {
 
   renderMobileTip = () => {
     const { showTip } = this.state
+    const { language } = this.props
     return (
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            请输入正确的11位手机号
+            {transfer(language, 'login_idError')}
           </Text> : null}
       </View>
     )
   }
 
   renderInput = () => {
-    const { formState, dispatch } = this.props
+    const { formState, dispatch, language } = this.props
 
     return (
       <View style={styles.input}>
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
-          title="账号"
-          placeholder="请输入11位手机号"
+          title={transfer(language, 'login_id')}
+          placeholder={transfer(language, 'login_idPlaceholder')}
           value={formState.mobile}
           maxLength={11}
           textInputProps={{
@@ -253,8 +256,8 @@ class Login extends PureComponent {
         <TKInputItem
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
-          title="密码"
-          placeholder="请输入密码"
+          title={transfer(language, 'login_password')}
+          placeholder={transfer(language, 'login_passwordPlaceholder')}
           value={formState.password}
           maxLength={common.textInputMaxLenPwd}
           secureTextEntry
@@ -265,17 +268,17 @@ class Login extends PureComponent {
   }
 
   renderExtraBtns = () => {
-    const { navigation } = this.props
+    const { navigation, language } = this.props
     return (
       <View style={styles.extraBtns}>
         <TKButton
           theme="small"
-          caption="新用户注册"
+          caption={transfer(language, 'login_newUser')}
           onPress={() => navigation.navigate('Register')}
         />
         <TKButton
           theme="small"
-          caption="忘记密码?"
+          caption={transfer(language, 'login_forget_password')}
           onPress={() => navigation.navigate('ForgotPwd')}
         />
       </View>
@@ -283,7 +286,7 @@ class Login extends PureComponent {
   }
 
   render() {
-    const { loading } = this.props
+    const { loading, language } = this.props
     return (
       <ScrollView
         style={styles.container}
@@ -300,7 +303,7 @@ class Login extends PureComponent {
           <TKButton
             style={{ marginTop: common.margin40 }}
             theme="yellow"
-            caption="登录"
+            caption={transfer(language, 'login_login')}
             onPress={this.loginPress}
             disabled={this.loading}
           />
@@ -320,6 +323,7 @@ function mapStateToProps(store) {
     loading: store.authorize.loading,
     loggedIn: store.authorize.loggedIn,
     loggedInResult: store.authorize.loggedInResult,
+    language: store.system.language,
   }
 }
 

@@ -7,11 +7,16 @@ import { requestPairInfo } from '../../actions/market'
 import * as exchange from '../../actions/exchange'
 import HeaderScrollView2 from '../market/HeaderScrollView2'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 class Market2 extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '市场',
+      headerTitle: title,
       headerLeft:
         (
           <NextTouchableOpacity
@@ -37,7 +42,10 @@ class Market2 extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, selectedPair } = this.props
+    const { dispatch, selectedPair, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'market_market'),
+    })
     dispatch(requestPairInfo({}))
     dispatch(exchange.updateCurrentPair({
       title: selectedPair.currency.name,
@@ -104,8 +112,7 @@ class Market2 extends Component {
   }
 
   render() {
-    const { pairs, currPair } = this.props
-    // const currPair = selectedPair.currency.name
+    const { pairs, currPair, language } = this.props
     const items = ['CNYT', 'BTC', 'TK']
     let marketData = []
     if (pairs && pairs[currPair]) {
@@ -124,6 +131,7 @@ class Market2 extends Component {
           onClickItem={this.onClickItem}
         />
         <MarketList2
+          language={language}
           data={marketData}
           currencyName={currPair}
           cellPressAction={rd => this.cellPressAction(rd)}
@@ -138,6 +146,7 @@ function mapStateToProps(state) {
     selectedPair: state.exchange.selectedPair,
     pairs: state.market.pairs,
     currPair: state.exchange.currPair,
+    language: state.system.language,
   }
 }
 

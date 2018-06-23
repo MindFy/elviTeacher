@@ -22,6 +22,7 @@ import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -55,8 +56,12 @@ const styles = StyleSheet.create({
 
 class Authentication extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '身份认证',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -87,7 +92,10 @@ class Authentication extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, authenticationAgain, loggedInResult } = this.props
+    const { dispatch, user, authenticationAgain, loggedInResult, navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_identity_authentication'),
+    })
     dispatch(actions.findUser(schemas.findUser(loggedInResult.id)))
     dispatch(actions.findAuditmanage(schemas.findAuditmanage(loggedInResult.id)))
     this.listener = DeviceEventEmitter.addListener(common.noti.idCardAuth, () => {
@@ -146,29 +154,29 @@ class Authentication extends Component {
   confirmPress() {
     Keyboard.dismiss()
 
-    const { dispatch, name, idNo, idCardImages } = this.props
+    const { dispatch, name, idNo, idCardImages, language } = this.props
     if (!name.length) {
-      Toast.fail('请输入姓名')
+      Toast.fail(transfer(language, 'me_ID_enterName'))
       return
     }
     if (name.length < 2) {
-      Toast.fail('姓名过短')
+      Toast.fail(transfer(language, 'me_ID_shorterName'))
       return
     }
     if (!idNo.length || !idcard.verify(idNo)) {
-      Toast.fail('请输入正确的身份证号')
+      Toast.fail(transfer(language, 'me_ID_correctNumber'))
       return
     }
     if (!idCardImages.first) {
-      Toast.fail('请上传身份证正面照片')
+      Toast.fail(transfer(language, 'me_ID_uploadIDcard_FrontPhoto'))
       return
     }
     if (!idCardImages.second) {
-      Toast.fail('请上传身份证反面照片')
+      Toast.fail(transfer(language, 'me_ID_uploadIDcard_BackPhoto'))
       return
     }
     if (!idCardImages.third) {
-      Toast.fail('请上传手持身份证照片')
+      Toast.fail(transfer(language, 'me_ID_uploadIDcard_HandPhoto'))
       return
     }
 
@@ -178,7 +186,7 @@ class Authentication extends Component {
     hash[idCardImages.third.hash] = true
     const hashArr = Object.keys(hash)
     if (hashArr.length !== 3) {
-      Toast.fail('请勿上传相同照片')
+      Toast.fail(transfer(language, 'me_ID_notUploadSamePhoto'))
       return
     }
 
@@ -200,12 +208,12 @@ class Authentication extends Component {
         const h2 = r.res[1] !== '' ? JSON.parse(r.res[1]).hash : ''
         const h3 = r.res[2] !== '' ? JSON.parse(r.res[2]).hash : ''
         if (!h1.length || !h2.length || !h3.length) {
-          Toast.fail('图片上传失败')
+          Toast.fail(transfer(language, 'me_ID_uploadPhotoFailed'))
           dispatch(actions.imgHashFailed())
         } else if ((h1 === h2)
           || (h1 === h3)
           || (h2 === h3)) {
-          Toast.fail('请勿上传相同照片')
+          Toast.fail(transfer(language, 'me_ID_notUploadSamePhoto'))
           dispatch(actions.imgHashFailed())
         } else {
           dispatch(actions.idCardAuth({
@@ -215,7 +223,7 @@ class Authentication extends Component {
           }))
         }
       } else {
-        Toast.fail('图片上传失败')
+        Toast.fail(transfer(language, 'me_ID_uploadPhotoFailed'))
         dispatch(actions.imgHashFailed())
       }
     })
@@ -254,23 +262,24 @@ class Authentication extends Component {
 
   handleIdCardAuthRequest(nextProps) {
     const { idCardAuthResponse } = nextProps
+    const { language } = this.props
     if (idCardAuthResponse && idCardAuthResponse !== this.props.idCardAuthResponse) {
       if (idCardAuthResponse.success) {
         Toast.success(idCardAuthResponse.result)
       } else if (idCardAuthResponse.error.code === 4000150) {
-        Toast.fail('身份认证失败，请确认信息是否正确')
+        Toast.fail(transfer(language, 'me_ID_AuthFailedInfo'))
       } else if (idCardAuthResponse.error.code === 4000151) {
-        Toast.fail('身份证号错误')
+        Toast.fail(transfer(language, 'me_ID_numberWrong'))
       } else if (idCardAuthResponse.error.code === 4000155) {
-        Toast.fail('身份证号已存在')
+        Toast.fail(transfer(language, 'me_ID_numberExisted'))
       } else {
-        Toast.fail('身份认证失败')
+        Toast.fail(transfer(language, 'me_ID_AuthFailed'))
       }
     }
   }
 
   renderScrollView() {
-    const { name, idNo, idCardImages } = this.props
+    const { name, idNo, idCardImages, language } = this.props
     return (
       <ScrollView
         keyboardShouldPersistTaps="handled"
@@ -283,14 +292,14 @@ class Authentication extends Component {
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={{ fontSize: common.font14 }}
-            placeholder="姓名"
+            placeholder={transfer(language, 'me_ID_name')}
             value={name}
             onChange={e => this.onChange(e, 'name')}
           />
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={{ fontSize: common.font14 }}
-            placeholder="身份证号"
+            placeholder={transfer(language, 'me_ID_number')}
             value={idNo}
             maxLength={common.textInputMaxLenIdNo}
             onChange={e => this.onChange(e, 'idNo')}
@@ -298,20 +307,23 @@ class Authentication extends Component {
           />
 
           <SelectImage
-            title={'请上传身份证正面照片'}
+            title={transfer(language, 'me_ID_uploadIDcard_FrontPhoto')}
             onPress={() => Keyboard.dismiss()}
+            language={language}
             imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'first')}
             avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
           />
           <SelectImage
-            title={'请上传身份证反面照片'}
+            title={transfer(language, 'me_ID_uploadIDcard_BackPhoto')}
             onPress={() => Keyboard.dismiss()}
+            language={language}
             imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'second')}
             avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
           />
           <SelectImage
-            title={'请上传手持身份证照片'}
+            title={transfer(language, 'me_ID_uploadIDcard_HandPhoto')}
             onPress={() => Keyboard.dismiss()}
+            language={language}
             imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'third')}
             avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
           />
@@ -319,7 +331,7 @@ class Authentication extends Component {
           <TKButton
             style={{ marginTop: common.margin40 }}
             onPress={() => this.confirmPress()}
-            caption="确认"
+            caption={transfer(language, 'me_ID_confirm')}
             theme={'gray'}
           />
         </KeyboardAvoidingView>
@@ -328,6 +340,7 @@ class Authentication extends Component {
   }
 
   renderSucceed() {
+    const { language } = this.props
     return (
       <ScrollView>
         <Image
@@ -335,14 +348,14 @@ class Authentication extends Component {
           source={require('../../assets/success.png')}
         />
         <Text style={styles.titleSucceed}>
-          恭喜！身份认证成功！
+          {transfer(language, 'me_ID_Authentication_success')}
         </Text>
-      </ScrollView>
+      </ScrollView >
     )
   }
 
   renderFailed() {
-    const { dispatch, findAuditmanageData } = this.props
+    const { dispatch, findAuditmanageData, language } = this.props
     let reason = ''
     try {
       if (findAuditmanageData) {
@@ -358,10 +371,10 @@ class Authentication extends Component {
           source={require('../../assets/failed.png')}
         />
         <Text style={styles.titleSucceed}>
-          抱歉！您的身份认证未通过审核！
+          {transfer(language, 'me_ID_Authentication_failed')}
         </Text>
         <Text style={[styles.titleSucceed, { marginTop: common.margin10 }]}>
-          失败原因：{reason}
+          {transfer(language, 'me_ID_Auth_failedReasonReminder')}{reason}
         </Text>
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -381,7 +394,7 @@ class Authentication extends Component {
               fontSize: common.font16,
               alignSelf: 'center',
             }}
-          >再次认证</Text>
+          >{transfer(language, 'me_ID_Authentication_again')}</Text>
         </NextTouchableOpacity>
       </ScrollView>
     )
@@ -404,46 +417,48 @@ class Authentication extends Component {
     }
   }
 
-  renderWaitingTip = () => (
-    <View
-      style={{
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'transparent',
-      }}
-    >
+  renderWaitingTip(language) {
+    return (
       <View
         style={{
           position: 'absolute',
-          alignSelf: 'center',
-          justifyContent: 'center',
-          top: common.margin30,
-          width: '50%',
-          height: common.h60,
-          backgroundColor: 'white',
-          borderRadius: common.radius6,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'transparent',
         }}
       >
-        <Text
+        <View
           style={{
-            color: common.blackColor,
-            fontSize: common.font16,
+            position: 'absolute',
             alignSelf: 'center',
-            textAlign: 'center',
-            lineHeight: common.margin20,
+            justifyContent: 'center',
+            top: common.margin30,
+            width: '50%',
+            paddingVertical: common.getH(8),
+            backgroundColor: 'white',
+            borderRadius: common.radius6,
           }}
-        >{'提交成功\n请耐心等待后台审核'}</Text>
+        >
+          <Text
+            style={{
+              color: common.blackColor,
+              fontSize: common.font16,
+              alignSelf: 'center',
+              textAlign: 'center',
+              lineHeight: common.margin20,
+            }}
+          >{transfer(language, 'me_submitAuthSuccess')}</Text>
+        </View>
       </View>
-    </View>
-  )
+    )
+  }
 
   render() {
-    const { idCardAuthVisible, user } = this.props
+    const { idCardAuthVisible, user, language } = this.props
     const isShowWaitingTip =
       user && user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting
     const contentView = !isShowWaitingTip && this.renderContentView()
-    const waitingTip = isShowWaitingTip && this.renderWaitingTip()
+    const waitingTip = isShowWaitingTip && this.renderWaitingTip(language)
     let transparentView = null
     if (idCardAuthVisible) {
       transparentView = <View style={styles.transparentView} />
@@ -471,6 +486,7 @@ function mapStateToProps(state) {
     findAuditmanageData: state.user.findAuditmanageData,
 
     loggedInResult: state.authorize.loggedInResult,
+    language: state.system.language,
   }
 }
 

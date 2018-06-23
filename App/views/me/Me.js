@@ -13,11 +13,16 @@ import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 import cache from '../../utils/cache'
+import transfer from '../../localization/utils'
 
 class Me extends Component {
-  static navigationOptions() {
+  static navigationOptions({ navigation }) {
+    let title = ''
+    if (navigation.state.params) {
+      title = navigation.state.params.title
+    }
     return {
-      headerTitle: '我的',
+      headerTitle: title,
     }
   }
 
@@ -30,6 +35,13 @@ class Me extends Component {
     })
   }
 
+  componentDidMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_me'),
+    })
+  }
+
   /* 跳转到登录页面 */
   navigateLogin() {
     const { navigation } = this.props
@@ -37,18 +49,18 @@ class Me extends Component {
   }
 
   logoutPress() {
-    const { dispatch } = this.props
+    const { dispatch, language } = this.props
     Alert.alert(
-      '真的要退出吗？',
+      transfer(language, 'me_logout_tilte'),
       '',
       [
         {
-          text: '点错了',
+          text: transfer(language, 'me_logout_cancel'),
           onPress: () => { },
           style: 'cancel',
         },
         {
-          text: '是的',
+          text: transfer(language, 'me_logout_confirm'),
           onPress: () => {
             dispatch(actions.logout())
             dispatch(actions.clearAllReducer())
@@ -68,7 +80,7 @@ class Me extends Component {
   }
 
   render() {
-    const { loggedIn, navigation, loading, loggedInResult } = this.props
+    const { loggedIn, navigation, loading, loggedInResult, language } = this.props
 
     return (
       <View
@@ -96,8 +108,9 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!loggedIn ? '请登录' : this.maskPhone(loggedInResult.mobile)}
+            title={!loggedIn ? transfer(language, 'me_login') : this.maskPhone(loggedInResult.mobile)}
             rightImageHide
+            target="global"
           />
           <MeCell
             viewStyle={{
@@ -108,7 +121,8 @@ class Me extends Component {
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/phone_right.png')}
-            title="身份认证"
+            title={transfer(language, 'me_identity_authentication')}
+            target="global"
           />
           <MeCell
             onPress={() => {
@@ -116,7 +130,8 @@ class Me extends Component {
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/phone_down.png')}
-            title="安全中心"
+            title={transfer(language, 'me_security_center')}
+            target="global"
           />
           <MeCell
             onPress={() => {
@@ -124,7 +139,8 @@ class Me extends Component {
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/bank_card.png')}
-            title="银行卡管理"
+            title={transfer(language, 'me_bankCards_management')}
+            target="global"
           />
           <MeCell
             onPress={() => {
@@ -132,12 +148,13 @@ class Me extends Component {
               else navigation.navigate('LoginStack')
             }}
             leftImageSource={require('../../assets/gift.png')}
-            title="超级返利"
+            title={transfer(language, 'me_super_cashBack')}
+            target="global"
           />
           <MeCell
             onPress={() => navigation.navigate('Settings')}
             leftImageSource={require('../../assets/setting.png')}
-            title="设置"
+            title={transfer(language, 'me_settings')}
           />
 
           {
@@ -149,7 +166,7 @@ class Me extends Component {
               }}
               onPress={() => this.logoutPress()}
               disabled={!loggedIn}
-              caption="退出登录"
+              caption={transfer(language, 'me_logOut')}
               theme={'gray'}
             />) : null
           }
@@ -168,6 +185,7 @@ function mapStateToProps(state) {
     loggedIn: state.authorize.loggedIn,
     loading: state.authorize.loading,
     loggedInResult: state.authorize.loggedInResult,
+    language: state.system.language,
   }
 }
 

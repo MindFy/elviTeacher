@@ -33,6 +33,7 @@ import schemas from '../../schemas/index'
 import AllegeView from './AllegeView'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import WithdrawAuthorizeCode from '../../views/balance/components/WithdrawAuthorizeCode'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   row: {
@@ -101,8 +102,13 @@ const styles = StyleSheet.create({
 
 class OtcDetail extends Component {
   static navigationOptions(props) {
+    const params = props.navigation.state.params || {}
+    let title = ''
+    if (params.title) {
+      title = params.title
+    }
     return {
-      headerTitle: '交易订单',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -135,6 +141,13 @@ class OtcDetail extends Component {
       showAllegeView: false,
     }
     this.codeTitles = ['短信验证码', '谷歌验证码']
+  }
+
+  componentWillMount() {
+    const { language } = this.props
+    this.props.navigation.setParams({
+      title: transfer(language, 'OtcDetail'),
+    })
   }
 
   componentDidMount() {
@@ -174,18 +187,18 @@ class OtcDetail extends Component {
   confirmPayPress(id) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
-    const { dispatch, formState, authCodeType } = this.props
+    const { dispatch, formState, authCodeType, language } = this.props
     if (authCodeType === '短信验证码') {
       const { code } = formState
       if (!code.length) {
-        Toast.fail('请输入验证码')
+        Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
         return
       }
       dispatch(requestConfirmPay({ id, code }))
     } else {
       const { googleCode } = formState
       if (!googleCode.length) {
-        Toast.fail('请输入谷歌验证码')
+        Toast.fail(transfer(language, 'AuthCode_enter_gv_code'))
         return
       }
       this.id = id
@@ -196,10 +209,10 @@ class OtcDetail extends Component {
   }
 
   cancelPress(title, id) {
-    const { dispatch, formState } = this.props
-    if (title === '撤单') {
+    const { dispatch, formState, language } = this.props
+    if (title === transfer(language, 'OtcDetail_cancelOrder')) {
       dispatch(requestCancel({ id }))
-    } else if (title === '投诉') {
+    } else if (title === transfer(language, 'OtcDetail_complaints')) {
       dispatch(updateForm({ ...formState, allegeText: '' }))
       this.setState({
         showAllegeView: true,
@@ -209,10 +222,10 @@ class OtcDetail extends Component {
   }
 
   havedPayPress(title, id) {
-    const { dispatch } = this.props
-    if (title === '我已付款') {
+    const { dispatch, language } = this.props
+    if (title === transfer(language, 'OtcDetail_i_paid')) {
       dispatch(requestHavedPay({ id }))
-    } else if (title === '确认收款') {
+    } else if (title === transfer(language, 'OtcDetail_received')) {
       this.showAuthCode(id)
     }
   }
@@ -247,9 +260,10 @@ class OtcDetail extends Component {
 
   segmentValueChanged = (e) => {
     const { dispatch, formState } = this.props
-    dispatch(updateAuthCodeType(e.title))
+    const title = this.codeTitles[e.index]
+    dispatch(updateAuthCodeType(title))
 
-    if (e.title === '谷歌验证码') {
+    if (e.index === 1) {
       dispatch(updateForm({
         ...formState,
         code: '',
@@ -269,7 +283,7 @@ class OtcDetail extends Component {
   }
 
   showAuthCode = (id) => {
-    const { dispatch, loggedInResult, formState } = this.props
+    const { dispatch, loggedInResult, formState, language } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
@@ -283,13 +297,14 @@ class OtcDetail extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
-          titles={this.codeTitles}
+          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
           mobile={loggedInResult.mobile}
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
           confirmPress={() => this.confirmPayPress(id)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+          language={language}
         />
       </Overlay.View>
     )
@@ -297,56 +312,56 @@ class OtcDetail extends Component {
   }
 
   errors = {
-    4000101: '手机号码或服务类型错误',
-    4000102: '一分钟内不能重复发送验证码',
-    4000104: '手机号码已注册',
-    4000156: '授权验证失败',
-    4001480: '订单状态已过期',
-    4001421: '订单状态已过期',
+    4000101: 'AuthCode_bad_phone_number_or_service_type',
+    4000102: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4000104: 'AuthCode_mobile_phone_number_registered',
+    4000156: 'AuthCode_authorization_verification_failed',
+    4001480: 'OtcDetail_order_statusexpired',
+    4001421: 'OtcDetail_order_statusexpired',
   }
 
   handleRequestGetCode(nextProps) {
-    const { getCodeResult, getCodeError } = nextProps
+    const { getCodeResult, getCodeError, language } = nextProps
 
     if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
       Toast.success(getCodeResult.message)
     }
     if (getCodeError && getCodeError !== this.props.getCodeError) {
       if (getCodeError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
-        const msg = this.errors[getCodeError.code]
+        const msg = transfer(language, this.errors[getCodeError.code])
         if (msg) Toast.fail(msg)
-        else Toast.fail('获取验证码失败，请重试')
+        else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
       }
     }
   }
 
   handleRequestCancel(nextProps) {
-    const { dispatch, cancelResult, cancelError, otcList } = nextProps
+    const { dispatch, cancelResult, cancelError, otcList, language } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
-      Toast.success('撤销成功')
+      Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
       const nextOtcList = otcList.concat()
       nextOtcList[this.operateIndex].status = 'cancel'
       dispatch(updateOtcList(nextOtcList))
     }
     if (cancelError && cancelError !== this.props.cancelError) {
       if (cancelError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
         const msg = this.errors[cancelError.code]
         if (msg) Toast.fail(msg)
-        else Toast.fail('撤单失败，请稍后重试')
+        else Toast.fail(transfer(language, 'OtcDetail_failed_to_cancel_the_order'))
       }
     }
   }
 
   handleRequestConfirmPay(nextProps) {
-    const { dispatch, confirmPayResult, confirmPayError, otcList } = nextProps
+    const { dispatch, confirmPayResult, confirmPayError, otcList, language } = nextProps
 
     if (confirmPayResult && confirmPayResult !== this.props.confirmPayResult) {
-      Toast.success('确认成功')
+      Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
       Overlay.hide(this.overlayViewKey)
       const nextOtcList = otcList.concat()
       nextOtcList[this.operateIndex].status = 'complete'
@@ -354,46 +369,46 @@ class OtcDetail extends Component {
     }
     if (confirmPayError && confirmPayError !== this.props.confirmPayError) {
       if (confirmPayError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
         const msg = this.errors[confirmPayError.code]
         if (msg) Toast.fail(msg)
-        else Toast.fail('确认失败，请稍后重试')
+        else Toast.fail(transfer(language, 'OtcDetail_confirm_failed'))
       }
     }
   }
 
   handleRequestHavedPay(nextProps) {
-    const { dispatch, havedPayResult, havedPayError, otcList } = nextProps
+    const { dispatch, havedPayResult, havedPayError, otcList, language } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
-      Toast.success('确认成功')
+      Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
       const nextOtcList = otcList.concat()
       nextOtcList[this.operateIndex].status = 'waitconfirm'
       dispatch(updateOtcList(nextOtcList))
     }
     if (havedPayError && havedPayError !== this.props.havedPayError) {
       if (havedPayError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
-        const msg = this.errors[havedPayError.code]
+        const msg = transfer(language, this.errors[havedPayError.code])
         if (msg) Toast.fail(msg)
-        else Toast.fail('操作失败，请稍后重试')
+        Toast.fail(transfer(language, 'OtcDetail_operation_failed'))
       }
     }
   }
 
   handleRequestCheck2GoogleCode(nextProps) {
     if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
-      const { googleCodeResponse, dispatch, formState } = nextProps
+      const { googleCodeResponse, dispatch, formState, language } = nextProps
       if (googleCodeResponse.success) {
         dispatch(requestConfirmPay({ id: this.id, googleCode: formState.googleCode }))
       } else {
         const errCode = googleCodeResponse.error.code
         if (errCode === 4000171) {
-          Toast.fail('请先绑定谷歌验证码!')
+          Toast.fail(transfer(language, 'AuthCode_bind_gv_code_first'))
         } else {
-          Toast.fail('谷歌验证码错误!')
+          Toast.fail(transfer(language, 'AuthCode_gv_code_error'))
         }
       }
       dispatch(check2GoogleAuthSetResponse(null))
@@ -401,10 +416,10 @@ class OtcDetail extends Component {
   }
 
   handleRequestAllege(nextProps) {
-    const { dispatch, allegeResult, allegeError, otcList } = nextProps
+    const { dispatch, allegeResult, allegeError, otcList, language } = nextProps
 
     if (allegeResult && allegeResult !== this.props.allegeResult) {
-      Toast.success('投诉成功')
+      Toast.success(transfer(language, 'OtcDetail_complaint_successful'))
       const nextOtcList = otcList.concat()
       nextOtcList[this.operateIndex].isAllege = 'yes'
       dispatch(updateOtcList(nextOtcList))
@@ -412,11 +427,11 @@ class OtcDetail extends Component {
     }
     if (allegeError && allegeError !== this.props.allegeError) {
       if (allegeError.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
         const msg = this.errors[allegeError.code]
-        if (msg) Toast.fail(msg)
-        else Toast.fail('投诉失败，请稍后重试')
+        if (msg) Toast.fail(transfer(language, msg))
+        Toast.fail(transfer(language, 'OtcDetail_complaint_failed'))
       }
       this.setState({ showAllegeView: false })
     }
@@ -449,7 +464,7 @@ class OtcDetail extends Component {
   keyExtractor = item => item.createdAt
 
   renderRow(rd, rid) {
-    const { navigation } = this.props
+    const { navigation, language } = this.props
     const createdAt = common.dfFullDate(rd.createdAt)
     let textColor = 'white'
     let status = ''
@@ -465,44 +480,51 @@ class OtcDetail extends Component {
     const amount = new BigNumber(dealPrice).multipliedBy(quantity).toFixed(2, 1)
     switch (rd.status) {
       case common.legalDeal.status.waitpay:
-        status = rd.direct === common.buy ? '待付款' : '待收款'
+        status =
+          transfer(language,
+            rd.direct === common.buy ? 'OtcDetail_unpaid' : 'OtcDetail_unReceived')
         cancelBtnDisabled = false
         havedPayDisabled = false
         break
       case common.legalDeal.status.waitconfirm:
-        status = '待确认'
+        status = transfer(language, 'OtcDetail_unconfirmed')
         confirmPayDisabled = false
         break
       case common.legalDeal.status.complete:
-        status = '已完成'
+        status = transfer(language, 'OtcDetail_closed')
         break
       case common.legalDeal.status.cancel:
-        status = '已取消'
+        status = transfer(language, 'OtcDetail_cancel')
         break
       default:
         break
     }
     if (rd.direct === common.buy) {
       textColor = common.redColor
-      direct = '买入'
-      paymentBtnTitle = '收款方信息'
-      havedPayTitle = '我已付款'
-      cancelBtnTitle = '撤单'
+      direct = transfer(language, 'OtcDetail_buy')
+      paymentBtnTitle = transfer(language, 'OtcDetail_Billing_info')
+      havedPayTitle = transfer(language, 'OtcDetail_i_paid')
+      cancelBtnTitle = transfer(language, 'OtcDetail_cancelOrder')
     } else if (rd.direct === common.sell) {
       textColor = common.greenColor
-      direct = '卖出'
-      paymentBtnTitle = '付款方信息'
-      havedPayTitle = '确认收款'
-      cancelBtnTitle = '投诉'
+      direct = transfer(language, 'OtcDetail_sell')
+      paymentBtnTitle = transfer(language, 'OtcDetail_payment_info')
+      havedPayTitle = transfer(language, 'OtcDetail_received')
+      cancelBtnTitle = transfer(language, 'OtcDetail_complaints')
       havedPayDisabled = confirmPayDisabled
     }
     const coin = common.legalDeal.token
     let cancelTitleColor = common.placeholderColor
     let havedPayTitleColor = common.placeholderColor
+
+    const priceTip = transfer(language, 'OtcDetail_price')
+    const amountTip = transfer(language, 'OtcDetail_amount')
+    const totalTip = transfer(language, 'OtcDetail_total')
+
     if (!havedPayDisabled) {
       havedPayTitleColor = common.btnTextColor
     }
-    if (cancelBtnTitle === '投诉') {
+    if (cancelBtnTitle === transfer(language, 'OtcDetail_complaints')) {
       if (!havedPayDisabled && rd.isAllege === 'no') {
         cancelBtnDisabled = false
       } else {
@@ -527,22 +549,22 @@ class OtcDetail extends Component {
         <View style={styles.rowBorderView}>
           <View style={styles.priceView}>
             <Text style={styles.price}>
-              {`单价:¥${dealPrice}`}</Text>
+              {`${priceTip}:¥${dealPrice}`}</Text>
           </View>
           <View style={[styles.priceView, { width: '30%' }]}>
             <Text style={styles.price}>
-              {`数量:${quantity} ${common.legalDeal.token}`}</Text>
+              {`${amountTip}:${quantity} ${common.legalDeal.token}`}</Text>
           </View>
           <View style={[styles.priceView, { width: '30%' }]}>
             <Text style={styles.price}>
-              {`总价:¥${amount}`}</Text>
+              {`${totalTip}:¥${amount}`}</Text>
           </View>
           <View style={styles.priceView}>
             <NextTouchableOpacity
               style={styles.paymentBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => {
-                navigation.navigate('Payment', { data: rd })
+                navigation.navigate('Payment', { data: rd, lang: language })
               }}
             >
               <Text style={styles.paymentTitle}>
@@ -589,7 +611,7 @@ class OtcDetail extends Component {
   }
 
   renderAllegeView() {
-    const { formState } = this.props
+    const { formState, language } = this.props
     const { showAllegeView, allegeId } = this.state
     const { allegeText } = formState
 
@@ -606,17 +628,18 @@ class OtcDetail extends Component {
           onPress={() => this.setState({ showAllegeView: false })}
           inputValue={allegeText}
           onChangeText={e => this.onChangeText(e, 'allege')}
-          placeholder={'请填写投诉事由，50个字之内'}
+          placeholder={transfer(language, 'OtcDetail_fill_in_50_words')}
           cancelPress={() => this.setState({ showAllegeView: false })}
           confirmPress={() => {
             Keyboard.dismiss()
             if (!formState.allegeText || formState.allegeText.length > 50) {
-              Toast.fail('请填写投诉事由，50个字之内')
+              Toast.fail(transfer(language, 'OtcDetail_fill_in_50_words'))
               return
             }
             const data = { legaldeal_id: allegeId, reason: formState.allegeText }
             this.allegeConfirmPress(data)
           }}
+          language={language}
         />
       )
     }
@@ -624,7 +647,7 @@ class OtcDetail extends Component {
   }
 
   render() {
-    const { loggedInResult, otcList } = this.props
+    const { loggedInResult, otcList, language } = this.props
     const { refreshState, skip } = this.state
 
     return (
@@ -658,6 +681,9 @@ class OtcDetail extends Component {
             color: common.textColor,
             fontSize: common.font14,
           }}
+          footerRefreshingText={transfer(language, 'exchange_dataInLoading')}
+          footerFailureText={transfer(language, 'exchange_dataFailureText')}
+          footerNoMoreDataText={transfer(language, 'exchange_dataNoMoreData')}
         />
         {this.renderAllegeView()}
       </View>
@@ -669,6 +695,7 @@ function mapStateToProps(state) {
   return {
     ...state.otcDetail,
     loggedInResult: state.authorize.loggedInResult,
+    language: state.system.language,
   }
 }
 

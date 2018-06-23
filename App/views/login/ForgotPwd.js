@@ -17,6 +17,7 @@ import TKInputItem from '../../components/TKInputItem'
 import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   container: {
@@ -119,13 +120,13 @@ class ForgotPwd extends Component {
   codePress() {
     Keyboard.dismiss()
 
-    const { dispatch, mobile } = this.props
+    const { dispatch, mobile, language } = this.props
     if (!mobile) {
-      Toast.fail('手机号不可为空')
+      Toast.fail(transfer(language, 'login_idUnNull'))
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.fail('请输入正确的手机号')
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     dispatch(actions.getVerificateCode({
@@ -137,17 +138,17 @@ class ForgotPwd extends Component {
   nextPress() {
     Keyboard.dismiss()
 
-    const { dispatch, mobile, code } = this.props
+    const { dispatch, mobile, code, language } = this.props
     if (!mobile.length) {
-      Toast.fail('请输入手机号')
+      Toast.fail(transfer(language, 'login_inputPhone'))
       return
     }
     if (!code.length) {
-      Toast.fail('请输入验证码')
+      Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.fail('请输入正确的手机号')
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     dispatch(actions.checkVerificateCode({
@@ -159,7 +160,7 @@ class ForgotPwd extends Component {
 
   /* 获取验证码请求结果处理 */
   handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = nextProps
+    const { getVerificateCodeVisible, getVerificateCodeResponse, language } = nextProps
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
 
     if (getVerificateCodeVisible) {
@@ -170,24 +171,25 @@ class ForgotPwd extends Component {
         Toast.success(getVerificateCodeResponse.result.message)
         this.setState({ nextBtnDisabled: false })
       } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
+        Toast.fail(transfer(language, 'login_numberOrTypeError'))
       } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('一分钟内不能重复发送验证码')
+        Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
       } else if (getVerificateCodeResponse.error.code === 4000103) {
-        Toast.fail('验证码已过期，请重新获取')
+        Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail('手机号码未注册')
+        Toast.fail(transfer(language, 'login_phoneUnRegist'))
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'login_networdError'))
       } else {
-        Toast.fail('获取验证码失败，请重试')
+        Toast.fail(transfer(language, 'login_getCodeFailed'))
       }
     }
   }
 
   /* 检测验证码请求结果处理 */
   handleCheckVerificateCodeRequest(nextProps) {
-    const { checkVerificateCodeVisible, checkVerificateCodeResponse, navigation } = nextProps
+    const { checkVerificateCodeVisible, checkVerificateCodeResponse,
+      navigation, language } = nextProps
     if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
     if (checkVerificateCodeVisible) {
       this.showCheckVerificateCodeResponse = true
@@ -196,15 +198,15 @@ class ForgotPwd extends Component {
       if (checkVerificateCodeResponse.success) {
         navigation.navigate('ConfirmPwd')
       } else if (checkVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
+        Toast.fail(transfer(language, 'login_numberOrTypeError'))
       } else if (checkVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('验证码错误')
+        Toast.fail(transfer(language, 'login_codeError'))
       } else if (checkVerificateCodeResponse.error.code === 4000103) {
-        Toast.fail('验证码已过期，请重新获取')
+        Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (checkVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'login_networdError'))
       } else {
-        Toast.fail('验证失败，请重试')
+        Toast.fail(transfer(language, 'login_verificateFailed'))
       }
     }
   }
@@ -215,14 +217,15 @@ class ForgotPwd extends Component {
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            请输入正确的11位手机号
+            {transfer(this.props.language, 'login_inputCorrectId')}
           </Text> : null}
       </View>
     )
   }
 
   render() {
-    const { mobile, code, getVerificateCodeVisible, checkVerificateCodeVisible } = this.props
+    const { mobile, code, getVerificateCodeVisible,
+      checkVerificateCodeVisible, language } = this.props
     const { nextBtnDisabled } = this.state
     let disabled = false
     if (nextBtnDisabled || getVerificateCodeVisible) {
@@ -252,8 +255,8 @@ class ForgotPwd extends Component {
                 }
               },
             }}
-            title="账号"
-            placeholder="请输入11位手机号"
+            title={transfer(language, 'login_id')}
+            placeholder={transfer(language, 'login_idPlaceholder')}
             value={mobile}
             maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
@@ -263,8 +266,9 @@ class ForgotPwd extends Component {
             viewStyle={[styles.inputView, { marginTop: 0 }]}
             inputStyle={styles.input}
             titleStyle={styles.inputText}
-            title="验证码"
-            placeholder="请输入短信验证码"
+            language={language}
+            title={transfer(language, 'login_code')}
+            placeholder={transfer(language, 'login_enterSmsCode')}
             value={code}
             maxLength={6}
             onPressCheckCodeBtn={() => this.codePress()}
@@ -280,7 +284,7 @@ class ForgotPwd extends Component {
               backgroundColor: disabled ? common.grayColor : common.btnTextColor,
             }}
             theme={'yellow'}
-            caption={'下一步'}
+            caption={transfer(language, 'login_nextStep')}
             disabled={disabled}
             onPress={() => this.nextPress()}
           />
@@ -304,6 +308,7 @@ function mapStateToProps(store) {
 
     checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
     checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
+    language: store.system.language,
   }
 }
 

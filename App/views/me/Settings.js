@@ -10,6 +10,7 @@ import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import packageJson from '../../../package.json'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -33,8 +34,12 @@ const styles = StyleSheet.create({
 
 class Settings extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '设置',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -50,25 +55,32 @@ class Settings extends Component {
     }
   }
 
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_settings'),
+    })
+  }
+
   render() {
-    const { navigation, loggedIn } = this.props
+    const { navigation, loggedIn, language } = this.props
     return (
       <ScrollView style={styles.container}>
         <StatusBar barStyle={'light-content'} />
 
-        <MeCell
+        {/* <MeCell
           viewStyle={styles.topCell}
           leftImageHide
           onPress={() => navigation.navigate('Language')}
-          title="语言"
-        />
+          title={transfer(language, 'me_settings_language')}
+        /> */}
         <MeCell
           leftImageHide
           onPress={() => {
             if (loggedIn) navigation.navigate('UpdatePassword')
             else navigation.navigate('LoginStack')
           }}
-          title="修改密码"
+          title={transfer(language, 'me_settings_changePW')}
         />
         <MeCell
           leftImageHide
@@ -85,6 +97,7 @@ class Settings extends Component {
 function mapStateToProps(state) {
   return {
     loggedIn: state.authorize.loggedIn,
+    language: state.system.language,
   }
 }
 

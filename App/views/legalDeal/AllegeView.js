@@ -10,6 +10,7 @@ import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   contant: {
@@ -103,6 +104,7 @@ export default class AllegeView extends PureComponent {
       placeholder,
       cancelPress,
       confirmPress,
+      language,
     } = this.props
 
     return (
@@ -116,10 +118,10 @@ export default class AllegeView extends PureComponent {
           activeOpacity={1}
           onPress={() => Keyboard.dismiss()}
         >
-          <Text style={styles.title}>投诉</Text>
+          <Text style={styles.title}>{transfer(language, 'Allege_complaints')}</Text>
           <View style={styles.underline} />
           <View style={styles.inputView}>
-            <Text style={styles.inputTitle}>事由：</Text>
+            <Text style={styles.inputTitle}>{transfer(language, 'Allege_cause')}</Text>
             <TextInput
               style={styles.input}
               multiline
@@ -131,9 +133,9 @@ export default class AllegeView extends PureComponent {
             />
           </View>
           <Text style={styles.tip}>
-            <Text>投诉后，请耐心等待客服联络。若仍有其他信息需要反馈，请发送邮件至客服邮箱:</Text>
+            <Text>{transfer(language, 'Allege_note_1')}</Text>
             <Text style={{ letterSpacing: common.getH(0) }}>service@tok.com</Text>
-            <Text>，客服将尽快为您处理。</Text>
+            <Text>{transfer(language, 'Allege_note_2')}</Text>
           </Text>
           <View style={styles.underline} />
           <View style={styles.cancelBtnView}>
@@ -142,14 +144,14 @@ export default class AllegeView extends PureComponent {
               activeOpacity={common.activeOpacity}
               onPress={cancelPress}
             >
-              <Text style={styles.cancelTitle}>取消</Text>
+              <Text style={styles.cancelTitle}>{transfer(language, 'Allege_cancel')}</Text>
             </NextTouchableOpacity>
             <NextTouchableOpacity
               style={styles.confirmBtn}
               activeOpacity={common.activeOpacity}
               onPress={confirmPress}
             >
-              <Text style={styles.cancelTitle}>确定</Text>
+              <Text style={styles.cancelTitle}>{transfer(language, 'Allege_confrim')}</Text>
             </NextTouchableOpacity>
           </View>
         </NextTouchableOpacity>

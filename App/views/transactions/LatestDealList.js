@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from 'react-native'
 import { common } from '../../constants/common'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   rowView: {
@@ -69,16 +70,17 @@ export default class LatestDealList extends Component {
   }
 
   renderHeader() {
+    const { language } = this.props
     return (
       <View style={styles.headerView}>
         <Text style={styles.headerText}>
-          时间
+          {transfer(language, 'exchange_lastTime')}
         </Text>
         <Text style={styles.headerText}>
-          价格
+          {transfer(language, 'exchange_price')}
         </Text>
         <Text style={styles.headerText}>
-          数量
+          {transfer(language, 'exchange_quality')}
         </Text>
       </View>
     )

@@ -21,6 +21,7 @@ class TKInputItemCheckCode extends Component {
 
   renderCheckCodeBtn = () => (
     <TKCheckCodeBtn
+      language={this.props.language}
       extraDisable={this.props.extraDisable}
       onPress={() => {
         if (this.props.onPressCheckCodeBtn) {
