@@ -72,7 +72,7 @@ const TabBar = TabNavigator(
       screen: Home,
       navigationOptions: {
         header: null,
-        tabBarLabel: transfer(systemLanguage, 'marketTab'),
+        tabBarLabel: transfer(systemLanguage, 'homeTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/home_selected.png'),

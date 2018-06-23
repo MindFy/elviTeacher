@@ -103,8 +103,12 @@ const styles = StyleSheet.create({
 class OtcDetail extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
+    let title = ''
+    if (params.title) {
+      title = params.title
+    }
     return {
-      headerTitle: transfer(params.language, 'OtcDetail'),
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -141,7 +145,9 @@ class OtcDetail extends Component {
 
   componentWillMount() {
     const { language } = this.props
-    this.props.navigation.setParams({ language })
+    this.props.navigation.setParams({
+      title: transfer(language, 'OtcDetail'),
+    })
   }
 
   componentDidMount() {
@@ -641,7 +647,7 @@ class OtcDetail extends Component {
   }
 
   render() {
-    const { loggedInResult, otcList } = this.props
+    const { loggedInResult, otcList, language } = this.props
     const { refreshState, skip } = this.state
 
     return (
@@ -675,6 +681,9 @@ class OtcDetail extends Component {
             color: common.textColor,
             fontSize: common.font14,
           }}
+          footerRefreshingText={transfer(language, 'exchange_dataInLoading')}
+          footerFailureText={transfer(language, 'exchange_dataFailureText')}
+          footerNoMoreDataText={transfer(language, 'exchange_dataNoMoreData')}
         />
         {this.renderAllegeView()}
       </View>

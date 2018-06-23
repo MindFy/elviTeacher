@@ -201,6 +201,7 @@ class UpdatePassword extends Component {
           behavior="padding"
         >
           <TextInputPwd
+            language={language}
             viewStyle={styles.input}
             placeholder={transfer(language, 'me_settings_PWold')}
             value={oldPassword}
@@ -209,6 +210,7 @@ class UpdatePassword extends Component {
             secureTextEntry
           />
           <TextInputPwd
+            language={language}
             viewStyle={styles.input}
             placeholder={transfer(language, 'me_settings_PWnew')}
             value={newPassword}
@@ -219,6 +221,7 @@ class UpdatePassword extends Component {
             inputTip={transfer(language, 'me_settings_PWreminder')}
           />
           <TextInputPwd
+            language={language}
             viewStyle={styles.input}
             placeholder={transfer(language, 'me_settings_PWnewAgain')}
             value={newPasswordAgain}

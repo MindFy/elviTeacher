@@ -63,8 +63,14 @@ const styles = StyleSheet.create({
 class Otc extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
+    let title = ''
+    let detail = ''
+    if (params.title) {
+      title = params.title
+      detail = params.detail
+    }
     return {
-      headerTitle: transfer(params.language, 'Otc'),
+      headerTitle: title,
       headerRight: (
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -76,7 +82,7 @@ class Otc extends Component {
               fontSize: common.font16,
               color: 'white',
             }}
-          >{transfer(params.language, 'Otc_detail')}</Text>
+          >{detail}</Text>
         </NextTouchableOpacity>
       ),
     }
@@ -90,8 +96,12 @@ class Otc extends Component {
   }
 
   componentWillMount() {
-    const { language } = this.props
-    this.props.navigation.setParams({ detailPress: this._detailPress, language })
+    const { language, navigation } = this.props
+    navigation.setParams({
+      detailPress: this._detailPress,
+      title: transfer(language, 'Otc'),
+      detail: transfer(language, 'Otc_detail'),
+    })
   }
 
   componentWillReceiveProps(nextProps) {

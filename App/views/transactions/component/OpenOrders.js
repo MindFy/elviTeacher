@@ -107,7 +107,7 @@ class OpenOrders extends Component {
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   }
 
-  renderOpenOrderCell = (item, language) => {
+  renderOpenOrderCell = (item, a, b, language) => {
     const createdAt = common.dfFullDate(item.createdAt)
     let cancelBtnTitle = ''
     let cancelDisabled = true
