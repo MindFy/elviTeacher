@@ -413,5 +413,6 @@
   "withdraw_scanTitle": "扫一扫",
   "withdraw_scanNote": "Note",
   "withdraw_takeBarcode": "将条码放入框内，即可自动扫描",
-  "balances_pageTitle": "资产"
+  "balances_pageTitle": "资产",
+  "me_changeLanguageSuccess": "切换语言成功"
 }

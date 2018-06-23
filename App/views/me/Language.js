@@ -4,6 +4,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
+import { Toast } from 'teaset'
 import { connect } from 'react-redux'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
@@ -68,6 +69,16 @@ class Language extends Component {
     navigation.setParams({
       title: transfer(language, 'me_settings_language'),
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language !== this.props.language) {
+      const { navigation, language } = nextProps
+      Toast.success(transfer(language, 'me_changeLanguageSuccess'))
+      navigation.setParams({
+        title: transfer(language, 'me_settings_language'),
+      })
+    }
   }
 
   setLanguage(launageEvt) {
