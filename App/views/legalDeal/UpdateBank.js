@@ -246,6 +246,7 @@ class UpdateBank extends Component {
           smsCodePress={this.SMSCodePress}
           confirmPress={() => this.updateBank()}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+          language={language}
         />
       </Overlay.View>
     )
