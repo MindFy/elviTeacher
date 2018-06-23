@@ -236,7 +236,10 @@ class OtcDetail extends Component {
   }
 
   refreshOtcList(data, refreshState) {
-    const { dispatch } = this.props
+    const { dispatch, otcListLoading } = this.props
+    if (this.loadingOtcList) return
+
+    this.loadingOtcList = true
     dispatch(requestOtcList(schemas.findOtcList(data)))
     this.setState({
       refreshState,
@@ -446,12 +449,14 @@ class OtcDetail extends Component {
       })
     }
     if (!otcList.length && refreshState === RefreshState.FooterRefreshing) {
+      this.loadingOtcList = false
       this.setState({
         skip: 0,
         refreshState: RefreshState.NoMoreData,
       })
       dispatch(updateOtcList(this.props.otcList))
     } else if (otcList.length && refreshState === RefreshState.FooterRefreshing) {
+      this.loadingOtcList = false
       this.setState({
         skip: skip + 1,
         refreshState: RefreshState.Idle,
@@ -461,7 +466,7 @@ class OtcDetail extends Component {
     }
   }
 
-  keyExtractor = item => item.createdAt
+  keyExtractor = item => item.id
 
   renderRow(rd, rid) {
     const { navigation, language } = this.props
