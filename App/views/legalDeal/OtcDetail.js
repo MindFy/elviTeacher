@@ -384,7 +384,7 @@ class OtcDetail extends Component {
       if (havedPayError.message === common.badNet) {
         Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
-        const msg = this.errors[havedPayError.code]
+        const msg = transfer(language, this.errors[havedPayError.code])
         if (msg) Toast.fail(msg)
         Toast.fail(transfer(language, 'OtcDetail_operation_failed'))
       }
@@ -502,7 +502,7 @@ class OtcDetail extends Component {
       textColor = common.greenColor
       direct = transfer(language, 'OtcDetail_sell')
       paymentBtnTitle = transfer(language, 'OtcDetail_payment_info')
-      havedPayTitle = transfer(language, 'OtcDetail_pay')
+      havedPayTitle = transfer(language, 'OtcDetail_received')
       cancelBtnTitle = transfer(language, 'OtcDetail_complaints')
       havedPayDisabled = confirmPayDisabled
     }
