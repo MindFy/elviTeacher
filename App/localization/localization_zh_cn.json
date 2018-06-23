@@ -385,6 +385,7 @@
   "payment_remark": "备注信息",
   "payment_s_please_note": "温馨提示",
   "payment_s_please_note_content": "1.请按信息向卖家汇款\n2.汇款时一定要填写转账备注\n3.卖家确认收到款后，货币将自动充值到您的账户上\n4.请务必使用本人绑定的银行卡进行汇款,否则卖家可能不会确认收款",
+  "payer_s_please_note_content": "1.请核对买家付款信息\n2.请核对转账备注\n3.如信息无误请点击确认收款",
   "payment_please_fill_in": "请务必填写",
   "payment_b": "收款方信息",
   "payment_b_billing_info": "收款信息",
