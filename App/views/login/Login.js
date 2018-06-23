@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     left: common.h80,
     fontSize: common.font12,
     color: common.redColor,
+    width: common.sw * 0.8 - common.getH(80),
   },
 })
 

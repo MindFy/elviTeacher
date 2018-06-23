@@ -418,7 +418,7 @@ class UpdateBank extends Component {
           style={{ marginTop: common.margin20 }}
           caption={transfer(language, editable ? 'UpdateBank_confirm' : 'UpdateBank_addAgain')}
           onPress={() => {
-            const title = editable ? transfer(language, 'me_ID_confirm') : transfer(language, 'me_reAddBankCard')
+            const title = editable ? '确认' : '重新添加'
             this.confirmPress(title)
           }}
         />

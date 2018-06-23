@@ -6,6 +6,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
+import deviceInfo from 'react-native-device-info'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import {
   common,
@@ -43,6 +44,13 @@ import Register from './views/login/Register'
 import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
+import transfer from './localization/utils'
+
+let systemLanguage = 'zh_cn'
+const evt = deviceInfo.getDeviceLocale()
+if (evt.indexOf('en') > -1) {
+  systemLanguage = 'en'
+}
 
 const styles = StyleSheet.create({
   tabBarIcon: {
@@ -64,7 +72,7 @@ const TabBar = TabNavigator(
       screen: Home,
       navigationOptions: {
         header: null,
-        tabBarLabel: '首页',
+        tabBarLabel: transfer(systemLanguage, 'marketTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/home_selected.png'),
@@ -75,7 +83,7 @@ const TabBar = TabNavigator(
     Market: {
       screen: Market,
       navigationOptions: {
-        tabBarLabel: '市场',
+        tabBarLabel: transfer(systemLanguage, 'marketTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/market_selected.png'),
@@ -86,7 +94,7 @@ const TabBar = TabNavigator(
     Otc: {
       screen: Otc,
       navigationOptions: {
-        tabBarLabel: '法币交易',
+        tabBarLabel: transfer(systemLanguage, 'otcTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/transaction_yellow.png'),
@@ -97,7 +105,7 @@ const TabBar = TabNavigator(
     Balance: {
       screen: Balance,
       navigationOptions: {
-        tabBarLabel: '资金',
+        tabBarLabel: transfer(systemLanguage, 'balancesTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/personal_funds_selected.png'),
@@ -108,7 +116,7 @@ const TabBar = TabNavigator(
     Me: {
       screen: Me,
       navigationOptions: {
-        tabBarLabel: '我的',
+        tabBarLabel: transfer(systemLanguage, 'accountTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/me_selected.png'),
@@ -132,7 +140,7 @@ const TabBar = TabNavigator(
       labelStyle: {
         marginTop: 0,
         marginBottom: common.IsIOS ? common.margin5 : 0,
-        width: common.h50,
+        width: common.sw / 5,
         fontSize: common.font12,
       },
       indicatorStyle: {

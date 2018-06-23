@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native'
+import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
 import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
@@ -24,6 +25,7 @@ import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
 import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
+import * as system from '../../actions/system'
 
 global.Buffer = require('buffer').Buffer
 
@@ -40,6 +42,18 @@ class Home extends Component {
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Home')
     })
+  }
+
+  componentWillMount() {
+    const { language, dispatch } = this.props
+    let systemLanguage = 'zh_cn'
+    const evt = deviceInfo.getDeviceLocale()
+    if (evt.indexOf('en') > -1) {
+      systemLanguage = 'en'
+    }
+    if (language !== systemLanguage) {
+      dispatch(system.updateLanguage(systemLanguage))
+    }
   }
 
   componentDidMount() {
