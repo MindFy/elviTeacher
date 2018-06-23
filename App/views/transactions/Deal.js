@@ -104,11 +104,11 @@ class Deal extends Component {
     this.props.dispatch(exchange.updateSegmentIndex(0))
     this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
-    // this.timer = setInterval(() => {
-    //   if (cache.getObject('currentComponentVisible') === 'Deal') {
-    //     this.loadNecessaryData()
-    //   }
-    // }, common.refreshIntervalTime)
+    this.timer = setInterval(() => {
+      if (cache.getObject('currentComponentVisible') === 'Deal') {
+        this.loadNecessaryData()
+      }
+    }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProps) {

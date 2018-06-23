@@ -95,8 +95,9 @@ const styles = StyleSheet.create({
   recommendImageView: {
     marginTop: common.margin15,
     marginLeft: common.margin10,
-    width: '25%',
+    width: '100%',
     flexDirection: 'row',
+    justifyContent: 'flex-start',
   },
   recommendImage: {
     height: common.h15,
@@ -151,8 +152,12 @@ const styles = StyleSheet.create({
 
 class Rebates extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return ({
-      headerTitle: '超级返利',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}
@@ -170,6 +175,13 @@ class Rebates extends Component {
         borderBottomWidth: 0,
       },
       headerTintColor: '#fff',
+    })
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_super_cashBack'),
     })
   }
 

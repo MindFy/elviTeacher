@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import WAValidator from 'wallet-address-validator'
 import { Image, Alert } from 'react-native'
 import { common } from '../../constants/common'
 import QRScannerView from './scan/QRScannerView'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '扫一扫',
+      headerTitle: title,
       headerLeft:
         (
           <NextTouchableOpacity
@@ -38,23 +44,32 @@ class ScanBarCode extends Component {
     this.didFindData = false
   }
 
+  componentDidMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'withdraw_scanTitle'),
+    })
+  }
+
   barcodeReceived(barCode) {
     if (this.didFindData) {
       return
     }
     this.didFindData = true
-    const { navigation } = this.props
+    const { navigation, language } = this.props
     const { coin, didScan } = navigation.state.params
     const data = barCode.data
     const disMatch = !WAValidator.validate(data, coin) &&
     !WAValidator.validate(data, coin, 'testnet')
     if (disMatch) {
+      const params1 = transfer(language, 'withdrawal_address_correct_required_1')
+      const params2 = transfer(language, 'withdrawal_address_correct_required_2')
       Alert.alert(
-        '提示',
-        `请填写正确的${coin}提币地址！`,
+        transfer(language, 'withdraw_scanNote'),
+        `${params1} ${coin} ${params2}`,
         [
           {
-            text: '确定',
+            text: transfer(language, 'login_submit'),
             onPress: () => {
               navigation.goBack()
             },
@@ -69,9 +84,10 @@ class ScanBarCode extends Component {
   }
 
   render() {
+    const { language } = this.props
     return (
       <QRScannerView
-        hintText="将条码放入框内，即可自动扫描"
+        hintText={transfer(language, 'withdraw_takeBarcode')}
         onScanResultReceived={barCode => this.barcodeReceived(barCode)}
         renderTopBarView={() => null}
         renderBottomMenuView={() => null}
@@ -82,4 +98,10 @@ class ScanBarCode extends Component {
   }
 }
 
-export default ScanBarCode
+function mapStateToProps(state) {
+  return {
+    language: state.system.language,
+  }
+}
+
+export default connect(mapStateToProps)(ScanBarCode)

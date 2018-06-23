@@ -34,8 +34,12 @@ const styles = StyleSheet.create({
 
 class Settings extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '设置',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -49,6 +53,13 @@ class Settings extends Component {
         </NextTouchableOpacity>
       ),
     }
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_settings'),
+    })
   }
 
   render() {
