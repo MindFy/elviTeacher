@@ -46,10 +46,10 @@ class Home extends Component {
 
   componentWillMount() {
     const { language, dispatch } = this.props
-    let systemLanguage = 'zh_cn'
+    let systemLanguage = 'en'
     const evt = deviceInfo.getDeviceLocale()
-    if (evt.indexOf('en') > -1) {
-      systemLanguage = 'en'
+    if (evt.indexOf('zh') > -1) {
+      systemLanguage = 'zh_cn'
     }
     if (language !== systemLanguage) {
       dispatch(system.updateLanguage(systemLanguage))

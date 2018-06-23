@@ -3,15 +3,21 @@ import {
   Image,
   WebView,
 } from 'react-native'
+import { connect } from 'react-redux'
 import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
-export default class Banner extends Component {
+class Banner extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '活动',
+      headerTitle: title,
       headerLeft:
         (
           <NextTouchableOpacity
@@ -35,7 +41,13 @@ export default class Banner extends Component {
         ),
     }
   }
-  componentDidMount() { }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'home_activeCenter'),
+    })
+  }
 
   render() {
     const { navigation } = this.props
@@ -50,3 +62,11 @@ export default class Banner extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    language: state.system.language,
+  }
+}
+
+export default connect(mapStateToProps)(Banner)

@@ -420,5 +420,7 @@
   "withdraw_scanNote": "提示",
   "withdraw_takeBarcode": "将条码放入框内，即可自动扫描",
   "balances_pageTitle": "资产",
-  "me_changeLanguageSuccess": "切换语言成功"
+  "me_changeLanguageSuccess": "切换语言成功",
+  "home_bullCenter": "公告中心",
+  "home_activeCenter": "活动"
 }

@@ -46,10 +46,10 @@ import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
 import transfer from './localization/utils'
 
-let systemLanguage = 'zh_cn'
+let systemLanguage = 'en'
 const evt = deviceInfo.getDeviceLocale()
-if (evt.indexOf('en') > -1) {
-  systemLanguage = 'en'
+if (evt.indexOf('zh') > -1) {
+  systemLanguage = 'zh_cn'
 }
 
 const styles = StyleSheet.create({
@@ -72,7 +72,7 @@ const TabBar = TabNavigator(
       screen: Home,
       navigationOptions: {
         header: null,
-        tabBarLabel: transfer(systemLanguage, 'marketTab'),
+        tabBarLabel: transfer(systemLanguage, 'homeTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/home_selected.png'),
