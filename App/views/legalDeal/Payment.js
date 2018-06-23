@@ -55,6 +55,7 @@ export default class Payment extends Component {
     let bankName = ''
     let bankNo = ''
     let remark = ''
+    let titleTips = ''
     const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity).toFixed(2, 1)
     if (rd.direct === common.buy) {
       name = rd.traderPayinfo.cardHolderName
@@ -64,6 +65,7 @@ export default class Payment extends Component {
       titleName = transfer(lang, 'payment_b_account_name')
       titleBankName = transfer(lang, 'payment_b_bank')
       titleBankNo = transfer(lang, 'payment_b_account_No')
+      titleTips = transfer(lang, 'payment_s_please_note_content')
     } else if (rd.direct === common.sell) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
@@ -72,6 +74,7 @@ export default class Payment extends Component {
       titleName = transfer(lang, 'payment_s_account_name')
       titleBankName = transfer(lang, 'payment_s_bank')
       titleBankNo = transfer(lang, 'payment_s_account_No')
+      titleTips = transfer(lang, 'payer_s_please_note_content')
     }
     return (
       <ScrollView
@@ -203,7 +206,7 @@ export default class Payment extends Component {
             fontSize: common.font10,
             lineHeight: 14,
           }}
-        >{transfer(lang, 'payment_s_please_note_content')}</Text>
+        >{titleTips}</Text>
       </ScrollView>
     )
   }

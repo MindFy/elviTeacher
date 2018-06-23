@@ -385,6 +385,7 @@
   "payment_remark": "Remark",
   "payment_s_please_note": "Pleaes Note",
   "payment_s_please_note_content": "1. Please pay the seller according to the following information.\n2. Please must fill up Remark while transferring payment.\n3. After the seller confirms your payment, the token will be automatically deposited to your account.\n4. You can only use the bank cards with your own name for transaction, or the seller may not confirm the payment.",
+  "payer_s_please_note_content": "1. Please check the buyer payment information.\n2. Please check the transfer remark.\n3. If all the information is correct, please click confirm payment.",
   "payment_please_fill_in": "must add",
   "payment_b": "Receiver Info",
   "payment_b_billing_info": "Billing Info",
