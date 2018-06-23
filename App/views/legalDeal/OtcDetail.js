@@ -298,6 +298,7 @@ class OtcDetail extends Component {
           smsCodePress={this.SMSCodePress}
           confirmPress={() => this.confirmPayPress(id)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
+          language={language}
         />
       </Overlay.View>
     )
