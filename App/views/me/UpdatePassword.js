@@ -43,8 +43,12 @@ const styles = StyleSheet.create({
 
 class UpdatePassword extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '修改密码',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}
@@ -63,6 +67,13 @@ class UpdatePassword extends Component {
   constructor() {
     super()
     this.showUpdatePasswordResponse = false
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_settings_changePW'),
+    })
   }
 
   componentWillReceiveProps(nextProps) {

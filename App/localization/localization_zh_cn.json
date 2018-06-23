@@ -177,8 +177,8 @@
   "me_super_copy":"复制",
   "me_super_copySuccess":"复制成功",
   "me_super_referalQR":"推荐二维码",
-  "me_super_invitedFriends:":"已邀请好友：",
-  "me_super_totalCashbackTK:":"已获得的收益TK",
+  "me_super_invitedFriends":"已邀请好友：",
+  "me_super_totalCashbackTK":"已获得的收益TK",
   "me_super_totalCashbackBTC":"已获得的收益BTC",
   "me_super_saveSuccess":"保存成功",
   "me_super_saveFailed":"保存失败",
@@ -202,7 +202,7 @@
   "me_settings_PWinternetFailed":"网络连接失败，请稍后重试",
   "me_settings_PWchangeFailed":"密码修改失败,请重试",
   "me_settings_languageChinese":"中文",
-  "me_settings_languageEnglish":"English",
+  "me_settings_languageEnglish":"英语",
   "me_settings_language":"语言",
   "me_logout_tilte":"真的要退出吗？",
   "me_logout_cancel":"点错了",
@@ -409,5 +409,9 @@
   "AuthCode_bind_gv_code_first": "请先绑定谷歌验证码!",
   "AuthCode_gv_code_error": "谷歌验证码错误!",
   "AuthCode_cancel": "取消",
-  "AuthCode_confirm": "确定"
+  "AuthCode_confirm": "确定",
+  "withdraw_scanTitle": "扫一扫",
+  "withdraw_scanNote": "提示",
+  "withdraw_takeBarcode": "将条码放入框内，即可自动扫描",
+  "balances_pageTitle": "资产"
 }
