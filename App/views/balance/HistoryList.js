@@ -30,7 +30,7 @@ class HistoryList extends Component {
               alignSelf: 'center',
               textAlign: 'left',
             }}
-          >{language.date}</Text>
+          >{transfer(language, 'history_date')}</Text>
           <Text
             style={{
               color: common.textColor,
@@ -39,7 +39,7 @@ class HistoryList extends Component {
               textAlign: 'center',
               alignSelf: 'center',
             }}
-          >{language.coin}</Text>
+          >{transfer(language, 'history_coin')}</Text>
           <Text
             style={{
               color: common.textColor,
@@ -48,7 +48,7 @@ class HistoryList extends Component {
               textAlign: 'center',
               alignSelf: 'center',
             }}
-          >{language.type}</Text>
+          >{transfer(language, 'history_type')}</Text>
           <Text
             style={{
               flex: 1,
@@ -57,7 +57,7 @@ class HistoryList extends Component {
               textAlign: 'right',
               alignSelf: 'center',
             }}
-          >{language.amount}</Text>
+          >{transfer(language, 'history_amount')}</Text>
         </View>
       )
     }
@@ -77,7 +77,7 @@ class HistoryList extends Component {
             alignSelf: 'center',
             textAlign: 'left',
           }}
-        >{language.date}</Text>
+        >{transfer(language, 'history_date')}</Text>
         <Text
           style={{
             color: common.textColor,
@@ -86,7 +86,7 @@ class HistoryList extends Component {
             textAlign: 'center',
             alignSelf: 'center',
           }}
-        >{language.coin}</Text>
+        >{transfer(language, 'history_coin')}</Text>
         <Text
           style={{
             flex: 1,
@@ -95,7 +95,7 @@ class HistoryList extends Component {
             textAlign: 'center',
             alignSelf: 'center',
           }}
-        >{language.amount}</Text>
+        >{transfer(language, 'history_amount')}</Text>
         <Text
           style={{
             color: common.textColor,
@@ -104,7 +104,7 @@ class HistoryList extends Component {
             textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
             alignSelf: 'center',
           }}
-        >{language.status}</Text>
+        >{transfer(language, 'history_status')}</Text>
         {
           rechargeOrWithdraw === common.payment.withdraw ?
             <Text
@@ -115,7 +115,7 @@ class HistoryList extends Component {
                 textAlign: 'right',
                 alignSelf: 'center',
               }}
-            >{language.action}</Text> : null
+            >{transfer(language, 'history_action')}</Text> : null
         }
       </View>
     )
@@ -130,10 +130,10 @@ class HistoryList extends Component {
       const quantity = new BigNumber(rd.quantity).toFixed(2)
       if (rd.direct === common.buy) {
         directColor = common.redColor
-        direct = language.buy
+        direct = transfer(language, 'history_buy')
       } else if (rd.direct === common.sell) {
         directColor = common.greenColor
-        direct = language.sell
+        direct = transfer(language, 'history_sell')
       }
       return (
         <View style={{
@@ -189,16 +189,16 @@ class HistoryList extends Component {
     switch (rd.status) {
       case '已完成':
         status = rechargeOrWithdraw === common.payment.recharge
-          ? language.deposited : language.withdrawed
+          ? transfer(language, 'history_deposited') : transfer(language, 'history_withdrawed')
         break
       case '已取消':
-        status = language.cancelled
+        status = transfer(language, 'history_cancelled')
         break
       case '提币中':
-        status = language.withdrawing
+        status = transfer(language, 'history_withdrawing')
         break
       case '待审核':
-        status = language.pending
+        status = transfer(language, 'history_pending')
         break
       default:
         break
@@ -263,7 +263,7 @@ class HistoryList extends Component {
                   fontSize: common.font12,
                   textAlign: 'right',
                 }}
-              >{language.cancel}</Text>
+              >{transfer(language, 'history_cancel')}</Text>
             </NextTouchableOpacity> : null
         }
       </View>
