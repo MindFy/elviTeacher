@@ -32,10 +32,8 @@ import {
   updateAuthCodeType,
   check2GoogleAuthSetError,
   check2GoogleAuth,
+  requestGetCode,
 } from '../../actions/withdraw'
-import {
-  getVerificateCode,
-} from '../../actions/user'
 import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
@@ -176,17 +174,16 @@ class WithDraw extends Component {
   constructor(props) {
     super(props)
     this.withdrawErrorDic = {
-      4000414: '地址已存在',
-      4000415: '仅支持BTC、ETH添加地址',
-      4000416: '提现地址有误',
-      4000156: '授权验证失败',
-      4000606: '提现地址有误',
-      4000608: '修改密码后，24小时内禁止提币操作',
+      4000414: 'withdraw_address_exist',
+      4000416: 'withdraw_address_error',
+      4000156: 'me_authFailed',
+      4000606: 'withdraw_address_error',
+      4000608: 'withdraw_error_after_pwd_changed',
     }
     this.verificationCodeErrorDic = {
-      4000101: '手机号码或服务类型错误',
-      4000102: '一分钟内不能重复发送验证码',
-      4000104: '手机号码已注册',
+      4000101: 'login_numberOrTypeError',
+      4000102: 'me_Email_repeatMinute',
+      4000104: 'me_phoneRegisted',
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码']
@@ -204,6 +201,7 @@ class WithDraw extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { dispatch, withdrawLoading, language } = this.props
+    this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
     }
@@ -211,7 +209,7 @@ class WithDraw extends Component {
     if (nextProps.withdrawError) {
       const errMsg = this.withdrawErrorDic[nextProps.withdrawError.code]
       if (errMsg) {
-        Toast.fail(errMsg)
+        Toast.fail(transfer(language, errMsg))
       } else {
         Toast.fail(transfer(language, 'withdrawal_failed'))
       }
@@ -234,9 +232,9 @@ class WithDraw extends Component {
       Overlay.hide(this.overlayViewKeyID)
       const errorCode = nextProps.googleCodeCheckError.code
       if (errorCode === 4000171) {
-        Toast.fail('请先绑定谷歌验证码!')
+        Toast.fail(transfer(language, 'me_bindBankCardFirst'))
       } else {
-        Toast.fail('谷歌验证码错误!')
+        Toast.fail(transfer(language, 'me_googleCodeError'))
       }
       dispatch(check2GoogleAuthSetError(null))
     }
@@ -306,6 +304,23 @@ class WithDraw extends Component {
       ...formState,
       withdrawAddress,
     }))
+  }
+
+  handleRequestGetCode(nextProps) {
+    const { getCodeResult, getCodeError, language } = nextProps
+
+    if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
+      Toast.fail(transfer(language, 'get_code_succeed'))
+    }
+    if (getCodeError && getCodeError !== this.props.getCodeError) {
+      if (getCodeError.message === common.badNet) {
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
+      } else {
+        const msg = transfer(language, this.verificationCodeErrorDic[getCodeError.code])
+        if (msg) Toast.fail(msg)
+        else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      }
+    }
   }
 
   showForm() {
@@ -442,7 +457,7 @@ class WithDraw extends Component {
 
     if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, currCoin)) {
       Alert.alert(
-        '提示',
+        transfer(language, 'withdraw_scanNote'),
         `${transfer(language, 'withdrawal_address_correct_required_1')}${currCoin}${transfer(language, 'withdrawal_address_correct_required_2')}`,
         [
           {
@@ -460,12 +475,12 @@ class WithDraw extends Component {
   confirmPress = () => {
     Keyboard.dismiss()
 
-    const { dispatch, currCoin, formState, authCodeType } = this.props
+    const { dispatch, currCoin, formState, authCodeType, language } = this.props
 
     if (authCodeType === '谷歌验证码') {
       const { googleCode } = formState
       if (!googleCode || googleCode.length === 0) {
-        Toast.fail('请输入谷歌验证码')
+        Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
       dispatch(check2GoogleAuth({
@@ -475,7 +490,7 @@ class WithDraw extends Component {
     }
     const tokenId = this.coinsIdDic[currCoin].id
     if (!formState.verificationCode.length) {
-      Toast.fail('请输入验证码')
+      Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
     let code = new BigNumber(formState.verificationCode)
@@ -490,6 +505,7 @@ class WithDraw extends Component {
   }
 
   alertBindingGoogleCode = () => {
+    const { language } = this.props
     const googleCodeAlert = (
       <Overlay.View
         style={styles.overlay}
@@ -499,7 +515,7 @@ class WithDraw extends Component {
         <View style={styles.googleAuthView} >
           <Text
             style={styles.googleAuthTip}
-          >{'请前去官网完成绑定'}</Text>
+          >{transfer(language, 'me_googleBindReminder')}</Text>
         </View>
       </Overlay.View>
     )
@@ -548,7 +564,7 @@ class WithDraw extends Component {
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={(count) => {
             this.count = count
-            dispatch(getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+            dispatch(requestGetCode({ mobile: user.mobile, service: 'auth' }))
           }}
           confirmPress={() => this.confirmPress()}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
@@ -568,10 +584,11 @@ class WithDraw extends Component {
   }
 
   addAddressPress = () => {
-    const { currCoin } = this.props
+    const { currCoin, language } = this.props
     const tokenId = this.coinsIdDic[currCoin].id
     this.props.navigation.navigate('AddAddress', {
       title: currCoin,
+      headerTitle: transfer(language, 'withdrawal_add_address'),
       tokenId,
     })
   }
