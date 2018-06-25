@@ -19,6 +19,13 @@ export function requestOtcListFailed(payload) {
   }
 }
 
+export function updateListPage(payload) {
+  return {
+    type: 'otcDetail/update_list_page',
+    payload,
+  }
+}
+
 export function requestGetCode(payload) {
   return {
     type: 'otcDetail/request_get_code',
