@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Echarts from 'native-echarts'
 import { common } from '../../constants/common'
+import transfer from '../../localization/utils'
 
 export default class Depth extends Component {
   shouldComponentUpdate(nextProps) {
@@ -40,6 +41,7 @@ export default class Depth extends Component {
 
   caculateOptions(data) {
     const { prices, amountsBuy, amountsSell } = this.processData(data)
+    const { language } = this.props
     return {
       title: {
         show: false,
@@ -56,13 +58,13 @@ export default class Depth extends Component {
         selectedMode: false,
         backgroundColor: 'transparent',
         data: [{
-          name: '买入',
+          name: transfer(language, 'history_buy'),
           icon: 'rect',
           textStyle: {
             color: common.placeholderColor,
           },
         }, {
-          name: '卖出',
+          name: transfer(language, 'history_sell'),
           icon: 'rect',
           textStyle: {
             color: common.placeholderColor,
@@ -207,16 +209,24 @@ export default class Depth extends Component {
         confine: true,
         transitionDuration: 0.3,
         formatter: params => {
+          const seriesName = params[0].seriesName
+          let price = ''
+          let quality = ''
+          if (seriesName === '买入') {
+            price = '价格'
+            quality = '数量'
+          } else {
+            price = 'Price'
+            quality = 'Amount'
+          }
           if (params[0].data !== '-') {
             const name = Number(params[0].name).toString()
             const data = params[0].data
-            const str = '价格: ' + name + '<br />数量: ' + data
-            return str
+            return `${price}: ${name}<br />${quality}: ${data}`
           }
           const name = Number(params[1].name).toString()
           const data = params[1].data
-          const str = '价格: ' + name + '<br />数量: ' + data
-          return str
+          return `${price}: ${name}<br />${quality}: ${data}`
         },
         data: [{
           name: 'aa',
@@ -228,7 +238,7 @@ export default class Depth extends Component {
       },
       series: [{
         type: 'line',
-        name: '买入',
+        name: transfer(language, 'history_buy'),
         coordinateSystem: 'cartesian2d',
         cursor: 'pointer',
         connectNulls: true,
@@ -263,7 +273,7 @@ export default class Depth extends Component {
         animation: false,
         smooth: 0.05,
       }, {
-        name: '卖出',
+        name: transfer(language, 'history_sell'),
         type: 'line',
         smooth: 0.05,
         lineStyle: {
