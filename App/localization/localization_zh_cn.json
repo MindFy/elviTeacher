@@ -282,9 +282,15 @@
   "withdrawal_address_required": "请填写提现地址",
   "withdrawal_address_correct_required_1": "请填写正确的",
   "withdrawal_address_correct_required_2": "提币地址!",
+  "withdraw_address_length_error": "提现地址长度有误",
+  "withdraw_address_exist": "提现地址已存在",
+  "withdraw_address_error": "提现地址有误",
+  "withdraw_error_after_pwd_changed": "修改密码后，24小时内禁止提币操作",
   "address_remark": "备注",
   "address_remark_required": "请填写备注",
   "address_add": "添加",
+  "add_address_failed": "添加地址失败",
+  "add_address_succeed": "添加地址成功",
   "history_deposit": "充值记录",
   "history_withdrawal": "提现记录",
   "history_otc": "法币交易记录",
@@ -423,5 +429,6 @@
   "balances_pageTitle": "资产",
   "me_changeLanguageSuccess": "切换语言成功",
   "home_bullCenter": "公告中心",
-  "home_activeCenter": "活动"
+  "home_activeCenter": "活动",
+  "get_code_succeed": "验证码已发送，请及时查收!"
 }

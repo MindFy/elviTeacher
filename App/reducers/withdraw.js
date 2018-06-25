@@ -22,6 +22,9 @@ const initialState = {
   address: [],
   googleCodeCheckLoading: false,
   googleCodeCheckError: null,
+  getCodeLoading: false,
+  getCodeResult: null,
+  getCodeError: null,
 }
 
 export default function withdraw(state = initialState, action) {
@@ -173,6 +176,30 @@ export default function withdraw(state = initialState, action) {
       nextState = {
         ...state,
         googleCodeCheckError: payload,
+      }
+      break
+    case 'withdraw/request_get_code':
+      nextState = {
+        ...state,
+        getCodeLoading: true,
+        getCodeResult: null,
+        getCodeError: null,
+      }
+      break
+    case 'withdraw/request_get_code_succeed':
+      nextState = {
+        ...state,
+        getCodeLoading: false,
+        getCodeResult: payload,
+        getCodeError: null,
+      }
+      break
+    case 'withdraw/request_get_code_failed':
+      nextState = {
+        ...state,
+        getCodeLoading: false,
+        getCodeResult: null,
+        getCodeError: payload,
       }
       break
     case 'notify/clear_reducer':

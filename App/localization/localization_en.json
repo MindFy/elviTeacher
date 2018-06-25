@@ -282,9 +282,15 @@
   "withdrawal_address_required": "Please enter the withdrawal address",
   "withdrawal_address_correct_required_1": "Please enter the correct ",
   "withdrawal_address_correct_required_2": " withdrawal address!",
+  "withdraw_address_length_error": "提现地址长度有误",
+  "withdraw_address_exist": "提现地址已存在",
+  "withdraw_address_error": "提现地址有误",
+  "withdraw_error_after_pwd_changed": "修改密码后，24小时内禁止提币操作",
   "address_remark": "Remark",
   "address_remark_required": "Please enter the remark",
   "address_add": "Add",
+  "add_address_failed": "添加地址失败",
+  "add_address_succeed": "添加地址成功",
   "history_deposit": "Deposit",
   "history_withdrawal": "Withdrawal",
   "history_otc": "OTC",
@@ -423,5 +429,6 @@
   "balances_pageTitle": "Balance",
   "me_changeLanguageSuccess": "Successfully change language",
   "home_bullCenter": "Announcements",
-  "home_activeCenter": "Activities"
+  "home_activeCenter": "Activities",
+  "get_code_succeed": "验证码已发送，请及时查收!"
 }

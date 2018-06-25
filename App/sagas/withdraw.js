@@ -101,6 +101,23 @@ export function* requsetCheck2GoogleAuthWorker(action) {
   }
 }
 
+export function* requestGetCodeWorker(action) {
+  const { payload } = action
+  const response = yield call(api.getVerificateCode, payload)
+
+  if (response.success) {
+    yield put({
+      type: 'withdraw/request_get_code_succeed',
+      payload: response.result,
+    })
+  } else {
+    yield put({
+      type: 'withdraw/request_get_code_failed',
+      payload: response.error,
+    })
+  }
+}
+
 export function* requestCoinList() {
   yield takeEvery('withdraw/request_coin_list', requestCoinListWorker)
 }
@@ -123,4 +140,8 @@ export function* requestWithdrawAddress() {
 
 export function* requsetCheck2GoogleAuth() {
   yield takeEvery('withdraw/check2_google_auth', requsetCheck2GoogleAuthWorker)
+}
+
+export function* requestGetCode() {
+  yield takeEvery('withdraw/request_get_code', requestGetCodeWorker)
 }
