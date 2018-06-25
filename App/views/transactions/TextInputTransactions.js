@@ -40,6 +40,7 @@ export default class TextInputTranscations extends Component {
         placeholderTextColor={common.placeholderColor}
         autoCorrect={false}
         value={value}
+        numberOfLines={1}
         onChangeText={onChangeText}
         editable={editable}
         maxLength={maxLength}
