@@ -1,5 +1,6 @@
 const initialState = {
   otcList: [],
+  otcListPage: 0,
   formState: {
     code: '',
     allegeText: '',
@@ -52,6 +53,12 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         otcListLoading: false,
         otcListError: payload,
+      }
+      break
+    case 'otcDetail/update_list_page':
+      nextState = {
+        ...state,
+        otcListPage: payload,
       }
       break
     case 'otcDetail/request_get_code':

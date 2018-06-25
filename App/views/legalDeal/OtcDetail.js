@@ -28,6 +28,7 @@ import {
   updateAuthCodeType,
   check2GoogleAuth,
   check2GoogleAuthSetResponse,
+  updateListPage,
 } from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
 import AllegeView from './AllegeView'
@@ -98,6 +99,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: common.margin10,
   },
+  allegeView: {
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    justifyContent: 'center',
+  },
+  footerText: {
+    color: common.textColor,
+    fontSize: common.font14,
+  },
 })
 
 class OtcDetail extends Component {
@@ -134,12 +146,13 @@ class OtcDetail extends Component {
 
   constructor() {
     super()
-    this.limit = 10
     this.state = {
       refreshState: RefreshState.Idle,
-      skip: 0,
       showAllegeView: false,
     }
+    this.firstRequest = true
+    this.limit = 10
+    this.skip = 0
     this.codeTitles = ['短信验证码', '谷歌验证码']
   }
 
@@ -156,7 +169,7 @@ class OtcDetail extends Component {
       id: loggedInResult.id,
       skip: 0,
       limit: this.limit,
-    }, RefreshState.HeaderRefreshing)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -235,15 +248,10 @@ class OtcDetail extends Component {
     dispatch(requestAllege(data))
   }
 
-  refreshOtcList(data, refreshState) {
-    const { dispatch, otcListLoading } = this.props
-    if (this.loadingOtcList) return
-
-    this.loadingOtcList = true
+  refreshOtcList(data) {
+    const { dispatch } = this.props
+    this.props.dispatch(updateListPage(this.skip))
     dispatch(requestOtcList(schemas.findOtcList(data)))
-    this.setState({
-      refreshState,
-    })
   }
 
   authCodeChanged = (e, code) => {
@@ -441,29 +449,36 @@ class OtcDetail extends Component {
   }
 
   handleRequestOtcList(nextProps) {
-    const { dispatch, otcList } = nextProps
-    const { refreshState, skip } = this.state
-    if (refreshState === RefreshState.HeaderRefreshing) {
-      this.setState({
-        refreshState: RefreshState.Idle,
-      })
+    if (this.props.otcListLoading && !nextProps.otcListLoading) {
+      this.firstRequest = false
+      if (nextProps.otcListError) {
+        this.setState({
+          refreshState: RefreshState.Idle,
+        })
+      } else if (nextProps.otcList) {
+        const otcListLength =
+          nextProps.otcList.length < (this.skip + 1) * this.limit
+        this.setState({
+          refreshState: !otcListLength ? RefreshState.Idle : RefreshState.NoMoreData,
+        })
+      }
     }
-    if (!otcList.length && refreshState === RefreshState.FooterRefreshing) {
-      this.loadingOtcList = false
-      this.setState({
-        skip: 0,
-        refreshState: RefreshState.NoMoreData,
-      })
-      dispatch(updateOtcList(this.props.otcList))
-    } else if (otcList.length && refreshState === RefreshState.FooterRefreshing) {
-      this.loadingOtcList = false
-      this.setState({
-        skip: skip + 1,
-        refreshState: RefreshState.Idle,
-      })
-      const nextOtcList = this.props.otcList.concat(otcList)
-      dispatch(updateOtcList(nextOtcList))
-    }
+  }
+
+  handleHeaderRefresh = (id) => {
+    if (this.firstRequest) return
+    this.setState({ refreshState: RefreshState.HeaderRefreshing })
+    this.skip = 0
+    this.refreshOtcList({ id, skip: this.skip, limit: this.limit })
+  }
+
+  handleFooterRefresh = (id) => {
+    if (this.firstRequest) return
+    this.setState({ refreshState: RefreshState.FooterRefreshing })
+
+    this.skip += 1
+    // this.props.dispatch(updateListPage(this.skip))
+    this.refreshOtcList({ id, skip: this.skip, limit: this.limit })
   }
 
   keyExtractor = item => item.id
@@ -623,13 +638,7 @@ class OtcDetail extends Component {
     if (showAllegeView) {
       return (
         <AllegeView
-          style={{
-            position: 'absolute',
-            height: '100%',
-            width: '100%',
-            backgroundColor: 'rgba(0,0,0,0.3)',
-            justifyContent: 'center',
-          }}
+          style={styles.allegeView}
           onPress={() => this.setState({ showAllegeView: false })}
           inputValue={allegeText}
           onChangeText={e => this.onChangeText(e, 'allege')}
@@ -653,7 +662,7 @@ class OtcDetail extends Component {
 
   render() {
     const { loggedInResult, otcList, language } = this.props
-    const { refreshState, skip } = this.state
+    const { refreshState } = this.state
 
     return (
       <View style={{ flex: 1, backgroundColor: common.blackColor }}>
@@ -662,30 +671,9 @@ class OtcDetail extends Component {
           renderItem={({ item, index }) => this.renderRow(item, index)}
           keyExtractor={this.keyExtractor}
           refreshState={refreshState}
-          onHeaderRefresh={() => {
-            if ((refreshState !== RefreshState.NoMoreData)
-              || (refreshState !== RefreshState.FooterRefreshing)) {
-              this.refreshOtcList({
-                id: loggedInResult.id,
-                skip: 0,
-                limit: this.limit,
-              }, RefreshState.HeaderRefreshing)
-            }
-          }}
-          onFooterRefresh={() => {
-            if ((refreshState !== RefreshState.NoMoreData)
-              || (refreshState !== RefreshState.HeaderRefreshing)) {
-              this.refreshOtcList({
-                id: loggedInResult.id,
-                skip: skip + 1,
-                limit: this.limit,
-              }, RefreshState.FooterRefreshing)
-            }
-          }}
-          footerTextStyle={{
-            color: common.textColor,
-            fontSize: common.font14,
-          }}
+          onHeaderRefresh={() => { this.handleHeaderRefresh(loggedInResult.id) }}
+          onFooterRefresh={() => { this.handleFooterRefresh(loggedInResult.id) }}
+          footerTextStyle={styles.footerText}
           footerRefreshingText={transfer(language, 'exchange_dataInLoading')}
           footerFailureText={transfer(language, 'exchange_dataFailureText')}
           footerNoMoreDataText={transfer(language, 'exchange_dataNoMoreData')}

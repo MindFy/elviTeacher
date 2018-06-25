@@ -3,6 +3,7 @@ import {
   put,
   takeEvery,
   takeLatest,
+  select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
@@ -11,10 +12,20 @@ export function* requestOtcListWorker(action) {
   const response = yield call(api.graphql, payload)
 
   if (response.success) {
-    yield put({
-      type: 'otcDetail/request_otc_list_succeed',
-      payload: response.result.data.find_legalDeal,
-    })
+    const page = yield select(state => state.otcDetail.otcListPage)
+    if (page === 0) {
+      yield put({
+        type: 'otcDetail/request_otc_list_succeed',
+        payload: response.result.data.find_legalDeal,
+      })
+    } else {
+      const otcList = yield select(state => state.otcDetail.otcList)
+      const newOtcList = otcList.concat(response.result.data.find_legalDeal)
+      yield put({
+        type: 'otcDetail/request_otc_list_succeed',
+        payload: newOtcList,
+      })
+    }
   } else {
     yield put({
       type: 'otcDetail/request_otc_list_failed',
