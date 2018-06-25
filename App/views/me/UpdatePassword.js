@@ -191,14 +191,14 @@ class UpdatePassword extends Component {
       language,
     } = this.props
     return (
-      <ScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustContentInsets={false}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
       >
-        <KeyboardAvoidingView
-          contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="padding"
+        <ScrollView
+          style={styles.container}
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustContentInsets={false}
         >
           <TextInputPwd
             language={language}
@@ -241,12 +241,12 @@ class UpdatePassword extends Component {
             caption={transfer(language, 'me_ID_confirm')}
             theme={'gray'}
           />
-        </KeyboardAvoidingView>
 
-        <TKSpinner
-          isVisible={updatePasswordVisible}
-        />
-      </ScrollView>
+          <TKSpinner
+            isVisible={updatePasswordVisible}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }

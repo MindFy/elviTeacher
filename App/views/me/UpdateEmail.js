@@ -183,15 +183,14 @@ class UpdateEmail extends Component {
     const { email, codeEmail, updateEmailVisible, user, language } = this.props
 
     return (
-      <ScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustContentInsets={false}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
       >
-        <KeyboardAvoidingView
-
-          contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="padding"
+        <ScrollView
+          style={styles.container}
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustContentInsets={false}
         >
           <TKInputItem
             viewStyle={styles.email}
@@ -226,11 +225,12 @@ class UpdateEmail extends Component {
             theme={'gray'}
           />
 
-        </KeyboardAvoidingView>
-        <TKSpinner
-          isVisible={updateEmailVisible}
-        />
-      </ScrollView>
+
+          <TKSpinner
+            isVisible={updateEmailVisible}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
 
     )
   }

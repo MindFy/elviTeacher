@@ -265,7 +265,8 @@ class Orders extends Component {
 
     if (this.props.orderHistoryLoading && !nexProps.orderHistoryLoading) {
       this.isRefresh = false
-      const orderHistoryLength = nexProps.orderHistory.length < (this.orderHistoryPage + 1) * this.limit
+      const orderHistoryLength =
+        nexProps.orderHistory.length < (this.orderHistoryPage + 1) * this.limit
       this.setState({
         orderHistoryReState: !orderHistoryLength ? RefreshState.Idle : RefreshState.NoMoreData,
       })
