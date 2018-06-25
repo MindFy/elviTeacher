@@ -288,15 +288,16 @@ class Login extends PureComponent {
   render() {
     const { loading, language } = this.props
     return (
-      <ScrollView
-        style={styles.container}
-        keyboardShouldPersistTaps="handled"
-        automaticallyAdjustContentInsets={false}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior="padding"
       >
-        <KeyboardAvoidingView
-          contentContainerStyle={{ justifyContent: 'center' }}
-          behavior="padding"
+        <ScrollView
+          style={styles.container}
+          keyboardShouldPersistTaps="handled"
+          automaticallyAdjustContentInsets={false}
         >
+
           {this.renderLogo()}
           {this.renderInput()}
           {this.renderExtraBtns()}
@@ -307,11 +308,11 @@ class Login extends PureComponent {
             onPress={this.loginPress}
             disabled={this.loading}
           />
-        </KeyboardAvoidingView>
-        <TKSpinner
-          isVisible={loading}
-        />
-      </ScrollView>
+          <TKSpinner
+            isVisible={loading}
+          />
+        </ScrollView>
+      </KeyboardAvoidingView>
     )
   }
 }
