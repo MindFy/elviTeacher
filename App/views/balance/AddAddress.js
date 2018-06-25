@@ -23,10 +23,9 @@ import {
   updateAuthCodeType,
   check2GoogleAuth,
   check2GoogleAuthSetResponse,
+  requestGetCode,
 } from '../../actions/addressAdd'
 import { requestWithdrawAddress } from '../../actions/withdraw'
-import { getVerificateCode } from '../../actions/user'
-import TKViewCheckAuthorize from '../../components/TKViewCheckAuthorize'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
@@ -84,8 +83,12 @@ const styles = StyleSheet.create({
 
 class AddAddress extends Component {
   static navigationOptions(props) {
+    let headerTitle = ''
+    if (props.navigation.state.params) {
+      headerTitle = props.navigation.state.params.headerTitle
+    }
     return {
-      headerTitle: '添加地址',
+      headerTitle,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -102,23 +105,24 @@ class AddAddress extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    const { navigation, dispatch, user, language } = this.props
+    this.handleRequestGetCode(nextProps)
     this.handleRequestCheck2GoogleCode(nextProps)
     if (nextProps.error) {
       Overlay.hide(this.overlayViewKey)
       const errCode = nextProps.error.code
       const errMsg = this.errMsgs[errCode]
       if (errMsg) {
-        Toast.fail(errMsg)
+        Toast.fail(transfer(language, errMsg))
       } else {
-        Toast.fail('添加地址错误')
+        Toast.fail(transfer(language, 'add_address_failed'))
       }
-      this.props.dispatch(requestAddressClearError())
+      dispatch(requestAddressClearError())
     }
 
     if (this.props.loading && !nextProps.loading) {
-      Toast.success('添加地址成功')
+      Toast.fail(transfer(language, 'add_address_succeed'))
       Overlay.hide(this.overlayViewKey)
-      const { navigation, dispatch, user } = this.props
       dispatch(requestWithdrawAddress(findAddress(user.id)))
       navigation.goBack()
     }
@@ -134,18 +138,41 @@ class AddAddress extends Component {
     }))
   }
 
+  getCodeErrors = {
+    4000101: 'login_numberOrTypeError',
+    4000102: 'me_Email_repeatMinute',
+    4000104: 'me_phoneRegisted',
+  }
+
   codeTitles = ['短信验证码', '谷歌验证码']
 
   errMsgs = {
-    4000413: '提币地址长度有误！',
-    4000414: '提币地址已存在！',
-    4000416: '提币地址格式错误',
-    4000156: '授权验证失败',
+    4000413: 'withdraw_address_length_error',
+    4000414: 'withdraw_address_exist',
+    4000416: 'withdraw_address_error',
+    4000156: 'me_authFailed',
+  }
+
+  handleRequestGetCode(nextProps) {
+    const { getCodeResult, getCodeError, language } = nextProps
+
+    if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
+      Toast.success(transfer(language, 'get_code_succeed'))
+    }
+    if (getCodeError && getCodeError !== this.props.getCodeError) {
+      if (getCodeError.message === common.badNet) {
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
+      } else {
+        const msg = transfer(language, this.getCodeErrors[getCodeError.code])
+        if (msg) Toast.fail(msg)
+        else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      }
+    }
   }
 
   handleRequestCheck2GoogleCode(nextProps) {
     if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
-      const { googleCodeResponse, dispatch, formState } = nextProps
+      const { googleCodeResponse, dispatch, formState, language } = nextProps
       if (googleCodeResponse.success) {
         const { navigation } = this.props
         dispatch(requestAddressAdd({
@@ -157,9 +184,9 @@ class AddAddress extends Component {
       } else {
         const errCode = googleCodeResponse.error.code
         if (errCode === 4000171) {
-          Toast.fail('请先绑定谷歌验证码!')
+          Toast.fail(transfer(language, 'me_bindBankCardFirst'))
         } else {
-          Toast.fail('谷歌验证码错误!')
+          Toast.fail(transfer(language, 'me_googleCodeError'))
         }
       }
       dispatch(check2GoogleAuthSetResponse(null))
@@ -212,7 +239,7 @@ class AddAddress extends Component {
 
     if (this.checkWithdrawAddressIsIneligible(address, title)) {
       Alert.alert(
-        '提示',
+        transfer(language, 'withdraw_scanNote'),
         `${transfer(language, 'withdrawal_address_correct_required_1')}${title}${transfer(language, 'withdrawal_address_correct_required_2')}`,
         [
           {
@@ -228,7 +255,6 @@ class AddAddress extends Component {
       Toast.fail(transfer(language, 'address_remark_required'))
       return
     }
-    // this.showOverlay()
     this.showAuthCode()
   }
 
@@ -236,10 +262,10 @@ class AddAddress extends Component {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
 
-    const { authCodeType, formState, dispatch } = this.props
+    const { authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码') {
       if (!formState.authCode.length) {
-        Toast.fail('请输入验证码')
+        Toast.fail(transfer(language, 'login_inputCode'))
         return
       }
       const { navigation } = this.props
@@ -251,7 +277,7 @@ class AddAddress extends Component {
       }))
     } else {
       if (!formState.googleCode.length) {
-        Toast.fail('请输入谷歌验证码')
+        Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
       dispatch(check2GoogleAuth({ googleCode: formState.googleCode }))
@@ -294,7 +320,7 @@ class AddAddress extends Component {
   SMSCodePress = (count) => {
     this.count = count
     const { user, dispatch } = this.props
-    dispatch(getVerificateCode({ mobile: user.mobile, service: 'auth' }))
+    dispatch(requestGetCode({ mobile: user.mobile, service: 'auth' }))
   }
 
   showAuthCode = () => {
@@ -324,29 +350,6 @@ class AddAddress extends Component {
       </Overlay.View>
     )
     this.overlayViewKeyID = Overlay.show(overlayView)
-  }
-
-  showOverlay() {
-    const { dispatch, user } = this.props
-    const overlayView = (
-      <Overlay.View
-        style={styles.overlay}
-        modal={false}
-        overlayOpacity={0}
-      >
-        <TKViewCheckAuthorize
-          mobile={user.mobile}
-          onChangeText={this.handleAuthCode}
-          codePress={(count) => {
-            this.authCount = count
-            dispatch(getVerificateCode({ mobile: user.mobile, service: 'auth' }))
-          }}
-          confirmPress={() => this.addPress()}
-          cancelPress={() => Overlay.hide(this.overlayViewKey)}
-        />
-      </Overlay.View>
-    )
-    this.overlayViewKey = Overlay.show(overlayView)
   }
 
   render() {

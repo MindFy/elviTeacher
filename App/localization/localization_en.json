@@ -282,9 +282,15 @@
   "withdrawal_address_required": "Please enter the withdrawal address",
   "withdrawal_address_correct_required_1": "Please enter the correct ",
   "withdrawal_address_correct_required_2": " withdrawal address!",
+  "withdraw_address_length_error": "提现地址长度有误",
+  "withdraw_address_exist": "提现地址已存在",
+  "withdraw_address_error": "提现地址有误",
+  "withdraw_error_after_pwd_changed": "修改密码后，24小时内禁止提币操作",
   "address_remark": "Remark",
   "address_remark_required": "Please enter the remark",
   "address_add": "Add",
+  "add_address_failed": "添加地址失败",
+  "add_address_succeed": "添加地址成功",
   "history_deposit": "Deposit",
   "history_withdrawal": "Withdrawal",
   "history_otc": "OTC",
@@ -615,5 +621,6 @@
   "agreement_190": "• We constantly set and adjust daily trading and cash withdrawal limits based on security requirement and actual state of transactions;",
   "agreement_191": "• If the transaction occurs frequently in an account registered by you or is beyond reasonable circumstances, our professional team will assess and determine whether such transaction is suspicious;",
   "agreement_192": "• If we identify a specific transaction as suspicious on the basis of our assessment, we may adopt such restrictive measures as suspending the transaction or denying the transaction, and if it is possible, we may even reverse the transaction as soon as possible, and report to the competent authorities, without, however, notifying you;",
-  "agreement_193": "• We reserve the right to reject registration applications by applicants that do not comply with the international standards against money laundering or who may be regarded as political and public figures; we reserve the right to suspend or terminate a transaction identified as suspicious based on our own assessment, which, however, does not breach any of our obligations and duties to you."
+  "agreement_193": "• We reserve the right to reject registration applications by applicants that do not comply with the international standards against money laundering or who may be regarded as political and public figures; we reserve the right to suspend or terminate a transaction identified as suspicious based on our own assessment, which, however, does not breach any of our obligations and duties to you.",
+  "get_code_succeed": "验证码已发送，请及时查收!"
 }

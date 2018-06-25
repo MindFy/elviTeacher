@@ -282,9 +282,15 @@
   "withdrawal_address_required": "请填写提现地址",
   "withdrawal_address_correct_required_1": "请填写正确的",
   "withdrawal_address_correct_required_2": "提币地址!",
+  "withdraw_address_length_error": "提现地址长度有误",
+  "withdraw_address_exist": "提现地址已存在",
+  "withdraw_address_error": "提现地址有误",
+  "withdraw_error_after_pwd_changed": "修改密码后，24小时内禁止提币操作",
   "address_remark": "备注",
   "address_remark_required": "请填写备注",
   "address_add": "添加",
+  "add_address_failed": "添加地址失败",
+  "add_address_succeed": "添加地址成功",
   "history_deposit": "充值记录",
   "history_withdrawal": "提现记录",
   "history_otc": "法币交易记录",
@@ -615,5 +621,6 @@
   "agreement_190": "4.1 我们根据安全性和实际交易情况时时设置和调整日常交易和提币最高限额;",
   "agreement_191": "4.2如果交易频繁集中发生在某个注册用户或存在超乎合理的情况，我们的专业团队将评估并决定他们是否可疑;",
   "agreement_192": "4.3我们凭借自身的判断认定为可疑交易的情况，我们可能会采取暂停该交易、拒绝该交易等限制性措施，甚至如果可能将尽快逆转该交易，同时向主管部门报告，但不会通知您;",
-  "agreement_193": "4.4我们保留拒绝来自于不符合国际反洗钱标准辖区的人或可被视为政治公众人物的人的注册申请，我们保留随时暂停或终止根据我们自身判断为可疑交易的交易，但我们这样做并不违反对您的任何义务和责任。"
+  "agreement_193": "4.4我们保留拒绝来自于不符合国际反洗钱标准辖区的人或可被视为政治公众人物的人的注册申请，我们保留随时暂停或终止根据我们自身判断为可疑交易的交易，但我们这样做并不违反对您的任何义务和责任。",
+  "get_code_succeed": "验证码已发送，请及时查收!"
 }

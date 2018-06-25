@@ -14,15 +14,7 @@ import {
   requestCancelOrder,
   requestCancelAllOrder,
 } from './orders'
-import {
-  requestCoinList,
-  requestBalance,
-  requestValuation,
-  requestWithdraw,
-  requestWithdrawAddress,
-  requsetCheck2GoogleAuth,
-} from './withdraw'
-// import { requestAddressAdd } from './addressAdd'
+import * as withdraw from './withdraw'
 import * as addressAdd from './addressAdd'
 import * as home from './home'
 import { requestPairInfo } from './market'
@@ -89,12 +81,13 @@ export default function* rootSaga() {
     fork(address.addAddress),
     fork(address.findAddress),
 
-    fork(requestCoinList),
-    fork(requestBalance),
-    fork(requestValuation),
-    fork(requestWithdraw),
-    fork(requestWithdrawAddress),
-    fork(requsetCheck2GoogleAuth),
+    fork(withdraw.requestCoinList),
+    fork(withdraw.requestBalance),
+    fork(withdraw.requestValuation),
+    fork(withdraw.requestWithdraw),
+    fork(withdraw.requestWithdrawAddress),
+    fork(withdraw.requsetCheck2GoogleAuth),
+    fork(withdraw.requestGetCode),
 
     fork(orderHistoryRequest),
     fork(openOrderRequest),
@@ -132,5 +125,6 @@ export default function* rootSaga() {
 
     addressAdd.requestAddressAdd(),
     addressAdd.requsetCheck2GoogleAuthWatcher(),
+    addressAdd.requestGetCode(),
   ]
 }
