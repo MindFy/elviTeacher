@@ -10,6 +10,9 @@ const initialState = {
   authCodeType: '短信验证码',
   googleCodeLoading: false,
   googleCodeResponse: null,
+  getCodeLoading: false,
+  getCodeResult: null,
+  getCodeError: null,
 }
 
 export default function addressAdd(state = initialState, action) {
@@ -64,6 +67,30 @@ export default function addressAdd(state = initialState, action) {
         ...state,
         googleCodeLoading: false,
         googleCodeResponse: payload,
+      }
+      break
+    case 'addressAdd/request_get_code':
+      nextState = {
+        ...state,
+        getCodeLoading: true,
+        getCodeResult: null,
+        getCodeError: null,
+      }
+      break
+    case 'addressAdd/request_get_code_succeed':
+      nextState = {
+        ...state,
+        getCodeLoading: false,
+        getCodeResult: payload,
+        getCodeError: null,
+      }
+      break
+    case 'addressAdd/request_get_code_failed':
+      nextState = {
+        ...state,
+        getCodeLoading: false,
+        getCodeResult: null,
+        getCodeError: payload,
       }
       break
     case 'notify/clear_reducer':

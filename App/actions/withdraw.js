@@ -142,3 +142,9 @@ export function check2GoogleAuthSetError(payload) {
   }
 }
 
+export function requestGetCode(payload) {
+  return {
+    type: 'withdraw/request_get_code',
+    payload,
+  }
+}

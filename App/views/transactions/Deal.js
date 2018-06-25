@@ -532,7 +532,7 @@ class Deal extends Component {
           }}
         />)
       }
-      return <Depth depthMap={depthMap} />
+      return <Depth depthMap={depthMap} language={language} />
     }
     return (
       <View style={styles.kLineView}>

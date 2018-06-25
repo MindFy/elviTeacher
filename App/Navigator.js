@@ -4,7 +4,6 @@ import {
   Image,
   Animated,
   StyleSheet,
-  View,
 } from 'react-native'
 import deviceInfo from 'react-native-device-info'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'

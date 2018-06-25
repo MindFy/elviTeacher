@@ -53,3 +53,10 @@ export function check2GoogleAuthSetResponse(payload) {
     payload,
   }
 }
+
+export function requestGetCode(payload) {
+  return {
+    type: 'addressAdd/request_get_code',
+    payload,
+  }
+}
