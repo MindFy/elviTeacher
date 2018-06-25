@@ -7,6 +7,7 @@ import {
 } from 'react-native'
 import { common } from '../../constants/common'
 import TKButtonGetVerificateCode from '../../components/TKButtonGetVerificateCode'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   viewStyle: {
@@ -29,7 +30,9 @@ export default class TextInputPwd extends Component {
   componentDidMount() { }
   render() {
     const { placeholder, onChange, maxLength, keyboardType, type, value, codeEmail, onPress,
-      secureTextEntry, newPassword, newPasswordAgain, editable } = this.props
+      secureTextEntry, newPassword, newPasswordAgain, editable, language,
+      inputTip,
+    } = this.props
     return (
       <View
         style={{
@@ -62,6 +65,7 @@ export default class TextInputPwd extends Component {
                   right: 10,
                   height: common.h15,
                 }}
+                language={language}
                 onPress={onPress}
               /> : null
           }
@@ -75,7 +79,7 @@ export default class TextInputPwd extends Component {
                 fontSize: common.font12,
                 textAlign: 'right',
               }}
-            >{common.regPasswordMsg}</Text> : null
+            >{transfer(language, 'login_passFormatterError')}</Text> : null
         }
         {
           ((type === 'newPasswordAgain') && (newPassword !== newPasswordAgain))
@@ -86,7 +90,7 @@ export default class TextInputPwd extends Component {
                 fontSize: common.font12,
                 textAlign: 'left',
               }}
-            >请确保两次输入密码一致</Text> : null
+            >{inputTip}</Text> : null
         }
       </View>
     )

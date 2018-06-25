@@ -14,6 +14,7 @@ import TextInputTransactions from './TextInputTransactions'
 import { common } from '../../constants/common'
 import TKButton from '../../components/TKButton'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   cover: {
@@ -176,7 +177,7 @@ class DealDrawer extends Component {
 
   render() {
     const caculatedData = this.caculateNecessaryData()
-    const { formData, changeAction, slideAction, buttonAction } = this.props
+    const { formData, changeAction, slideAction, buttonAction, language } = this.props
     const { price, quantity, amount } = formData
     const { index } = this.state
     if (this.state.visible === false) {
@@ -208,11 +209,13 @@ class DealDrawer extends Component {
           keyboardVerticalOffset={common.IsIOS ? 0 : -220}
         >
           <View style={[styles.inputView, { marginTop: common.margin10 }]}>
-            <Text style={styles.amountVisibleTitle}>可用: </Text>
+            <Text style={styles.amountVisibleTitle}>
+              {transfer(language, 'exchange_availble')}
+            </Text>
             <Text style={styles.amountVisible}>
               {caculatedData.newamountVisible}
             </Text>
-            <Text style={styles.amountVisibleTitle}>{`手续费: ${charge}`}</Text>
+            <Text style={styles.amountVisibleTitle}>{`${transfer(language, 'withdrawal_fee')}: ${charge}`}</Text>
           </View>
 
           <View style={styles.inputView}>
@@ -236,7 +239,7 @@ class DealDrawer extends Component {
                 />
               </NextTouchableOpacity>
               <TextInputTransactions
-                placeholder={`价格（${caculatedData.currencyName}）`}
+                placeholder={`${transfer(language, 'exchange_price')}（${caculatedData.currencyName}）`}
                 keyboardType="numeric"
                 value={price}
                 onChangeText={(e) => {
@@ -288,7 +291,7 @@ class DealDrawer extends Component {
                 />
               </NextTouchableOpacity>
               <TextInputTransactions
-                placeholder={`数量（${caculatedData.goodsName}）`}
+                placeholder={`${transfer(language, 'exchange_quality')}（${caculatedData.goodsName}）`}
                 keyboardType="numeric"
                 value={quantity}
                 onChangeText={(e) => {
@@ -325,7 +328,7 @@ class DealDrawer extends Component {
           <View style={styles.amount}>
             <TextInputTransactions
               textInputStyle={{ width: '100%' }}
-              placeholder={`成交金额（${caculatedData.currencyName}）`}
+              placeholder={`${transfer(language, 'exchange_total')}（${caculatedData.currencyName}）`}
               value={amount}
               editable={false}
             />
@@ -353,7 +356,9 @@ class DealDrawer extends Component {
             }]}
             titleStyle={styles.buttonStyle}
             theme={'gray'}
-            caption={!index ? '买入' : '卖出'}
+            caption={!index ?
+              transfer(language, 'exchange_buy') :
+              transfer(language, 'exchange_sell')}
             onPress={() => {
               if (buttonAction) {
                 buttonAction(index)

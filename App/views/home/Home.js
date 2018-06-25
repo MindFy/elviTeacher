@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
 } from 'react-native'
+import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
 import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
@@ -23,6 +24,8 @@ import schemas from '../../schemas/index'
 import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
 import packageJson from '../../../package.json'
+import transfer from '../../localization/utils'
+import * as system from '../../actions/system'
 
 global.Buffer = require('buffer').Buffer
 
@@ -41,6 +44,18 @@ class Home extends Component {
     })
   }
 
+  componentWillMount() {
+    const { language, dispatch } = this.props
+    let systemLanguage = 'en'
+    const evt = deviceInfo.getDeviceLocale()
+    if (evt.indexOf('zh') > -1) {
+      systemLanguage = 'zh_cn'
+    }
+    if (language !== systemLanguage) {
+      dispatch(system.updateLanguage(systemLanguage))
+    }
+  }
+
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide()
@@ -55,7 +70,7 @@ class Home extends Component {
       }
     }, common.refreshIntervalTime)
 
-    this.checkUpdate()
+    // this.checkUpdate()
 
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
@@ -77,6 +92,9 @@ class Home extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
+    if (nextProps.language !== this.props.language) {
+      return true
+    }
     if (nextProps.market.length && this.props.market.length) {
       return !equal(nextProps.market, this.props.market)
     }
@@ -111,16 +129,17 @@ class Home extends Component {
             isAbort: false,
           }
           HotUpdate.downLoadBundleZipWithOption(options, () => {
+            const { language } = this.props
             Alert.alert(
-              '检测到新版本',
+              transfer(language, 'home_receiveNewVersion'),
               '',
               [
                 {
-                  text: '立即更新',
+                  text: transfer(language, 'home_updateNow'),
                   onPress: () => HotUpdate.killApp(),
                 },
                 {
-                  text: '取消',
+                  text: transfer(language, 'home_updateCancel'),
                   onPress: () => {},
                 },
               ],
@@ -145,17 +164,17 @@ class Home extends Component {
   }
 
   menuBtnPress = (i) => {
-    const { navigation, user } = this.props
+    const { navigation, user, language } = this.props
     const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     if (!user) {
       navigation.navigate('LoginStack')
     } else if (i === 2) {
       navigation.navigate('Orders', {
-        title: '当前委托',
+        title: transfer(language, 'home_currentDelegate'),
       })
     } else if (i === 3) {
       navigation.navigate('Orders', {
-        title: '历史委托',
+        title: transfer(language, 'home_historyDelegate'),
       })
     } else {
       navigation.navigate(navigateKeys[i])
@@ -163,7 +182,13 @@ class Home extends Component {
   }
 
   renderMenuBtns = () => {
-    const btnTitles = ['充值', '提现', '当前委托', '历史委托']
+    const { language } = this.props
+    const btnTitles = [
+      transfer(language, 'home_deposit'),
+      transfer(language, 'home_withdrawal'),
+      transfer(language, 'home_currentDelegate'),
+      transfer(language, 'home_historyDelegate'),
+    ]
     const menuBtns = []
     const icons = [
       require('../../assets/recharge.png'),
@@ -171,7 +196,6 @@ class Home extends Component {
       require('../../assets/currentDelegate.png'),
       require('../../assets/history_delegate.png'),
     ]
-
     for (let i = 0; i < btnTitles.length; i++) {
       menuBtns.push(
         <TKButton
@@ -204,7 +228,7 @@ class Home extends Component {
   )
 
   render() {
-    const { announcements, banners, market, navigation } = this.props
+    const { announcements, banners, market, navigation, language } = this.props
 
     return (
       <View style={styles.container}>
@@ -225,6 +249,7 @@ class Home extends Component {
 
           <HomeMarket
             data={market}
+            language={language}
             onPress={rd => this.marketPress(rd)}
           />
         </ScrollView>
@@ -238,6 +263,7 @@ function mapStateToProps(store) {
     ...store.home,
     selectedPair: store.exchange.selectedPair,
     user: store.user.user,
+    language: store.system.language,
   }
 }
 

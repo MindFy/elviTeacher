@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     left: common.w100,
     fontSize: common.font12,
     color: common.redColor,
+    width: common.sw * 0.8 - common.getH(80),
   },
 })
 
@@ -167,17 +168,17 @@ class Register extends Component {
   recommendNoOffset = 100
 
   codePress() {
-    const { dispatch, mobile, mobileIsExist } = this.props
+    const { dispatch, mobile, mobileIsExist, language } = this.props
     if (mobileIsExist) {
-      Toast.fail('手机号已被注册')
+      Toast.fail(transfer(language, 'login_phoneRegisted'))
       return
     }
     if (!mobile) {
-      Toast.fail('手机号不可为空')
+      Toast.fail(transfer(language, 'login_idUnNull'))
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.fail('请输入正确的手机号')
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     dispatch(actions.getVerificateCode({
@@ -187,14 +188,15 @@ class Register extends Component {
   }
 
   registerPress() {
-    const { dispatch, mobile, code, password, passwordAgain, recommendNo } = this.props
+    const { dispatch, mobile, code, password,
+      passwordAgain, recommendNo, language } = this.props
 
     if (!mobile.length) {
-      Toast.fail('请输入手机号')
+      Toast.fail(transfer(language, 'login_inputPhone'))
       return
     }
     if (!code.length) {
-      Toast.fail('请输入验证码')
+      Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
     if (!password.length || !common.regPassword.test(password) ||
@@ -204,21 +206,21 @@ class Register extends Component {
           paddingLeft: common.margin20,
           paddingRight: common.margin20,
         },
-        text: common.regPasswordMsg,
+        text: transfer(language, 'login_passFormatterError'),
         position: 'bottom',
       })
       return
     }
     if (!passwordAgain.length) {
-      Toast.fail('请再次设置密码')
+      Toast.fail(transfer(language, 'login_resetPass'))
       return
     }
     if (password !== passwordAgain) {
-      Toast.fail('确认密码需要和密码保持一致')
+      Toast.fail(transfer(language, 'login_samePass'))
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.fail('请输入正确的手机号')
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     dispatch(actions.register({
@@ -230,7 +232,7 @@ class Register extends Component {
   }
 
   handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateCodeVisible, getVerificateCodeResponse } = nextProps
+    const { getVerificateCodeVisible, getVerificateCodeResponse, language } = nextProps
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
 
     if (getVerificateCodeVisible) {
@@ -240,21 +242,21 @@ class Register extends Component {
       if (getVerificateCodeResponse.success) {
         Toast.success(getVerificateCodeResponse.result.message)
       } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail('手机号码或服务类型错误')
+        Toast.fail(transfer(language, 'login_numberOrTypeError'))
       } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail('一分钟内不能重复发送验证码')
+        Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
       } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail('手机号码已注册')
+        Toast.fail(transfer(language, 'login_phoneRegisted'))
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'login_networdError'))
       } else {
-        Toast.fail('获取验证码失败，请重试')
+        Toast.fail(transfer(language, 'login_getCodeFailed'))
       }
     }
   }
 
   handleRegisterRequest(nextProps) {
-    const { registerVisible, registerResponse, navigation } = nextProps
+    const { registerVisible, registerResponse, navigation, language } = nextProps
     if (!registerVisible && !this.showRegisterResponse) return
 
     if (registerVisible) {
@@ -263,29 +265,29 @@ class Register extends Component {
       this.showRegisterResponse = false
 
       if (registerResponse.success) {
-        Toast.success('注册成功')
+        Toast.success(transfer(language, 'login_registSuccess'))
 
         const { dispatch } = this.props
         dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
       } else if (registerResponse.error.code === 4000104) {
-        Toast.fail('请重新获取验证码')
+        Toast.fail(transfer(language, 'login_reGetCode'))
       } else if (registerResponse.error.code === 4000101) {
-        Toast.fail('验证码不能为空')
+        Toast.fail(transfer(language, 'login_codeNotNull'))
       } else if (registerResponse.error.code === 4000102) {
-        Toast.fail('验证码错误')
+        Toast.fail(transfer(language, 'login_codeError'))
       } else if (registerResponse.error.code === 4000103) {
-        Toast.fail('验证码已过期，请重新获取')
+        Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (registerResponse.error.code === 4000114) {
-        Toast.fail('手机号码已被注册')
+        Toast.fail(transfer(language, 'login_phoneRegisted'))
       } else if (registerResponse.error.code === 4000115) {
-        Toast.fail('邀请用户不存在')
+        Toast.fail(transfer(language, 'login_inviteUserNotExist'))
       } else if (registerResponse.error.code === 4000113) {
-        Toast.fail('邀请码不正确')
+        Toast.fail(transfer(language, 'login_inviteCodeError'))
       } else if (registerResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'login_networdError'))
       } else {
-        Toast.fail('注册失败，请重试')
+        Toast.fail(transfer(language, 'login_registFailed'))
       }
     }
   }
@@ -359,8 +361,9 @@ class Register extends Component {
         titleStyle={{
           width: common.h80,
         }}
-        title="验证码"
-        placeholder="请输入短信验证码"
+        title={transfer(language, 'login_code')}
+        placeholder={transfer(language, 'login_enterSmsCode')}
+        language={language}
         value={code}
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'code')}
@@ -390,15 +393,17 @@ class Register extends Component {
         style={{
           color: common.redColor,
           fontSize: common.font12,
+          width: common.sw * 0.8 - common.getH(80),
         }}
       >
-        {common.regPasswordMsg}
+        {transfer(this.props.language, 'login_passFormatterError')}
       </Text>
     )
     return (
       <View style={{
         alignItems: 'flex-end',
         height: common.w40,
+        width: common.sw * 0.8 - common.getH(80),
       }}
       >
         <View>
@@ -416,15 +421,15 @@ class Register extends Component {
   }
 
   renderPassword = () => {
-    const { password } = this.props
+    const { password, language } = this.props
     return (
       <TKInputItem
         viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
-        title="密码"
-        placeholder="请输入密码"
+        title={transfer(language, 'login_password')}
+        placeholder={transfer(language, 'login_passwordPlaceholder')}
         value={password}
         maxLength={common.textInputMaxLenPwd}
         secureTextEntry
@@ -441,15 +446,15 @@ class Register extends Component {
   }
 
   renderConfirmPwd = () => {
-    const { passwordAgain } = this.props
+    const { passwordAgain, language } = this.props
     return (
       <TKInputItem
         viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
-        title="再次确认密码"
-        placeholder="请再次输入密码"
+        title={transfer(language, 'login_repeatPassword')}
+        placeholder={transfer(language, 'login_repeatPasswordAgain')}
         value={passwordAgain}
         maxLength={common.textInputMaxLenPwd}
         secureTextEntry
@@ -466,15 +471,15 @@ class Register extends Component {
   }
 
   renderRecommendNo = () => {
-    const { recommendNo } = this.props
+    const { recommendNo, language } = this.props
     return (
       <TKInputItem
         viewStyle={{ flex: undefined }}
         titleStyle={{
           width: common.h80,
         }}
-        title="邀请码"
-        placeholder="选填"
+        title={transfer(language, 'login_inviteCode')}
+        placeholder={transfer(language, 'login_optional')}
         value={recommendNo}
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'recommendNo')}
@@ -490,22 +495,22 @@ class Register extends Component {
   }
 
   renderExtraBtns = () => {
-    const { navigation } = this.props
+    const { navigation, language } = this.props
     return (
       <View style={styles.container}>
         <View style={{ flexDirection: 'row' }} >
           <Text
             style={styles.title}
-          >注册即同意</Text>
+          >{transfer(language, 'login_registAsAgree')}</Text>
           <TKButton
             theme={'small'}
-            caption={'《用户协议》'}
+            caption={`《${transfer(language, 'login_agreement')}》`}
             onPress={() => navigation.navigate('Agreement')}
           />
         </View>
         <TKButton
           theme={'small'}
-          caption={'已有账号？去登录'}
+          caption={transfer(language, 'login_hasAccount')}
           onPress={() => navigation.goBack()}
         />
       </View>
@@ -519,6 +524,7 @@ class Register extends Component {
       code,
       password,
       passwordAgain,
+      language,
     } = this.props
 
     let behavior = null
@@ -572,7 +578,7 @@ class Register extends Component {
           <TKButton
             style={registerBtnBackgroundColor}
             theme="yellow"
-            caption={'注册'}
+            caption={transfer(language, 'login_registText')}
             disabled={!canRegister}
             onPress={() => this.registerPress()}
           />

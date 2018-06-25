@@ -5,10 +5,12 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
+import { connect } from 'react-redux'
 import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -53,10 +55,14 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Agreement extends Component {
+class Agreement extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '用户协议',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -71,7 +77,12 @@ export default class Agreement extends Component {
       ),
     }
   }
-  componentDidMount() { }
+  componentDidMount() {
+    const { language, navigation } = this.props
+    navigation.setParams({
+      title: transfer(language, 'login_agreement'),
+    })
+  }
 
   render() {
     return (
@@ -458,3 +469,11 @@ export default class Agreement extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    language: state.system.language,
+  }
+}
+
+export default connect(mapStateToProps)(Agreement)

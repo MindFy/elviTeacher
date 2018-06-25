@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import NextTouchableOpacity from './NextTouchableOpacity'
 import { common } from '../constants/common'
+import transfer from '../localization/utils'
 
 const styles = StyleSheet.create({
   titleStyle: {
@@ -14,8 +15,11 @@ const styles = StyleSheet.create({
 })
 
 class TKCheckCodeBtn extends Component {
-  state = {
-    title: '获取验证码',
+  constructor(props) {
+    super(props)
+    this.state = {
+      title: transfer(props.language, 'login_getCode'),
+    }
   }
 
   componentWillUnmount() {
@@ -41,7 +45,7 @@ class TKCheckCodeBtn extends Component {
     this.timerID = setInterval(() => {
       if (this.count === 0) {
         this.setState({
-          title: '获取验证码',
+          title: transfer(this.props.language, 'login_getCode'),
         })
         clearImmediate(this.timerID)
         this.timerID = null

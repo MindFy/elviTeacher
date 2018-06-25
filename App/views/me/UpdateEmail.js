@@ -19,6 +19,7 @@ import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -44,8 +45,12 @@ const styles = StyleSheet.create({
 
 class UpdateEmail extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '绑定邮箱',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}
@@ -67,8 +72,10 @@ class UpdateEmail extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, navigation, codeEmail } = this.props
-
+    const { dispatch, user, navigation, codeEmail, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_linkEmail'),
+    })
     dispatch(actions.findUser(schemas.findUser(user.id)))
     if (user.email) {
       dispatch(actions.updateEmailUpdate({ email: user.email, codeEmail }))
@@ -108,9 +115,9 @@ class UpdateEmail extends Component {
   }
 
   sendCodeEmail(count) {
-    const { dispatch, email, user } = this.props
+    const { dispatch, email, user, language } = this.props
     if (!email.length || !common.regEmail.test(email)) {
-      Toast.fail('请输入正确格式的邮箱')
+      Toast.fail(transfer(language, 'me_Email_correctFormat'))
       return
     }
     this.count = count
@@ -124,19 +131,19 @@ class UpdateEmail extends Component {
   confirmPress() {
     Keyboard.dismiss()
 
-    const { dispatch, email, codeEmail } = this.props
+    const { dispatch, email, codeEmail, language } = this.props
     if (!email.length) {
-      Toast.fail('请输入邮箱地址')
+      Toast.fail(transfer(language, 'me_enter_EmailAddress'))
       return
     }
 
     if (!common.regEmail.test(email)) {
-      Toast.fail('邮箱地址不正确')
+      Toast.fail(transfer(language, 'me_enter_EmailAddress'))
       return
     }
 
     if (!codeEmail.length) {
-      Toast.fail('请输入邮箱验证码')
+      Toast.fail(transfer(language, 'me_enter_EmailVerification'))
       return
     }
 
@@ -147,6 +154,7 @@ class UpdateEmail extends Component {
   }
 
   handleGetVerificateSmtpCodeRequest(nextProps) {
+    const { language } = this.props
     const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse } = nextProps
     if (!getVerificateSmtpCodeVisible && !this.showGetVerificateSmtpCodeResponse) return
 
@@ -158,21 +166,21 @@ class UpdateEmail extends Component {
         this.count()
         Toast.success(getVerificateSmtpCodeResponse.result.message)
       } else if (getVerificateSmtpCodeResponse.error.code === 4000150) {
-        Toast.fail('邮箱或服务类型错误')
+        Toast.fail(transfer(language, 'me_Email_serverTypeWrong'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
-        Toast.fail('一分钟内不能重复发送验证码')
+        Toast.fail(transfer(language, 'me_Email_repeatMinute'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000152) {
-        Toast.fail('邮箱已注册')
+        Toast.fail(transfer(language, 'me_Email_registered'))
       } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
+        Toast.fail(transfer(language, 'me_settings_PWinternetFailed'))
       } else {
-        Toast.fail('获取验证码失败，请重试')
+        Toast.fail(transfer(language, 'me_Email_getCodeFailed'))
       }
     }
   }
 
   render() {
-    const { email, codeEmail, updateEmailVisible, user } = this.props
+    const { email, codeEmail, updateEmailVisible, user, language } = this.props
 
     return (
       <ScrollView
@@ -187,7 +195,7 @@ class UpdateEmail extends Component {
         >
           <TKInputItem
             viewStyle={styles.email}
-            placeholder={'请输入邮箱地址'}
+            placeholder={transfer(language, 'me_enter_EmailAddress')}
             value={email}
             onChange={e => this.onChange(e, 'email')}
             editable={user.emailStatus !== common.user.status.bind}
@@ -195,7 +203,8 @@ class UpdateEmail extends Component {
           {
             user.emailStatus === common.user.status.bind ? null
               : <TextInputPwd
-                placeholder={'请输入邮箱验证码'}
+                language={language}
+                placeholder={transfer(language, 'me_enter_EmailVerification')}
                 value={codeEmail}
                 codeEmail={'code'}
                 onChange={e => this.onChange(e, 'code')}
@@ -213,7 +222,7 @@ class UpdateEmail extends Component {
             }}
             onPress={() => this.confirmPress()}
             disabled={user.emailStatus === common.user.status.bind ? true : updateEmailVisible}
-            caption={user.emailStatus === common.user.status.bind ? '邮箱已绑定' : '确定'}
+            caption={user.emailStatus === common.user.status.bind ? transfer(language, 'me_Email_binded') : transfer(language, 'me_ID_confirm')}
             theme={'gray'}
           />
 
@@ -227,15 +236,16 @@ class UpdateEmail extends Component {
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
-    email: store.user.email,
-    codeEmail: store.user.codeEmail,
+    user: state.user.user,
+    email: state.user.email,
+    codeEmail: state.user.codeEmail,
 
-    updateEmailVisible: store.user.updateEmailVisible,
-    getVerificateSmtpCodeVisible: store.user.getVerificateSmtpCodeVisible,
-    getVerificateSmtpCodeResponse: store.user.getVerificateSmtpCodeResponse,
+    updateEmailVisible: state.user.updateEmailVisible,
+    getVerificateSmtpCodeVisible: state.user.getVerificateSmtpCodeVisible,
+    getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
+    language: state.system.language,
   }
 }
 

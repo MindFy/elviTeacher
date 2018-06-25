@@ -120,8 +120,14 @@ const styles = StyleSheet.create({
 
 class Recharge extends Component {
   static navigationOptions(props) {
+    let title = ''
+    let right = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+      right = props.navigation.state.params.right
+    }
     return {
-      headerTitle: '充值',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.backBtn}
@@ -141,10 +147,18 @@ class Recharge extends Component {
         >
           <Text
             style={styles.headerRightText}
-          >历史记录</Text>
+          >{right}</Text>
         </NextTouchableOpacity>
       ),
     }
+  }
+
+  componentDidMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'home_deposit'),
+      right: transfer(language, 'recharge_historyList'),
+    })
   }
 
   componentWillUnmount() {
@@ -174,10 +188,10 @@ class Recharge extends Component {
   }
 
   _saveImageToCameraRoll = (rechargeAddress, qrApi) => {
-    const { language } = this.props
     if (rechargeAddress.length === 0) {
       return
     }
+    const { language } = this.props
     const uri = `${qrApi}${rechargeAddress}`
     if (common.IsIOS) {
       CameraRoll.saveToCameraRoll(uri).then(() => {
@@ -208,6 +222,7 @@ class Recharge extends Component {
   }
 
   qrPress = (rechargeAddress, coinName, qrApi) => {
+    const { language } = this.props
     const overlayView = (
       <Overlay.View
         style={{

@@ -5,12 +5,14 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native'
+import { connect } from 'react-redux'
 import FastImage from 'react-native-fast-image'
 import {
   common,
 } from '../../constants/common'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -56,10 +58,14 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Announcement extends Component {
+class Announcement extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '公告中心',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -79,6 +85,13 @@ export default class Announcement extends Component {
     this.state = {
       pictureHeight: 0,
     }
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'home_bullCenter'),
+    })
   }
 
   componentDidMount() {
@@ -121,3 +134,11 @@ export default class Announcement extends Component {
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    language: state.system.language,
+  }
+}
+
+export default connect(mapStateToProps)(Announcement)

@@ -17,8 +17,12 @@ import transfer from '../../localization/utils'
 
 class History extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: '历史记录',
+      headerTitle: title,
       headerLeft:
         (
           <NextTouchableOpacity
@@ -41,6 +45,13 @@ class History extends Component {
           </NextTouchableOpacity>
         ),
     }
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'recharge_historyList'),
+    })
   }
 
   componentDidMount() {
