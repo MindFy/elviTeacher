@@ -1,7 +1,7 @@
 export function findPaymentListRecharge(userId, skip, limit) {
   return `{
     find_payment(
-        skip: ${skip},
+        skip: ${skip * limit},
         limit: ${limit},
         where: {
           user_id: ${userId},
@@ -29,7 +29,7 @@ export function findPaymentListRecharge(userId, skip, limit) {
 export function findPaymentListWithdraw(userId, skip, limit) {
   return `{
     find_payment(
-        skip: ${skip},
+        skip: ${skip * limit},
         limit: ${limit},
         where: {
           user_id: ${userId},

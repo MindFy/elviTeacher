@@ -286,6 +286,7 @@
   "withdraw_address_exist": "提现地址已存在",
   "withdraw_address_error": "提现地址有误",
   "withdraw_error_after_pwd_changed": "修改密码后，24小时内禁止提币操作",
+  "withdraw_doesnt_exist": "提币记录不存在",
   "address_remark": "备注",
   "address_remark_required": "请填写备注",
   "address_add": "添加",

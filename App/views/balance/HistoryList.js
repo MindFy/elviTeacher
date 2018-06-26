@@ -12,8 +12,8 @@ import transfer from '../../localization/utils'
 
 class HistoryList extends Component {
   renderHeader() {
-    const { rechargeOrWithdraw, language } = this.props
-    if (rechargeOrWithdraw === common.payment.legalDeal) {
+    const { selectionBar, language } = this.props
+    if (selectionBar === 'otc') {
       return (
         <View style={{
           marginTop: common.margin10,
@@ -101,12 +101,12 @@ class HistoryList extends Component {
             color: common.textColor,
             fontSize: common.font12,
             width: '17%',
-            textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
+            textAlign: selectionBar === 'withdraw' ? 'center' : 'right',
             alignSelf: 'center',
           }}
         >{transfer(language, 'history_status')}</Text>
         {
-          rechargeOrWithdraw === common.payment.withdraw ?
+          selectionBar === 'withdraw' ?
             <Text
               style={{
                 color: common.textColor,
@@ -122,8 +122,8 @@ class HistoryList extends Component {
   }
 
   renderItem(rd, rid) {
-    const { rechargeOrWithdraw, cancelWithdraw, language } = this.props
-    if (rechargeOrWithdraw === common.payment.legalDeal) {
+    const { selectionBar, cancelWithdraw, language } = this.props
+    if (selectionBar === 'otc') {
       const createdAt = common.dfFullDate(rd.createdAt)
       let direct = ''
       let directColor = 'white'
@@ -188,7 +188,7 @@ class HistoryList extends Component {
     let status = ''
     switch (rd.status) {
       case '已完成':
-        status = rechargeOrWithdraw === common.payment.recharge
+        status = selectionBar === 'deposit'
           ? transfer(language, 'history_deposited') : transfer(language, 'history_withdrawed')
         break
       case '已取消':
@@ -243,12 +243,12 @@ class HistoryList extends Component {
             color: common.textColor,
             fontSize: common.font12,
             width: '17%',
-            textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
+            textAlign: selectionBar === 'withdraw' ? 'center' : 'right',
             alignSelf: 'center',
           }}
         >{status}</Text>
         {
-          rechargeOrWithdraw === common.payment.withdraw ?
+          selectionBar === 'withdraw' ?
             <NextTouchableOpacity
               style={{
                 width: '12%',

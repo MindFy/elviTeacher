@@ -1,7 +1,6 @@
 import { fork } from 'redux-saga/effects'
 import * as user from './user'
 import * as rebates from './rebates'
-import * as payment from './payment'
 import * as legalDeal from './legalDeal'
 import getRose from './dealstat'
 import * as deal from './deal'
@@ -28,6 +27,7 @@ import {
   requestBalanceValuation,
 } from './balance'
 import * as recharge from './recharge'
+import * as history from './history'
 
 export default function* rootSaga() {
   yield [
@@ -55,12 +55,6 @@ export default function* rootSaga() {
     fork(rebates.requestInvitationCount),
     fork(rebates.requestRebatesCountTK),
     fork(rebates.requestRebatesCountBTC),
-
-    fork(payment.cancelWithdraw),
-    fork(payment.findPaymentListRecharge),
-    fork(payment.findPaymentListWithdraw),
-    fork(payment.recharge),
-    fork(payment.withdraw),
 
     fork(legalDeal.legalDealCancel),
     fork(legalDeal.confirmPay),
@@ -126,5 +120,10 @@ export default function* rootSaga() {
     addressAdd.requestAddressAdd(),
     addressAdd.requsetCheck2GoogleAuthWatcher(),
     addressAdd.requestGetCode(),
+
+    history.requestDeposit(),
+    history.requestWithdraw(),
+    history.requestOtc(),
+    history.withdrawCancel(),
   ]
 }
