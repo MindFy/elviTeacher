@@ -168,7 +168,7 @@ class ForgotPwd extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        Toast.success(getVerificateCodeResponse.result.message)
+        Toast.success(transfer(language, 'get_code_succeed'))
         this.setState({ nextBtnDisabled: false })
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail(transfer(language, 'login_numberOrTypeError'))

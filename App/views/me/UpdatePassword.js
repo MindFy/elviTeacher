@@ -166,7 +166,7 @@ class UpdatePassword extends Component {
     } else {
       this.showUpdatePasswordResponse = false
       if (updatePasswordResponse.success) {
-        Toast.success(updatePasswordResponse.result.message)
+        Toast.success(transfer(language, 'me_change_pwd_succeed'))
         navigation.goBack()
       } else if (updatePasswordResponse.error.code === 4030501) {
         Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
