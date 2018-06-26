@@ -308,6 +308,7 @@
   "history_withdrawing": "Withdrawing",
   "history_cancelled": "Cancelled",
   "history_pending": "Pending",
+  "history_refused": "Refused",
   "history_list_loading": "Loading data…",
   "history_list_noMoreData": "No related data for now",
   "history_list_reload": "Click to reload",
