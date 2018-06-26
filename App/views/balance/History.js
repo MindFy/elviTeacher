@@ -113,9 +113,9 @@ class History extends Component {
       cancelled: transfer(language, 'history_cancelled'),
       withdrawing: transfer(language, 'history_withdrawing'),
       pending: transfer(language, 'history_pending'),
-      loading: transfer(language, 'history_list_loading'),
-      noMoreData: transfer(language, 'history_list_noMoreData'),
-      reload: transfer(language, 'history_list_reload'),
+      loading: transfer(language, 'exchange_dataInLoading'),
+      noMoreData: transfer(language, 'exchange_dataNoMoreData'),
+      reload: transfer(language, 'exchange_dataFailureText'),
     }
 
     return (

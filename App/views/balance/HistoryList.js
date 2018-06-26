@@ -3,14 +3,12 @@ import {
   View,
   Text,
 } from 'react-native'
-import { connect } from 'react-redux'
 import RefreshListView from 'react-native-refresh-list-view'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
-import transfer from '../../localization/utils'
 
-class HistoryList extends Component {
+export default class HistoryList extends Component {
   renderHeader() {
     const { rechargeOrWithdraw, language } = this.props
     if (rechargeOrWithdraw === common.payment.legalDeal) {
@@ -285,18 +283,10 @@ class HistoryList extends Component {
           color: common.textColor,
           fontSize: common.font14,
         }}
-        footerRefreshingText={transfer(language, 'exchange_dataInLoading')}
-        footerFailureText={transfer(language, 'exchange_dataFailureText')}
-        footerNoMoreDataText={transfer(language, 'exchange_dataNoMoreData')}
+        footerRefreshingText={language.loading}
+        footerFailureText={language.reload}
+        footerNoMoreDataText={language.noMoreData}
       />
     )
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    language: state.system.language,
-  }
-}
-
-export default connect(mapStateToProps)(HistoryList)
