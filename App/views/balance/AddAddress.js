@@ -121,7 +121,7 @@ class AddAddress extends Component {
     }
 
     if (this.props.loading && !nextProps.loading) {
-      Toast.fail(transfer(language, 'add_address_succeed'))
+      Toast.success(transfer(language, 'add_address_succeed'))
       Overlay.hide(this.overlayViewKey)
       dispatch(requestWithdrawAddress(findAddress(user.id)))
       navigation.goBack()
