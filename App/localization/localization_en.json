@@ -200,6 +200,7 @@
   "me_settings_changePW": "Change Password",
   "me_settings_version": "Version",
   "me_settings_PWold": "Old password",
+  "me_settings_oldPwdLength0": "Please enter old password",
   "me_settings_PWnew": "New password",
   "me_settings_PWnewAgain": "Re-enter password",
   "me_settings_PWreminder": "Two passwords should match",

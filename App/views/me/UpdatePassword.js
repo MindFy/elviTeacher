@@ -118,7 +118,7 @@ class UpdatePassword extends Component {
 
     const { oldPassword, newPassword, newPasswordAgain, language } = this.props
     if (!oldPassword.length) {
-      Toast.fail(transfer(language, 'me_settings_PWold'))
+      Toast.fail(transfer(language, 'me_settings_oldPwdLength0'))
       return
     }
     if (!newPassword.length || !common.regPassword.test(newPassword)
@@ -129,7 +129,6 @@ class UpdatePassword extends Component {
           paddingRight: common.margin15,
         },
         text: transfer(language, 'me_settings_PWillegal'),
-        position: 'bottom',
       })
       return
     }

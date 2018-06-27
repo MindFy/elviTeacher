@@ -200,6 +200,7 @@
   "me_settings_changePW":"修改密码",
   "me_settings_version":"版本显示",
   "me_settings_PWold":"旧密码",
+  "me_settings_oldPwdLength0": "请输入旧密码",
   "me_settings_PWnew":"输入密码",
   "me_settings_PWnewAgain":"再次输入密码",
   "me_settings_PWreminder":"请确保再次输入密码一致",
