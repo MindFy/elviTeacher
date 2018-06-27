@@ -4,7 +4,6 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
 import {
@@ -191,62 +190,57 @@ class UpdatePassword extends Component {
       language,
     } = this.props
     return (
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior="padding"
+      <ScrollView
+        style={styles.container}
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustContentInsets={false}
       >
-        <ScrollView
-          style={styles.container}
-          keyboardShouldPersistTaps="handled"
-          automaticallyAdjustContentInsets={false}
-        >
-          <TextInputPwd
-            language={language}
-            viewStyle={styles.input}
-            placeholder={transfer(language, 'me_settings_PWold')}
-            value={oldPassword}
-            onChange={e => this.onChange(e, 'oldPassword')}
-            maxLength={common.textInputMaxLenPwd}
-            secureTextEntry
-          />
-          <TextInputPwd
-            language={language}
-            viewStyle={styles.input}
-            placeholder={transfer(language, 'me_settings_PWnew')}
-            value={newPassword}
-            type={'newPassword'}
-            secureTextEntry
-            onChange={e => this.onChange(e, 'newPassword')}
-            maxLength={common.textInputMaxLenPwd}
-            inputTip={transfer(language, 'me_settings_PWreminder')}
-          />
-          <TextInputPwd
-            language={language}
-            viewStyle={styles.input}
-            placeholder={transfer(language, 'me_settings_PWnewAgain')}
-            value={newPasswordAgain}
-            type={'newPasswordAgain'}
-            newPassword={newPassword}
-            newPasswordAgain={newPasswordAgain}
-            onChange={e => this.onChange(e, 'newPasswordAgain')}
-            maxLength={common.textInputMaxLenPwd}
-            inputTip={transfer(language, 'me_settings_PWreminder')}
-            secureTextEntry
-          />
+        <TextInputPwd
+          language={language}
+          viewStyle={styles.input}
+          placeholder={transfer(language, 'me_settings_PWold')}
+          value={oldPassword}
+          onChange={e => this.onChange(e, 'oldPassword')}
+          maxLength={common.textInputMaxLenPwd}
+          secureTextEntry
+        />
+        <TextInputPwd
+          language={language}
+          viewStyle={styles.input}
+          placeholder={transfer(language, 'me_settings_PWnew')}
+          value={newPassword}
+          type={'newPassword'}
+          secureTextEntry
+          onChange={e => this.onChange(e, 'newPassword')}
+          maxLength={common.textInputMaxLenPwd}
+          inputTip={transfer(language, 'me_settings_PWreminder')}
+        />
+        <TextInputPwd
+          language={language}
+          viewStyle={styles.input}
+          placeholder={transfer(language, 'me_settings_PWnewAgain')}
+          value={newPasswordAgain}
+          type={'newPasswordAgain'}
+          newPassword={newPassword}
+          newPasswordAgain={newPasswordAgain}
+          onChange={e => this.onChange(e, 'newPasswordAgain')}
+          maxLength={common.textInputMaxLenPwd}
+          inputTip={transfer(language, 'me_settings_PWreminder')}
+          secureTextEntry
+        />
 
-          <TKButton
-            style={styles.confirmBtn}
-            onPress={() => this.confirmPress()}
-            disabled={updatePasswordVisible}
-            caption={transfer(language, 'me_ID_confirm')}
-            theme={'gray'}
-          />
+        <TKButton
+          style={styles.confirmBtn}
+          onPress={() => this.confirmPress()}
+          disabled={updatePasswordVisible}
+          caption={transfer(language, 'me_ID_confirm')}
+          theme={'gray'}
+        />
 
-          <TKSpinner
-            isVisible={updatePasswordVisible}
-          />
-        </ScrollView>
-      </KeyboardAvoidingView>
+        <TKSpinner
+          isVisible={updatePasswordVisible}
+        />
+      </ScrollView>
     )
   }
 }
