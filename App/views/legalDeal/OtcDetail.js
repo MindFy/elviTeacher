@@ -383,7 +383,7 @@ class OtcDetail extends Component {
         Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
         const msg = this.errors[confirmPayError.code]
-        if (msg) Toast.fail(msg)
+        if (msg) Toast.fail(transfer(language, msg))
         else Toast.fail(transfer(language, 'OtcDetail_confirm_failed'))
       }
     }
