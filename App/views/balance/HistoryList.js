@@ -149,6 +149,9 @@ export default class HistoryList extends Component {
       case '待审核':
         status = language.pending
         break
+      case '已拒绝':
+        status = language.refused
+        break
       default:
         break
     }

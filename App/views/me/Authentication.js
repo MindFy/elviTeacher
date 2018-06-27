@@ -265,7 +265,7 @@ class Authentication extends Component {
     const { language } = this.props
     if (idCardAuthResponse && idCardAuthResponse !== this.props.idCardAuthResponse) {
       if (idCardAuthResponse.success) {
-        Toast.success(idCardAuthResponse.result)
+        Toast.success(transfer(language, 'me_ID_Submit_success'))
       } else if (idCardAuthResponse.error.code === 4000150) {
         Toast.fail(transfer(language, 'me_ID_AuthFailedInfo'))
       } else if (idCardAuthResponse.error.code === 4000151) {

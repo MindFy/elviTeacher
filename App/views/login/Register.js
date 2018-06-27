@@ -240,7 +240,7 @@ class Register extends Component {
     } else {
       this.showGetVerificateCodeResponse = false
       if (getVerificateCodeResponse.success) {
-        Toast.success(getVerificateCodeResponse.result.message)
+        Toast.success(transfer(language, 'get_code_succeed'))
       } else if (getVerificateCodeResponse.error.code === 4000101) {
         Toast.fail(transfer(language, 'login_numberOrTypeError'))
       } else if (getVerificateCodeResponse.error.code === 4000102) {

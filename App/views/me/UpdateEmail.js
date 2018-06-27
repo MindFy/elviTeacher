@@ -164,7 +164,7 @@ class UpdateEmail extends Component {
       this.showGetVerificateSmtpCodeResponse = false
       if (getVerificateSmtpCodeResponse.success) {
         this.count()
-        Toast.success(getVerificateSmtpCodeResponse.result.message)
+        Toast.success(transfer(language, 'get_code_succeed'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000150) {
         Toast.fail(transfer(language, 'me_Email_serverTypeWrong'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
