@@ -3,17 +3,46 @@ import { connect } from 'react-redux'
 import {
   View,
   Image,
-  StatusBar,
-  ScrollView,
+  StyleSheet,
 } from 'react-native'
 import { RefreshState } from 'react-native-refresh-list-view'
+import {
+  Toast,
+} from 'teaset'
 import { common } from '../../constants/common'
 import TKSelectionBar from '../../components/TKSelectionBar'
+import TKSpinner from '../../components/TKSpinner'
 import HistoryList from './HistoryList'
-import actions from '../../actions/index'
+import {
+  requestDeposit,
+  requestWithdraw,
+  requestOtc,
+  withdrawCancel,
+  withdrawUpdate,
+  depositPageUpdate,
+  withdrawPageUpdate,
+  otcPageUpdate,
+} from '../../actions/history'
 import schemas from '../../schemas/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+
+const styles = StyleSheet.create({
+  headerLeft: {
+    height: 40,
+    width: 40,
+    justifyContent: 'center',
+  },
+  headerLeftImage: {
+    marginLeft: 10,
+    width: 10,
+    height: 20,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+  },
+})
 
 class History extends Component {
   static navigationOptions(props) {
@@ -23,28 +52,33 @@ class History extends Component {
     }
     return {
       headerTitle: title,
-      headerLeft:
-        (
-          <NextTouchableOpacity
-            style={{
-              height: common.w40,
-              width: common.w40,
-              justifyContent: 'center',
-            }}
-            activeOpacity={common.activeOpacity}
-            onPress={() => props.navigation.goBack()}
-          >
-            <Image
-              style={{
-                marginLeft: common.margin10,
-                width: common.w10,
-                height: common.h20,
-              }}
-              source={require('../../assets/arrow_left_left.png')}
-            />
-          </NextTouchableOpacity>
-        ),
+      headerLeft: (
+        <NextTouchableOpacity
+          style={styles.headerLeft}
+          activeOpacity={common.activeOpacity}
+          onPress={() => props.navigation.goBack()}
+        >
+          <Image
+            style={styles.headerLeftImage}
+            source={require('../../assets/arrow_left_left.png')}
+          />
+        </NextTouchableOpacity>
+      ),
     }
+  }
+  constructor() {
+    super()
+    this.state = {
+      depositState: RefreshState.Idle,
+      withdrawState: RefreshState.Idle,
+      otcState: RefreshState.Idle,
+      selectionBar: 'deposit',
+    }
+    this.limit = 10
+    this.depositSkip = 0
+    this.withdrawSkip = 0
+    this.otcSkip = 0
+    this.firstRequestDeposit = true
   }
 
   componentWillMount() {
@@ -55,48 +89,119 @@ class History extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, loggedInResult } = this.props
 
-    if (user) {
-      dispatch(actions.findPaymentListRecharge(
-        schemas.findPaymentListRecharge(user.id, 0, common.payment.limitRecharge)
-        , RefreshState.HeaderRefreshing))
-      dispatch(actions.findPaymentListWithdraw(
-        schemas.findPaymentListWithdraw(user.id, 0, common.payment.limitWithdraw)
-        , RefreshState.HeaderRefreshing))
-      dispatch(actions.findLegalDeal(schemas.findOtcList({
-        id: user.id,
-        skip: 0,
-        limit: common.legalDeal.limit,
-      }), RefreshState.HeaderRefreshing))
-    }
+    dispatch(requestDeposit(schemas.findPaymentListRecharge(
+      loggedInResult.id,
+      0,
+      this.limit,
+    )))
+    dispatch(requestWithdraw(schemas.findPaymentListWithdraw(
+      loggedInResult.id,
+      0,
+      this.limit,
+    )))
+    dispatch(requestOtc(schemas.findOtcList({
+      id: loggedInResult.id,
+      skip: 0,
+      limit: this.limit,
+    })))
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.handleRequestDeposit(nextProps)
+    this.handleRequestWithdraw(nextProps)
+    this.handleRequestOtc(nextProps)
+    this.handleWithdrawCancel(nextProps)
   }
 
   componentWillUnmount() {
-    const { dispatch, rechargeOrWithdraw } = this.props
-    if (rechargeOrWithdraw !== common.payment.recharge) {
-      dispatch(actions.rechargeOrWithdrawUpdate({
-        rechargeOrWithdraw: common.payment.recharge,
-      }))
+    const { dispatch } = this.props
+    dispatch(depositPageUpdate(0))
+    dispatch(withdrawPageUpdate(0))
+    dispatch(otcPageUpdate(0))
+  }
+
+  errors = {
+    4000612: 'withdraw_doesnt_exist',
+  }
+
+  handleRequestDeposit(nextProps) {
+    const { depositLoading, depositError, deposit } = nextProps
+    if (!depositLoading && this.props.depositLoading) {
+      this.firstRequestDeposit = false
+      this.firstRequest = false
+      if (depositError) {
+        this.setState({ depositState: RefreshState.Idle })
+      } else if (deposit) {
+        const length = deposit.length < (this.depositSkip + 1) * this.limit
+        this.setState({ depositState: !length ? RefreshState.Idle : RefreshState.NoMoreData })
+      }
     }
-    dispatch(actions.skipPaymentUpdate({
-      skipRecharge: 0,
-      skipWithdraw: 0,
-      refreshStateRecharge: RefreshState.Idle,
-      refreshStateWithdraw: RefreshState.Idle,
-    }))
-    dispatch(actions.skipLegalDealUpdate({
-      skip: 0,
-      refreshState: RefreshState.Idle,
-    }))
+  }
+
+  handleRequestWithdraw(nextProps) {
+    const { withdrawLoading, withdrawError, withdraw } = nextProps
+    if (!withdrawLoading && this.props.withdrawLoading) {
+      this.firstRequest = false
+      if (withdrawError) {
+        this.setState({ withdrawState: RefreshState.Idle })
+      } else if (withdraw) {
+        const length = withdraw.length < (this.withdrawSkip + 1) * this.limit
+        this.setState({ withdrawState: !length ? RefreshState.Idle : RefreshState.NoMoreData })
+      }
+    }
+  }
+
+  handleWithdrawCancel(nextProps) {
+    const { dispatch, withdrawCancelResult, withdrawCancelError, language } = nextProps
+
+    if (withdrawCancelResult && withdrawCancelResult !== this.props.withdrawCancelResult) {
+      Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
+      const newWithdraw = this.props.withdraw.concat()
+      newWithdraw[this.withdrawCancelIndex].status = '已取消'
+      dispatch(withdrawUpdate(newWithdraw))
+    }
+    if (withdrawCancelError && withdrawCancelError !== this.props.withdrawCancelError) {
+      if (withdrawCancelError.message === common.badNet) {
+        Toast.fail(transfer(language, 'OtcDetail_net_error'))
+      } else {
+        const msg = this.errors[withdrawCancelError.code]
+        if (msg) Toast.fail(transfer(language, msg))
+        else Toast.fail(transfer(language, 'OtcDetail_failed_to_cancel_the_order'))
+      }
+    }
+  }
+
+  handleRequestOtc(nextProps) {
+    const { otcLoading, otcError, otc } = nextProps
+    if (!otcLoading && this.props.otcLoading) {
+      this.firstRequest = false
+      if (otcError) {
+        this.setState({ otcState: RefreshState.Idle })
+      } else if (otc) {
+        const length = otc.length < (this.otcSkip + 1) * this.limit
+        this.setState({ otcState: !length ? RefreshState.Idle : RefreshState.NoMoreData })
+      }
+    }
   }
 
   render() {
-    const { dispatch, rechargeOrWithdraw, paymentRecharge, paymentWithdraw, legalDeal, user,
-      skipLegalDeal, skipRecharge, skipWithdraw, refreshStateLegalDeal, refreshStateRecharge,
-      refreshStateWithdraw,
+    const {
+      dispatch,
+      deposit,
+      withdraw,
+      otc,
+      loggedInResult,
       language,
+      withdrawCancelLoading,
     } = this.props
+    const {
+      selectionBar,
+      depositState,
+      withdrawState,
+      otcState,
+    } = this.state
 
     const listLanguage = {
       date: transfer(language, 'history_date'),
@@ -119,163 +224,127 @@ class History extends Component {
     }
 
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: common.bgColor,
-        }}
-      >
-        <StatusBar
-          barStyle={'light-content'}
-        />
-
+      <View style={styles.container}>
         <TKSelectionBar
           titles={[transfer(language, 'history_deposit'),
             transfer(language, 'history_withdrawal'),
             transfer(language, 'history_otc')]}
           onPress={(e) => {
             if (e.title === transfer(language, 'history_deposit')) {
-              dispatch(actions.rechargeOrWithdrawUpdate({
-                rechargeOrWithdraw: common.payment.recharge,
-              }))
+              this.setState({ selectionBar: 'deposit' })
             } else if (e.title === transfer(language, 'history_withdrawal')) {
-              dispatch(actions.rechargeOrWithdrawUpdate({
-                rechargeOrWithdraw: common.payment.withdraw,
-              }))
+              this.setState({ selectionBar: 'withdraw' })
             } else if (e.title === transfer(language, 'history_otc')) {
-              dispatch(actions.rechargeOrWithdrawUpdate({
-                rechargeOrWithdraw: common.payment.legalDeal,
-              }))
+              this.setState({ selectionBar: 'otc' })
             }
           }}
         />
 
         {
-          rechargeOrWithdraw === common.payment.recharge
+          selectionBar === 'deposit'
             ? <HistoryList
               language={listLanguage}
-              data={paymentRecharge}
-              rechargeOrWithdraw={rechargeOrWithdraw}
-              refreshState={refreshStateRecharge}
+              data={deposit}
+              selectionBar={selectionBar}
+              refreshState={depositState}
               onHeaderRefresh={() => {
-                if (refreshStateRecharge !== RefreshState.NoMoreData
-                  || refreshStateRecharge !== RefreshState.FooterRefreshing) {
-                  if (user) {
-                    dispatch(actions.findPaymentListRecharge(
-                      schemas.findPaymentListRecharge(
-                        user.id, 0, common.payment.limitRecharge,
-                      ), RefreshState.HeaderRefreshing))
-                  }
-                }
+                if (this.firstRequestDeposit) return
+                this.setState({ depositState: RefreshState.HeaderRefreshing })
+                this.depositSkip = 0
+                dispatch(depositPageUpdate(this.depositSkip))
+                dispatch(requestDeposit(schemas.findPaymentListRecharge(
+                  loggedInResult.id,
+                  this.depositSkip,
+                  this.limit,
+                )))
               }}
               onFooterRefresh={() => {
-                if (user && refreshStateRecharge !== RefreshState.NoMoreData
-                  || refreshStateRecharge !== RefreshState.HeaderRefreshing) {
-                  if (user) {
-                    dispatch(actions.findPaymentListRecharge(
-                      schemas.findPaymentListRecharge(
-                        user.id,
-                        skipRecharge * common.payment.limitRecharge,
-                        common.payment.limitRecharge,
-                      ), RefreshState.FooterRefreshing))
-                  }
-                }
+                if (this.firstRequestDeposit) return
+                this.setState({ depositState: RefreshState.FooterRefreshing })
+                this.depositSkip += 1
+                dispatch(depositPageUpdate(this.depositSkip))
+                dispatch(requestWithdraw(schemas.findPaymentListRecharge(
+                  loggedInResult.id,
+                  this.depositSkip,
+                  this.limit,
+                )))
               }}
             /> : null
         }
         {
-          rechargeOrWithdraw === common.payment.withdraw
+          selectionBar === 'withdraw'
             ? <HistoryList
               language={listLanguage}
-              data={paymentWithdraw}
-              rechargeOrWithdraw={rechargeOrWithdraw}
-              refreshState={refreshStateWithdraw}
+              data={withdraw}
+              selectionBar={selectionBar}
+              refreshState={withdrawState}
               onHeaderRefresh={() => {
-                if (refreshStateWithdraw !== RefreshState.NoMoreData
-                  || refreshStateWithdraw !== RefreshState.FooterRefreshing) {
-                  if (user) {
-                    dispatch(actions.findPaymentListWithdraw(
-                      schemas.findPaymentListWithdraw(
-                        user.id, 0, common.payment.limitWithdraw,
-                      ), RefreshState.HeaderRefreshing))
-                  }
-                }
+                this.setState({ withdrawState: RefreshState.HeaderRefreshing })
+                this.withdrawSkip = 0
+                dispatch(withdrawPageUpdate(this.withdrawSkip))
+                dispatch(requestWithdraw(schemas.findPaymentListWithdraw(
+                  loggedInResult.id,
+                  this.withdrawSkip,
+                  this.limit,
+                )))
               }}
               onFooterRefresh={() => {
-                if (user && refreshStateWithdraw !== RefreshState.NoMoreData
-                  || refreshStateWithdraw !== RefreshState.HeaderRefreshing) {
-                  if (user) {
-                    dispatch(actions.findPaymentListWithdraw(
-                      schemas.findPaymentListWithdraw(
-                        user.id,
-                        skipWithdraw * common.payment.limitWithdraw,
-                        common.payment.limitWithdraw,
-                      ), RefreshState.FooterRefreshing))
-                  }
-                }
+                this.setState({ withdrawState: RefreshState.FooterRefreshing })
+                this.withdrawSkip += 1
+                dispatch(withdrawPageUpdate(this.withdrawSkip))
+                dispatch(requestWithdraw(schemas.findPaymentListWithdraw(
+                  loggedInResult.id,
+                  this.withdrawSkip,
+                  this.limit,
+                )))
               }}
               cancelWithdraw={(rd, rid) => {
-                const temp = paymentWithdraw.concat()
-                temp[rid].status = '已取消'
-                dispatch(actions.cancelWithdraw({ id: rd.id }, temp))
+                this.withdrawCancelIndex = rid
+                dispatch(withdrawCancel({ id: rd.id }))
               }}
             /> : null
         }
         {
-          rechargeOrWithdraw === common.payment.legalDeal
+          selectionBar === 'otc'
             ? <HistoryList
               language={listLanguage}
-              data={legalDeal}
-              rechargeOrWithdraw={rechargeOrWithdraw}
-              refreshState={refreshStateLegalDeal}
+              data={otc}
+              selectionBar={selectionBar}
+              refreshState={otcState}
               onHeaderRefresh={() => {
-                if (refreshStateLegalDeal !== RefreshState.NoMoreData
-                  || refreshStateLegalDeal !== RefreshState.FooterRefreshing) {
-                  if (user) {
-                    dispatch(actions.findLegalDeal(schemas.findOtcList({
-                      id: user.id,
-                      skip: 0,
-                      limit: common.legalDeal.limit,
-                    }), RefreshState.HeaderRefreshing))
-                  }
-                }
+                this.setState({ otcState: RefreshState.HeaderRefreshing })
+                this.otcSkip = 0
+                dispatch(otcPageUpdate(this.otcSkip))
+                dispatch(requestOtc(schemas.findOtcList({
+                  id: loggedInResult.id,
+                  skip: this.otcSkip,
+                  limit: this.limit,
+                })))
               }}
               onFooterRefresh={() => {
-                if (user && refreshStateLegalDeal !== RefreshState.NoMoreData
-                  || refreshStateLegalDeal !== RefreshState.HeaderRefreshing) {
-                  if (user) {
-                    dispatch(actions.findLegalDeal(schemas.findOtcList({
-                      id: user.id,
-                      skip: skipLegalDeal,
-                      limit: common.legalDeal.limit,
-                    }), RefreshState.FooterRefreshing))
-                  }
-                }
+                this.setState({ otcState: RefreshState.FooterRefreshing })
+                this.otcSkip += 1
+                dispatch(otcPageUpdate(this.otcSkip))
+                dispatch(requestOtc(schemas.findOtcList({
+                  id: loggedInResult.id,
+                  skip: this.otcSkip,
+                  limit: this.limit,
+                })))
               }}
             /> : null
         }
-
-        <ScrollView />
+        <TKSpinner isVisible={withdrawCancelLoading} />
       </View>
     )
   }
 }
 
-function mapStateToProps(store) {
+function mapStateToProps(state) {
   return {
-    user: store.user.user,
-    skipRecharge: store.payment.skipRecharge,
-    refreshStateRecharge: store.payment.refreshStateRecharge,
-    paymentRecharge: store.payment.paymentRecharge,
-    skipWithdraw: store.payment.skipWithdraw,
-    refreshStateWithdraw: store.payment.refreshStateWithdraw,
-    paymentWithdraw: store.payment.paymentWithdraw,
-    rechargeOrWithdraw: store.payment.rechargeOrWithdraw,
+    ...state.history,
 
-    legalDeal: store.legalDeal.legalDeal,
-    skipLegalDeal: store.legalDeal.skip,
-    refreshStateLegalDeal: store.legalDeal.refreshState,
-    language: store.system.language,
+    loggedInResult: state.authorize.loggedInResult,
+    language: state.system.language,
   }
 }
 

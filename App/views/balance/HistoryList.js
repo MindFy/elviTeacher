@@ -2,182 +2,132 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
+  StyleSheet,
 } from 'react-native'
-import { connect } from 'react-redux'
 import RefreshListView from 'react-native-refresh-list-view'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
-import transfer from '../../localization/utils'
 
-class HistoryList extends Component {
+const styles = StyleSheet.create({
+  header: {
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    flexDirection: 'row',
+  },
+  date: {
+    color: common.textColor,
+    fontSize: common.font12,
+    width: '38%',
+    alignSelf: 'center',
+  },
+  headerCoin: {
+    color: common.textColor,
+    fontSize: common.font12,
+    width: '20%',
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  rowCoin: {
+    color: common.textColor,
+    fontSize: common.font12,
+    width: '15%',
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  otcAmount: {
+    flex: 1,
+    color: common.textColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+    textAlign: 'right',
+  },
+  headerText: {
+    color: common.textColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  status: {
+    color: common.textColor,
+    fontSize: common.font12,
+    width: '17%',
+    alignSelf: 'center',
+    textAlign: 'center',
+  },
+  action: {
+    color: common.textColor,
+    fontSize: common.font12,
+    alignSelf: 'center',
+    textAlign: 'right',
+    width: '12%',
+  },
+  cancelBtn: {
+    width: '12%',
+    alignSelf: 'center',
+  },
+  cancel: {
+    fontSize: common.font12,
+    textAlign: 'right',
+  },
+})
+
+export default class HistoryList extends Component {
   renderHeader() {
-    const { rechargeOrWithdraw, language } = this.props
-    if (rechargeOrWithdraw === common.payment.legalDeal) {
+    const { selectionBar, language } = this.props
+    if (selectionBar === 'otc') {
       return (
-        <View style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin15,
-          marginRight: common.margin15,
-          flexDirection: 'row',
-        }}
-        >
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '38%',
-              alignSelf: 'center',
-              textAlign: 'left',
-            }}
-          >{transfer(language, 'history_date')}</Text>
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '20%',
-              textAlign: 'center',
-              alignSelf: 'center',
-            }}
-          >{transfer(language, 'history_coin')}</Text>
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '20%',
-              textAlign: 'center',
-              alignSelf: 'center',
-            }}
-          >{transfer(language, 'history_type')}</Text>
-          <Text
-            style={{
-              flex: 1,
-              color: common.textColor,
-              fontSize: common.font12,
-              textAlign: 'right',
-              alignSelf: 'center',
-            }}
-          >{transfer(language, 'history_amount')}</Text>
+        <View style={styles.header}>
+          <Text style={styles.date}>{language.date}</Text>
+          <Text style={styles.headerCoin}>{language.coin}</Text>
+          <Text style={styles.headerCoin}>{language.type}</Text>
+          <Text style={styles.otcAmount}>{language.amount}</Text>
         </View>
       )
     }
     return (
-      <View style={{
-        marginTop: common.margin10,
-        marginLeft: common.margin15,
-        marginRight: common.margin15,
-        flexDirection: 'row',
-      }}
-      >
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-            width: '38%',
-            alignSelf: 'center',
-            textAlign: 'left',
-          }}
-        >{transfer(language, 'history_date')}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-            width: '15%',
-            textAlign: 'center',
-            alignSelf: 'center',
-          }}
-        >{transfer(language, 'history_coin')}</Text>
-        <Text
-          style={{
-            flex: 1,
-            color: common.textColor,
-            fontSize: common.font12,
-            textAlign: 'center',
-            alignSelf: 'center',
-          }}
-        >{transfer(language, 'history_amount')}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-            width: '17%',
-            textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
-            alignSelf: 'center',
-          }}
-        >{transfer(language, 'history_status')}</Text>
-        {
-          rechargeOrWithdraw === common.payment.withdraw ?
-            <Text
-              style={{
-                color: common.textColor,
-                fontSize: common.font12,
-                width: '12%',
-                textAlign: 'right',
-                alignSelf: 'center',
-              }}
-            >{transfer(language, 'history_action')}</Text> : null
-        }
+      <View style={styles.header}>
+        <Text style={styles.date}>{language.date}</Text>
+        <Text style={styles.rowCoin}>{language.coin}</Text>
+        <Text style={[styles.headerText, {
+          flex: 1,
+        }]}
+        >{language.amount}</Text>
+        <Text style={[styles.status, {
+          textAlign: selectionBar === 'withdraw' ? 'center' : 'right',
+        }]}
+        >{language.status}</Text>
+        {selectionBar === 'withdraw' ?
+          <Text style={styles.action}>{language.action}</Text>
+          : null}
       </View>
     )
   }
 
   renderItem(rd, rid) {
-    const { rechargeOrWithdraw, cancelWithdraw, language } = this.props
-    if (rechargeOrWithdraw === common.payment.legalDeal) {
+    const { selectionBar, cancelWithdraw, language } = this.props
+    if (selectionBar === 'otc') {
       const createdAt = common.dfFullDate(rd.createdAt)
       let direct = ''
       let directColor = 'white'
       const quantity = new BigNumber(rd.quantity).toFixed(2)
       if (rd.direct === common.buy) {
         directColor = common.redColor
-        direct = transfer(language, 'history_buy')
+        direct = language.buy
       } else if (rd.direct === common.sell) {
         directColor = common.greenColor
-        direct = transfer(language, 'history_sell')
+        direct = language.sell
       }
       return (
-        <View style={{
-          marginTop: common.margin10,
-          marginLeft: common.margin15,
-          marginRight: common.margin15,
-          flexDirection: 'row',
-        }}
-        >
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '38%',
-              alignSelf: 'center',
-            }}
-          >{createdAt}</Text>
-          <Text
-            style={{
-              color: common.textColor,
-              fontSize: common.font12,
-              width: '20%',
-              textAlign: 'center',
-              alignSelf: 'center',
-            }}
-          >{common.legalDeal.token}</Text>
-          <Text
-            style={{
-              color: directColor,
-              fontSize: common.font12,
-              width: '20%',
-              alignSelf: 'center',
-              textAlign: 'center',
-            }}
+        <View style={styles.header}>
+          <Text style={styles.date}>{createdAt}</Text>
+          <Text style={styles.headerCoin}>{common.legalDeal.token}</Text>
+          <Text style={[styles.headerCoin, {
+            color: directColor,
+          }]}
           >{direct}</Text>
-          <Text
-            style={{
-              flex: 1,
-              color: common.textColor,
-              fontSize: common.font12,
-              alignSelf: 'center',
-              textAlign: 'right',
-            }}
-          >{quantity}</Text>
+          <Text style={styles.otcAmount}>{quantity}</Text>
         </View>
       )
     }
@@ -188,84 +138,44 @@ class HistoryList extends Component {
     let status = ''
     switch (rd.status) {
       case '已完成':
-        status = rechargeOrWithdraw === common.payment.recharge
-          ? transfer(language, 'history_deposited') : transfer(language, 'history_withdrawed')
+        status = selectionBar === 'deposit' ? language.deposited : language.withdrawed
         break
       case '已取消':
-        status = transfer(language, 'history_cancelled')
+        status = language.cancelled
         break
       case '提币中':
-        status = transfer(language, 'history_withdrawing')
+        status = language.withdrawing
         break
       case '待审核':
-        status = transfer(language, 'history_pending')
+        status = language.pending
         break
       default:
         break
     }
     return (
-      <View style={{
-        marginTop: common.margin10,
-        marginLeft: common.margin15,
-        marginRight: common.margin15,
-        flexDirection: 'row',
-      }}
-      >
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-            width: '38%',
-            alignSelf: 'center',
-            textAlign: 'left',
-          }}
-        >{createdAt}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-            width: '15%',
-            textAlign: 'center',
-            alignSelf: 'center',
-          }}
-        >{rd.token.name}</Text>
-        <Text
-          style={{
-            flex: 1,
-            color: common.textColor,
-            fontSize: common.font12,
-            textAlign: 'center',
-            alignSelf: 'center',
-          }}
+      <View style={styles.header}>
+        <Text style={styles.date}>{createdAt}</Text>
+        <Text style={styles.rowCoin}>{rd.token.name}</Text>
+        <Text style={[styles.headerText, {
+          flex: 1,
+        }]}
         >{amount}</Text>
-        <Text
-          style={{
-            color: common.textColor,
-            fontSize: common.font12,
-            width: '17%',
-            textAlign: rechargeOrWithdraw === common.payment.withdraw ? 'center' : 'right',
-            alignSelf: 'center',
-          }}
+        <Text style={[styles.status, {
+          textAlign: selectionBar === 'withdraw' ? 'center' : 'right',
+        }]}
         >{status}</Text>
-        {
-          rechargeOrWithdraw === common.payment.withdraw ?
-            <NextTouchableOpacity
-              style={{
-                width: '12%',
-                alignSelf: 'center',
-              }}
-              onPress={() => cancelWithdraw(rd, rid)}
-              disabled={btnDisabled}
-            >
-              <Text
-                style={{
-                  color: btnTitleColor,
-                  fontSize: common.font12,
-                  textAlign: 'right',
-                }}
-              >{transfer(language, 'history_cancel')}</Text>
-            </NextTouchableOpacity> : null
-        }
+        {selectionBar === 'withdraw' ?
+          <NextTouchableOpacity
+            style={styles.cancelBtn}
+            onPress={() => cancelWithdraw(rd, rid)}
+            disabled={btnDisabled}
+          >
+            <Text style={[styles.cancel, {
+              color: btnTitleColor,
+            }]}
+            >{language.cancel}</Text>
+          </NextTouchableOpacity>
+          : null}
       </View>
     )
   }
@@ -285,18 +195,10 @@ class HistoryList extends Component {
           color: common.textColor,
           fontSize: common.font14,
         }}
-        footerRefreshingText={transfer(language, 'exchange_dataInLoading')}
-        footerFailureText={transfer(language, 'exchange_dataFailureText')}
-        footerNoMoreDataText={transfer(language, 'exchange_dataNoMoreData')}
+        footerRefreshingText={language.loading}
+        footerFailureText={language.reload}
+        footerNoMoreDataText={language.noMoreData}
       />
     )
   }
 }
-
-function mapStateToProps(state) {
-  return {
-    language: state.system.language,
-  }
-}
-
-export default connect(mapStateToProps)(HistoryList)

@@ -31,15 +31,6 @@ import {
   skipLegalDealUpdate,
 } from './legalDeal'
 import {
-  cancelWithdraw,
-  findPaymentListRecharge,
-  findPaymentListWithdraw,
-  recharge,
-  withdraw,
-  rechargeOrWithdrawUpdate,
-  skipPaymentUpdate,
-} from './payment'
-import {
   checkVerificateCode,
   getGoogleAuth,
   getVerificateCode,
@@ -116,14 +107,6 @@ const actions = {
   havedPay,
   legalDealUpdate,
   skipLegalDealUpdate,
-
-  cancelWithdraw,
-  findPaymentListRecharge,
-  findPaymentListWithdraw,
-  recharge,
-  withdraw,
-  rechargeOrWithdrawUpdate,
-  skipPaymentUpdate,
 
   checkVerificateCode,
   getGoogleAuth,

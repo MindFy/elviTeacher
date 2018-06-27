@@ -4,7 +4,6 @@ import asset from './asset'
 import deal from './deal'
 import dealstat from './dealstat'
 import legalDeal from './legalDeal'
-import payment from './payment'
 import rebates from './rebates'
 import user from './user'
 import ui from './ui'
@@ -22,6 +21,7 @@ import otcDetail from './otcDetail'
 import balance from './balance'
 import recharge from './recharge'
 import system from './system'
+import history from './history'
 
 const rootReducer = combineReducers({
   authorize,
@@ -31,7 +31,6 @@ const rootReducer = combineReducers({
   deal,
   dealstat,
   legalDeal,
-  payment,
   rebates,
   user,
   ui,
@@ -47,6 +46,7 @@ const rootReducer = combineReducers({
   balance,
   recharge,
   system,
+  history,
 })
 
 export default rootReducer
