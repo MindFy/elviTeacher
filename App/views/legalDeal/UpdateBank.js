@@ -306,7 +306,7 @@ class UpdateBank extends Component {
         return
       }
       const msg = this.errors[updateBankError.code]
-      if (msg) Toast.fail(msg)
+      if (msg) Toast.fail(transfer(language, msg))
       else Toast.fail(transfer(language, 'UpdateBank_blind_card_failed'))
     }
   }
