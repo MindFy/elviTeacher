@@ -11,9 +11,9 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   header: {
-    marginTop: common.margin10,
-    marginLeft: common.margin15,
-    marginRight: common.margin15,
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
     flexDirection: 'row',
   },
   date: {
