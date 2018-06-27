@@ -63,6 +63,8 @@ const initialState = {
   updateBankResponse: undefined,
 
   updateEmailVisible: false,
+  updateEmailResult: null,
+  updateEmailError: null,
 
   findAuditmanageData: undefined,
 
@@ -318,18 +320,24 @@ export default function user(state = initialState, action) {
       nextState = {
         ...state,
         updateEmailVisible: true,
+        updateEmailResult: null,
+        updateEmailError: null,
       }
       break
     case constants.UPDATE_EMAIL_SUCCEED:
       nextState = {
         ...state,
         updateEmailVisible: false,
+        updateEmailResult: action.payload,
+        updateEmailError: null,
       }
       break
     case constants.UPDATE_EMAIL_FAILED:
       nextState = {
         ...state,
         updateEmailVisible: false,
+        updateEmailResult: null,
+        updateEmailError: action.payload,
       }
       break
     case constants.UPDATE_EMAIL_UPDATE:

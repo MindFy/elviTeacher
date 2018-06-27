@@ -5,9 +5,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native'
 import {
-  Toast,
-} from 'teaset'
-import {
   common,
   storeSave,
 } from '../constants/common'
@@ -158,28 +155,9 @@ export function* updateEmail() {
     const request = yield take(constants.UPDATE_EMAIL_REQUEST)
     const response = yield call(api.updateEmail, request.data)
     if (response.success) {
-      Toast.success(response.result)
-      DeviceEventEmitter.emit(common.noti.updateEmail)
-      yield put({ type: constants.UPDATE_EMAIL_SUCCEED, response })
+      yield put({ type: constants.UPDATE_EMAIL_SUCCEED, payload: response.result })
     } else {
-      yield put({ type: constants.UPDATE_EMAIL_FAILED, response })
-      if (response.error.message === common.badNet) {
-        Toast.fail('网络连接失败，请稍后重试')
-      } else if (response.error.code === 4000101) {
-        Toast.fail('验证码不能为空')
-      } else if (response.error.code === 4000102) {
-        Toast.fail('验证码错误')
-      } else if (response.error.code === 4000103) {
-        Toast.fail('验证码已过期，请重新获取')
-      } else if (response.error.code === 4000160) {
-        Toast.fail('邮箱格式不正确')
-      } else if (response.error.code === 4000161) {
-        Toast.fail('邮箱已被注册')
-      } else if (response.error.code === 4000162) {
-        Toast.fail('账户不存在')
-      } else {
-        Toast.fail('邮箱绑定失败')
-      }
+      yield put({ type: constants.UPDATE_EMAIL_FAILED, payload: response.error })
     }
   }
 }
