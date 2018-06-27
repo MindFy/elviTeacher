@@ -29,14 +29,14 @@ import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
   headerLeft: {
-    height: common.getH(40),
-    width: common.getH(40),
+    height: 40,
+    width: 40,
     justifyContent: 'center',
   },
   headerLeftImage: {
-    marginLeft: common.getH(10),
-    width: common.getH(10),
-    height: common.getH(20),
+    marginLeft: 10,
+    width: 10,
+    height: 20,
   },
   container: {
     flex: 1,
