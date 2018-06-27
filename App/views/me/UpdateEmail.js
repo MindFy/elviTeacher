@@ -7,6 +7,8 @@ import {
   DeviceEventEmitter,
   KeyboardAvoidingView,
   Keyboard,
+  View,
+  Text,
 } from 'react-native'
 import {
   Toast,
@@ -40,6 +42,17 @@ const styles = StyleSheet.create({
     marginTop: common.margin10,
     marginLeft: common.margin10,
     marginRight: common.margin10,
+  },
+  tipsContainer: {
+    marginTop: common.margin15,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  tipsContent: {
+    marginTop: common.margin10,
+    color: common.textColor,
+    fontSize: common.font10,
+    lineHeight: 14,
   },
 })
 
@@ -179,6 +192,21 @@ class UpdateEmail extends Component {
     }
   }
 
+  renderTip = () => (
+    <View style={{ marginHorizontal: common.margin10 }}>
+      <Text
+        style={styles.tipsContainer}
+      >
+        {transfer(this.props.language, 'me_Email_pleaes_note')}
+      </Text>
+      <Text
+        style={styles.tipsContent}
+      >
+        {transfer(this.props.language, 'me_Email_note_content')}
+      </Text>
+    </View>
+  )
+
   render() {
     const { email, codeEmail, updateEmailVisible, user, language } = this.props
 
@@ -225,6 +253,7 @@ class UpdateEmail extends Component {
             theme={'gray'}
           />
 
+          {user.emailStatus !== common.user.status.bind && this.renderTip()}
 
           <TKSpinner
             isVisible={updateEmailVisible}
