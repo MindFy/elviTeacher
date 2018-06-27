@@ -310,7 +310,7 @@ class WithDraw extends Component {
     const { getCodeResult, getCodeError, language } = nextProps
 
     if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
-      Toast.fail(transfer(language, 'get_code_succeed'))
+      Toast.success(transfer(language, 'get_code_succeed'))
     }
     if (getCodeError && getCodeError !== this.props.getCodeError) {
       if (getCodeError.message === common.badNet) {
