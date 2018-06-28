@@ -134,7 +134,7 @@
   "exchange_dataNoMoreData": "All data loaded",
   "exchcnge_noData": "No related data for now",
   "exchange_orderPriceMoreThanCurrentPrice": "The price you ordered is 10% more than the current price, are you sure you want to order?",
-  "exchange_orderPriceLowerThanCurrentPrice": "The price you ordered is 30% lower than the current price, are you sure you want to order?",
+  "exchange_orderPriceLowerThanCurrentPrice": "The price you ordered is 10% lower than the current price, are you sure you want to order?",
   "me_me": "Account",
   "me_myAccount": "My Account",
   "me_login": "Please login",

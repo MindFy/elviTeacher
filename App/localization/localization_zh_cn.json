@@ -134,7 +134,7 @@
   "exchange_dataNoMoreData": "已加载全部数据",
   "exchcnge_noData": "暂时没有相关数据",
   "exchange_orderPriceMoreThanCurrentPrice": "您委托的价格超过了当前价格的10%，是否确认委托？",
-  "exchange_orderPriceLowerThanCurrentPrice": "您委托的价格低于了当前价格的30%，是否确认委托？",
+  "exchange_orderPriceLowerThanCurrentPrice": "您委托的价格低于了当前价格的10%，是否确认委托？",
   "me_me": "我的",
   "me_myAccount": "我的",
   "me_login":"请登录",

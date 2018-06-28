@@ -203,9 +203,9 @@ class Deal extends Component {
       return
     }
     if ((!idx && new BigNumber(selectedPair.lastprice)
-      .multipliedBy('1.3').isLessThanOrEqualTo(price))
+      .multipliedBy('1.1').isLessThanOrEqualTo(price))
       || (idx && new BigNumber(selectedPair.lastprice)
-        .multipliedBy('0.7').isGreaterThanOrEqualTo(price))
+        .multipliedBy('0.9').isGreaterThanOrEqualTo(price))
     ) {
       let alertTitle = ''
       if (!idx) {
