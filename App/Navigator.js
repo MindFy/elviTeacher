@@ -32,6 +32,7 @@ import Language from './views/me/Language'
 import UpdatePassword from './views/me/UpdatePassword'
 import Otc from './views/legalDeal/Otc'
 import OtcDetail from './views/legalDeal/OtcDetail'
+import ReceiverInfo from './views/legalDeal/ReceiverInfo'
 import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
@@ -185,6 +186,7 @@ const TabBarStack = StackNavigator(
     UpdatePassword,
     Otc,
     OtcDetail,
+    ReceiverInfo,
     Payment,
     UpdateBank,
     Banner,

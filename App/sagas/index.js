@@ -28,6 +28,7 @@ import {
 } from './balance'
 import * as recharge from './recharge'
 import * as history from './history'
+import watcherRequestReceiverInfo from './receiverInfo'
 
 export default function* rootSaga() {
   yield [
@@ -125,5 +126,7 @@ export default function* rootSaga() {
     history.requestWithdraw(),
     history.requestOtc(),
     history.withdrawCancel(),
+
+    watcherRequestReceiverInfo(),
   ]
 }
