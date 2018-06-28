@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
-import { common } from '../../constants/common'
+import { common, storeSave } from '../../constants/common'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import TKInputItem from '../../components/TKInputItem'
@@ -179,10 +179,14 @@ class Login extends PureComponent {
     if (loggedIn !== this.props.loggedIn) {
       Toast.success(transfer(language, 'login_success'))
       const user = loggedInResult
-      dispatch(actions.findUser(schemas.findUser(user.id)))
-      dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-      cache.setObject('isLoginIn', 'true')
-      screenProps.dismiss()
+      storeSave(common.user.string, user, (e) => {
+        if (!e) {
+          dispatch(actions.findUser(schemas.findUser(user.id)))
+          dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+          cache.setObject('isLoginIn', 'true')
+          screenProps.dismiss()
+        }
+      })
     }
 
     const errs = {

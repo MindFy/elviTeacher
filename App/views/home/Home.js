@@ -15,6 +15,8 @@ import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
 import {
   common,
+  storeRead,
+  storeDelete,
 } from '../../constants/common'
 import HomeMarket from './HomeMarket'
 import HomeSwiper from './HomeSwiper'
@@ -61,8 +63,9 @@ class Home extends Component {
       SplashScreen.hide()
     }, 200)
     cache.setObject('currentComponentVisible', 'Home')
-    this.refreshData()
     const { dispatch } = this.props
+    dispatch(actions.sync())
+    this.refreshData()
     this.timeId = setInterval(() => {
       const page = cache.getObject('currentComponentVisible')
       if (page === 'Home' || page === 'Deal') {
@@ -89,6 +92,7 @@ class Home extends Component {
         break
       }
     }
+    this.handleSync(props)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -115,6 +119,45 @@ class Home extends Component {
       this.refreshData()
     }
   }
+
+  handleSync = (nextProps) => {
+    if (this.props.syncing && !nextProps.syncing) {
+      const { syncSuccess } = nextProps
+      if (syncSuccess) {
+        this.syncSuccess()
+      } else {
+        this.syncFailed()
+      }
+    }
+  }
+
+  syncSuccess = () => {
+    if (this.isNeedAutoLogin()) {
+      storeRead(common.user.string, (error, result) => {
+        if (!error) {
+          const user = JSON.parse(result)
+          const { dispatch } = this.props
+          dispatch(actions.findUserUpdate(user))
+          dispatch(actions.find(schemas.findUser(user.id)))
+        }
+      })
+    }
+  }
+
+  syncFailed = () => {
+    storeDelete(common.user.string, (error) => {
+      if (!error) {
+        const { dispatch } = this.props
+        dispatch(actions.findUserUpdate(undefined))
+        dispatch(actions.findAssetListUpdate({
+          asset: [],
+          amountVisible: undefined,
+        }))
+      }
+    })
+  }
+
+  isNeedAutoLogin = () => true
 
   checkUpdate() {
     const currentVersion = packageJson.jsVersion
