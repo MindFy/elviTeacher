@@ -118,7 +118,7 @@ class Otc extends Component {
         Toast.fail(transfer(language, 'Otc_please_bind_bank_card_first'))
         navigation.navigate('UpdateBank')
       } else if (error.code === 4001416) {
-        Toast.fail(Toast.fail(transfer(language, 'Otc_system_does_not_provide_tradable_merchants')))
+        Toast.fail(transfer(language, 'Otc_system_does_not_provide_tradable_merchants'))
       } else if (error.code === 4001417) {
         Toast.fail(transfer(language, 'Otc_merchant_does_not_provide_bank_card_information'))
       } else if (error.code === 4001418) {
