@@ -214,8 +214,8 @@ class Deal extends Component {
         alertTitle = transfer(language, 'exchange_orderPriceLowerThanCurrentPrice')
       }
       Alert.alert(
-        alertTitle,
         '',
+        alertTitle,
         [{
           text: transfer(language, 'withdrawal_cancel'),
           onPress: () => {},
