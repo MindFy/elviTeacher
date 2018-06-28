@@ -106,6 +106,15 @@ export default class HomeMarket extends Component {
     }).cloneWithRows(data)
   }
 
+  marketIcons = {
+    TK: require('../../assets/market_TK.png'),
+    BTC: require('../../assets/market_BTC.png'),
+    ETH: require('../../assets/market_ETH.png'),
+    ETC: require('../../assets/market_ETC.png'),
+    LTC: require('../../assets/market_LTC.png'),
+    EIEC: require('../../assets/market_EIEC.png'),
+  }
+
   renderHeader() {
     const { language } = this.props
     return (
@@ -142,6 +151,7 @@ export default class HomeMarket extends Component {
     common.precision(rd.goods.name, rd.currency.name, (p) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
     })
+    const iconSource = this.marketIcons[rd.goods.name]
 
     return (
       <NextTouchableOpacity
@@ -152,7 +162,7 @@ export default class HomeMarket extends Component {
         <View style={styles.rowIconView}>
           <Image
             style={styles.rowIcon}
-            source={require('../../assets/111.png')}
+            source={iconSource}
           />
         </View>
 
