@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Echarts from 'native-echarts'
 import { common } from '../../constants/common'
 import transfer from '../../localization/utils'
+import BigNumber from 'bignumber.js';
 
 export default class Depth extends Component {
   shouldComponentUpdate(nextProps) {
@@ -21,18 +22,18 @@ export default class Depth extends Component {
     }
 
     for (let i = 0; i < data.buy.length; i++) {
-      prices.push(data.buy[i].price)
-      amountsBuy.push(data.buy[i].totalamount)
+      prices.push(new BigNumber(data.buy[i].price).toFixed())
+      amountsBuy.push(new BigNumber(data.buy[i].totalamount).toFixed())
       amountsSell.unshift('-')
     }
 
-    prices.push(data.lastprice)
+    prices.push(new BigNumber(data.lastprice).toFixed())
     amountsBuy.push(0)
     amountsSell.push(0)
 
     for (let i = 0; i < data.sell.length; i++) {
-      prices.push(data.sell[i].price)
-      amountsSell.push(data.sell[i].totalamount)
+      prices.push(new BigNumber(data.sell[i].price).toFixed())
+      amountsSell.push(new BigNumber(data.sell[i].totalamount).toFixed())
       amountsBuy.push('-')
     }
 
@@ -220,11 +221,11 @@ export default class Depth extends Component {
             quality = 'Amount'
           }
           if (params[0].data !== '-') {
-            const name = Number(params[0].name).toString()
+            const name = params[0].name
             const data = params[0].data
             return `${price}: ${name}<br />${quality}: ${data}`
           }
-          const name = Number(params[1].name).toString()
+          const name = params[1].name
           const data = params[1].data
           return `${price}: ${name}<br />${quality}: ${data}`
         },
