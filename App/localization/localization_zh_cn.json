@@ -122,6 +122,7 @@
   "exchange_loadingData": "加载中..",
   "exchange_noOrders": "暂无委托单",
   "exchange_cancelOrder": "撤单",
+  "exchange_complete": "已完成",
   "exchange_canceled": "已取消",
   "exchange_changed": "已成交",
   "exchange_lastTime": "时间",
