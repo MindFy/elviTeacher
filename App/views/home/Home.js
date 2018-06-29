@@ -116,13 +116,14 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
+      this.props.dispatch(actions.sync())
       this.refreshData()
     }
   }
 
   handleSync = (nextProps) => {
-    if (this.props.syncing && !nextProps.syncing) {
-      const { syncSuccess } = nextProps
+    if (this.props.authorize.syncing && !nextProps.authorize.syncing) {
+      const { syncSuccess } = nextProps.authorize
       if (syncSuccess) {
         this.syncSuccess()
       } else {
@@ -133,12 +134,13 @@ class Home extends Component {
 
   syncSuccess = () => {
     if (this.isNeedAutoLogin()) {
-      storeRead(common.user.string, (error, result) => {
-        if (!error) {
+      storeRead(common.user.string, (result) => {
+        if (result) {
+          cache.setObject('isLoginIn', 'true')
           const user = JSON.parse(result)
           const { dispatch } = this.props
           dispatch(actions.findUserUpdate(user))
-          dispatch(actions.find(schemas.findUser(user.id)))
+          dispatch(actions.findUser(schemas.findUser(user.id)))
         }
       })
     }
@@ -147,6 +149,7 @@ class Home extends Component {
   syncFailed = () => {
     storeDelete(common.user.string, (error) => {
       if (!error) {
+        cache.removeObject('isLoginIn')
         const { dispatch } = this.props
         dispatch(actions.findUserUpdate(undefined))
         dispatch(actions.findAssetListUpdate({
@@ -306,6 +309,7 @@ function mapStateToProps(store) {
     ...store.home,
     selectedPair: store.exchange.selectedPair,
     user: store.user.user,
+    authorize: store.authorize,
     language: store.system.language,
   }
 }
