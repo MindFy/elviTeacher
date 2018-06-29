@@ -22,6 +22,7 @@ import balance from './balance'
 import recharge from './recharge'
 import system from './system'
 import history from './history'
+import receiverInfo from './receiverInfo'
 
 const rootReducer = combineReducers({
   authorize,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   user,
   ui,
   detailDeal,
+  receiverInfo,
   withdraw,
   addressAdd,
   orders,

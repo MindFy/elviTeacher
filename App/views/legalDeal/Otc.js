@@ -132,7 +132,13 @@ class Otc extends Component {
         Toast.fail(transfer(language, 'Otc_order_pending'))
       }
     } else if (type === 'buy') {
-      Toast.success(transfer(language, 'Otc_buy_success'), 5000)
+      Toast.success(transfer(language, 'Otc_buy_success'), 3000)
+      setTimeout(() => {
+        this.props.navigation.navigate('ReceiverInfo', {
+          receiverId: response.result.id,
+          titleName: transfer(language, 'payment_b'),
+        })
+      }, 3000)
     } else {
       Toast.success(transfer(language, 'Otc_sell_success'))
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
