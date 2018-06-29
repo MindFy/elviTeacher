@@ -124,6 +124,8 @@ class Otc extends Component {
       } else if (error.code === 4001418) {
         navigation.navigate('Authentication')
         Toast.fail(transfer(language, 'Otc_please_perform_authentication_first'))
+      } else if (error.code === 4001419) {
+        Toast.fail(transfer(language, 'Otc_wait_legalDeal_more_than_2'))
       } else if (error.message === common.badNet) {
         Toast.fail(transfer(language, 'Otc_net_error'))
       } else if (error.code === 4031601) {
