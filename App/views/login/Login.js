@@ -179,14 +179,18 @@ class Login extends PureComponent {
     if (loggedIn !== this.props.loggedIn) {
       Toast.success(transfer(language, 'login_success'))
       const user = loggedInResult
-      storeSave(common.user.string, user, (e) => {
-        if (!e) {
-          dispatch(actions.findUser(schemas.findUser(user.id)))
-          dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
-          cache.setObject('isLoginIn', 'true')
-          screenProps.dismiss()
-        }
-      })
+      dispatch(actions.findUser(schemas.findUser(user.id)))
+      dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+      cache.setObject('isLoginIn', 'true')
+      screenProps.dismiss()
+      // storeSave(common.user.string, user, (e) => {
+      //   if (!e) {
+      //     dispatch(actions.findUser(schemas.findUser(user.id)))
+      //     dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+      //     cache.setObject('isLoginIn', 'true')
+      //     screenProps.dismiss()
+      //   }
+      // })
     }
 
     const errs = {
