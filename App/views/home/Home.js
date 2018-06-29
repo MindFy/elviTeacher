@@ -8,6 +8,7 @@ import {
   StyleSheet,
   RefreshControl,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
@@ -64,7 +65,7 @@ class Home extends Component {
     }, 200)
     cache.setObject('currentComponentVisible', 'Home')
     const { dispatch } = this.props
-    // dispatch(actions.sync())
+    this.isNeedAutoLogin(() => { dispatch(actions.sync()) })
     this.refreshData()
     this.timeId = setInterval(() => {
       const page = cache.getObject('currentComponentVisible')
@@ -116,7 +117,7 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
-      // this.props.dispatch(actions.sync())
+      this.isNeedAutoLogin(() => { this.props.dispatch(actions.sync()) })
       this.refreshData()
     }
   }
@@ -133,17 +134,15 @@ class Home extends Component {
   }
 
   syncSuccess = () => {
-    if (this.isNeedAutoLogin()) {
-      storeRead(common.user.string, (result) => {
-        if (result) {
-          cache.setObject('isLoginIn', 'true')
-          const user = JSON.parse(result)
-          const { dispatch } = this.props
-          dispatch(actions.findUserUpdate(user))
-          dispatch(actions.findUser(schemas.findUser(user.id)))
-        }
-      })
-    }
+    storeRead(common.user.string, (result) => {
+      if (result) {
+        cache.setObject('isLoginIn', 'true')
+        const user = JSON.parse(result)
+        const { dispatch } = this.props
+        dispatch(actions.findUserUpdate(user))
+        dispatch(actions.findUser(schemas.findUser(user.id)))
+      }
+    })
   }
 
   syncFailed = () => {
@@ -160,7 +159,10 @@ class Home extends Component {
     })
   }
 
-  isNeedAutoLogin = () => true
+  isNeedAutoLogin = async (callBack) => {
+    const isAutoLogin = await AsyncStorage.getItem('isAutoLogin')
+    if (isAutoLogin === 'true') callBack()
+  }
 
   checkUpdate() {
     const currentVersion = packageJson.jsVersion
@@ -186,7 +188,7 @@ class Home extends Component {
                 },
                 {
                   text: transfer(language, 'home_updateCancel'),
-                  onPress: () => {},
+                  onPress: () => { },
                 },
               ],
             )

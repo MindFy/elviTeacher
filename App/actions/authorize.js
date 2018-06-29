@@ -23,3 +23,10 @@ export function clearError() {
     type: LOGIN_FLOW_CLEAR_ERROR,
   }
 }
+
+export function toggleAutoLogin(payload) {
+  return {
+    type: 'authorize/toggle_auto_login',
+    payload,
+  }
+}
