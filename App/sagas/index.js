@@ -6,7 +6,7 @@ import getRose from './dealstat'
 import * as deal from './deal'
 import * as asset from './asset'
 import * as address from './address'
-import loginFlow, { syncWatcher } from './authorize'
+import loginFlow, { syncWatcher, watchRequestLoginout } from './authorize'
 import {
   openOrderRequest,
   orderHistoryRequest,
@@ -38,6 +38,7 @@ export default function* rootSaga() {
 
     loginFlow(),
     syncWatcher(),
+    watchRequestLoginout(),
     fork(user.checkVerificateCode),
     fork(user.getGoogleAuth),
     fork(user.getVerificateCode),

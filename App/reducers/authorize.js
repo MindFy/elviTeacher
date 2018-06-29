@@ -16,6 +16,7 @@ const initialState = {
     mobile: '',
     password: '',
   },
+  isAutoLogin: false,
   error: null,
   loading: false,
   loggedIn: false,
@@ -107,6 +108,12 @@ export default function authorize(state = initialState, action) {
         syncing: false,
         loggedIn: false,
         syncSuccess: false,
+      }
+      break
+    case 'authorize/toggle_auto_login':
+      nextState = {
+        ...state,
+        isAutoLogin: payload,
       }
       break
     case 'notify/clear_reducer':
