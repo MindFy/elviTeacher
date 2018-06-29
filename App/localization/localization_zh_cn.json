@@ -340,6 +340,7 @@
   "Otc_system_does_not_provide_tradable_merchants": "系统未提供可交易的商家",
   "Otc_merchant_does_not_provide_bank_card_information": "商家未提供银行卡信息",
   "Otc_please_perform_authentication_first": "请先进行身份认证",
+  "Otc_wait_legalDeal_more_than_2": "您尚有2笔订单未完成，请先完成后再继续交易",
   "Otc_enter_the_number_of_purchases": "请输入买入数量",
   "Otc_enter_the_quantity_sold": "请输入卖出数量",
   "Otc_minimum_purchase_amount": "买入数量最少为",

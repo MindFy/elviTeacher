@@ -340,6 +340,7 @@
   "Otc_system_does_not_provide_tradable_merchants": "No available trader provided.",
   "Otc_merchant_does_not_provide_bank_card_information": "The trader doesn't provide bank card information",
   "Otc_please_perform_authentication_first": "Please process ID verification first.",
+  "Otc_wait_legalDeal_more_than_2": "您尚有2笔订单未完成，请先完成后再继续交易",
   "Otc_enter_the_number_of_purchases": "Please enter the buying amount",
   "Otc_enter_the_quantity_sold": "Please enter the selling amount",
   "Otc_minimum_purchase_amount": "minimum amount ",
