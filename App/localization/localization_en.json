@@ -122,6 +122,7 @@
   "exchange_loadingData": "Loading…",
   "exchange_noOrders": "No order",
   "exchange_cancelOrder": "Cancel",
+  "exchange_complete": "Complete",
   "exchange_canceled": "Canceled",
   "exchange_changed": "Closed",
   "exchange_lastTime": "Date",

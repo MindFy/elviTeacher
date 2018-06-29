@@ -4,7 +4,6 @@ import {
   View,
   Image,
   Text,
-  Alert,
   StyleSheet,
 } from 'react-native'
 import Toast from 'teaset/components/Toast/Toast'
@@ -20,8 +19,6 @@ import {
   orderHistoryRequest,
   orderHistrorySetError,
   updateSelectedTitle,
-  toggleIsShowTotalPrice,
-  toggleIsShowDealAmount,
   requestCancelOrder,
   requestCancelOrderSetError,
   updateOpenOrderPage,
@@ -125,63 +122,25 @@ const OOCStyles = StyleSheet.create({
   },
 })
 
-
 // orderHistoryCellStyles
 const OHCStyles = StyleSheet.create({
-  headerContainer: {
-    marginTop: common.margin10,
-    marginLeft: common.margin10,
-    marginRight: common.margin10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  headerMarket: {
-    flex: 1,
-    color: common.placeholderColor,
-    fontSize: common.font12,
-  },
-  headerSConatiner: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  headerLeft: {
-    fontSize: common.font12,
-    textAlign: 'right',
-  },
-  Slash: {
-    color: common.placeholderColor,
-    fontSize: common.font12,
-  },
-  headerRight: {
-    fontSize: common.font12,
-  },
-  cellContainer: {
-    marginTop: common.margin10,
-    marginLeft: common.margin10,
-    marginRight: common.margin10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  goodsCurrency: {
-    flex: 1,
-    fontSize: common.font10,
-    color: common.textColor,
-    alignSelf: 'center',
-    textAlign: 'left',
-  },
-  averagePriceOrPrice: {
-    flex: 1,
-    fontSize: common.font10,
-    color: common.textColor,
-    alignSelf: 'center',
-    textAlign: 'center',
-  },
-  dealledOrdealAmount: {
-    flex: 1,
+  status: {
+    position: 'absolute',
+    right: common.margin5,
     fontSize: common.font10,
     color: common.textColor,
     alignSelf: 'center',
     textAlign: 'right',
+  },
+  priceView: {
+    flex: 1,
+    flexDirection: 'row',
+    borderBottomColor: common.borderColor,
+    borderBottomWidth: 1,
+  },
+  amountView: {
+    flex: 1,
+    flexDirection: 'row',
   },
 })
 
@@ -370,18 +329,6 @@ class Orders extends Component {
     }))
   }
 
-  cancelAllOrder = () => {
-    const { openOrders } = this.props
-    if (openOrders.length === 0) {
-      return
-    }
-    Alert.alert('需求未明确')
-    // dispatch(requestCancelAllOrder({
-    //   goods_id: 1,
-    //   currency_id: 2,
-    // }))
-  }
-
   topBarPress(e) {
     const { dispatch } = this.props
     if (e.index === 0) {
@@ -402,97 +349,6 @@ class Orders extends Component {
   }
 
   keyExtractor = (item, index) => index
-
-  handleClickShowTotalPrice = (e) => {
-    const { dispatch } = this.props
-    if (e === 'totalPrice') {
-      dispatch(toggleIsShowTotalPrice())
-    } else if (e === 'dealAmount') {
-      dispatch(toggleIsShowDealAmount())
-    }
-  }
-
-  renderOpenOrderHeader = () => (
-    <View style={OOCStyles.headerStyle}>
-      <View />
-      <NextTouchableOpacity
-        activeOpacity={common.activeOpacity}
-        onPress={this.cancelAllOrder}
-      >
-        <Text style={OOCStyles.header}>
-          全部撤单
-        </Text>
-      </NextTouchableOpacity>
-    </View>
-  )
-
-
-  renderOrderHistoryHeader = () => {
-    const { isShowTotalPrice, isShowDealAmount, language } = this.props
-
-    const rightColor =
-      isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
-    const leftColor =
-      !isShowTotalPrice ? { color: common.btnTextColor } : { color: common.placeholderColor }
-
-    const daRightColor =
-      isShowDealAmount ? { color: common.btnTextColor } : { color: common.placeholderColor }
-    const daLeftColor =
-      !isShowDealAmount ? { color: common.btnTextColor } : { color: common.placeholderColor }
-
-    return (
-      <View style={OHCStyles.headerContainer}>
-        <Text style={OHCStyles.headerMarket}>
-          {transfer(language, 'market_market')}
-        </Text>
-        <View style={OHCStyles.headerSConatiner}>
-          <NextTouchableOpacity
-            style={{ flex: 1 }}
-            disabled={!isShowTotalPrice}
-            activeOpacity={common.activeOpacity}
-            onPress={() => { this.handleClickShowTotalPrice('totalPrice') }}
-          >
-            <Text style={[OHCStyles.headerLeft, leftColor]}>
-              {transfer(language, 'exchange_averagePrice')}
-            </Text>
-          </NextTouchableOpacity>
-          <Text style={OHCStyles.Slash}> / </Text>
-          <NextTouchableOpacity
-            style={{ flex: 1 }}
-            disabled={isShowTotalPrice}
-            activeOpacity={common.activeOpacity}
-            onPress={() => { this.handleClickShowTotalPrice('totalPrice') }}
-          >
-            <Text style={[OHCStyles.headerRight, rightColor]}>
-              {transfer(language, 'exchange_price')}
-            </Text>
-          </NextTouchableOpacity>
-        </View>
-        <View style={OHCStyles.headerSConatiner}>
-          <NextTouchableOpacity
-            style={{ flex: 1 }}
-            disabled={!isShowDealAmount}
-            activeOpacity={common.activeOpacity}
-            onPress={() => { this.handleClickShowTotalPrice('dealAmount') }}
-          >
-            <Text style={[OHCStyles.headerLeft, daLeftColor]}>
-              {transfer(language, 'exchange_changedAmount')}
-            </Text>
-          </NextTouchableOpacity>
-          <Text style={OHCStyles.Slash}> / </Text>
-          <NextTouchableOpacity
-            disabled={isShowDealAmount}
-            activeOpacity={common.activeOpacity}
-            onPress={() => { this.handleClickShowTotalPrice('dealAmount') }}
-          >
-            <Text style={[OHCStyles.headerRight, daRightColor]}>
-              {transfer(language, 'exchange_money')}
-            </Text>
-          </NextTouchableOpacity>
-        </View>
-      </View>
-    )
-  }
 
   renderOpenOrderCell = (item, idx, language) => {
     const createdAt = common.dfFullDate(item.createdAt)
@@ -564,56 +420,55 @@ class Orders extends Component {
   }
 
   renderOrderHistoryCell = (item) => {
+    const { language } = this.props
     const goodsCurrency = `${item.goods.name}/${item.currency.name}`
-    let averagePriceOrPrice
-    let dealledOrdealAmount
-
-    const { isShowTotalPrice, isShowDealAmount } = this.props
-    if (!isShowTotalPrice) {
-      let averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
+    let price
+    let averagePrice
+    let dealamount
+    let dealled
+    common.precision(item.goods.name, item.currency.name, (p, q, a) => {
+      price = new BigNumber(item.price).toFixed(p, 1)
+      dealamount = new BigNumber(item.dealamount).toFixed(a, 1)
+      dealled = new BigNumber(item.dealled).toFixed(q, 1)
+      averagePrice = new BigNumber(item.dealamount).dividedBy(item.dealled)
       if (averagePrice.isNaN()) {
         averagePrice = 0
       }
-      common.precision(item.goods.name, item.currency.name, (p) => {
-        averagePriceOrPrice = averagePrice.toFixed(p, 1)
-      })
-    } else {
-      common.precision(item.goods.name, item.currency.name, (p) => {
-        averagePriceOrPrice = new BigNumber(item.price).toFixed(p, 1)
-      })
+      averagePrice = averagePrice.toFixed(p, 1)
+    })
+    let status = ''
+    if (item.status === common.delegate.status.complete) {
+      status = transfer(language, 'exchange_complete')
+    } else if (item.status === common.delegate.status.cancel) {
+      status = transfer(language, 'exchange_canceled')
     }
-    if (!isShowDealAmount) {
-      common.precision(item.goods.name, item.currency.name, (p, q) => {
-        dealledOrdealAmount = new BigNumber(item.dealled).toFixed(q, 1)
-      })
-    } else {
-      common.precision(item.goods.name, item.currency.name, (p, q, a) => {
-        dealledOrdealAmount = new BigNumber(item.dealamount).toFixed(a, 1)
-      })
-    }
+    const createdAt = common.dfFullDate(item.createdAt)
+    const buySell = item.direct === 'buy' ? transfer(language, 'exchange_buy') : transfer(language, 'exchange_sell')
+    const buySellColor =
+      item.direct === 'sell' ? { color: common.greenColor } : { color: common.redColor }
+
     return (
-      <View style={OHCStyles.cellContainer}>
-        <Text style={OHCStyles.goodsCurrency}>
-          {goodsCurrency}
-        </Text>
-        <Text style={OHCStyles.averagePriceOrPrice}>
-          {averagePriceOrPrice}
-        </Text>
-        <Text style={OHCStyles.dealledOrdealAmount}>
-          {dealledOrdealAmount}
-        </Text>
-      </View>
+      <View style={OOCStyles.cellContainer}>
+        <View style={OOCStyles.cellContentContainer}>
+          <Text style={OOCStyles.goodsCurrency}>{goodsCurrency}</Text>
+          <Text style={[OOCStyles.buySell, buySellColor]}>{buySell}</Text>
+          <Text style={OOCStyles.createTime}>{createdAt}</Text>
+          <Text style={OHCStyles.status}>{status}</Text>
+        </View>
+        <View style={OHCStyles.priceView}>
+          <Text style={OOCStyles.price}>{`${transfer(language, 'exchange_price')}: ${price}`}</Text>
+          <Text style={OOCStyles.quantity}>{`${transfer(language, 'exchange_averagePrice')}: ${averagePrice}`}</Text>
+          <Text style={OOCStyles.dealled}>{`${transfer(language, 'exchange_changedAmount')}: ${dealled}`}</Text>
+        </View>
+        <View style={OHCStyles.amountView}>
+          <Text style={OOCStyles.price}>{`${transfer(language, 'exchange_total')}: ${dealamount}`}</Text>
+          <Text style={OOCStyles.dealled}>{''}</Text>
+        </View>
+      </View >
     )
   }
 
-  renderHeader = () => {
-    const { titleSeleted, language } = this.props
-
-    if (titleSeleted === transfer(language, 'home_currentDelegate')) {
-      return null
-    }
-    return this.renderOrderHistoryHeader()
-  }
+  renderHeader = () => null
 
   renderCell = ({ item, index }) => {
     const { titleSeleted, language } = this.props
