@@ -64,7 +64,7 @@ class Home extends Component {
     }, 200)
     cache.setObject('currentComponentVisible', 'Home')
     const { dispatch } = this.props
-    dispatch(actions.sync())
+    // dispatch(actions.sync())
     this.refreshData()
     this.timeId = setInterval(() => {
       const page = cache.getObject('currentComponentVisible')
@@ -116,7 +116,7 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
-      this.props.dispatch(actions.sync())
+      // this.props.dispatch(actions.sync())
       this.refreshData()
     }
   }

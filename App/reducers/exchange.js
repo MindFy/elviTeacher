@@ -130,7 +130,7 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         segmentIndex: payload,
-        openOrders: [],
+        openOrders: undefined,
       }
       break
     case 'exchange/create_order':
