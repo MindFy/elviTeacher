@@ -129,14 +129,18 @@ class Login extends PureComponent {
   }
 
   componentDidMount = async () => {
-    const isAutoLogin = await AsyncStorage.getItem('isAutoLogin')
-    let pIsAutoLogin
-    if (isAutoLogin === 'true') {
-      pIsAutoLogin = true
-    } else {
-      pIsAutoLogin = false
+    const { dispatch } = this.props
+    this.props.dispatch(actions.toggleAutoLogin(false))
+    const result = await AsyncStorage.getItem(common.user.string)
+    if (result) {
+      const user = JSON.parse(result)
+      const { formState } = this.props
+      const nextFormState = {
+        ...formState,
+        mobile: user.mobile,
+      }
+      dispatch(actions.loginUpdate(nextFormState))
     }
-    this.props.dispatch(actions.toggleAutoLogin(pIsAutoLogin))
   }
 
   componentWillReceiveProps(nextProps) {
@@ -207,6 +211,9 @@ class Login extends PureComponent {
     if (loggedIn !== this.props.loggedIn) {
       Toast.success(transfer(language, 'login_success'))
       const user = loggedInResult
+      const { isAutoLogin } = this.props
+      AsyncStorage.setItem('isAutoLogin', isAutoLogin.toString())
+      AsyncStorage.setItem('lastLoginTs', new Date().toISOString())
       storeSave(common.user.string, user, (e) => {
         if (!e) {
           dispatch(actions.findUser(schemas.findUser(user.id)))
@@ -275,6 +282,7 @@ class Login extends PureComponent {
           title={transfer(language, 'login_id')}
           placeholder={transfer(language, 'login_idPlaceholder')}
           value={formState.mobile}
+          showDelBtn
           maxLength={11}
           textInputProps={{
             keyboardType: 'phone-pad',

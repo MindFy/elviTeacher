@@ -7,7 +7,6 @@ import {
 } from 'react-native'
 import {
   common,
-  storeDelete,
 } from '../../constants/common'
 import MeCell from './MeCell'
 import TKButton from '../../components/TKButton'
@@ -65,7 +64,6 @@ class Me extends Component {
           onPress: () => {
             dispatch(actions.logout())
             dispatch(actions.clearAllReducer())
-            storeDelete(common.user.string, () => {})
             cache.removeObject('isLoginIn')
           },
         },
