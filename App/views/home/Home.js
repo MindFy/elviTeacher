@@ -156,6 +156,14 @@ class Home extends Component {
   }
 
   isNeedAutoLogin = async (callBack) => {
+    const preLoginTs = await AsyncStorage.getItem('lastLoginTs')
+    if (preLoginTs) {
+      const ts = new Date().getTime() - new Date(preLoginTs).getTime()
+      if (ts > 15 * 24 * 60 * 60 * 1000) {
+        this.syncFailed()
+        return
+      }
+    }
     const isAutoLogin = await AsyncStorage.getItem('isAutoLogin')
     if (isAutoLogin === 'true') callBack()
   }

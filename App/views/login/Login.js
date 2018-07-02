@@ -134,7 +134,6 @@ class Login extends PureComponent {
     const result = await AsyncStorage.getItem(common.user.string)
     if (result) {
       const user = JSON.parse(result)
-      console.log('user--->>>', user)
       const { formState } = this.props
       const nextFormState = {
         ...formState,
@@ -214,6 +213,7 @@ class Login extends PureComponent {
       const user = loggedInResult
       const { isAutoLogin } = this.props
       AsyncStorage.setItem('isAutoLogin', isAutoLogin.toString())
+      AsyncStorage.setItem('lastLoginTs', new Date().toISOString())
       storeSave(common.user.string, user, (e) => {
         if (!e) {
           dispatch(actions.findUser(schemas.findUser(user.id)))
