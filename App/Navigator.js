@@ -37,6 +37,7 @@ import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
 import Market2 from './views/transactions/Market2'
+import KLineFullScreen from './views/transactions/KLineFullScreen'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -193,6 +194,12 @@ const TabBarStack = StackNavigator(
     Announcement,
     SecurityCenter,
     UpdateEmail,
+    KLineFullScreen: {
+      screen: KLineFullScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
     Rebates: {
       screen: Rebates,
     },

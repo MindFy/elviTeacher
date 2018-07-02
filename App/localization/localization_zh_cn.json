@@ -104,6 +104,7 @@
   "exchange_price": "价格",
   "exchange_quality": "数量",
   "exchange_myOrder": "我的委托",
+  "exchange_fullscreen": "全屏",
   "exchange_time": "分时",
   "exchange_1min": "1分",
   "exchange_5min": "5分",
