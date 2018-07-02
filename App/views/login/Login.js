@@ -275,6 +275,7 @@ class Login extends PureComponent {
           title={transfer(language, 'login_id')}
           placeholder={transfer(language, 'login_idPlaceholder')}
           value={formState.mobile}
+          showDelBtn
           maxLength={11}
           textInputProps={{
             keyboardType: 'phone-pad',
