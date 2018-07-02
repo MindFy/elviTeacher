@@ -4,8 +4,10 @@ import {
   View,
   Text,
   TextInput,
+  Image,
 } from 'react-native'
 import { common } from '../constants/common'
+import NextTouchableOpacity from '../components/NextTouchableOpacity'
 
 const styles = StyleSheet.create({
   container: {
@@ -45,6 +47,16 @@ const styles = StyleSheet.create({
   extra: {
     color: common.textColor,
     fontSize: common.font12,
+  },
+  delCoverStyle: {
+    width: common.getH(38),
+    height: common.getH(38),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  delImageStyle: {
+    width: 17,
+    height: 17,
   },
 })
 
@@ -149,6 +161,32 @@ class TKInputItem extends Component {
     )
   }
 
+  renderDelBtnIfNeeded() {
+    const { showDelBtn, value = '' } = this.props
+    if (showDelBtn) {
+      if (value.length > 0) {
+        return (
+          <NextTouchableOpacity
+            style={styles.delCoverStyle}
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.onChange({
+              nativeEvent: {
+                text: '',
+              },
+            })}
+          >
+            <Image
+              style={styles.delImageStyle}
+              resizeMode="contain"
+              source={require('../assets/deleteAll.png')}
+            />
+          </NextTouchableOpacity>
+        )
+      }
+    }
+    return null
+  }
+
   render() {
     const {
       onLayout,
@@ -161,6 +199,7 @@ class TKInputItem extends Component {
         {this.renderTitle()}
         {this.renderInput()}
         {this.renderExtra()}
+        {this.renderDelBtnIfNeeded()}
       </View>
     )
   }
