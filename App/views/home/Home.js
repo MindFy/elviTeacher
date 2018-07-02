@@ -146,17 +146,13 @@ class Home extends Component {
   }
 
   syncFailed = () => {
-    storeDelete(common.user.string, (error) => {
-      if (!error) {
-        cache.removeObject('isLoginIn')
-        const { dispatch } = this.props
-        dispatch(actions.findUserUpdate(undefined))
-        dispatch(actions.findAssetListUpdate({
-          asset: [],
-          amountVisible: undefined,
-        }))
-      }
-    })
+    cache.removeObject('isLoginIn')
+    const { dispatch } = this.props
+    dispatch(actions.findUserUpdate(undefined))
+    dispatch(actions.findAssetListUpdate({
+      asset: [],
+      amountVisible: undefined,
+    }))
   }
 
   isNeedAutoLogin = async (callBack) => {
