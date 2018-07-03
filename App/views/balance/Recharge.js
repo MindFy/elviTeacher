@@ -222,7 +222,6 @@ class Recharge extends Component {
   }
 
   qrPress = (rechargeAddress, coinName, qrApi) => {
-    const { language } = this.props
     const overlayView = (
       <Overlay.View
         style={{
