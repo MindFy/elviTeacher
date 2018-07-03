@@ -1,4 +1,4 @@
-import { take, takeEvery, call, put, fork, cancel, cancelled, select } from 'redux-saga/effects'
+import { take, takeEvery, call, put, fork, cancel, cancelled } from 'redux-saga/effects'
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCEED,
