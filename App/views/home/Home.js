@@ -148,6 +148,7 @@ class Home extends Component {
     cache.removeObject('isLoginIn')
     const { dispatch } = this.props
     dispatch(actions.findUserUpdate(undefined))
+    dispatch(actions.clearAllReducer())
     dispatch(actions.findAssetListUpdate({
       asset: [],
       amountVisible: undefined,
@@ -158,7 +159,8 @@ class Home extends Component {
     const preLoginTs = await AsyncStorage.getItem('lastLoginTs')
     if (preLoginTs) {
       const ts = new Date().getTime() - new Date(preLoginTs).getTime()
-      if (ts > 15 * 24 * 60 * 60 * 1000) {
+      // 15 * 24 * 60 * 60 * 1000
+      if (ts > 5 * 60 * 1000) {
         this.syncFailed()
         return
       }
