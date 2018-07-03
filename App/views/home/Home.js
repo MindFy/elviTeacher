@@ -17,7 +17,6 @@ import SplashScreen from 'react-native-splash-screen'
 import {
   common,
   storeRead,
-  storeDelete,
 } from '../../constants/common'
 import HomeMarket from './HomeMarket'
 import HomeSwiper from './HomeSwiper'
