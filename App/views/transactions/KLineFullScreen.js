@@ -4,6 +4,7 @@ import { WebView, View, StatusBar, Image } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
+import cache from '../../utils/cache'
 
 const styles = {
   conatiner: {
@@ -93,6 +94,13 @@ class KLineFullScreen extends Component {
     this.webView.injectJavaScript(`setResolution('${resolution}')`)
   }
 
+  pop() {
+    this.props.navigation.goBack()
+    setTimeout(() => {
+      cache.removeObject('duration')
+    }, 100)
+  }
+
   render() {
     const { navigation } = this.props
     const { goodsName, currencyName } = navigation.state.params
@@ -103,7 +111,8 @@ class KLineFullScreen extends Component {
             <NextTouchableOpacity
               style={styles.backBtn}
               activeOpacity={common.activeOpacity}
-              onPress={() => this.props.navigation.goBack()}
+              delay={0}
+              onPress={() => this.pop()}
             >
               <Image
                 resizeMode="contain"

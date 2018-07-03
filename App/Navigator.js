@@ -10,6 +10,7 @@ import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/Car
 import {
   common,
 } from './constants/common'
+import cache from './utils/cache'
 
 import Home from './views/home/Home'
 import Banner from './views/home/Banner'
@@ -154,7 +155,7 @@ const TabBar = TabNavigator(
 const TransitionConfiguration = () => ({
   transitionSpec: {
     timing: Animated.timing,
-    duration: 250,
+    duration: cache.getObject('duration') || 250,
   },
   screenInterpolator: (sceneProps) => {
     const { scene } = sceneProps
