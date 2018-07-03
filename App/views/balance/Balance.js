@@ -219,11 +219,22 @@ class Balance extends Component {
     return initBalance
   }
 
+  marketIcons = {
+    TK: require('../../assets/market_TK.png'),
+    CNYT: require('../../assets/market_TK.png'),
+    BTC: require('../../assets/market_BTC.png'),
+    ETH: require('../../assets/market_ETH.png'),
+    ETC: require('../../assets/market_ETC.png'),
+    LTC: require('../../assets/market_LTC.png'),
+    EIEC: require('../../assets/market_EIEC.png'),
+  }
+
   renderRow(rd) {
     const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
+    const source = this.marketIcons[rd.token.name]
     return (
       <BalanceCell
-        leftImageSource={require('../../assets/111.png')}
+        leftImageSource={source}
         title={rd.token.name}
         detail={amount}
       />

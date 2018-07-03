@@ -8,6 +8,7 @@ import {
   StyleSheet,
   RefreshControl,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
@@ -15,6 +16,7 @@ import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
 import {
   common,
+  storeRead,
 } from '../../constants/common'
 import HomeMarket from './HomeMarket'
 import HomeSwiper from './HomeSwiper'
@@ -61,8 +63,9 @@ class Home extends Component {
       SplashScreen.hide()
     }, 200)
     cache.setObject('currentComponentVisible', 'Home')
-    this.refreshData()
     const { dispatch } = this.props
+    this.isNeedAutoLogin(() => { dispatch(actions.sync()) })
+    this.refreshData()
     this.timeId = setInterval(() => {
       const page = cache.getObject('currentComponentVisible')
       if (page === 'Home' || page === 'Deal') {
@@ -89,6 +92,7 @@ class Home extends Component {
         break
       }
     }
+    this.handleSync(props)
   }
 
   shouldComponentUpdate(nextProps) {
@@ -112,8 +116,57 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
+      this.isNeedAutoLogin(() => { this.props.dispatch(actions.sync()) })
       this.refreshData()
     }
+  }
+
+  handleSync = (nextProps) => {
+    if (this.props.authorize.syncing && !nextProps.authorize.syncing) {
+      const { syncSuccess } = nextProps.authorize
+      if (syncSuccess) {
+        this.syncSuccess()
+      } else {
+        this.syncFailed()
+      }
+    }
+  }
+
+  syncSuccess = () => {
+    storeRead(common.user.string, (result) => {
+      if (result) {
+        cache.setObject('isLoginIn', 'true')
+        const user = JSON.parse(result)
+        const { dispatch } = this.props
+        dispatch(actions.findUserUpdate(user))
+        dispatch(actions.findUser(schemas.findUser(user.id)))
+      }
+    })
+  }
+
+  syncFailed = () => {
+    cache.removeObject('isLoginIn')
+    const { dispatch } = this.props
+    dispatch(actions.findUserUpdate(undefined))
+    dispatch(actions.clearAllReducer())
+    dispatch(actions.findAssetListUpdate({
+      asset: [],
+      amountVisible: undefined,
+    }))
+  }
+
+  isNeedAutoLogin = async (callBack) => {
+    const preLoginTs = await AsyncStorage.getItem('lastLoginTs')
+    if (preLoginTs) {
+      const ts = new Date().getTime() - new Date(preLoginTs).getTime()
+      // 15 * 24 * 60 * 60 * 1000
+      if (ts > 5 * 60 * 1000) {
+        this.syncFailed()
+        return
+      }
+    }
+    const isAutoLogin = await AsyncStorage.getItem('isAutoLogin')
+    if (isAutoLogin === 'true') callBack()
   }
 
   checkUpdate() {
@@ -140,7 +193,7 @@ class Home extends Component {
                 },
                 {
                   text: transfer(language, 'home_updateCancel'),
-                  onPress: () => {},
+                  onPress: () => { },
                 },
               ],
             )
@@ -263,6 +316,7 @@ function mapStateToProps(store) {
     ...store.home,
     selectedPair: store.exchange.selectedPair,
     user: store.user.user,
+    authorize: store.authorize,
     language: store.system.language,
   }
 }

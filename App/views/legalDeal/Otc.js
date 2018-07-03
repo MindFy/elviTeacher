@@ -118,12 +118,14 @@ class Otc extends Component {
         Toast.fail(transfer(language, 'Otc_please_bind_bank_card_first'))
         navigation.navigate('UpdateBank')
       } else if (error.code === 4001416) {
-        Toast.fail(Toast.fail(transfer(language, 'Otc_system_does_not_provide_tradable_merchants')))
+        Toast.fail(transfer(language, 'Otc_system_does_not_provide_tradable_merchants'))
       } else if (error.code === 4001417) {
         Toast.fail(transfer(language, 'Otc_merchant_does_not_provide_bank_card_information'))
       } else if (error.code === 4001418) {
         navigation.navigate('Authentication')
         Toast.fail(transfer(language, 'Otc_please_perform_authentication_first'))
+      } else if (error.code === 4001419) {
+        Toast.fail(transfer(language, 'Otc_wait_legalDeal_more_than_2'))
       } else if (error.message === common.badNet) {
         Toast.fail(transfer(language, 'Otc_net_error'))
       } else if (error.code === 4031601) {
@@ -132,7 +134,13 @@ class Otc extends Component {
         Toast.fail(transfer(language, 'Otc_order_pending'))
       }
     } else if (type === 'buy') {
-      Toast.success(transfer(language, 'Otc_buy_success'), 5000)
+      Toast.success(transfer(language, 'Otc_buy_success'), 3000)
+      setTimeout(() => {
+        this.props.navigation.navigate('ReceiverInfo', {
+          receiverId: response.result.id,
+          titleName: transfer(language, 'payment_b'),
+        })
+      }, 3000)
     } else {
       Toast.success(transfer(language, 'Otc_sell_success'))
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))

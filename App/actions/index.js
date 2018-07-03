@@ -73,6 +73,7 @@ import {
   login,
   loginUpdate,
   clearError,
+  toggleAutoLogin,
 } from './authorize'
 import * as home from './home'
 
@@ -146,6 +147,7 @@ const actions = {
   login,
   loginUpdate,
   clearError,
+  toggleAutoLogin,
 
   clearAllReducer,
 }

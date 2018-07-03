@@ -11,10 +11,12 @@ import {
 
 const initialState = {
   syncing: false,
+  syncSuccess: false,
   formState: {
     mobile: '',
     password: '',
   },
+  isAutoLogin: false,
   error: null,
   loading: false,
   loggedIn: false,
@@ -88,18 +90,30 @@ export default function authorize(state = initialState, action) {
       nextState = {
         ...state,
         syncing: true,
+        syncSuccess: false,
       }
       break
     case 'authorize/sync_request_succeed':
       nextState = {
         ...state,
         syncing: false,
+        syncSuccess: true,
+        loggedIn: true,
+        loggedInResult: payload,
       }
       break
     case 'authorize/sync_request_failed':
       nextState = {
         ...state,
         syncing: false,
+        loggedIn: false,
+        syncSuccess: false,
+      }
+      break
+    case 'authorize/toggle_auto_login':
+      nextState = {
+        ...state,
+        isAutoLogin: payload,
       }
       break
     case 'notify/clear_reducer':

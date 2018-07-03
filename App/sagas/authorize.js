@@ -31,7 +31,6 @@ export function* authorize(data) {
 export function* sync() {
   try {
     const response = yield call(api.sync)
-
     if (response.success && response.result.id > 0) {
       yield put({ type: 'authorize/sync_request_succeed', payload: response.result })
     } else {
@@ -39,6 +38,20 @@ export function* sync() {
     }
   } catch (error) {
     yield put({ type: 'authorize/sync_request_failed', payload: error })
+  }
+}
+
+function* requestLoginOut() {
+  let loading
+  if (loading) return
+  loading = true
+  const response = yield call(api.logout)
+  if (response.success) {
+    loading = false
+    yield put({ type: LOGOUT_SUCCEED, payload: response.result })
+  } else {
+    loading = false
+    yield put({ type: LOGOUT_FAILED, payload: response.error })
   }
 }
 
@@ -50,16 +63,15 @@ export default function* loginFlow() {
 
     if (action.type === LOGOUT_REQUEST) {
       yield cancel(task)
-      const response = yield call(api.logout)
-      if (response.success) {
-        yield put({ type: LOGOUT_SUCCEED, payload: response.result })
-      } else {
-        yield put({ type: LOGOUT_FAILED, payload: response.error })
-      }
+      yield fork(requestLoginOut)
     }
   }
 }
 
 export function* syncWatcher() {
   yield takeEvery(SYNC_REQUEST, sync)
+}
+
+export function* watchRequestLoginout() {
+  yield takeEvery(LOGOUT_REQUEST, requestLoginOut)
 }

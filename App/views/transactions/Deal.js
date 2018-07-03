@@ -203,19 +203,25 @@ class Deal extends Component {
       return
     }
     if ((!idx && new BigNumber(selectedPair.lastprice)
-      .multipliedBy('1.3').isLessThanOrEqualTo(price))
+      .multipliedBy('1.1').isLessThanOrEqualTo(price))
       || (idx && new BigNumber(selectedPair.lastprice)
-        .multipliedBy('0.7').isGreaterThanOrEqualTo(price))
+        .multipliedBy('0.9').isGreaterThanOrEqualTo(price))
     ) {
+      let alertTitle = ''
+      if (!idx) {
+        alertTitle = transfer(language, 'exchange_orderPriceMoreThanCurrentPrice')
+      } else {
+        alertTitle = transfer(language, 'exchange_orderPriceLowerThanCurrentPrice')
+      }
       Alert.alert(
-        `您委托的价格${!idx ? '超过' : '低于'}了当前价格的30%，是否确认委托？`,
         '',
+        alertTitle,
         [{
-          text: '取消',
+          text: transfer(language, 'withdrawal_cancel'),
           onPress: () => {},
           style: 'cancel',
         }, {
-          text: '确定',
+          text: transfer(language, 'withdrawal_confirm'),
           onPress: () => {
             if (this.drawer) {
               this.drawer.hide()

@@ -4,9 +4,10 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  DeviceEventEmitter,
   KeyboardAvoidingView,
   Keyboard,
+  View,
+  Text,
 } from 'react-native'
 import {
   Toast,
@@ -40,6 +41,17 @@ const styles = StyleSheet.create({
     marginTop: common.margin10,
     marginLeft: common.margin10,
     marginRight: common.margin10,
+  },
+  tipsContainer: {
+    marginTop: common.margin15,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  tipsContent: {
+    marginTop: common.margin10,
+    color: common.textColor,
+    fontSize: common.font10,
+    lineHeight: 14,
   },
 })
 
@@ -80,22 +92,16 @@ class UpdateEmail extends Component {
     if (user.email) {
       dispatch(actions.updateEmailUpdate({ email: user.email, codeEmail }))
     }
-    this.listener = DeviceEventEmitter.addListener(common.noti.updateEmail, () => {
-      user.emailStatus = common.user.status.bind
-      dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
-      dispatch(actions.findUser(schemas.findUser(user.id)))
-      navigation.goBack()
-    })
   }
 
   componentWillReceiveProps(nextProps) {
     this.handleGetVerificateSmtpCodeRequest(nextProps)
+    this.handleUpdateEmailRequest(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(actions.updateEmailUpdate({ email: '', codeEmail: '' }))
-    this.listener.remove()
   }
 
   onChange(event, tag) {
@@ -153,6 +159,37 @@ class UpdateEmail extends Component {
     }))
   }
 
+  errors = {
+    4000101: 'login_codeNotNull',
+    4000102: 'login_codeError',
+    4000103: 'login_codeOverDue',
+    4000160: 'me_Email_format_error',
+    4000161: 'me_Email_registered',
+  }
+
+  handleUpdateEmailRequest(nextProps) {
+    const { updateEmailVisible, updateEmailError, updateEmailResult } = nextProps
+    const { user, language, dispatch, navigation } = this.props
+    if (!updateEmailVisible && this.props.updateEmailVisible) {
+      if (updateEmailError) {
+        if (updateEmailError.message === common.badNet) {
+          Toast.fail(transfer(language, 'OtcDetail_net_error'))
+        } else {
+          const msg = this.errors[updateEmailError.code]
+          if (msg) Toast.fail(transfer(language, msg))
+          else Toast.fail(transfer(language, 'me_Email_bind_failed'))
+        }
+      }
+      if (updateEmailResult) {
+        Toast.success(transfer(language, 'me_Email_binded'))
+        user.emailStatus = common.user.status.bind
+        dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
+        dispatch(actions.findUser(schemas.findUser(user.id)))
+        navigation.goBack()
+      }
+    }
+  }
+
   handleGetVerificateSmtpCodeRequest(nextProps) {
     const { language } = this.props
     const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse } = nextProps
@@ -164,7 +201,7 @@ class UpdateEmail extends Component {
       this.showGetVerificateSmtpCodeResponse = false
       if (getVerificateSmtpCodeResponse.success) {
         this.count()
-        Toast.success(getVerificateSmtpCodeResponse.result.message)
+        Toast.success(transfer(language, 'get_code_succeed'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000150) {
         Toast.fail(transfer(language, 'me_Email_serverTypeWrong'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
@@ -178,6 +215,21 @@ class UpdateEmail extends Component {
       }
     }
   }
+
+  renderTip = () => (
+    <View style={{ marginHorizontal: common.margin10 }}>
+      <Text
+        style={styles.tipsContainer}
+      >
+        {transfer(this.props.language, 'me_Email_pleaes_note')}
+      </Text>
+      <Text
+        style={styles.tipsContent}
+      >
+        {transfer(this.props.language, 'me_Email_note_content')}
+      </Text>
+    </View>
+  )
 
   render() {
     const { email, codeEmail, updateEmailVisible, user, language } = this.props
@@ -225,6 +277,7 @@ class UpdateEmail extends Component {
             theme={'gray'}
           />
 
+          {user.emailStatus !== common.user.status.bind && this.renderTip()}
 
           <TKSpinner
             isVisible={updateEmailVisible}
@@ -243,6 +296,8 @@ function mapStateToProps(state) {
     codeEmail: state.user.codeEmail,
 
     updateEmailVisible: state.user.updateEmailVisible,
+    updateEmailResult: state.user.updateEmailResult,
+    updateEmailError: state.user.updateEmailError,
     getVerificateSmtpCodeVisible: state.user.getVerificateSmtpCodeVisible,
     getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
     language: state.system.language,

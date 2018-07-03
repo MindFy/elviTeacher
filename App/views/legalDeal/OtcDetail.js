@@ -335,7 +335,7 @@ class OtcDetail extends Component {
     const { getCodeResult, getCodeError, language } = nextProps
 
     if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
-      Toast.success(getCodeResult.message)
+      Toast.success(transfer(language, 'get_code_succeed'))
     }
     if (getCodeError && getCodeError !== this.props.getCodeError) {
       if (getCodeError.message === common.badNet) {
@@ -362,7 +362,7 @@ class OtcDetail extends Component {
         Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
         const msg = this.errors[cancelError.code]
-        if (msg) Toast.fail(msg)
+        if (msg) Toast.fail(transfer(language, msg))
         else Toast.fail(transfer(language, 'OtcDetail_failed_to_cancel_the_order'))
       }
     }
@@ -383,7 +383,7 @@ class OtcDetail extends Component {
         Toast.fail(transfer(language, 'OtcDetail_net_error'))
       } else {
         const msg = this.errors[confirmPayError.code]
-        if (msg) Toast.fail(msg)
+        if (msg) Toast.fail(transfer(language, msg))
         else Toast.fail(transfer(language, 'OtcDetail_confirm_failed'))
       }
     }

@@ -118,7 +118,7 @@ class UpdatePassword extends Component {
 
     const { oldPassword, newPassword, newPasswordAgain, language } = this.props
     if (!oldPassword.length) {
-      Toast.fail(transfer(language, 'me_settings_PWold'))
+      Toast.fail(transfer(language, 'me_settings_oldPwdLength0'))
       return
     }
     if (!newPassword.length || !common.regPassword.test(newPassword)
@@ -129,7 +129,6 @@ class UpdatePassword extends Component {
           paddingRight: common.margin15,
         },
         text: transfer(language, 'me_settings_PWillegal'),
-        position: 'bottom',
       })
       return
     }
@@ -165,7 +164,7 @@ class UpdatePassword extends Component {
     } else {
       this.showUpdatePasswordResponse = false
       if (updatePasswordResponse.success) {
-        Toast.success(updatePasswordResponse.result.message)
+        Toast.success(transfer(language, 'me_change_pwd_succeed'))
         navigation.goBack()
       } else if (updatePasswordResponse.error.code === 4030501) {
         Toast.fail(transfer(language, 'me_settings_PWoldWrong'))

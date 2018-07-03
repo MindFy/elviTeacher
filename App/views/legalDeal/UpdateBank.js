@@ -265,7 +265,7 @@ class UpdateBank extends Component {
   handleRequestGetCode(nextProps) {
     const { getCodeResult, getCodeError, language } = nextProps
     if (getCodeResult && (getCodeResult !== this.props.getCodeResult)) {
-      Toast.success(getCodeResult.message)
+      Toast.success(transfer(language, 'get_code_succeed'))
       return
     }
     if (getCodeError && (getCodeError !== this.props.getCodeError)) {
@@ -294,7 +294,7 @@ class UpdateBank extends Component {
     const { updateBankResult, updateBankError, navigation, language } = nextProps
     if (updateBankResult && (updateBankResult !== this.props.updateBankResult)) {
       this.userUpdate(nextProps)
-      Toast.success(updateBankResult)
+      Toast.success(transfer(language, 'bank_linked'))
       Overlay.hide(this.overlayViewKey)
       navigation.goBack()
       return
@@ -306,7 +306,7 @@ class UpdateBank extends Component {
         return
       }
       const msg = this.errors[updateBankError.code]
-      if (msg) Toast.fail(msg)
+      if (msg) Toast.fail(transfer(language, msg))
       else Toast.fail(transfer(language, 'UpdateBank_blind_card_failed'))
     }
   }

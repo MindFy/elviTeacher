@@ -6,7 +6,7 @@ import getRose from './dealstat'
 import * as deal from './deal'
 import * as asset from './asset'
 import * as address from './address'
-import loginFlow, { syncWatcher } from './authorize'
+import loginFlow, { syncWatcher, watchRequestLoginout } from './authorize'
 import {
   openOrderRequest,
   orderHistoryRequest,
@@ -28,6 +28,7 @@ import {
 } from './balance'
 import * as recharge from './recharge'
 import * as history from './history'
+import watcherRequestReceiverInfo from './receiverInfo'
 
 export default function* rootSaga() {
   yield [
@@ -37,6 +38,7 @@ export default function* rootSaga() {
 
     loginFlow(),
     syncWatcher(),
+    watchRequestLoginout(),
     fork(user.checkVerificateCode),
     fork(user.getGoogleAuth),
     fork(user.getVerificateCode),
@@ -125,5 +127,7 @@ export default function* rootSaga() {
     history.requestWithdraw(),
     history.requestOtc(),
     history.withdrawCancel(),
+
+    watcherRequestReceiverInfo(),
   ]
 }
