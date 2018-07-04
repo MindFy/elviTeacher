@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import WAValidator from 'wallet-address-validator'
-import { Image, Alert } from 'react-native'
+import { Image } from 'react-native'
 import { common } from '../../constants/common'
 import QRScannerView from './scan/QRScannerView'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {

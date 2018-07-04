@@ -9,7 +9,6 @@ import {
   StyleSheet,
   CameraRoll,
   RefreshControl,
-  Alert,
 } from 'react-native'
 import {
   Toast,
@@ -24,6 +23,7 @@ import * as api from '../../services/api'
 import * as schemas from '../../schemas/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -271,7 +271,6 @@ class Rebates extends Component {
         text: transfer(language, 'me_super_savePhotoOK'),
         onPress: () => { },
       }],
-      { cancelable: false },
     )
   }
 

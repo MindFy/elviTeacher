@@ -4,7 +4,6 @@ import {
   View,
   Text,
   Image,
-  Alert,
   Clipboard,
   ScrollView,
   CameraRoll,
@@ -26,6 +25,7 @@ import {
 import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -183,7 +183,6 @@ class Recharge extends Component {
         text: transfer(language, 'deposit_ok'),
         onPress: () => { },
       }],
-      { cancelable: false },
     )
   }
 
