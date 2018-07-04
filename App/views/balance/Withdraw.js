@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Keyboard,
-  Alert,
 } from 'react-native'
 import {
   Toast,
@@ -40,6 +39,7 @@ import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 const styles = StyleSheet.create({
   headerLeft: {

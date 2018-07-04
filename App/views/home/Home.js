@@ -7,7 +7,6 @@ import {
   ScrollView,
   StyleSheet,
   RefreshControl,
-  Alert,
   AsyncStorage,
   Linking,
 } from 'react-native'
@@ -30,6 +29,7 @@ import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
 import * as system from '../../actions/system'
 import * as api from '../../services/api'
+import Alert from '../../components/Alert'
 
 global.Buffer = require('buffer').Buffer
 
@@ -55,7 +55,9 @@ class Home extends Component {
     if (evt.indexOf('zh') > -1) {
       systemLanguage = 'zh_cn'
     }
-    this.checkUpdate(systemLanguage)
+    setTimeout(() => {
+      this.checkUpdate(systemLanguage)
+    }, 1000)
     if (language !== systemLanguage) {
       dispatch(system.updateLanguage(systemLanguage))
     }
@@ -69,12 +71,12 @@ class Home extends Component {
     const { dispatch } = this.props
     this.isNeedAutoLogin(() => { dispatch(actions.sync()) })
     this.refreshData()
-    this.timeId = setInterval(() => {
-      const page = cache.getObject('currentComponentVisible')
-      if (page === 'Home' || page === 'Deal') {
-        dispatch(actions.requestMarket())
-      }
-    }, common.refreshIntervalTime)
+    // this.timeId = setInterval(() => {
+    //   const page = cache.getObject('currentComponentVisible')
+    //   if (page === 'Home' || page === 'Deal') {
+    //     dispatch(actions.requestMarket())
+    //   }
+    // }, common.refreshIntervalTime)
 
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
@@ -195,9 +197,7 @@ class Home extends Component {
                   })
               },
             },
-          ], {
-            cancelable: false,
-          })
+          ])
       }
     })
   }
