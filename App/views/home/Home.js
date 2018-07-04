@@ -71,12 +71,12 @@ class Home extends Component {
     const { dispatch } = this.props
     this.isNeedAutoLogin(() => { dispatch(actions.sync()) })
     this.refreshData()
-    // this.timeId = setInterval(() => {
-    //   const page = cache.getObject('currentComponentVisible')
-    //   if (page === 'Home' || page === 'Deal') {
-    //     dispatch(actions.requestMarket())
-    //   }
-    // }, common.refreshIntervalTime)
+    this.timeId = setInterval(() => {
+      const page = cache.getObject('currentComponentVisible')
+      if (page === 'Home' || page === 'Deal') {
+        dispatch(actions.requestMarket())
+      }
+    }, common.refreshIntervalTime)
 
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
