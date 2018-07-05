@@ -71,12 +71,12 @@ class Home extends Component {
     const { dispatch } = this.props
     this.isNeedAutoLogin(() => { dispatch(actions.sync()) })
     this.refreshData()
-    // this.timeId = setInterval(() => {
-    //   const page = cache.getObject('currentComponentVisible')
-    //   if (page === 'Home' || page === 'Deal') {
-    //     dispatch(actions.requestMarket())
-    //   }
-    // }, common.refreshIntervalTime)
+    this.timeId = setInterval(() => {
+      const page = cache.getObject('currentComponentVisible')
+      if (page === 'Home' || page === 'Deal') {
+        dispatch(actions.requestMarket())
+      }
+    }, common.refreshIntervalTime)
 
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
@@ -162,8 +162,7 @@ class Home extends Component {
     const preLoginTs = await AsyncStorage.getItem('lastLoginTs')
     if (preLoginTs) {
       const ts = new Date().getTime() - new Date(preLoginTs).getTime()
-      // 15 * 24 * 60 * 60 * 1000
-      if (ts > 5 * 60 * 1000) {
+      if (ts > 15 * 24 * 60 * 60 * 1000) {
         this.syncFailed()
         return
       }
