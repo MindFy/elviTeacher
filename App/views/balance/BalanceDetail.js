@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bottomToolBarItem: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#343c5c',
-    width: 172,
     height: 36,
   },
   bottomToolbarItemText: {
