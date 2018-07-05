@@ -26,6 +26,7 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from './balance'
+import watchRequestDailyChange from './balanceDetail'
 import * as recharge from './recharge'
 import * as history from './history'
 import watcherRequestReceiverInfo from './receiverInfo'
@@ -68,6 +69,8 @@ export default function* rootSaga() {
 
     fork(deal.findListSelf),
     fork(deal.latestDeals),
+
+    fork(watchRequestDailyChange),
 
     fork(asset.createAddress),
     fork(asset.getAssets),

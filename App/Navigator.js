@@ -17,7 +17,6 @@ import Announcement from './views/home/Announcement'
 import Market from './views/market/Market'
 import Deal from './views/transactions/Deal'
 import Orders from './views/transactions/Orders'
-import Balance from './views/balance/Balance'
 import History from './views/balance/History'
 import Withdraw from './views/balance/Withdraw'
 import Recharge from './views/balance/Recharge'
@@ -37,6 +36,9 @@ import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
 import Market2 from './views/transactions/Market2'
+
+import Balance from './views/balance/Balance'
+import BalanceDetail from './views/balance/BalanceDetail'
 
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
@@ -190,6 +192,7 @@ const TabBarStack = StackNavigator(
     Payment,
     UpdateBank,
     Banner,
+    BalanceDetail,
     Announcement,
     SecurityCenter,
     UpdateEmail,
