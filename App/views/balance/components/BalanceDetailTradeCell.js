@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 12,
     color: '#616989',
+    alignSelf: 'center',
   },
   detail: {
     marginRight: 30,
