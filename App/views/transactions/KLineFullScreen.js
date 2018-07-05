@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { WebView, View, StatusBar, Image } from 'react-native'
+import { BigNumber } from 'bignumber.js'
+import { Overlay } from 'teaset'
+import equal from 'deep-equal'
+import { WebView, Animated, View, StatusBar, Image, Text, TouchableOpacity } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
+import transfer from '../../localization/utils'
+import * as exchange from '../../actions/exchange'
 
 const styles = {
   conatiner: {
@@ -18,15 +23,71 @@ const styles = {
     transform: [
       { rotateZ: '90deg' },
     ],
-    backgroundColor: common.navBgColor,
+    backgroundColor: '#101b23',
   },
   navBar: {
     width: '100%',
-    height: 44,
-    backgroundColor: common.navBgColor,
+    height: common.IsIOS ? (common.navHeight - 64 + 50) : 50,
+    paddingTop: common.IsIOS ? (common.navHeight - 64) : 0,
+    backgroundColor: '#0E1820',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  detailShow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  btc: {
+    fontSize: 12,
+    color: '#616989',
+    marginRight: 10,
+  },
+  currentBtc: {
+    color: '#DFE4FF',
+    fontSize: 20,
+  },
+  increaseUp: {
+    color: '#D54550',
+    fontSize: 16,
+  },
+  increaseDown: {
+    color: 'rgb(36, 199, 139)',
+    fontSize: 16,
+  },
+  arrowStyle: {
+    width: 10.29,
+    height: 12,
+    marginHorizontal: 5,
+  },
+  cny: {
+    marginHorizontal: 5,
+    fontSize: 12,
+    color: '#DFE4FF',
+  },
+  priceUp: {
+    color: '#D54550',
+    fontSize: 12,
+  },
+  volume: {
+    color: '#616989',
+    fontSize: 12,
+    marginLeft: 20,
+    marginRight: 3,
+  },
+  btcAmount: {
+    color: '#DFE4FF',
+    fontSize: 12,
+  },
+  priceDown: {
+    color: 'rgb(36, 199, 139)',
+    fontSiz2: 12,
   },
   backBtn: {
-    width: 44,
+    width: 24,
     height: 44,
     justifyContent: 'center',
     alignItems: 'center',
@@ -39,9 +100,77 @@ const styles = {
     flex: 1,
     backgroundColor: 'transparent',
   },
+  footerView: {
+    width: '100%',
+    height: 35,
+    backgroundColor: '#0E1820',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  footerItems: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textStyle: {
+    color: '#DFE4FF',
+    fontSize: 14,
+  },
+  textSelectedStyle: {
+    color: '#FFD502',
+    fontSize: 14,
+  },
+  arrowIcon: {
+    width: 12,
+    height: 6,
+    marginLeft: 2,
+  },
+  btnCovers: {
+    paddingHorizontal: 8,
+    backgroundColor: '#0E1820',
+    height: 92,
+    width: 92,
+    transform: [
+      { rotateZ: '90deg' },
+    ],
+  },
+  btnHourCovers: {
+    paddingHorizontal: 8,
+    backgroundColor: '#0E1820',
+    height: 46,
+    width: 46,
+    transform: [
+      { rotateZ: '90deg' },
+    ],
+  },
+  popViewStyle: {
+    backgroundColor: common.navBgColor,
+  },
+  popItems: {
+    color: '#DFE4FF',
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: 23,
+    height: 23,
+  },
+  popItemsSelected: {
+    color: '#FFD502',
+    fontSize: 12,
+    textAlign: 'center',
+    lineHeight: 23,
+    height: 23,
+  },
 }
 
 class KLineFullScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.minuteRotate = new Animated.Value(0)
+    this.hourRotate = new Animated.Value(0)
+  }
+
   componentWillMount() {
     StatusBar.setHidden(true, true)
   }
@@ -51,15 +180,35 @@ class KLineFullScreen extends Component {
     this.setLine(kLineIndex, 500)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.kLineIndex !== this.props.kLineIndex) {
+      if (this.webView) {
+        this.setValue(nextProps.kLineIndex)
+      }
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    if (!equal(nextProps.valuation, this.props.valuation)) {
+      return true
+    }
+    if (nextProps.kLineIndex !== this.props.kLineIndex) {
+      return true
+    }
+    return false
+  }
+
   componentDidUpdate(preProps) {
-    const { goodsName, currencyName } = this.props
+    const { selectedPair } = this.props
+    const goodsName = selectedPair.goods.name
+    const currencyName = selectedPair.currency.name
     if (preProps.goodsName !== goodsName ||
       preProps.currencyName !== currencyName
     ) {
       if (this.webView) {
         const nextUrl = `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}`
         this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
-        // this.webView.injectJavaScript('window.location.reload()')
+        this.webView.injectJavaScript('window.location.reload()')
       }
     }
   }
@@ -71,7 +220,7 @@ class KLineFullScreen extends Component {
   setLine(kLineIndex, delay) {
     this.timer = setTimeout(() => {
       if (this.webView) {
-        // this.webView.injectJavaScript('window.location.reload()')
+        this.webView.injectJavaScript('window.location.reload()')
         this.setValue(kLineIndex)
       } else {
         this.setLine(kLineIndex, 500)
@@ -90,8 +239,175 @@ class KLineFullScreen extends Component {
       resolution = array[kLineIndex]
       type = 1
     }
-    this.webView.injectJavaScript(`setChartType(${type})`)
-    this.webView.injectJavaScript(`setResolution('${resolution}')`)
+    setTimeout(() => {
+      this.webView.injectJavaScript(`setChartType(${type})`)
+      this.webView.injectJavaScript(`setResolution('${resolution}')`)
+    }, 1000)
+  }
+
+  baseBtnDidClick(idx) {
+    const { dispatch } = this.props
+    dispatch(exchange.updateKLineIndex(idx))
+  }
+
+  minuteBtnDidClick(idx) {
+    if (this.minuteShowKey) {
+      Overlay.hide(this.minuteShowKey)
+    }
+    Animated.timing(
+      this.minuteRotate, {
+        toValue: 0,
+        duration: 150,
+      },
+    ).start()
+    const { dispatch } = this.props
+    dispatch(exchange.updateKLineIndex(idx))
+  }
+
+  hourBtnDidClick(idx) {
+    if (this.hourShowKey) {
+      Overlay.hide(this.hourShowKey)
+    }
+    Animated.timing(
+      this.hourRotate, {
+        toValue: 0,
+        duration: 150,
+      },
+    ).start()
+    const { dispatch } = this.props
+    dispatch(exchange.updateKLineIndex(idx))
+  }
+
+  showMinuteOverlay({ x, y, width, height }) {
+    const fromBounds = { x, y, width, height }
+    const { language, kLineIndex } = this.props
+    const overlayView = (
+      <Overlay.PopoverView
+        onAppearCompleted={() => {
+          Animated.timing(
+            this.minuteRotate, {
+              toValue: 0.5,
+              duration: 150,
+            },
+          ).start()
+        }}
+        onDisappearCompleted={() => {
+          this.minuteShowKey = undefined
+          Animated.timing(
+            this.minuteRotate, {
+              toValue: 0,
+              duration: 150,
+            },
+          ).start()
+        }}
+        popoverStyle={styles.popViewStyle}
+        fromBounds={fromBounds}
+        direction="right"
+        align="start"
+        directionInsets={4}
+        showArrow={false}
+      >
+        <View style={styles.btnCovers}>
+          <Text
+            style={
+              kLineIndex === 1 ?
+                styles.popItemsSelected :
+                styles.popItems
+            }
+            onPress={() => this.minuteBtnDidClick(1)}
+          >
+            {transfer(language, 'exchange_1min')}
+          </Text>
+          <Text
+            style={
+              kLineIndex === 2 ?
+                styles.popItemsSelected :
+                styles.popItems
+            }
+            onPress={() => this.minuteBtnDidClick(2)}
+          >
+            {transfer(language, 'exchange_5min')}
+          </Text>
+          <Text
+            style={
+              kLineIndex === 3 ?
+                styles.popItemsSelected :
+                styles.popItems
+            }
+            onPress={() => this.minuteBtnDidClick(3)}
+          >
+            {transfer(language, 'exchange_15min')}
+          </Text>
+          <Text
+            style={
+              kLineIndex === 4 ?
+                styles.popItemsSelected :
+                styles.popItems
+            }
+            onPress={() => this.minuteBtnDidClick(4)}
+          >
+            {transfer(language, 'exchange_30min')}
+          </Text>
+        </View>
+      </Overlay.PopoverView>
+    )
+    this.minuteShowKey = Overlay.show(overlayView)
+  }
+
+  showHourOverlay({ x, y, width, height }) {
+    const fromBounds = { x, y, width, height }
+    const { language, kLineIndex } = this.props
+    const overlayView = (
+      <Overlay.PopoverView
+        onAppearCompleted={() => {
+          Animated.timing(
+            this.hourRotate, {
+              toValue: 0.5,
+              duration: 150,
+            },
+          ).start()
+        }}
+        onDisappearCompleted={() => {
+          this.hourShowKey = undefined
+          Animated.timing(
+            this.hourRotate, {
+              toValue: 0,
+              duration: 150,
+            },
+          ).start()
+        }}
+        popoverStyle={styles.popViewStyle}
+        fromBounds={fromBounds}
+        direction="right"
+        align="start"
+        directionInsets={4}
+        showArrow={false}
+      >
+        <View style={styles.btnHourCovers}>
+          <Text
+            style={
+              kLineIndex === 5 ?
+                styles.popItemsSelected :
+                styles.popItems
+            }
+            onPress={() => this.hourBtnDidClick(5)}
+          >
+            {transfer(language, 'exchange_1hour')}
+          </Text>
+          <Text
+            style={
+              kLineIndex === 6 ?
+                styles.popItemsSelected :
+                styles.popItems
+            }
+            onPress={() => this.hourBtnDidClick(6)}
+          >
+            {transfer(language, 'exchange_4hour')}
+          </Text>
+        </View>
+      </Overlay.PopoverView>
+    )
+    this.hourShowKey = Overlay.show(overlayView)
   }
 
   pop() {
@@ -101,26 +417,208 @@ class KLineFullScreen extends Component {
     }, 100)
   }
 
+  renderHeaderBar() {
+    const { selectedPair, valuation, language } = this.props
+    const goodsName = selectedPair.goods.name
+    const currencyName = selectedPair.currency.name
+    let quantity = ''
+    let cprice = ''
+    const rose = selectedPair.rose
+    let rmb = '0.00'
+
+    if (selectedPair) {
+      common.precision(selectedPair.goods.name, selectedPair.currency.name, (p, q) => {
+        cprice = new BigNumber(selectedPair.cprice).toFixed(p, 1)
+        quantity = new BigNumber(selectedPair.quantity).toFixed(q, 1)
+      })
+      if (valuation && valuation.rates) {
+        rmb = valuation.rates[currencyName][common.token.CNYT]
+        rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
+      }
+    }
+    let cpriceColor
+    let dirImageSource
+    let newRose = new BigNumber(rose)
+    if (newRose.gt(0)) {
+      cpriceColor = common.redColor
+      dirImageSource = require('../../assets/red_arrow_up.png')
+    } else if (newRose.lt(0)) {
+      cpriceColor = common.greenColor
+      dirImageSource = require('../../assets/down_arrow_green.png')
+    } else {
+      cpriceColor = common.textColor
+    }
+    newRose = newRose.multipliedBy(100).toFixed(2, 1)
+    return (<View style={styles.navBar}>
+      <View style={styles.detailShow}>
+        <Text style={styles.btc}>
+          <Text style={styles.currentBtc}>{goodsName}</Text>/{currencyName}
+        </Text>
+        <Text style={styles.increaseUp}>{cprice}
+          <Image
+            resizeMode="contain"
+            style={styles.arrowStyle}
+            source={dirImageSource}
+          />
+        </Text>
+        <Text style={styles.cny}>¥ {rmb}</Text>
+        <Text style={styles.priceUp}>{`${cpriceColor === common.redColor ? `+${newRose}` : newRose}%`}</Text>
+        <Text style={styles.volume}>{transfer(language, 'exchange_24changed')}:</Text>
+        <Text style={styles.btcAmount}>{quantity}</Text>
+      </View>
+      <NextTouchableOpacity
+        style={styles.backBtn}
+        activeOpacity={common.activeOpacity}
+        delay={0}
+        onPress={() => this.pop()}
+      >
+        <Image
+          resizeMode="contain"
+          source={require('../../assets/full_screen_2.png')}
+          style={styles.backImage}
+        />
+      </NextTouchableOpacity>
+    </View>)
+  }
+
+  renderFooterBar() {
+    const { language, kLineIndex } = this.props
+    return (
+      <View style={styles.footerView}>
+        <NextTouchableOpacity
+          style={styles.footerItems}
+          activeOpacity={common.activeOpacity}
+          onPress={() => this.baseBtnDidClick(0)}
+        >
+          <Text
+            style={
+              kLineIndex === 0 ?
+                styles.textSelectedStyle :
+                styles.textStyle
+            }
+          >{transfer(language, 'exchange_time_l')}</Text>
+        </NextTouchableOpacity>
+        <TouchableOpacity
+          style={styles.footerItems}
+          activeOpacity={common.activeOpacity}
+          onPress={() => {
+            this.showMinuteOverlay({
+              x: 35,
+              y: common.sh / 6 + (common.sh / 6 - 104) / 2,
+              width: 0,
+              height: 0,
+            })
+          }}
+        >
+          <Text
+            style={
+              (kLineIndex > 0 && kLineIndex <= 4) ?
+                styles.textSelectedStyle :
+                styles.textStyle
+            }
+          >{transfer(language, 'exchange_minute')}</Text>
+          <Animated.Image
+            resizeMode="contain"
+            style={[styles.arrowIcon,
+              {
+                transform: [
+                  {
+                    rotate: this.minuteRotate.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '360deg'],
+                    }),
+                  },
+                ],
+              }]}
+            source={require('../../assets/yellow_arrow_down.png')}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.footerItems}
+          activeOpacity={common.activeOpacity}
+          onPress={() => {
+            this.showHourOverlay({
+              x: 35,
+              y: common.sh / 3 + (common.sh / 6 - 46) / 2,
+              width: 0,
+              height: 0,
+            })
+          }}
+        >
+          <Text
+            style={
+              (kLineIndex > 4 && kLineIndex <= 6) ?
+                styles.textSelectedStyle :
+                styles.textStyle
+            }
+          >{transfer(language, 'exchange_hour_l')}</Text>
+          <Animated.Image
+            resizeMode="contain"
+            style={[styles.arrowIcon,
+              {
+                transform: [
+                  {
+                    rotate: this.hourRotate.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '360deg'],
+                    }),
+                  },
+                ],
+              }]}
+            source={require('../../assets/yellow_arrow_down.png')}
+          />
+        </TouchableOpacity>
+        <NextTouchableOpacity
+          style={styles.footerItems}
+          activeOpacity={common.activeOpacity}
+          onPress={() => this.baseBtnDidClick(7)}
+        >
+          <Text
+            style={
+              kLineIndex === 7 ?
+                styles.textSelectedStyle :
+                styles.textStyle
+            }
+          >{transfer(language, 'exchange_dayLine')}</Text>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          style={styles.footerItems}
+          activeOpacity={common.activeOpacity}
+          onPress={() => this.baseBtnDidClick(8)}
+        >
+          <Text
+            style={
+              kLineIndex === 8 ?
+                styles.textSelectedStyle :
+                styles.textStyle
+            }
+          >{transfer(language, 'exchange_weekLine')}</Text>
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          style={styles.footerItems}
+          activeOpacity={common.activeOpacity}
+          onPress={() => this.baseBtnDidClick(9)}
+        >
+          <Text
+            style={
+              kLineIndex === 9 ?
+                styles.textSelectedStyle :
+                styles.textStyle
+            }
+          >{transfer(language, 'exchange_monthLine')}</Text>
+        </NextTouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
-    const { navigation } = this.props
-    const { goodsName, currencyName } = navigation.state.params
+    const { selectedPair } = this.props
+    const goodsName = selectedPair.goods.name
+    const currencyName = selectedPair.currency.name
     return (
       <View style={styles.conatiner}>
         <View style={styles.box}>
-          <View style={styles.navBar}>
-            <NextTouchableOpacity
-              style={styles.backBtn}
-              activeOpacity={common.activeOpacity}
-              delay={0}
-              onPress={() => this.pop()}
-            >
-              <Image
-                resizeMode="contain"
-                source={require('../../assets/arrow_left_left.png')}
-                style={styles.backImage}
-              />
-            </NextTouchableOpacity>
-          </View>
+          {this.renderHeaderBar()}
           <WebView
             ref={(e) => { this.webView = e }}
             javaScriptEnabled
@@ -130,6 +628,7 @@ class KLineFullScreen extends Component {
             style={styles.webview}
             source={{ uri: `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}` }}
           />
+          {this.renderFooterBar()}
         </View>
       </View >
     )
@@ -138,7 +637,10 @@ class KLineFullScreen extends Component {
 
 function mapStateToProps(state) {
   return {
+    valuation: state.exchange.valuation,
     kLineIndex: state.exchange.kLineIndex,
+    selectedPair: state.exchange.selectedPair,
+    language: state.system.language,
   }
 }
 

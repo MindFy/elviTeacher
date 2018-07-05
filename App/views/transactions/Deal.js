@@ -7,8 +7,11 @@ import {
   ScrollView,
   StyleSheet,
   ListView,
+  Image,
+  TouchableOpacity,
+  Animated,
 } from 'react-native'
-import { Toast } from 'teaset'
+import { Toast, Overlay } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import KLine from './KLineWeb'
@@ -53,12 +56,17 @@ const styles = StyleSheet.create({
     backgroundColor: common.blackColor,
     width: '100%',
   },
+  klineContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    paddingVertical: 2,
+    justifyContent: 'space-between',
     paddingHorizontal: 10,
+    height: 32,
+    backgroundColor: common.navBgColor,
   },
   kLineBtn: {
     height: common.getH(17),
@@ -88,14 +96,52 @@ const styles = StyleSheet.create({
   },
   kLineBtnTitleSelected: {
     color: '#FFD502',
-    fontSize: common.font12,
+    fontSize: common.font14,
     alignSelf: 'center',
+  },
+  kLineBtnTitleBase: {
+    color: '#FFFFFF',
+    fontSize: common.font14,
+    alignSelf: 'center',
+  },
+  fullContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  fullTouchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  fullScreen: {
+    width: 12,
+    height: 12,
+    marginLeft: 2,
+  },
+  klineIcon: {
+    width: 12,
+    height: 6,
+    marginLeft: 3,
+  },
+  deepBtn: {
+    marginLeft: 30,
+  },
+  popViewStyle: {
+    backgroundColor: common.navBgColor,
+  },
+  btnCovers: {
+    padding: 10,
+    flexDirection: 'row',
+    width: common.sw - 20,
+    flexWrap: 'wrap',
   },
 })
 
 class Deal extends Component {
   constructor(props) {
     super(props)
+    this.rotate = new Animated.Value(0)
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     cache.setObject('currentComponentVisible', 'Deal')
   }
@@ -218,7 +264,7 @@ class Deal extends Component {
         alertTitle,
         [{
           text: transfer(language, 'withdrawal_cancel'),
-          onPress: () => {},
+          onPress: () => { },
           style: 'cancel',
         }, {
           text: transfer(language, 'withdrawal_confirm'),
@@ -465,64 +511,86 @@ class Deal extends Component {
     )
   }
 
-  renderKlineBtnIfNeeded(kLineOrDepth, language) {
-    if (kLineOrDepth === common.ui.kLine) {
-      const array = [
-        transfer(language, 'exchange_time'),
-        transfer(language, 'exchange_1min'),
-        transfer(language, 'exchange_5min'),
-        transfer(language, 'exchange_15min'),
-        transfer(language, 'exchange_30min'),
-        transfer(language, 'exchange_1hour'),
-        transfer(language, 'exchange_4hour'),
-        transfer(language, 'exchange_1day'),
-        transfer(language, 'exchange_1week'),
-        transfer(language, 'exchange_1month'),
-      ]
-      const { kLineIndex } = this.props
-      return (
-        <ScrollView
-          horizontal
-          automaticallyAdjustContentInsets={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-          style={styles.scrollView}
-          contentContainerStyle={styles.scrollViewContentStyle}
-        >
-          {
-            array.map((e, idx) => (
-              <NextTouchableOpacity
-                key={e}
-                style={styles.scrollViewLineBtn}
-                activeOpacity={common.activeOpacity}
-                onPress={() => {
-                  const { dispatch } = this.props
-                  if (idx !== kLineIndex) {
-                    dispatch(exchange.updateKLineIndex(idx))
-                  }
-                }}
-              >
-                <Text style={
-                  idx === kLineIndex ?
-                    styles.kLineBtnTitleSelected :
-                    styles.kLineBtnTitle}
-                >{e}</Text>
-              </NextTouchableOpacity>
-            ))
+  renderKlineBtnIfNeeded({ x, y, width, height, language, kLineIndex, kLineOrDepth }) {
+    const fromBounds = { x, y, width, height }
+    const array = [
+      transfer(language, 'exchange_time'),
+      transfer(language, 'exchange_1min'),
+      transfer(language, 'exchange_5min'),
+      transfer(language, 'exchange_15min'),
+      transfer(language, 'exchange_30min'),
+      transfer(language, 'exchange_1hour'),
+      transfer(language, 'exchange_4hour'),
+      transfer(language, 'exchange_1day'),
+      transfer(language, 'exchange_1week'),
+      transfer(language, 'exchange_1month'),
+    ]
+    const btns = array.map((e, idx) => (
+      <NextTouchableOpacity
+        key={e}
+        style={styles.scrollViewLineBtn}
+        activeOpacity={common.activeOpacity}
+        onPress={() => {
+          if (this.showKey) {
+            Overlay.hide(this.showKey)
           }
-        </ScrollView>
-      )
-    }
-    return null
+          this.showKey = undefined
+          const { dispatch } = this.props
+          if (idx !== kLineIndex) {
+            if (kLineOrDepth !== common.ui.kLine) {
+              dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
+            }
+            Animated.timing(
+              this.rotate, {
+                toValue: 0,
+                duration: 150,
+              },
+            ).start()
+            dispatch(exchange.updateKLineIndex(idx))
+          }
+        }}
+      >
+        <Text style={idx === kLineIndex ?
+          styles.kLineBtnTitleSelected :
+          styles.kLineBtnTitle}
+        >{e}</Text>
+      </NextTouchableOpacity>
+    ))
+    const overlayView = (
+      <Overlay.PopoverView
+        onAppearCompleted={() => {
+          Animated.timing(
+            this.rotate, {
+              toValue: 0.5,
+              duration: 150,
+            },
+          ).start()
+        }}
+        onDisappearCompleted={() => {
+          this.showKey = undefined
+          Animated.timing(
+            this.rotate, {
+              toValue: 0,
+              duration: 150,
+            },
+          ).start()
+        }}
+        popoverStyle={styles.popViewStyle}
+        fromBounds={fromBounds}
+        direction="left"
+        align="start"
+        directionInsets={4}
+        showArrow={false}
+      >
+        <View style={styles.btnCovers}>{btns}</View>
+      </Overlay.PopoverView>
+    )
+    this.showKey = Overlay.show(overlayView)
   }
 
   renderDepthView = () => {
     const { dispatch, kLineOrDepth, depthMap,
       selectedPair, kLineIndex, language } = this.props
-    let kLineBtnTitle = transfer(language, 'exchange_kLine')
-    if (kLineOrDepth === common.ui.kLine) {
-      kLineBtnTitle = transfer(language, 'exchange_deep')
-    }
     const renderCharts = () => {
       if (kLineOrDepth === common.ui.kLine) {
         return (<KLine
@@ -543,23 +611,78 @@ class Deal extends Component {
     return (
       <View style={styles.kLineView}>
         <View style={styles.header}>
-          {this.renderKlineBtnIfNeeded(kLineOrDepth, language)}
-          <NextTouchableOpacity
-            style={styles.kLineBtn}
+          <TouchableOpacity
             activeOpacity={common.activeOpacity}
+            style={styles.klineContainer}
+            onPress={() => {
+              this.renderKlineBtnIfNeeded({
+                x: common.sw - 10,
+                y: 86 + common.navHeight,
+                width: 0,
+                height: 0,
+                language,
+                kLineIndex,
+                kLineOrDepth,
+              })
+            }}
+          >
+            <Text
+              style={kLineOrDepth === common.ui.kLine ?
+                styles.kLineBtnTitleSelected :
+                styles.kLineBtnTitleBase}
+            >{transfer(language, 'exchange_kLine')}</Text>
+            <Animated.Image
+              resizeMode="contain"
+              style={[styles.klineIcon,
+                {
+                  transform: [
+                    {
+                      rotate: this.rotate.interpolate({
+                        inputRange: [0, 1],
+                        outputRange: ['0deg', '360deg'],
+                      }),
+                    },
+                  ],
+                }]}
+              ref={(e) => { this.arrow = e }}
+              source={require('../../assets/yellow_arrow_up.png')}
+            />
+          </TouchableOpacity>
+          <NextTouchableOpacity
+            activeOpacity={common.activeOpacity}
+            style={styles.deepBtn}
             onPress={() => {
               if (kLineOrDepth === common.ui.kLine) {
                 dispatch(actions.kLineOrDepthUpdate(common.ui.depth))
-              } else {
-                dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
+                dispatch(exchange.updateKLineIndex(3))
               }
-              dispatch(exchange.updateKLineIndex(3))
             }}
           >
-            <Text style={styles.kLineBtnTitle}>
-              {kLineBtnTitle}
-            </Text>
+            <Text
+              style={kLineOrDepth !== common.ui.kLine ?
+                styles.kLineBtnTitleSelected :
+                styles.kLineBtnTitleBase}
+            >{transfer(language, 'exchange_deep')}</Text>
           </NextTouchableOpacity>
+          <View style={styles.fullContainer}>
+            <NextTouchableOpacity
+              activeOpacity={common.activeOpacity}
+              style={styles.fullTouchContainer}
+              onPress={() => {
+                const { navigation } = this.props
+                cache.setObject('duration', 1)
+                navigation.navigate('KLineFullScreen', {
+                  transition: 'forVertical',
+                })
+              }}
+            >
+              <Image
+                resizeMode="contain"
+                style={styles.fullScreen}
+                source={require('../../assets/full_screen_1.png')}
+              />
+            </NextTouchableOpacity>
+          </View>
         </View>
         {renderCharts()}
       </View>

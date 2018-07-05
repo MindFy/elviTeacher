@@ -159,8 +159,7 @@ class Home extends Component {
     const preLoginTs = await AsyncStorage.getItem('lastLoginTs')
     if (preLoginTs) {
       const ts = new Date().getTime() - new Date(preLoginTs).getTime()
-      // 15 * 24 * 60 * 60 * 1000
-      if (ts > 5 * 60 * 1000) {
+      if (ts > 15 * 24 * 60 * 60 * 1000) {
         this.syncFailed()
         return
       }
