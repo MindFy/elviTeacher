@@ -20,8 +20,6 @@ import * as withdraw from '../../actions/withdraw'
 import * as recharge from '../../actions/recharge'
 import { requestDailyChange } from '../../actions/balanceDetail'
 
-// import moduleName from '../../actions/detailDeal'
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -127,7 +125,6 @@ class BalanceDetail extends Component {
 
   jumpToRecharge = () => {
     const { dispatch, navigation, currentToken } = this.props
-    // dispatch(recharge.toggleForm())
     dispatch(recharge.coinSelected(currentToken))
     dispatch(recharge.requestRechargeAddress({
       token_ids: [currentToken.id],
@@ -178,7 +175,7 @@ class BalanceDetail extends Component {
 
     if (bgRose.gt(0)) {
       extraStyle = { color: 'rgb(213,69,80)' }
-      rose = `+${bgRose.toFixed(2, 1)}`
+      rose = `+${bgRose.toFixed(2, 1)}%`
     } else if (bgRose.lt(0)) {
       extraStyle = { color: '#24c78c' }
     } else {
