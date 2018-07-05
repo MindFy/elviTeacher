@@ -17,7 +17,7 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from '../../actions/balance'
-import { updateCurrentToken, updateCurrentTokenBalance } from '../../actions/balanceDetail'
+import { updateCurrentToken } from '../../actions/balanceDetail'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
