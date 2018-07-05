@@ -34,7 +34,6 @@ function* requestDailyChange() {
             rose: one.rose,
           })
         }
-        break
       } else {
         for (let j = 0; j < ones.sub.length; j++) {
           const one = ones.sub[j]

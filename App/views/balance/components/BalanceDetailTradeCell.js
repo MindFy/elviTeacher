@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flexDirection: 'row',
-    width: '30%',
+    width: '33%',
   },
   title: {
     fontSize: 14,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   detail: {
     marginRight: 30,
-    textAlign: 'center',
+    textAlign: 'left',
     flex: 1,
     fontSize: 14,
     color: '#dfe4ff',
@@ -68,8 +68,7 @@ class BalanceDetailTradeCell extends Component {
     return (
       <NextTouchableOpacity style={container} onPress={this.handlePress} activeOpacity={0.7}>
         <Image style={styles.icon} source={this.props.icon} />
-        <Text style={styles.title}>{this.props.title}</Text>
-        <Text style={styles.subtitle}>{`/${this.props.subtitle}`}</Text>
+        {this.renderTitle()}
         <Text style={styles.detail}>{this.props.detail}</Text>
         <Text style={extarStyle}>{this.props.extra}</Text>
       </NextTouchableOpacity>
