@@ -371,11 +371,11 @@ class Orders extends Component {
   }
 
   cancelAllOrder = () => {
-    const { openOrders } = this.props
-    if (openOrders.length === 0) {
-      return
-    }
-    Alert.alert('需求未明确')
+    // const { openOrders } = this.props
+    // if (openOrders.length === 0) {
+    //   return
+    // }
+    // Alert.alert('需求未明确')
     // dispatch(requestCancelAllOrder({
     //   goods_id: 1,
     //   currency_id: 2,

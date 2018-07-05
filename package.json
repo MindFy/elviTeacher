@@ -17,6 +17,7 @@
     ]
   },
   "dependencies": {
+    "antd-mobile": "2.1.4",
     "bignumber.js": "^7.0.1",
     "buffer": "5.1.0",
     "idcard": "^4.1.0",
@@ -62,5 +63,5 @@
   "jest": {
     "preset": "react-native"
   },
-  "jsVersion": "1.0.0.0"
+  "jsVersion": "1.0.0.1"
 }
