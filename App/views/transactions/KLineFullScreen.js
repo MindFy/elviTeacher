@@ -198,21 +198,6 @@ class KLineFullScreen extends Component {
     return false
   }
 
-  componentDidUpdate(preProps) {
-    const { selectedPair } = this.props
-    const goodsName = selectedPair.goods.name
-    const currencyName = selectedPair.currency.name
-    if (preProps.goodsName !== goodsName ||
-      preProps.currencyName !== currencyName
-    ) {
-      if (this.webView) {
-        const nextUrl = `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}`
-        this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
-        this.webView.injectJavaScript('window.location.reload()')
-      }
-    }
-  }
-
   componentWillUnmount() {
     StatusBar.setHidden(false, true)
   }
@@ -221,7 +206,9 @@ class KLineFullScreen extends Component {
     this.timer = setTimeout(() => {
       if (this.webView) {
         this.webView.injectJavaScript('window.location.reload()')
-        this.setValue(kLineIndex)
+        setTimeout(() => {
+          this.setValue(kLineIndex)
+        }, 1000)
       } else {
         this.setLine(kLineIndex, 500)
       }
@@ -239,10 +226,8 @@ class KLineFullScreen extends Component {
       resolution = array[kLineIndex]
       type = 1
     }
-    setTimeout(() => {
-      this.webView.injectJavaScript(`setChartType(${type})`)
-      this.webView.injectJavaScript(`setResolution('${resolution}')`)
-    }, 1000)
+    this.webView.injectJavaScript(`setChartType(${type})`)
+    this.webView.injectJavaScript(`setResolution('${resolution}')`)
   }
 
   baseBtnDidClick(idx) {
