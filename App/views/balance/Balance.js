@@ -17,6 +17,7 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from '../../actions/balance'
+import { updateCurrentToken } from '../../actions/balanceDetail'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
@@ -229,6 +230,14 @@ class Balance extends Component {
     EIEC: require('../../assets/market_EIEC.png'),
   }
 
+  jumpToBalanceDetail = (rd) => {
+    this.props.dispatch(updateCurrentToken({ ...rd.token }))
+    this.props.navigation.navigate('BalanceDetail', {
+      language: this.props.language,
+      headerTitle: transfer(this.props.language, 'balance_detail'),
+    })
+  }
+
   renderRow(rd) {
     const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
     const source = this.marketIcons[rd.token.name]
@@ -237,6 +246,7 @@ class Balance extends Component {
         leftImageSource={source}
         title={rd.token.name}
         detail={amount}
+        onPress={() => { this.jumpToBalanceDetail(rd) }}
       />
     )
   }
