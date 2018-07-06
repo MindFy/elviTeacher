@@ -170,7 +170,7 @@ class BalanceDetail extends Component {
       cPirce = new BigNumber(item.cprice).toFixed(p, 1)
     })
     const bgRose = new BigNumber(item.rose).multipliedBy(100)
-    let rose = bgRose.toFixed(2, 1)
+    let rose
     let extraStyle = {}
 
     if (bgRose.gt(0)) {
@@ -178,9 +178,10 @@ class BalanceDetail extends Component {
       rose = `+${bgRose.toFixed(2, 1)}%`
     } else if (bgRose.lt(0)) {
       extraStyle = { color: '#24c78c' }
+      rose = `${bgRose.toFixed(2, 1)}%`
     } else {
       extraStyle = { color: 'rgb(223,228,255)' }
-      rose = `${rose}%`
+      rose = `${bgRose.toFixed(2, 1)}%`
     }
 
     return (
