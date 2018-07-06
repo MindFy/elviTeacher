@@ -59,12 +59,13 @@ const styles = StyleSheet.create({
   klineContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: '100%',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 10,
+    paddingLeft: 10,
     height: 32,
     backgroundColor: common.navBgColor,
   },
@@ -115,6 +116,9 @@ const styles = StyleSheet.create({
   fullTouchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: 32,
+    width: 32,
+    justifyContent: 'center',
   },
   fullScreen: {
     width: 12,
@@ -128,9 +132,15 @@ const styles = StyleSheet.create({
   },
   deepBtn: {
     marginLeft: 30,
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: 50,
   },
   popViewStyle: {
     backgroundColor: common.navBgColor,
+    borderWidth: 0,
   },
   btnCovers: {
     padding: 10,
@@ -537,18 +547,16 @@ class Deal extends Component {
           }
           this.showKey = undefined
           const { dispatch } = this.props
-          if (idx !== kLineIndex) {
-            if (kLineOrDepth !== common.ui.kLine) {
-              dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
-            }
-            Animated.timing(
-              this.rotate, {
-                toValue: 0,
-                duration: 150,
-              },
-            ).start()
-            dispatch(exchange.updateKLineIndex(idx))
+          if (kLineOrDepth !== common.ui.kLine) {
+            dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
           }
+          Animated.timing(
+            this.rotate, {
+              toValue: 0,
+              duration: 150,
+            },
+          ).start()
+          dispatch(exchange.updateKLineIndex(idx))
         }}
       >
         <Text style={idx === kLineIndex ?

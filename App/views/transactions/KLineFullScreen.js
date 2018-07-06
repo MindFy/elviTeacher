@@ -33,7 +33,7 @@ const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingLeft: 10,
   },
   detailShow: {
     flex: 1,
@@ -59,9 +59,9 @@ const styles = {
     fontSize: 16,
   },
   arrowStyle: {
-    width: common.h13,
-    height: common.h13,
-    marginHorizontal: 5,
+    width: common.IsIOS ? 12 : 12 * common.scale,
+    height: common.IsIOS ? 12 : 12 * common.scale,
+    paddingHorizontal: 5 * common.scale,
   },
   cny: {
     marginHorizontal: 5,
@@ -87,8 +87,8 @@ const styles = {
     fontSize: 12,
   },
   backBtn: {
-    width: 24,
-    height: 44,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -110,6 +110,7 @@ const styles = {
   },
   footerItems: {
     flex: 1,
+    height: 35,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -445,7 +446,6 @@ class KLineFullScreen extends Component {
           styles.increaseDown}
         >{cprice}
           <Image
-            resizeMode="contain"
             style={styles.arrowStyle}
             source={dirImageSource}
           />
@@ -458,7 +458,7 @@ class KLineFullScreen extends Component {
         <Text style={styles.volume}>{transfer(language, 'exchange_24changed')}:</Text>
         <Text style={styles.btcAmount}>{quantity}</Text>
       </View>
-      <NextTouchableOpacity
+      <TouchableOpacity
         style={styles.backBtn}
         activeOpacity={common.activeOpacity}
         delay={0}
@@ -469,7 +469,7 @@ class KLineFullScreen extends Component {
           source={require('../../assets/full_screen_2.png')}
           style={styles.backImage}
         />
-      </NextTouchableOpacity>
+      </TouchableOpacity>
     </View>)
   }
 
@@ -494,7 +494,6 @@ class KLineFullScreen extends Component {
         <TouchableOpacity
           style={styles.footerItems}
           activeOpacity={common.activeOpacity}
-          delay={100}
           onPress={() => {
             this.showMinuteOverlay({
               x: 35,
