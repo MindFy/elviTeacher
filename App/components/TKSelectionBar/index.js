@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     height: common.h36,
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: common.margin10,
   },
 })
 
