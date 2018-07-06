@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   View,
   Text,
-  Alert,
   ScrollView,
   StyleSheet,
   ListView,
@@ -32,6 +31,7 @@ import findAssetList from '../../schemas/asset'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 const styles = StyleSheet.create({
   container: {
@@ -260,8 +260,8 @@ class Deal extends Component {
         alertTitle = transfer(language, 'exchange_orderPriceLowerThanCurrentPrice')
       }
       Alert.alert(
-        '',
         alertTitle,
+        '',
         [{
           text: transfer(language, 'withdrawal_cancel'),
           onPress: () => { },
@@ -284,7 +284,6 @@ class Deal extends Component {
             }
           },
         }],
-        { cancelable: false },
       )
       return
     }

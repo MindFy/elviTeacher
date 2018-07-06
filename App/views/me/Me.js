@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   View,
   ScrollView,
-  Alert,
 } from 'react-native'
 import {
   common,
@@ -14,6 +13,7 @@ import TKSpinner from '../../components/TKSpinner'
 import actions from '../../actions/index'
 import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 class Me extends Component {
   static navigationOptions({ navigation }) {
@@ -68,7 +68,6 @@ class Me extends Component {
           },
         },
       ],
-      { cancelable: false },
     )
   }
 

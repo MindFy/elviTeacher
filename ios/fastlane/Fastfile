@@ -27,7 +27,7 @@ platform :ios do
       export_options: {
         method: "ad-hoc",
         provisioningProfiles: { 
-          "io.d3j.wallet": "wallet-adhoc",
+          "io.d3j.wallet": "Tok-adhoc",
         }
       }
     )

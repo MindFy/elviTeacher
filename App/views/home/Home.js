@@ -7,8 +7,8 @@ import {
   ScrollView,
   StyleSheet,
   RefreshControl,
-  Alert,
   AsyncStorage,
+  Linking,
 } from 'react-native'
 import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
@@ -28,6 +28,8 @@ import cache from '../../utils/cache'
 import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
 import * as system from '../../actions/system'
+import * as api from '../../services/api'
+import Alert from '../../components/Alert'
 
 global.Buffer = require('buffer').Buffer
 
@@ -53,6 +55,9 @@ class Home extends Component {
     if (evt.indexOf('zh') > -1) {
       systemLanguage = 'zh_cn'
     }
+    setTimeout(() => {
+      this.checkUpdate(systemLanguage)
+    }, 1000)
     if (language !== systemLanguage) {
       dispatch(system.updateLanguage(systemLanguage))
     }
@@ -72,8 +77,6 @@ class Home extends Component {
         dispatch(actions.requestMarket())
       }
     }, common.refreshIntervalTime)
-
-    // this.checkUpdate()
 
     AppState.addEventListener('change',
       nextAppState => this._handleAppStateChange(nextAppState))
@@ -168,34 +171,47 @@ class Home extends Component {
     if (isAutoLogin === 'true') callBack()
   }
 
-  checkUpdate() {
+  checkUpdate(language) {
+    this.checkIsNeedUpdate(({ isUpdate, version }) => {
+      if (isUpdate) {
+        const newVersion = transfer(language, 'home_receiveNewVersion')
+        const availble = transfer(language, 'home_newVersionAvailble')
+        Alert.alert(
+          `${newVersion} V${version} ${availble}`,
+          null,
+          [
+            {
+              text: transfer(language, 'home_updateCancel'),
+              onPress: () => { },
+            },
+            {
+              text: transfer(language, 'home_updateNow'),
+              onPress: () => {
+                const url = `${api.API_ROOT}/landing.html`
+                Linking.canOpenURL(url)
+                  .then((e) => {
+                    if (e) {
+                      Linking.openURL(url)
+                    }
+                  })
+              },
+            },
+          ])
+      }
+    })
+  }
+
+  checkIsNeedUpdate(callback) {
     const currentVersion = packageJson.jsVersion
-    HotUpdate.setValueToUserStand(currentVersion, 'build', () => { })
-    const url = `http://192.168.1.165:8989/update/${currentVersion}/${common.IsIOS ? 'ios' : 'android'}`
+    const platform = common.IsIOS ? 'ios' : 'android'
+    const url = `${api.API_ROOT}/1.0/openapi/appupdate?device=${platform}&version=${currentVersion}`
     fetch(url)
       .then(r => r.json())
       .then((r) => {
-        if (r.version.toString() !== currentVersion.toString()) {
-          const options = {
-            zipPath: r.url,
-            isAbort: false,
-          }
-          HotUpdate.downLoadBundleZipWithOption(options, () => {
-            const { language } = this.props
-            Alert.alert(
-              transfer(language, 'home_receiveNewVersion'),
-              '',
-              [
-                {
-                  text: transfer(language, 'home_updateNow'),
-                  onPress: () => HotUpdate.killApp(),
-                },
-                {
-                  text: transfer(language, 'home_updateCancel'),
-                  onPress: () => { },
-                },
-              ],
-            )
+        if (r) {
+          callback({
+            isUpdate: r.isUpdate,
+            version: r.version,
           })
         }
       })
@@ -281,7 +297,6 @@ class Home extends Component {
 
   render() {
     const { announcements, banners, market, navigation, language } = this.props
-
     return (
       <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />

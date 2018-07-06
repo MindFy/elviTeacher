@@ -6,7 +6,6 @@ import {
   Image,
   ScrollView,
   StyleSheet,
-  Alert,
   Keyboard,
 } from 'react-native'
 import {
@@ -31,6 +30,7 @@ import TKInputItem from '../../components/TKInputItem'
 import findAddress from '../../schemas/address'
 import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import transfer from '../../localization/utils'
+import Alert from '../../components/Alert'
 
 const styles = StyleSheet.create({
   headerLeft: {
