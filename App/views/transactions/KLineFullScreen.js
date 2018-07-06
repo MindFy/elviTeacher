@@ -59,8 +59,8 @@ const styles = {
     fontSize: 16,
   },
   arrowStyle: {
-    width: 10.29,
-    height: 12,
+    width: common.h13,
+    height: common.h13,
     marginHorizontal: 5,
   },
   cny: {
@@ -84,7 +84,7 @@ const styles = {
   },
   priceDown: {
     color: 'rgb(36, 199, 139)',
-    fontSiz2: 12,
+    fontSize: 12,
   },
   backBtn: {
     width: 24,
@@ -146,7 +146,8 @@ const styles = {
     ],
   },
   popViewStyle: {
-    backgroundColor: common.navBgColor,
+    backgroundColor: 'red',
+    borderWidth: 0,
   },
   popItems: {
     color: '#DFE4FF',
@@ -431,7 +432,7 @@ class KLineFullScreen extends Component {
       cpriceColor = common.greenColor
       dirImageSource = require('../../assets/down_arrow_green.png')
     } else {
-      cpriceColor = common.textColor
+      cpriceColor = common.redColor
     }
     newRose = newRose.multipliedBy(100).toFixed(2, 1)
     return (<View style={styles.navBar}>
@@ -439,7 +440,10 @@ class KLineFullScreen extends Component {
         <Text style={styles.btc}>
           <Text style={styles.currentBtc}>{goodsName}</Text>/{currencyName}
         </Text>
-        <Text style={styles.increaseUp}>{cprice}
+        <Text style={cpriceColor === common.redColor ?
+          styles.increaseUp :
+          styles.increaseDown}
+        >{cprice}
           <Image
             resizeMode="contain"
             style={styles.arrowStyle}
@@ -447,7 +451,10 @@ class KLineFullScreen extends Component {
           />
         </Text>
         <Text style={styles.cny}>¥ {rmb}</Text>
-        <Text style={styles.priceUp}>{`${cpriceColor === common.redColor ? `+${newRose}` : newRose}%`}</Text>
+        <Text style={cpriceColor === common.redColor ?
+          styles.priceUp :
+          styles.priceDown}
+        >{`${cpriceColor === common.redColor ? `+${newRose}` : newRose}%`}</Text>
         <Text style={styles.volume}>{transfer(language, 'exchange_24changed')}:</Text>
         <Text style={styles.btcAmount}>{quantity}</Text>
       </View>
@@ -474,6 +481,7 @@ class KLineFullScreen extends Component {
           style={styles.footerItems}
           activeOpacity={common.activeOpacity}
           onPress={() => this.baseBtnDidClick(0)}
+          delay={100}
         >
           <Text
             style={
@@ -486,6 +494,7 @@ class KLineFullScreen extends Component {
         <TouchableOpacity
           style={styles.footerItems}
           activeOpacity={common.activeOpacity}
+          delay={100}
           onPress={() => {
             this.showMinuteOverlay({
               x: 35,
@@ -556,6 +565,7 @@ class KLineFullScreen extends Component {
         <NextTouchableOpacity
           style={styles.footerItems}
           activeOpacity={common.activeOpacity}
+          delay={100}
           onPress={() => this.baseBtnDidClick(7)}
         >
           <Text
@@ -569,6 +579,7 @@ class KLineFullScreen extends Component {
         <NextTouchableOpacity
           style={styles.footerItems}
           activeOpacity={common.activeOpacity}
+          delay={100}
           onPress={() => this.baseBtnDidClick(8)}
         >
           <Text
@@ -582,6 +593,7 @@ class KLineFullScreen extends Component {
         <NextTouchableOpacity
           style={styles.footerItems}
           activeOpacity={common.activeOpacity}
+          delay={100}
           onPress={() => this.baseBtnDidClick(9)}
         >
           <Text

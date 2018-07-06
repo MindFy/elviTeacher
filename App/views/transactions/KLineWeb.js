@@ -73,7 +73,9 @@ export default class KLine extends Component {
     this.timer = setTimeout(() => {
       if (this.webView) {
         this.webView.injectJavaScript('window.location.reload()')
-        this.setValue(kLineIndex)
+        setTimeout(() => {
+          this.setValue(kLineIndex)
+        }, 1000)
       } else {
         this.setLine(kLineIndex, 500)
       }

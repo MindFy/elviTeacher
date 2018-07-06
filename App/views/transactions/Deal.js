@@ -88,15 +88,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   scrollViewLineBtn: {
-    height: common.getH(17),
-    paddingHorizontal: 5,
+    height: common.getH(24),
+    width: common.getH(35),
     backgroundColor: common.navBgColor,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
     marginRight: 10,
   },
   kLineBtnTitleSelected: {
     color: '#FFD502',
-    fontSize: common.font14,
+    fontSize: common.font12,
     alignSelf: 'center',
   },
   kLineBtnTitleBase: {
