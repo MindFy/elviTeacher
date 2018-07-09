@@ -228,8 +228,10 @@ class KLineFullScreen extends Component {
       resolution = array[kLineIndex]
       type = 1
     }
-    this.webView.injectJavaScript(`setChartType(${type})`)
-    this.webView.injectJavaScript(`setResolution('${resolution}')`)
+    if (this.webView) {
+      this.webView.injectJavaScript(`setChartType(${type})`)
+      this.webView.injectJavaScript(`setResolution('${resolution}')`)
+    }
   }
 
   baseBtnDidClick(idx) {
