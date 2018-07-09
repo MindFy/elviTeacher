@@ -10,6 +10,7 @@ import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/Car
 import {
   common,
 } from './constants/common'
+import cache from './utils/cache'
 
 import Home from './views/home/Home'
 import Banner from './views/home/Banner'
@@ -36,6 +37,7 @@ import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
 import Market2 from './views/transactions/Market2'
+import KLineFullScreen from './views/transactions/KLineFullScreen'
 
 import Balance from './views/balance/Balance'
 import BalanceDetail from './views/balance/BalanceDetail'
@@ -155,7 +157,7 @@ const TabBar = TabNavigator(
 const TransitionConfiguration = () => ({
   transitionSpec: {
     timing: Animated.timing,
-    duration: 250,
+    duration: cache.getObject('duration') || 250,
   },
   screenInterpolator: (sceneProps) => {
     const { scene } = sceneProps
@@ -196,6 +198,12 @@ const TabBarStack = StackNavigator(
     Announcement,
     SecurityCenter,
     UpdateEmail,
+    KLineFullScreen: {
+      screen: KLineFullScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
     Rebates: {
       screen: Rebates,
     },
