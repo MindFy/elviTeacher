@@ -167,6 +167,7 @@ const styles = {
 }
 
 /* eslint-disable */
+// fix issue https://github.com/facebook/react-native/issues/10865
 const patchPostMessageFunction = () => {
   const originalPostMessage = window.postMessage
   const patchedPostMessage = (message, targetOrigin, transfer) => {
