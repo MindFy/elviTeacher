@@ -59,9 +59,9 @@ const styles = {
     fontSize: 16,
   },
   arrowStyle: {
-    width: common.IsIOS ? 12 : 12 * common.scale,
-    height: common.IsIOS ? 12 : 12 * common.scale,
-    paddingHorizontal: 5 * common.scale,
+    width: common.IsIOS ? 10 : 10 * common.scale,
+    height: common.IsIOS ? 10 : 10 * common.scale,
+    paddingHorizontal: common.IsIOS ? 5 : 5 * common.scale,
   },
   cny: {
     marginHorizontal: 5,
@@ -166,6 +166,17 @@ const styles = {
   },
 }
 
+/* eslint-disable */
+const patchPostMessageFunction = () => {
+  const originalPostMessage = window.postMessage
+  const patchedPostMessage = (message, targetOrigin, transfer) => {
+    originalPostMessage(message, targetOrigin, transfer)
+  }
+  patchedPostMessage.toString = () => String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
+  window.postMessage = patchedPostMessage
+}
+const patchPostMessageJsCode = `(${String(patchPostMessageFunction)})();`
+/* eslint-enable */
 class KLineFullScreen extends Component {
   constructor(props) {
     super(props)
@@ -175,11 +186,6 @@ class KLineFullScreen extends Component {
 
   componentWillMount() {
     StatusBar.setHidden(true, true)
-  }
-
-  componentDidMount() {
-    const { kLineIndex } = this.props
-    this.setLine(kLineIndex, 500)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -202,19 +208,6 @@ class KLineFullScreen extends Component {
 
   componentWillUnmount() {
     StatusBar.setHidden(false, true)
-  }
-
-  setLine(kLineIndex, delay) {
-    this.timer = setTimeout(() => {
-      if (this.webView) {
-        this.webView.injectJavaScript('window.location.reload()')
-        setTimeout(() => {
-          this.setValue(kLineIndex)
-        }, 1000)
-      } else {
-        this.setLine(kLineIndex, 500)
-      }
-    }, delay)
   }
 
   setValue(kLineIndex) {
@@ -610,7 +603,7 @@ class KLineFullScreen extends Component {
   }
 
   render() {
-    const { selectedPair } = this.props
+    const { selectedPair, kLineIndex } = this.props
     const goodsName = selectedPair.goods.name
     const currencyName = selectedPair.currency.name
     return (
@@ -624,7 +617,9 @@ class KLineFullScreen extends Component {
             scalesPageToFit={false}
             automaticallyAdjustContentInsets={false}
             style={styles.webview}
-            source={{ uri: `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}` }}
+            injectedJavaScript={patchPostMessageJsCode}
+            source={{ uri: `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}` }}
+            onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
           />
           {this.renderFooterBar()}
         </View>
