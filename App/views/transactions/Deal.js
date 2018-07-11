@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   scrollViewLineBtn: {
     height: common.getH(24),
-    width: common.getH(35),
+    width: common.getH(40),
     backgroundColor: common.navBgColor,
     justifyContent: 'flex-start',
     flexDirection: 'row',
