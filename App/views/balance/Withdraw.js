@@ -179,6 +179,7 @@ class WithDraw extends Component {
       4000156: 'me_authFailed',
       4000606: 'withdraw_address_error',
       4000608: 'withdraw_error_after_pwd_changed',
+      4000668: 'withdraw_account_frozen',
     }
     this.verificationCodeErrorDic = {
       4000101: 'login_numberOrTypeError',
