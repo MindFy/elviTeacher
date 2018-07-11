@@ -3,6 +3,7 @@ import {
   put,
   takeEvery,
   select,
+  takeLatest,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
@@ -147,6 +148,27 @@ export function* requestDepthMapWorker(action) {
   }
 }
 
+function* checkFavorite(action) {
+  const { payload } = action
+  const parms = {
+    goods_id: payload.goods.id,
+    currency_id: payload.currency.id,
+    action: 'check',
+  }
+  const resp = yield call(api.userFavoriteLists, parms)
+  if (resp.success) {
+    yield put({
+      type: 'exchange/check_favorite_success',
+      payload: resp.result.existFavorite,
+    })
+  } else {
+    yield put({
+      type: 'exchange/check_favorite_failed',
+      payload: resp.error,
+    })
+  }
+}
+
 export function* requestLastpriceList() {
   yield takeEvery('exchange/request_lastprice_list', requestLastpriceListWorker)
 }
@@ -173,4 +195,8 @@ export function* requestValuation() {
 
 export function* requestDepthMap() {
   yield takeEvery('exchange/request_depth_map', requestDepthMapWorker)
+}
+
+export function* watchCheckFavorite() {
+  yield takeLatest('exchange/check_favorite_request', checkFavorite)
 }

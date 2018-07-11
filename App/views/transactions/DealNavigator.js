@@ -29,10 +29,16 @@ const styles = StyleSheet.create({
     width: common.w10,
     height: common.h20,
   },
-  titleView: {
+  titleViewContainer: {
     marginTop: common.navHeight - common.h44,
     height: common.h44,
     alignSelf: 'center',
+    flexDirection: 'row',
+  },
+  titleView: {
+    // marginTop: common.navHeight - common.h44,
+    // height: common.h44,
+    // alignSelf: 'center',
     flexDirection: 'row',
   },
   title: {
@@ -53,6 +59,15 @@ const styles = StyleSheet.create({
     height: common.h44,
     justifyContent: 'center',
   },
+  isSelectedIconContainer: {
+    width: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  isSelectedIcon: {
+    width: 12,
+    height: 12,
+  },
 })
 
 export default class DealNavigator extends Component {
@@ -62,10 +77,48 @@ export default class DealNavigator extends Component {
     rightBtn: 'rightBtn',
   }
 
+  handlePressSelected = () => {
+    if (this.props.onPressSelected) {
+      this.props.onPressSelected()
+    }
+  }
+
+  renderTitleView = () => {
+    const { titles, onPress, isFavorited } = this.props
+
+    const title = titles[0] || ''
+    const isSelectedIcon = isFavorited
+      ? require('../../assets/icon_star_selected.png')
+      : require('../../assets/icon_star.png')
+
+    return (
+      <View style={styles.titleViewContainer}>
+        <NextTouchableOpacity
+          style={styles.isSelectedIconContainer}
+          onPress={this.handlePressSelected}
+        >
+          <Image source={isSelectedIcon} style={styles.isSelectedIcon} />
+        </NextTouchableOpacity>
+        <NextTouchableOpacity
+          style={styles.titleView}
+          activeOpacity={common.activeOpacity}
+          onPress={() => onPress(this.types.title)}
+        >
+          <Text style={styles.title}>
+            {title}
+          </Text>
+          <Image
+            style={styles.titleImage}
+            source={require('../../assets/arrow_down_yellow.png')}
+          />
+        </NextTouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
     const { titles, onPress } = this.props
 
-    const title = titles[0] || ''
     const rightBtnTitle = titles[1] || ''
 
     return (
@@ -82,19 +135,9 @@ export default class DealNavigator extends Component {
             source={require('../../assets/arrow_left_left.png')}
           />
         </NextTouchableOpacity>
-        <NextTouchableOpacity
-          style={styles.titleView}
-          activeOpacity={common.activeOpacity}
-          onPress={() => onPress(this.types.title)}
-        >
-          <Text style={styles.title}>
-            {title}
-          </Text>
-          <Image
-            style={styles.titleImage}
-            source={require('../../assets/arrow_down_yellow.png')}
-          />
-        </NextTouchableOpacity>
+
+        {this.renderTitleView()}
+
         <NextTouchableOpacity
           style={styles.rightBtn}
           activeOpacity={common.activeOpacity}

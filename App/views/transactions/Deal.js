@@ -159,6 +159,9 @@ class Deal extends Component {
   }
 
   componentDidMount() {
+    const { selectedPair } = this.props
+    const { currency, goods } = selectedPair
+    this.props.dispatch(exchange.checkFavorite({ goods, currency }))
     this.props.dispatch(exchange.updateSegmentIndex(0))
     this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
@@ -435,6 +438,7 @@ class Deal extends Component {
     const { navigation, language } = this.props
     navigation.navigate('Market2', {
       language,
+      fromDeal: true,
     })
   }
 
@@ -467,15 +471,29 @@ class Deal extends Component {
   }
 
   renderNavigationBar = () => {
-    const { navigation, selectedPair, loggedIn, language } = this.props
+    const { navigation, selectedPair, loggedIn, language, checkFavoriteStatus } = this.props
     const goodsName = selectedPair.goods.name
     const currencyName = selectedPair.currency.name
+
+    let isFavorited = false
+    if (checkFavoriteStatus.isPending) {
+      const params = this.props.navigation.state.params || {}
+      if (params.isFavorited) {
+        isFavorited = params.isFavorited
+      }
+    } else if (checkFavoriteStatus.error) {
+      isFavorited = false
+    } else {
+      isFavorited = checkFavoriteStatus.isFavorited
+    }
+
     return (
       <DealNavigator
         titles={[
           `${goodsName}/${currencyName}`,
           transfer(language, 'exchange_myOrder'),
         ]}
+        isFavorited={isFavorited}
         onPress={(type) => {
           if (type === 'leftBtn') {
             navigation.goBack()
