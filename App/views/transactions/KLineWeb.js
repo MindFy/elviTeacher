@@ -3,7 +3,36 @@ import { WebView, PanResponder, View } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 
+api.API_ROOT = 'http://192.168.1.222:8000'
+
+/* eslint-disable */
+// fix issue https://github.com/facebook/react-native/issues/10865
+const patchPostMessageFunction = () => {
+  const originalPostMessage = window.postMessage
+  const patchedPostMessage = (message, targetOrigin, transfer) => {
+    originalPostMessage(message, targetOrigin, transfer)
+  }
+  patchedPostMessage.toString = () => String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
+  window.postMessage = patchedPostMessage
+}
+const patchPostMessageJsCode = `(${String(patchPostMessageFunction)})();`
+/* eslint-enable */
+
+const styles = {
+  webView: {
+    width: common.sw,
+    height: common.getH(263),
+    backgroundColor: 'transparent',
+  },
+}
+
 export default class KLine extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      updateTime: 0,
+    }
+  }
   componentWillMount() {
     if (common.IsIOS) {
       this.panResponder = {
@@ -30,7 +59,7 @@ export default class KLine extends Component {
 
   componentDidMount() {
     const { kLineIndex } = this.props
-    this.setLine(kLineIndex, 500)
+    this.setLine(kLineIndex, 0)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -43,7 +72,8 @@ export default class KLine extends Component {
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.goodsName === this.props.goodsName &&
-      nextProps.currencyName === this.props.currencyName
+      nextProps.currencyName === this.props.currencyName &&
+      nextProps.kLineIndex === this.props.kLineIndex
     ) {
       return false
     }
@@ -56,9 +86,8 @@ export default class KLine extends Component {
       preProps.currencyName !== currencyName
     ) {
       if (this.webView) {
-        const nextUrl = `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}`
+        const nextUrl = `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}`
         this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
-        this.webView.injectJavaScript('window.location.reload()')
       }
     }
   }
@@ -72,10 +101,10 @@ export default class KLine extends Component {
   setLine(kLineIndex, delay) {
     this.timer = setTimeout(() => {
       if (this.webView) {
-        this.webView.injectJavaScript('window.location.reload()')
-        setTimeout(() => {
-          this.setValue(kLineIndex)
-        }, 1000)
+        const { goodsName, currencyName } = this.props
+        const nextUrl = `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}`
+        this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
+        this.setValue(kLineIndex)
       } else {
         this.setLine(kLineIndex, 500)
       }
@@ -93,26 +122,26 @@ export default class KLine extends Component {
       resolution = array[kLineIndex]
       type = 1
     }
-    this.webView.injectJavaScript(`setChartType(${type})`)
-    this.webView.injectJavaScript(`setResolution('${resolution}')`)
+    if (this.webView) {
+      this.webView.injectJavaScript(`setChartType(${type})`)
+      this.webView.injectJavaScript(`setResolution('${resolution}')`)
+    }
   }
 
   render() {
-    const { goodsName, currencyName } = this.props
+    const { goodsName, currencyName, kLineIndex } = this.props
     return (
-      <View {...this.panResponder.panHandlers}>
+      <View {...this.panResponder.panHandlers} >
         <WebView
           ref={(e) => { this.webView = e }}
           javaScriptEnabled
           domStorageEnabled
           scalesPageToFit={false}
           automaticallyAdjustContentInsets={false}
-          style={{
-            width: common.sw,
-            height: common.getH(263),
-            backgroundColor: 'transparent',
-          }}
-          source={{ uri: `${api.API_ROOT}/mobile_black.html#${goodsName}/${currencyName}` }}
+          style={styles.webView}
+          injectedJavaScript={patchPostMessageJsCode}
+          source={{ uri: `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}` }}
+          onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
         />
       </View>
     )
