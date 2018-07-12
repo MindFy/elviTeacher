@@ -238,15 +238,18 @@ class Deal extends Component {
     dispatch(exchange.requestCancelOrder(id))
   }
 
-  initData = (data) => {
-    const newLastPrice = {
-      sell: data.sell || [],
-      buy: data.buy || [],
+  initData = (d) => {
+    if (d.data) {
+      const data = d.data
+      const newLastPrice = {
+        sell: data.sell || [],
+        buy: data.buy || [],
+      }
+      const { dispatch } = this.props
+      dispatch(exchange.requestLastpriceListSucceed(newLastPrice))
+      const newOrderHistory = data.newDeals || []
+      dispatch(exchange.requestOrderhistoryListSucceed(newOrderHistory))
     }
-    const { dispatch } = this.props
-    dispatch(exchange.requestLastpriceListSucceed(newLastPrice))
-    const newOrderHistory = data.newDeals || []
-    dispatch(exchange.requestOrderhistoryListSucceed(newOrderHistory))
   }
 
   initWebSocket(props) {
@@ -262,7 +265,14 @@ class Deal extends Component {
         }))
       },
       onMessage: (data) => {
-        this.initData(data.data)
+        this.initData(data)
+      },
+      onClose: () => {
+        ws.sendMessage(JSON.stringify({
+          act: 'off',
+          ch: `channel_${currency.id}_${goods.id}`,
+          timestamp: Date.now(),
+        }))
       },
     })
   }
