@@ -55,36 +55,9 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     marginRight: 10,
   },
-  nextContainer: {
-    width: 80,
-    height: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  nextTitle: {
-    color: common.textColor,
-    fontSize: common.font12,
-  },
-  phoneContainer: {
-    width: 37,
-    height: 17,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  numberArea: {
-    color: common.textColor,
-    fontSize: common.font12,
-  },
-  whiteArrow: {
-    width: 7,
-    height: 5,
-    marginLeft: 5,
-  },
 })
 
-class Register extends Component {
+class EmailRegist extends Component {
   static navigationOptions({ navigation }) {
     let rightText = ''
     let rightHandler
@@ -151,7 +124,7 @@ class Register extends Component {
   componentWillMount() {
     const { navigation, language, dispatch } = this.props
     navigation.setParams({
-      rightText: transfer(language, 'login_email_regist'),
+      rightText: transfer(language, 'login_phone_regist'),
       rightHandler: () => {
         dispatch(actions.registerUpdate({
           mobile: '',
@@ -160,7 +133,7 @@ class Register extends Component {
           passwordAgain: '',
           recommendNo: '',
         }))
-        navigation.replace('EmailRegist')
+        navigation.replace('Register')
       },
     })
   }
@@ -240,7 +213,7 @@ class Register extends Component {
   codePress() {
     const { dispatch, mobile, mobileIsExist, language } = this.props
     if (mobileIsExist) {
-      Toast.fail(transfer(language, 'login_phoneRegisted'))
+      Toast.fail(transfer(language, 'login_emailRegisted'))
       return
     }
     if (!mobile) {
@@ -312,15 +285,15 @@ class Register extends Component {
       if (getVerificateCodeResponse.success) {
         Toast.success(transfer(language, 'get_code_succeed'))
       } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_numberOrTypeError'))
+        Toast.fail(transfer(language, 'login_email_numberOrTypeError'))
       } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
+        Toast.fail(transfer(language, 'login_email_disbaleSendInOneMin'))
       } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneRegisted'))
+        Toast.fail(transfer(language, 'login_emailRegisted'))
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
+        Toast.fail(transfer(language, 'login_email_networdError'))
       } else {
-        Toast.fail(transfer(language, 'login_getCodeFailed'))
+        Toast.fail(transfer(language, 'login_email_getCodeFailed'))
       }
     }
   }
@@ -349,7 +322,7 @@ class Register extends Component {
       } else if (registerResponse.error.code === 4000103) {
         Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (registerResponse.error.code === 4000114) {
-        Toast.fail(transfer(language, 'login_phoneRegisted'))
+        Toast.fail(transfer(language, 'login_emailRegisted'))
       } else if (registerResponse.error.code === 4000115) {
         Toast.fail(transfer(language, 'login_inviteUserNotExist'))
       } else if (registerResponse.error.code === 4000113) {
@@ -370,34 +343,15 @@ class Register extends Component {
         titleStyle={{
           width: common.h80,
         }}
-        title={() => (
-          <View style={styles.nextContainer}>
-            <Text style={styles.nextTitle}>
-              {transfer(language, 'login_id')}
-            </Text>
-            <NextTouchableOpacity
-              style={styles.phoneContainer}
-              activeOpacity={1}
-              delay={0}
-            >
-              <Text style={styles.numberArea}>+86</Text>
-              <Image
-                style={styles.whiteArrow}
-                resizeMode="contain"
-                source={require('../../assets/white_arrow_up.png')}
-              />
-            </NextTouchableOpacity>
-          </View>
-        )}
-        // title={transfer(language, 'login_id')}
-        placeholder={transfer(language, 'login_idPlaceholder')}
+        title={transfer(language, 'login_id')}
+        placeholder={transfer(language, 'login_email_inputCode')}
         textInputProps={{
-          keyboardType: 'phone-pad',
           onBlur: () => {
-            if (!common.regMobile.test(this.props.mobile)) {
+            if (!common.regEmail.test(this.props.mobile)) {
               this.props.dispatch(actions.clearMobileIsExist())
               this.setState({ showTip: true })
             } else {
+              // 需要修改
               this.props.dispatch(actions.mobileIsExist({
                 type: 'mobile',
                 value: this.props.mobile,
@@ -407,7 +361,6 @@ class Register extends Component {
           },
         }}
         value={mobile}
-        maxLength={11}
         onChange={e => this.onChange(e, 'mobile')}
         onFocus={() => {
           if (common.IsIOS) {
@@ -427,7 +380,7 @@ class Register extends Component {
       return (
         <View style={{ height: 40 }}>
           <Text style={styles.mobileTip}>
-            {transfer(language, 'login_phoneRegisted')}
+            {transfer(language, 'login_emailRegisted')}
           </Text>
         </View>
       )
@@ -436,7 +389,7 @@ class Register extends Component {
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            {transfer(language, 'login_idError')}
+            {transfer(language, 'login_emailFormatError')}
           </Text> : null}
       </View>
     )
@@ -451,7 +404,7 @@ class Register extends Component {
           width: common.h80,
         }}
         title={transfer(language, 'login_code')}
-        placeholder={transfer(language, 'login_enterSmsCode')}
+        placeholder={transfer(language, 'login_email_inputCode')}
         language={language}
         value={code}
         maxLength={common.textInputMaxLenPwd}
@@ -702,4 +655,4 @@ function mapStateToProps(state) {
 
 export default connect(
   mapStateToProps,
-)(Register)
+)(EmailRegist)

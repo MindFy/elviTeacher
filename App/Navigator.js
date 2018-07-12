@@ -45,6 +45,7 @@ import BalanceDetail from './views/balance/BalanceDetail'
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
 import Register from './views/login/Register'
+import EmailRegist from './views/login/EmailRegist'
 import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
@@ -232,6 +233,7 @@ const LoginStack = DismissableStackNavigator(
   {
     Login,
     Register,
+    EmailRegist,
     ForgotPwd,
     ConfirmPwd,
     Agreement,

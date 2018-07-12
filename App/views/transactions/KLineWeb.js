@@ -3,8 +3,6 @@ import { WebView, PanResponder, View } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 
-api.API_ROOT = 'http://192.168.1.222:8000'
-
 /* eslint-disable */
 // fix issue https://github.com/facebook/react-native/issues/10865
 const patchPostMessageFunction = () => {

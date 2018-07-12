@@ -653,5 +653,16 @@
   "agreement_191": "4.2如果交易频繁集中发生在某个注册用户或存在超乎合理的情况，我们的专业团队将评估并决定他们是否可疑;",
   "agreement_192": "4.3我们凭借自身的判断认定为可疑交易的情况，我们可能会采取暂停该交易、拒绝该交易等限制性措施，甚至如果可能将尽快逆转该交易，同时向主管部门报告，但不会通知您;",
   "agreement_193": "4.4我们保留拒绝来自于不符合国际反洗钱标准辖区的人或可被视为政治公众人物的人的注册申请，我们保留随时暂停或终止根据我们自身判断为可疑交易的交易，但我们这样做并不违反对您的任何义务和责任。",
-  "get_code_succeed": "验证码已发送，请及时查收!"
+  "get_code_succeed": "验证码已发送，请及时查收!",
+  "login_email_regist": "邮箱注册",
+  "login_phone_regist": "手机注册",
+  "login_email_input": "请输入邮箱",
+  "login_email_inputCode": "请输入邮箱验证码",
+  // 等待确认
+  "login_email_numberOrTypeError": "手机号码或服务类型错误",
+  "login_email_disbaleSendInOneMin": "一分钟内不能重复发送验证码",
+  "login_email_networdError": "网络连接失败，请稍后重试",
+  "login_email_getCodeFailed": "获取验证码失败，请重试",
+  "login_emailRegisted": "邮箱已被注册",
+  "login_emailFormatError": "邮箱格式错误"
 }
