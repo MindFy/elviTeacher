@@ -22,11 +22,14 @@ const styles = StyleSheet.create({
 
 class NavigationItem extends PureComponent {
   render() {
-    const icon = this.props.icon &&
-      <Image style={[styles.icon, this.props.iconStyle]} source={this.props.icon} />
+    const icon = this.props.icon
+      ? <Image style={[styles.icon, this.props.iconStyle]} source={this.props.icon} />
+      : null
 
-    const title = this.props.title &&
-      <Text style={[styles.title, this.props.iconStyle]}>{this.props.title}</Text>
+    const title = this.props.title
+      ? <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
+      : null
+
     return (
       <NextTouchableOpacity
         style={styles.container}
