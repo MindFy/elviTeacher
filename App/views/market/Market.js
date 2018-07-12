@@ -59,6 +59,13 @@ class Market extends Component {
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Market')
     })
+    props.navigation.addListener('didBlur', () => {
+      const { language } = this.props
+      props.dispatch(toggleEdit(false))
+      props.navigation.setParams({
+        headerRightTitle: transfer(language, 'market_add_favorites'),
+      })
+    })
     this.marketTitles = [transfer(props.language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
   }
 
@@ -78,6 +85,10 @@ class Market extends Component {
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     dispatch(getFavorite())
+    const params = navigation.state.params || {}
+    if (params.fromDeal && params.currencyName) {
+      dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
+    }
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
         dispatch(requestPairInfo({}))
@@ -147,6 +158,10 @@ class Market extends Component {
   }
 
   pressEdit = () => {
+    if (!this.props.loggedIn) {
+      this.props.navigation.navigate('LoginStack')
+      return
+    }
     const { isEdit, dispatch, navigation, language } = this.props
     let headerRightTitle
     if (!isEdit) {
@@ -219,6 +234,7 @@ function mapStateToProps(state) {
     pairs: state.market.pairs,
     isEdit: state.market.isEdit,
     favoritePairs: null,
+    loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }
 }

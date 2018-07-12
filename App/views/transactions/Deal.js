@@ -435,10 +435,11 @@ class Deal extends Component {
   }
 
   menuPress() {
-    const { navigation, language } = this.props
+    const { navigation, language, selectedPair } = this.props
     navigation.navigate('Market2', {
       language,
       fromDeal: true,
+      currencyName: selectedPair.currency.name,
     })
   }
 
