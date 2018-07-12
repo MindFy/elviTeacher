@@ -3,8 +3,6 @@ import { WebView, PanResponder, View } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 
-api.API_ROOT = 'http://192.168.1.222:8000'
-
 /* eslint-disable */
 // fix issue https://github.com/facebook/react-native/issues/10865
 const patchPostMessageFunction = () => {
@@ -86,7 +84,7 @@ export default class KLine extends Component {
       preProps.currencyName !== currencyName
     ) {
       if (this.webView) {
-        const nextUrl = `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}`
+        const nextUrl = `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}`
         this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
       }
     }
@@ -102,7 +100,7 @@ export default class KLine extends Component {
     this.timer = setTimeout(() => {
       if (this.webView) {
         const { goodsName, currencyName } = this.props
-        const nextUrl = `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}`
+        const nextUrl = `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}`
         this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
         this.setValue(kLineIndex)
       } else {
@@ -140,7 +138,7 @@ export default class KLine extends Component {
           automaticallyAdjustContentInsets={false}
           style={styles.webView}
           injectedJavaScript={patchPostMessageJsCode}
-          source={{ uri: `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}` }}
+          source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
           onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
         />
       </View>

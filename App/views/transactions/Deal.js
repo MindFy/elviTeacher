@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   scrollViewLineBtn: {
     height: common.getH(24),
-    width: common.getH(35),
+    width: common.getH(40),
     backgroundColor: common.navBgColor,
     justifyContent: 'flex-start',
     flexDirection: 'row',
@@ -195,9 +195,18 @@ class Deal extends Component {
         4000511: transfer(language, 'exchange_listFailedForNull'),
         4000513: transfer(language, 'exchange_listFailedForLessCredit'),
         4000514: transfer(language, 'exchange_listFailedForLessCredit'),
+        4000666: transfer(language, 'exchange_account_frozen'),
       }
       const msg = errors[createResponse.code]
-      if (msg) Toast.fail(msg)
+      if (msg) {
+        Toast.fail(msg)
+      } else {
+        Toast.fail(
+          createOrderIndex === 0 ?
+            transfer(language, 'exchange_buyFailed') :
+            transfer(language, 'exchange_sellFailed'),
+        )
+      }
     } else {
       Toast.fail(
         `${createOrderIndex === 0 ?

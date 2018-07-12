@@ -619,7 +619,7 @@ class KLineFullScreen extends Component {
             automaticallyAdjustContentInsets={false}
             style={styles.webview}
             injectedJavaScript={patchPostMessageJsCode}
-            source={{ uri: `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}` }}
+            source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
             onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
           />
           {this.renderFooterBar()}
