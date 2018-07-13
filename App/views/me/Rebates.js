@@ -279,7 +279,7 @@ class Rebates extends Component {
     const { prefixNo, recommendId } = user
     let rebatesLinkQr = ''
     if (recommendId.length) {
-      rebatesLinkQr = api.rebatesLinkQr + prefixNo + recommendId
+      rebatesLinkQr = `${api.rebatesLinkQr}${prefixNo}${recommendId}&ts=${Math.random()}`
     }
     const overlayView = (
       <Overlay.View
