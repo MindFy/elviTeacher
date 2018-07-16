@@ -485,7 +485,7 @@ class Deal extends Component {
     } else if (checkFavoriteStatus.error) {
       isFavorited = false
     } else {
-      isFavorited = checkFavoriteStatus.isFavorited
+      isFavorited = this.props.isFavorited
     }
 
     return (
@@ -507,6 +507,11 @@ class Deal extends Component {
               })
             } else navigation.navigate('LoginStack')
           }
+        }}
+        onPressSelected={() => {
+          if (loggedIn) {
+            this.props.dispatch(exchange.setFavorite(selectedPair))
+          } else navigation.navigate('LoginStack')
         }}
       />
     )

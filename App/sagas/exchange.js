@@ -168,6 +168,30 @@ function* checkFavorite(action) {
   }
 }
 
+function* setFavorite(action) {
+  const { payload } = action
+  const parms = { goods_id: payload.goods.id, currency_id: payload.currency.id }
+  const resp = yield call(api.userFavoriteLists, parms)
+  if (resp.success) {
+    let result
+    const dict = resp.result.favoriteLists
+    if (Object.keys(dict).some(key => key === `${payload.goods.id}_${payload.currency.id}`)) {
+      result = true
+    } else {
+      result = false
+    }
+    yield put({
+      type: 'exchange/set_favorite_success',
+      payload: result,
+    })
+  } else {
+    yield put({
+      type: 'exchange/set_favorite_success',
+      payload: false,
+    })
+  }
+}
+
 export function* requestLastpriceList() {
   yield takeEvery('exchange/request_lastprice_list', requestLastpriceListWorker)
 }
@@ -198,4 +222,8 @@ export function* requestDepthMap() {
 
 export function* watchCheckFavorite() {
   yield takeLatest('exchange/check_favorite_request', checkFavorite)
+}
+
+export function* watchSetFavorite() {
+  yield takeLatest('exchange/set_favorite_request', setFavorite)
 }

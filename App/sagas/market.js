@@ -70,13 +70,7 @@ function* getFavorite(action) {
 
   const resp = yield call(api.getFavorite, payload)
   if (resp.success) {
-    const dict = {}
-    resp.result.favoriteLists.forEach((ele) => {
-      dict[ele.coin_pairs] = {
-        goods_id: ele.goods_id,
-        currency_id: ele.currency_id,
-      }
-    })
+    const dict = resp.result.favoriteLists
     yield put({
       type: 'market/get_favorite_success',
       payload: dict,
@@ -96,13 +90,7 @@ function* setFavoriteAdd(action) {
   const resp = yield call(api.userFavoriteLists, parms)
 
   if (resp.success) {
-    const dict = {}
-    resp.result.favoriteLists.forEach((ele) => {
-      dict[ele.coin_pairs] = {
-        goods_id: ele.goods_id,
-        currency_id: ele.currency_id,
-      }
-    })
+    const dict = resp.result.favoriteLists
     yield put({
       type: 'market/get_favorite_success',
       payload: dict,
@@ -139,13 +127,7 @@ function* setFavoriteRemove(action) {
   const resp = yield call(api.userFavoriteLists, parms)
 
   if (resp.success) {
-    const dict = {}
-    resp.result.favoriteLists.forEach((ele) => {
-      dict[ele.coin_pairs] = {
-        goods_id: ele.goods_id,
-        currency_id: ele.currency_id,
-      }
-    })
+    const dict = resp.result.favoriteLists
     yield put({
       type: 'market/get_favorite_success',
       payload: dict,

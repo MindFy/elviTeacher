@@ -96,6 +96,7 @@ export default class DealNavigator extends Component {
         <NextTouchableOpacity
           style={styles.isSelectedIconContainer}
           onPress={this.handlePressSelected}
+          delay={300}
         >
           <Image source={isSelectedIcon} style={styles.isSelectedIcon} />
         </NextTouchableOpacity>

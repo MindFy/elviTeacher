@@ -109,7 +109,7 @@ export default class MarketList extends Component {
   renderRow(rd, currencyName) {
     const { language, isEdit, currPair } = this.props
     const cellData = this.getDetailCellData(rd, currencyName, language)
-    if (currPair === '自选') {
+    if (currPair === transfer(language, 'market_favorites')) {
       return this.renderMarkedCell(isEdit, cellData, rd)
     }
 

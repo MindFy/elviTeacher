@@ -169,3 +169,10 @@ export function checkFavorite(payload) {
     payload,
   }
 }
+
+export function setFavorite(payload) {
+  return {
+    type: 'exchange/set_favorite_request',
+    payload,
+  }
+}

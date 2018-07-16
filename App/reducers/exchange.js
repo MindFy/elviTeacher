@@ -50,9 +50,9 @@ const initialState = {
 
   checkFavoriteStatus: {
     isPending: false,
-    isFavorited: false,
     error: null,
   },
+  isFavorited: false,
 }
 
 export default function exchange(state = initialState, action) {
@@ -274,8 +274,8 @@ export default function exchange(state = initialState, action) {
         ...state,
         checkFavoriteStatus: {
           isPending: false,
-          isFavorited: payload,
         },
+        isFavorited: payload,
       }
       break
     case 'exchange/check_favorite_failed':
@@ -285,6 +285,18 @@ export default function exchange(state = initialState, action) {
           isPending: false,
           error: payload,
         },
+      }
+      break
+    case 'exchange/set_favorite_success':
+      nextState = {
+        ...state,
+        isFavorited: payload,
+      }
+      break
+    case 'exchange/set_favorite_failed':
+      nextState = {
+        ...state,
+        isFavorited: payload,
       }
       break
     case 'notify/clear_reducer':

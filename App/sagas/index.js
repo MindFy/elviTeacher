@@ -106,6 +106,7 @@ export default function* rootSaga() {
     fork(requestBalanceList),
     fork(requestBalanceValuation),
     exchanges.watchCheckFavorite(),
+    exchanges.watchSetFavorite(),
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
