@@ -104,3 +104,12 @@ export const getValuation = makePostAPI('/1.0/app/asset/getValuation')
 export const add = makePostAPI('/1.0/app/address/add')
 
 export const graphql = graphqlAPI('/1.0/app')
+
+/** 查看用户自选列表 */
+export const getFavorite = makePostAPI('/1.0/app/user/getFavorite')
+
+/** 设置/取消用户自选项目 */
+export const userFavoriteLists = makePostAPI('/1.0/app/user/userFavoriteLists')
+
+/** 检查该币币对是否在用户自选列表内 */
+export const checkFavorite = makePostAPI('/1.0/app/user/checkFavorite')
