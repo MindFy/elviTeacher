@@ -21,29 +21,23 @@ const styles = StyleSheet.create({
 })
 
 class HeaderScrollView extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      indexSelected: props.initialIndexSelected || 0,
-    }
-  }
-
   renderHeaderItem = (item, index, selected, onClickItem) => {
     const textColor =
       selected ? { color: common.btnTextColor } : { color: common.textColor }
+
+    let itemWith = {}
+    if (item.length > 6) {
+      itemWith = { width: common.sw / 5 }
+    }
     return (
       <View
-        style={styles.itemContainer}
+        style={[styles.itemContainer, itemWith]}
         key={index}
       >
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
           disabled={selected}
           onPress={() => {
-            this.setState({
-              indexSelected: index,
-            })
             if (onClickItem) {
               onClickItem({
                 title: item,
@@ -62,11 +56,10 @@ class HeaderScrollView extends Component {
 
   render() {
     const { titles, onClickItem } = this.props
-
     return (
       <View style={styles.container}>
         {titles.map((item, index) => (
-          this.renderHeaderItem(item, index, index === this.state.indexSelected, onClickItem)
+          this.renderHeaderItem(item, index, index === this.props.indexSelected, onClickItem)
         ))}
       </View>
     )
