@@ -162,3 +162,17 @@ export function updateKLineIndex(payload) {
     payload,
   }
 }
+
+export function checkFavorite(payload) {
+  return {
+    type: 'exchange/check_favorite_request',
+    payload,
+  }
+}
+
+export function setFavorite(payload) {
+  return {
+    type: 'exchange/set_favorite_request',
+    payload,
+  }
+}
