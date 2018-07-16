@@ -153,9 +153,8 @@ function* checkFavorite(action) {
   const parms = {
     goods_id: payload.goods.id,
     currency_id: payload.currency.id,
-    action: 'check',
   }
-  const resp = yield call(api.userFavoriteLists, parms)
+  const resp = yield call(api.checkFavorite, parms)
   if (resp.success) {
     yield put({
       type: 'exchange/check_favorite_success',
