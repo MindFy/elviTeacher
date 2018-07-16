@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native'
+import equal from 'deep-equal'
 import { Toast, Overlay } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
@@ -32,6 +33,8 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import ws from '../../websocket/ws'
+import * as api from '../../services/api'
 
 const styles = StyleSheet.create({
   container: {
@@ -162,14 +165,19 @@ class Deal extends Component {
     this.props.dispatch(exchange.updateSegmentIndex(0))
     this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
+    this.initWebSocket(this.props)
     this.timer = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Deal') {
-        this.loadNecessaryData()
+        this.loadNecessaryData(false)
       }
     }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProps) {
+    const { selectedPair } = this.props
+    if (!equal(nextProps.selectedPair, selectedPair)) {
+      this.initWebSocket(nextProps)
+    }
     const { dispatch, createOrderIndex, language } = this.props
     const { createResponse } = nextProps
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
@@ -221,6 +229,7 @@ class Deal extends Component {
       clearInterval(this.timer)
       this.timer = undefined
     }
+    ws.destory()
     cache.setObject('currentComponentVisible', 'Home')
   }
 
@@ -229,7 +238,46 @@ class Deal extends Component {
     dispatch(exchange.requestCancelOrder(id))
   }
 
-  loadNecessaryData() {
+  initData = (d) => {
+    if (d.data) {
+      const data = d.data
+      const newLastPrice = {
+        sell: data.sell || [],
+        buy: data.buy || [],
+      }
+      const { dispatch } = this.props
+      dispatch(exchange.requestLastpriceListSucceed(newLastPrice))
+      const newOrderHistory = data.newDeals || []
+      dispatch(exchange.requestOrderhistoryListSucceed(newOrderHistory))
+    }
+  }
+
+  initWebSocket(props) {
+    const { selectedPair } = props
+    const { currency, goods } = selectedPair
+    ws.initInstance({
+      url: api.ws,
+      onOpen: () => {
+        ws.sendMessage(JSON.stringify({
+          act: 'on',
+          ch: `channel_${currency.id}_${goods.id}`,
+          timestamp: Date.now(),
+        }))
+      },
+      onMessage: (data) => {
+        this.initData(data)
+      },
+      onClose: () => {
+        ws.sendMessage(JSON.stringify({
+          act: 'off',
+          ch: `channel_${currency.id}_${goods.id}`,
+          timestamp: Date.now(),
+        }))
+      },
+    })
+  }
+
+  loadNecessaryData(loadLastPrice = true) {
     const { dispatch, selectedPair, loggedInResult, loggedIn } = this.props
     const { currency, goods } = selectedPair
     const params = {
@@ -237,8 +285,10 @@ class Deal extends Component {
       currency_id: currency.id,
     }
     dispatch(exchange.requestValuation())
-    dispatch(exchange.requestLastpriceList(params))
-    dispatch(exchange.requestOrderhistoryList(params))
+    if (loadLastPrice) {
+      dispatch(exchange.requestLastpriceList(params))
+      dispatch(exchange.requestOrderhistoryList(params))
+    }
     dispatch(exchange.requestDepthMap(params))
     if (loggedIn) {
       dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
