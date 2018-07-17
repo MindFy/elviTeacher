@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
-import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
 import {
   common,

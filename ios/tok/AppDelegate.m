@@ -12,7 +12,6 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "SplashScreen.h"
-#import "HotUpdate.h"
 
 @implementation AppDelegate
 
