@@ -444,11 +444,13 @@ class Deal extends Component {
   }
 
   menuPress() {
-    const { navigation, language, selectedPair } = this.props
+    const { navigation, language, selectedPair, isFavorited } = this.props
+    const currencyName =
+      isFavorited ? transfer(language, 'market_favorites') : selectedPair.currency.name
     navigation.navigate('Market2', {
       language,
       fromDeal: true,
-      currencyName: selectedPair.currency.name,
+      currencyName,
     })
   }
 
