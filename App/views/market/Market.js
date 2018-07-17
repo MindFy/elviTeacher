@@ -193,14 +193,77 @@ class Market extends Component {
     },
   }
 
-  render() {
-    const { currPair, pairs, language, isEdit } = this.props
-    let marketData = []
+  obtainMarketData = () => {
+    const { currPair, pairs, language, favoriteList } = this.props
+    const marketData = []
     if (pairs && currPair === transfer(language, 'market_favorites')) {
-      marketData = pairs.markedTokens
-    } else if (pairs && pairs[currPair]) {
-      marketData = pairs[currPair]
+      for (let i = 0; i < pairs.length; i++) {
+        const ones = pairs[i]
+        for (let j = 0; j < ones.sub.length; j++) {
+          const one = ones.sub[j]
+          if (favoriteList &&
+            Object.keys(favoriteList).some(key => key === `${one.id}_${ones.id}`)) {
+            const obj = {
+              goods: {
+                id: one.id,
+                name: one.name,
+              },
+              currency: {
+                id: ones.id,
+                name: ones.name,
+              },
+              cprice: one.cprice,
+              hprice: one.hprice,
+              lastprice: one.lastprice,
+              lprice: one.lprice,
+              quantity: one.quantity,
+              rose: one.rose,
+              isFavorited: true,
+            }
+            marketData.push(obj)
+          }
+        }
+      }
+    } else if (pairs) {
+      for (let i = 0; i < pairs.length; i++) {
+        const ones = pairs[i]
+        for (let j = 0; j < ones.sub.length; j++) {
+          const one = ones.sub[j]
+          if (ones.name === currPair) {
+            const obj = {
+              goods: {
+                id: one.id,
+                name: one.name,
+              },
+              currency: {
+                id: ones.id,
+                name: ones.name,
+              },
+              cprice: one.cprice,
+              hprice: one.hprice,
+              lastprice: one.lastprice,
+              lprice: one.lprice,
+              quantity: one.quantity,
+              rose: one.rose,
+            }
+            if (favoriteList &&
+              Object.keys(favoriteList).some(key => key === `${one.id}_${ones.id}`)) {
+              const newObj = { ...obj, isFavorited: true }
+              marketData.push(newObj)
+            } else {
+              marketData.push(obj)
+            }
+          }
+        }
+      }
     }
+
+    return marketData
+  }
+
+  render() {
+    const { currPair, language, isEdit } = this.props
+    const marketData = this.obtainMarketData()
     const index = this.marketTitles.indexOf(currPair)
     return (
       <View
@@ -232,8 +295,8 @@ function mapStateToProps(state) {
   return {
     currPair: state.market.currPair,
     pairs: state.market.pairs,
+    favoriteList: state.market.favoriteList,
     isEdit: state.market.isEdit,
-    favoritePairs: null,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }
