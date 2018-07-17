@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { WebView, PanResponder, View } from 'react-native'
+import { WebView, PanResponder, View, AsyncStorage } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
+import * as exchange from '../../actions/exchange'
 
 /* eslint-disable */
 // fix issue https://github.com/facebook/react-native/issues/10865
@@ -31,6 +32,7 @@ export default class KLine extends Component {
       updateTime: 0,
     }
   }
+
   componentWillMount() {
     if (common.IsIOS) {
       this.panResponder = {
@@ -56,8 +58,16 @@ export default class KLine extends Component {
   }
 
   componentDidMount() {
-    const { kLineIndex } = this.props
-    this.setLine(kLineIndex, 0)
+    AsyncStorage.getItem('savedKlineIndex')
+      .then((savedIndex) => {
+        if (savedIndex) {
+          this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
+          this.setLine(savedIndex, 0)
+        } else {
+          const { kLineIndex } = this.props
+          this.setLine(kLineIndex, 0)
+        }
+      })
   }
 
   componentWillReceiveProps(nextProps) {
