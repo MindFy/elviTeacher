@@ -184,6 +184,10 @@ function* setFavorite(action) {
       type: 'exchange/set_favorite_success',
       payload: result,
     })
+    yield put({
+      type: 'market/get_favorite_success',
+      payload: dict,
+    })
   } else {
     yield put({
       type: 'exchange/set_favorite_success',
