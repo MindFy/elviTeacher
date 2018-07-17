@@ -9,7 +9,9 @@ import {
   Image,
   TouchableOpacity,
   Animated,
+  AsyncStorage,
 } from 'react-native'
+import equal from 'deep-equal'
 import { Toast, Overlay } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
@@ -32,6 +34,8 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import ws from '../../websocket/ws'
+import * as api from '../../services/api'
 
 const styles = StyleSheet.create({
   container: {
@@ -99,7 +103,7 @@ const styles = StyleSheet.create({
   },
   kLineBtnTitleSelected: {
     color: '#FFD502',
-    fontSize: common.font12,
+    fontSize: common.font14,
     alignSelf: 'center',
   },
   kLineBtnTitleBase: {
@@ -156,6 +160,19 @@ class Deal extends Component {
     this.rotate = new Animated.Value(0)
     this.dataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
     cache.setObject('currentComponentVisible', 'Deal')
+    const { language } = this.props
+    this.array = [
+      transfer(language, 'exchange_time'),
+      transfer(language, 'exchange_1min'),
+      transfer(language, 'exchange_5min'),
+      transfer(language, 'exchange_15min'),
+      transfer(language, 'exchange_30min'),
+      transfer(language, 'exchange_1hour'),
+      transfer(language, 'exchange_4hour'),
+      transfer(language, 'exchange_1day'),
+      transfer(language, 'exchange_1week'),
+      transfer(language, 'exchange_1month'),
+    ]
   }
 
   componentDidMount() {
@@ -165,14 +182,19 @@ class Deal extends Component {
     this.props.dispatch(exchange.updateSegmentIndex(0))
     this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
+    this.initWebSocket(this.props)
     this.timer = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Deal') {
-        this.loadNecessaryData()
+        this.loadNecessaryData(false)
       }
     }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProps) {
+    const { selectedPair } = this.props
+    if (!equal(nextProps.selectedPair, selectedPair)) {
+      this.initWebSocket(nextProps)
+    }
     const { dispatch, createOrderIndex, language } = this.props
     const { createResponse } = nextProps
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
@@ -224,6 +246,7 @@ class Deal extends Component {
       clearInterval(this.timer)
       this.timer = undefined
     }
+    ws.destory()
     cache.setObject('currentComponentVisible', 'Home')
   }
 
@@ -232,7 +255,46 @@ class Deal extends Component {
     dispatch(exchange.requestCancelOrder(id))
   }
 
-  loadNecessaryData() {
+  initData = (d) => {
+    if (d.data) {
+      const data = d.data
+      const newLastPrice = {
+        sell: data.sell || [],
+        buy: data.buy || [],
+      }
+      const { dispatch } = this.props
+      dispatch(exchange.requestLastpriceListSucceed(newLastPrice))
+      const newOrderHistory = data.newDeals || []
+      dispatch(exchange.requestOrderhistoryListSucceed(newOrderHistory))
+    }
+  }
+
+  initWebSocket(props) {
+    const { selectedPair } = props
+    const { currency, goods } = selectedPair
+    ws.initInstance({
+      url: api.ws,
+      onOpen: () => {
+        ws.sendMessage(JSON.stringify({
+          act: 'on',
+          ch: `channel_${currency.id}_${goods.id}`,
+          timestamp: Date.now(),
+        }))
+      },
+      onMessage: (data) => {
+        this.initData(data)
+      },
+      onClose: () => {
+        ws.sendMessage(JSON.stringify({
+          act: 'off',
+          ch: `channel_${currency.id}_${goods.id}`,
+          timestamp: Date.now(),
+        }))
+      },
+    })
+  }
+
+  loadNecessaryData(loadLastPrice = true) {
     const { dispatch, selectedPair, loggedInResult, loggedIn } = this.props
     const { currency, goods } = selectedPair
     const params = {
@@ -240,8 +302,10 @@ class Deal extends Component {
       currency_id: currency.id,
     }
     dispatch(exchange.requestValuation())
-    dispatch(exchange.requestLastpriceList(params))
-    dispatch(exchange.requestOrderhistoryList(params))
+    if (loadLastPrice) {
+      dispatch(exchange.requestLastpriceList(params))
+      dispatch(exchange.requestOrderhistoryList(params))
+    }
     dispatch(exchange.requestDepthMap(params))
     if (loggedIn) {
       dispatch(actions.findAssetList(findAssetList(loggedInResult.id)))
@@ -557,21 +621,9 @@ class Deal extends Component {
     )
   }
 
-  renderKlineBtnIfNeeded({ x, y, width, height, language, kLineIndex, kLineOrDepth }) {
+  renderKlineBtnIfNeeded({ x, y, width, height, kLineIndex, kLineOrDepth }) {
     const fromBounds = { x, y, width, height }
-    const array = [
-      transfer(language, 'exchange_time'),
-      transfer(language, 'exchange_1min'),
-      transfer(language, 'exchange_5min'),
-      transfer(language, 'exchange_15min'),
-      transfer(language, 'exchange_30min'),
-      transfer(language, 'exchange_1hour'),
-      transfer(language, 'exchange_4hour'),
-      transfer(language, 'exchange_1day'),
-      transfer(language, 'exchange_1week'),
-      transfer(language, 'exchange_1month'),
-    ]
-    const btns = array.map((e, idx) => (
+    const btns = this.array.map((e, idx) => (
       <NextTouchableOpacity
         key={e}
         style={styles.scrollViewLineBtn}
@@ -585,6 +637,7 @@ class Deal extends Component {
           if (kLineOrDepth !== common.ui.kLine) {
             dispatch(actions.kLineOrDepthUpdate(common.ui.kLine))
           }
+          AsyncStorage.setItem('savedKlineIndex', idx.toString())
           Animated.timing(
             this.rotate, {
               toValue: 0,
@@ -638,6 +691,7 @@ class Deal extends Component {
     const renderCharts = () => {
       if (kLineOrDepth === common.ui.kLine) {
         return (<KLine
+          dispatch={dispatch}
           kLineIndex={kLineIndex}
           goodsName={selectedPair.goods.name}
           currencyName={selectedPair.currency.name}
@@ -674,7 +728,7 @@ class Deal extends Component {
               style={kLineOrDepth === common.ui.kLine ?
                 styles.kLineBtnTitleSelected :
                 styles.kLineBtnTitleBase}
-            >{transfer(language, 'exchange_kLine')}</Text>
+            >{this.array[kLineIndex]}</Text>
             <Animated.Image
               resizeMode="contain"
               style={[styles.klineIcon,
@@ -689,7 +743,7 @@ class Deal extends Component {
                   ],
                 }]}
               ref={(e) => { this.arrow = e }}
-              source={require('../../assets/yellow_arrow_up.png')}
+              source={require('../../assets/yellow_arrow_down.png')}
             />
           </TouchableOpacity>
           <NextTouchableOpacity
@@ -698,7 +752,6 @@ class Deal extends Component {
             onPress={() => {
               if (kLineOrDepth === common.ui.kLine) {
                 dispatch(actions.kLineOrDepthUpdate(common.ui.depth))
-                dispatch(exchange.updateKLineIndex(3))
               }
             }}
           >
