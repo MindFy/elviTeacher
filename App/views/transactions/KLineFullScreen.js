@@ -27,8 +27,8 @@ const styles = {
   },
   navBar: {
     width: '100%',
-    height: common.IsIOS ? (common.navHeight - 64 + 50) : 50,
-    paddingTop: common.IsIOS ? (common.navHeight - 64) : 0,
+    height: 50,
+    paddingTop: 0,
     backgroundColor: '#0E1820',
     flexDirection: 'row',
     justifyContent: 'space-between',

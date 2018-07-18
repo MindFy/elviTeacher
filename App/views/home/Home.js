@@ -60,6 +60,13 @@ class Home extends Component {
     if (language !== systemLanguage) {
       dispatch(system.updateLanguage(systemLanguage))
     }
+    AsyncStorage.getItem('savedKlineIndex')
+      .then((savedIndex) => {
+        if (savedIndex) {
+          cache.setObject('savedKlineIndex', savedIndex)
+          this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
+        }
+      })
   }
 
   componentDidMount() {

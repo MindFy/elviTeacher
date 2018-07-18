@@ -182,21 +182,20 @@ class Deal extends Component {
       this.props.dispatch(exchange.checkFavorite({ goods, currency }))
     }
     this.props.dispatch(exchange.updateSegmentIndex(0))
-    this.props.dispatch(exchange.updateKLineIndex(3))
     this.loadNecessaryData()
-    this.initWebSocket(this.props)
+    // this.initWebSocket(this.props)
     this.timer = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Deal') {
-        this.loadNecessaryData(false)
+        this.loadNecessaryData(true)
       }
     }, common.refreshIntervalTime)
   }
 
   componentWillReceiveProps(nextProps) {
-    const { selectedPair } = this.props
-    if (!equal(nextProps.selectedPair, selectedPair)) {
-      this.initWebSocket(nextProps)
-    }
+    // const { selectedPair } = this.props
+    // if (!equal(nextProps.selectedPair, selectedPair)) {
+    //   this.initWebSocket(nextProps)
+    // }
     const { dispatch, createOrderIndex, language } = this.props
     const { createResponse } = nextProps
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
