@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, ActivityIndicator } from 'react-native'
+import { View } from 'react-native'
 import { common } from '../../constants/common'
 import MarketList from './MarketList'
 import {
@@ -88,7 +88,7 @@ class Market extends Component {
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
-    } else if (!loggedIn) {
+    } else {
       dispatch(updateCurrentPair({ title: 'CNYT' }))
     }
     this.timeId = setInterval(() => {
@@ -96,15 +96,6 @@ class Market extends Component {
         dispatch(requestPairInfo({}))
       }
     }, common.refreshIntervalTime)
-  }
-
-  componentWillReceiveProps(nextProp) {
-    const { pairs, dispatch } = this.props
-    // if (!Object.keys(pairs).length && Object.keys(nextProp.pairs).length) {
-    //   dispatch(updateCurrentPair({
-    //     title: 'CNYT',
-    //   }))
-    // }
   }
 
   componentWillUnmount() {
