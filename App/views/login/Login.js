@@ -13,6 +13,7 @@ import {
 import Toast from 'teaset/components/Toast/Toast'
 import { common, storeSave } from '../../constants/common'
 import actions from '../../actions/index'
+import { setInitialized } from '../../actions/market'
 import schemas from '../../schemas/index'
 import TKInputItem from '../../components/TKInputItem'
 import TKButton from '../../components/TKButton'
@@ -218,6 +219,7 @@ class Login extends PureComponent {
         if (!e) {
           dispatch(actions.findUser(schemas.findUser(user.id)))
           dispatch(actions.findAssetList(schemas.findAssetList(user.id)))
+          dispatch(setInitialized({ initialized: false }))
           cache.setObject('isLoginIn', 'true')
           screenProps.dismiss()
         }

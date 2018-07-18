@@ -4,6 +4,8 @@ const initialState = {
   isEdit: false,
   markedTokenPairs: {},
 
+  initialized: false,
+
   getFavoritePending: false,
   getFavoriteError: null,
   favoriteList: {},
@@ -52,7 +54,7 @@ export default function market(state = initialState, action) {
     case 'market/get_favorite_success':
       nextState = {
         ...state,
-        getFavoritePending: true,
+        getFavoritePending: false,
         getFavoriteError: null,
         favoriteList: payload,
       }
@@ -60,7 +62,7 @@ export default function market(state = initialState, action) {
     case 'market/get_favorite_failed':
       nextState = {
         ...state,
-        getFavoritePending: true,
+        getFavoritePending: false,
         getFavoriteError: payload,
         favoriteList: null,
       }
@@ -90,6 +92,20 @@ export default function market(state = initialState, action) {
       nextState = {
         ...state,
         pairs: payload,
+      }
+      break
+    case 'market/set_initialized_state':
+      nextState = {
+        ...state,
+        initialized: payload.initialized,
+      }
+      break
+    case 'notify/clear_reducer':
+      nextState = {
+        ...state,
+        getFavoritePending: false,
+        getFavoriteError: null,
+        favoriteList: {},
       }
       break
     default:

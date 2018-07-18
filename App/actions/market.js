@@ -33,3 +33,11 @@ export function setFavorite(payload) {
   }
 }
 
+
+export function setInitialized(payload) {
+  return {
+    type: 'market/set_initialized_state',
+    payload,
+  }
+}
+

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View } from 'react-native'
+import { View, ActivityIndicator } from 'react-native'
 import { common } from '../../constants/common'
 import MarketList from './MarketList'
 import {
@@ -58,6 +58,7 @@ class Market extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Market')
+      this.isNeedtoGetFavorites()
     })
     props.navigation.addListener('didBlur', () => {
       const { language } = this.props
@@ -84,7 +85,6 @@ class Market extends Component {
     })
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
-    dispatch(getFavorite())
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
@@ -98,11 +98,11 @@ class Market extends Component {
 
   componentWillReceiveProps(nextProp) {
     const { pairs, dispatch } = this.props
-    if (!Object.keys(pairs).length && Object.keys(nextProp.pairs).length) {
-      dispatch(updateCurrentPair({
-        title: 'CNYT',
-      }))
-    }
+    // if (!Object.keys(pairs).length && Object.keys(nextProp.pairs).length) {
+    //   dispatch(updateCurrentPair({
+    //     title: 'CNYT',
+    //   }))
+    // }
   }
 
   componentWillUnmount() {
@@ -115,7 +115,9 @@ class Market extends Component {
   onClickItem = (item) => {
     const { dispatch } = this.props
     if (item.index === 0) {
-      dispatch(getFavorite())
+      if (this.props.loggedIn) {
+        dispatch(getFavorite())
+      }
     }
     dispatch(updateCurrentPair({
       title: item.title,
@@ -136,6 +138,13 @@ class Market extends Component {
     const { dispatch } = this.props
     const parms = { currency: rd.currency, goods: rd.goods }
     dispatch(setFavorite(parms))
+  }
+
+  isNeedtoGetFavorites = () => {
+    if (this.props.initialized) {
+      return
+    }
+    this.props.dispatch(getFavorite())
   }
 
   jumpBackToDeal = (e) => {
@@ -262,6 +271,14 @@ class Market extends Component {
   }
 
   render() {
+    const { getFavoritePending, initialized } = this.props
+    if (getFavoritePending && !initialized) {
+      return (
+        <View style={{ flex: 1, backgroundColor: common.bgColor }}>
+          <ActivityIndicator style={{ marginTop: 20 }} color="white" />
+        </View>
+      )
+    }
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
     const index = this.marketTitles.indexOf(currPair)
@@ -295,8 +312,10 @@ function mapStateToProps(state) {
   return {
     currPair: state.market.currPair,
     pairs: state.market.pairs,
+    getFavoritePending: state.market.getFavoritePending,
     favoriteList: state.market.favoriteList,
     isEdit: state.market.isEdit,
+    initialized: state.market.initialized,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }

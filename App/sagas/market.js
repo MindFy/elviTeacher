@@ -6,6 +6,7 @@ import {
   select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
+import transfer from '../localization/utils'
 
 const getFavoriteList = state => state.market.favoriteList
 
@@ -37,13 +38,37 @@ function* getFavorite(action) {
       type: 'market/get_favorite_success',
       payload: dict,
     })
+    const initialized = yield select(state => state.market.initialized)
+    if (!initialized && Object.keys(dict).length > 0) {
+      const language = yield select(state => state.system.language)
+      yield put({
+        type: 'withdraw/update_current_pair',
+        payload: { title: transfer(language, 'market_favorites') },
+      })
+    } else if (!initialized) {
+      yield put({
+        type: 'withdraw/update_current_pair',
+        payload: { title: 'CNYT' },
+      })
+    }
   } else {
     const error = resp.error
     yield put({
       type: 'market/get_favorite_failed',
       payload: error,
     })
+    const initialized = yield select(state => state.market.initialized)
+    if (!initialized) {
+      yield put({
+        type: 'withdraw/update_current_pair',
+        payload: { title: 'CNYT' },
+      })
+    }
   }
+  yield put({
+    type: 'market/set_initialized_state',
+    payload: { initialized: true },
+  })
 }
 
 function* setFavoriteAdd(action) {
