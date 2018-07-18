@@ -88,7 +88,7 @@ class Market extends Component {
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
-    } else if (!loggedIn) {
+    } else {
       dispatch(updateCurrentPair({ title: 'CNYT' }))
     }
     this.timeId = setInterval(() => {
