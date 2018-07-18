@@ -109,9 +109,7 @@ export default class KLine extends Component {
   setLine(kLineIndex, delay) {
     this.timer = setTimeout(() => {
       if (this.webView) {
-        const { goodsName, currencyName } = this.props
-        const nextUrl = `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}`
-        this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
+        this.webView.injectJavaScript('window.location.reload()')
         this.setValue(kLineIndex)
       } else {
         this.setLine(kLineIndex, 500)
