@@ -176,3 +176,10 @@ export function setFavorite(payload) {
     payload,
   }
 }
+
+export function setFavoriteSuccess(payload) {
+  return {
+    type: 'exchange/set_favorite_success',
+    payload,
+  }
+}

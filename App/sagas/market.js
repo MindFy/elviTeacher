@@ -45,11 +45,6 @@ function* getFavorite(action) {
         type: 'withdraw/update_current_pair',
         payload: { title: transfer(language, 'market_favorites') },
       })
-    } else if (!initialized) {
-      yield put({
-        type: 'withdraw/update_current_pair',
-        payload: { title: 'CNYT' },
-      })
     }
   } else {
     const error = resp.error
