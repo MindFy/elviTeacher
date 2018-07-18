@@ -79,7 +79,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language } = this.props
+    const { dispatch, navigation, language, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'market_market'),
     })
@@ -88,6 +88,8 @@ class Market extends Component {
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
+    } else if (!loggedIn) {
+      dispatch(updateCurrentPair({ title: 'CNYT' }))
     }
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
@@ -114,10 +116,8 @@ class Market extends Component {
 
   onClickItem = (item) => {
     const { dispatch } = this.props
-    if (item.index === 0) {
-      if (this.props.loggedIn) {
-        dispatch(getFavorite())
-      }
+    if (item.index === 0 && this.props.loggedIn) {
+      dispatch(getFavorite())
     }
     dispatch(updateCurrentPair({
       title: item.title,
@@ -130,6 +130,7 @@ class Market extends Component {
       return
     }
     const { dispatch, navigation } = this.props
+    dispatch(exchange.setFavoriteSuccess(e.isFavorited))
     dispatch(exchange.updatePair(e))
     navigation.navigate('Deal')
   }
@@ -141,7 +142,7 @@ class Market extends Component {
   }
 
   isNeedtoGetFavorites = () => {
-    if (this.props.initialized) {
+    if (this.props.initialized || !this.props.loggedIn) {
       return
     }
     this.props.dispatch(getFavorite())
@@ -271,14 +272,6 @@ class Market extends Component {
   }
 
   render() {
-    const { getFavoritePending, initialized } = this.props
-    if (getFavoritePending && !initialized) {
-      return (
-        <View style={{ flex: 1, backgroundColor: common.bgColor }}>
-          <ActivityIndicator style={{ marginTop: 20 }} color="white" />
-        </View>
-      )
-    }
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
     const index = this.marketTitles.indexOf(currPair)

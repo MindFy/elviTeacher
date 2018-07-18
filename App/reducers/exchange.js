@@ -49,7 +49,8 @@ const initialState = {
   kLineIndex: 3,
 
   checkFavoriteStatus: {
-    isPending: false,
+    requesting: false,
+    successful: false,
     error: null,
   },
   isFavorited: false,
@@ -264,7 +265,8 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         checkFavoriteStatus: {
-          isPending: true,
+          requesting: true,
+          successful: false,
           error: null,
         },
       }
@@ -273,7 +275,8 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         checkFavoriteStatus: {
-          isPending: false,
+          requesting: false,
+          successful: true,
         },
         isFavorited: payload,
       }
@@ -282,7 +285,8 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         checkFavoriteStatus: {
-          isPending: false,
+          requesting: false,
+          successful: false,
           error: payload,
         },
       }
@@ -290,10 +294,7 @@ export default function exchange(state = initialState, action) {
     case 'exchange/set_favorite_request':
       nextState = {
         ...state,
-        checkFavoriteStatus: {
-          isPending: false,
-          error: null,
-        },
+        checkFavoriteStatus: initialState.checkFavoriteStatus,
       }
       break
     case 'exchange/set_favorite_success':
