@@ -287,6 +287,15 @@ export default function exchange(state = initialState, action) {
         },
       }
       break
+    case 'exchange/set_favorite_request':
+      nextState = {
+        ...state,
+        checkFavoriteStatus: {
+          isPending: false,
+          error: null,
+        },
+      }
+      break
     case 'exchange/set_favorite_success':
       nextState = {
         ...state,
