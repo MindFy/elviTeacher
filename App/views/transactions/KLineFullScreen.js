@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { Overlay } from 'teaset'
+import FS from 'rn-fs-d3j'
 import equal from 'deep-equal'
 import { WebView, Animated, View, StatusBar, Image, Text, TouchableOpacity, AsyncStorage } from 'react-native'
 import { common } from '../../constants/common'
@@ -16,6 +17,7 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#101b23',
   },
   box: {
     width: common.sh,
@@ -626,9 +628,19 @@ class KLineFullScreen extends Component {
     const { selectedPair, kLineIndex } = this.props
     const goodsName = selectedPair.goods.name
     const currencyName = selectedPair.currency.name
+    let wh = {
+      width: common.sh,
+      height: common.sw,
+    }
+    if (!common.IsIOS) {
+      wh = {
+        width: FS.height / FS.width * common.sw,
+        height: common.sw,
+      }
+    }
     return (
       <View style={styles.conatiner}>
-        <View style={styles.box}>
+        <View style={[styles.box, { width: wh.width }]}>
           {this.renderHeaderBar()}
           <WebView
             ref={(e) => { this.webView = e }}
@@ -636,7 +648,7 @@ class KLineFullScreen extends Component {
             domStorageEnabled
             scalesPageToFit={false}
             automaticallyAdjustContentInsets={false}
-            style={styles.webview}
+            style={[styles.webview, { width: wh.width }]}
             injectedJavaScript={patchPostMessageJsCode}
             source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
             onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
