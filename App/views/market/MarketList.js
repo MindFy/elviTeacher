@@ -20,7 +20,7 @@ export default class MarketList extends Component {
     }).cloneWithRows(data)
   }
 
-  getDetailCellData = (rd, currencyName, language) => {
+  getDetailCellData = (rd, language) => {
     let typeColor = common.textColor
     let rose = new BigNumber(rd.rose).multipliedBy(100)
     let quantity
@@ -35,7 +35,7 @@ export default class MarketList extends Component {
       typeColor = common.textColor
     }
     rose = rose.toFixed(2, 1)
-    common.precision(rd.goods.name, currencyName, (p, q) => {
+    common.precision(rd.goods.name, rd.currency.name, (p, q) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
       quantity = new BigNumber(rd.quantity).toFixed(q, 1)
     })
@@ -106,9 +106,9 @@ export default class MarketList extends Component {
     )
   }
 
-  renderRow(rd, currencyName) {
+  renderRow(rd) {
     const { language, isEdit, currPair } = this.props
-    const cellData = this.getDetailCellData(rd, currencyName, language)
+    const cellData = this.getDetailCellData(rd, language)
     if (currPair === transfer(language, 'market_favorites')) {
       return this.renderMarkedCell(isEdit, cellData, rd)
     }
@@ -139,7 +139,7 @@ export default class MarketList extends Component {
         dailyChangeTextStyle={cellData.dailyChangeTextStyle}
         onPressCell={() => {
           if (this.props.onClickMarketItem) {
-            this.props.onClickMarketItem(rd, currencyName)
+            this.props.onClickMarketItem(rd)
           }
         }}
       />
@@ -147,11 +147,11 @@ export default class MarketList extends Component {
   }
 
   render() {
-    const { data, currencyName } = this.props
+    const { data } = this.props
     return (
       <ListView
         dataSource={this.listDS(data)}
-        renderRow={rd => this.renderRow(rd, currencyName)}
+        renderRow={rd => this.renderRow(rd)}
         renderHeader={() => this.renderHeader()}
         enableEmptySections
         removeClippedSubviews={false}
