@@ -634,8 +634,8 @@ class KLineFullScreen extends Component {
     }
     if (!common.IsIOS) {
       wh = {
-        width: FS.height / FS.width * common.sw,
-        height: common.sw,
+        width: FS.height,
+        height: FS.width,
       }
     }
     return (
