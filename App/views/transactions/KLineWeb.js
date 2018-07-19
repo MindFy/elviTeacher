@@ -58,16 +58,8 @@ export default class KLine extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('savedKlineIndex')
-      .then((savedIndex) => {
-        if (savedIndex) {
-          this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
-          this.setLine(savedIndex, 0)
-        } else {
-          const { kLineIndex } = this.props
-          this.setLine(kLineIndex, 0)
-        }
-      })
+    const { kLineIndex } = this.props
+    this.setLine(kLineIndex, 0)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -109,9 +101,6 @@ export default class KLine extends Component {
   setLine(kLineIndex, delay) {
     this.timer = setTimeout(() => {
       if (this.webView) {
-        const { goodsName, currencyName } = this.props
-        const nextUrl = `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}`
-        this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
         this.setValue(kLineIndex)
       } else {
         this.setLine(kLineIndex, 500)
@@ -148,8 +137,8 @@ export default class KLine extends Component {
           automaticallyAdjustContentInsets={false}
           style={styles.webView}
           injectedJavaScript={patchPostMessageJsCode}
-          source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
           onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
+          source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
         />
       </View>
     )

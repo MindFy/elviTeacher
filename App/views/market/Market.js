@@ -153,7 +153,7 @@ class Market extends Component {
     dispatch(exchange.requestDepthMap(params))
     dispatch(exchange.updateSegmentIndex(0))
     dispatch(exchange.clearOpenOrders())
-    dispatch(exchange.updateKLineIndex(3))
+    // dispatch(exchange.updateKLineIndex(3))
     cache.setObject('currentComponentVisible', 'Deal')
     this.props.navigation.goBack()
   }
