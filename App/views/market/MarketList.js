@@ -35,7 +35,7 @@ export default class MarketList extends Component {
       typeColor = common.textColor
     }
     rose = rose.toFixed(2, 1)
-    common.precision(rd.name, currencyName, (p, q) => {
+    common.precision(rd.goods.name, currencyName, (p, q) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
       quantity = new BigNumber(rd.quantity).toFixed(q, 1)
     })
