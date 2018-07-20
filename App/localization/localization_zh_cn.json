@@ -664,11 +664,13 @@
   "login_phone_regist": "手机注册",
   "login_email_input": "请输入邮箱",
   "login_email_inputCode": "请输入邮箱验证码",
-  // 等待确认
-  "login_email_numberOrTypeError": "手机号码或服务类型错误",
+  "login_email_numberOrTypeError": "邮箱或服务类型错误",
   "login_email_disbaleSendInOneMin": "一分钟内不能重复发送验证码",
   "login_email_networdError": "网络连接失败，请稍后重试",
   "login_email_getCodeFailed": "获取验证码失败，请重试",
   "login_emailRegisted": "邮箱已被注册",
-  "login_emailFormatError": "邮箱格式错误"
+  "login_emailFormatError": "邮箱格式错误",
+  "login_emailUnNull" : "邮箱不可为空",
+  "login_inputCorrectEmail": "请输入正确的邮箱",
+  "login_inputEmail": "请输入邮箱"
 }

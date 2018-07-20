@@ -217,16 +217,16 @@ class EmailRegist extends Component {
       return
     }
     if (!mobile) {
-      Toast.fail(transfer(language, 'login_idUnNull'))
+      Toast.fail(transfer(language, 'login_emailUnNull'))
       return
     }
-    if (!common.regMobile.test(mobile)) {
-      Toast.fail(transfer(language, 'login_inputCorrectId'))
+    if (!common.regEmail.test(mobile)) {
+      Toast.fail(transfer(language, 'login_inputCorrectEmail'))
       return
     }
-    dispatch(actions.getVerificateCode({
-      mobile,
-      service: 'register',
+    dispatch(actions.getVerificateSmtpCode({
+      email: mobile, // 这里用mobile 记录的是 邮箱
+      service: 'auth',
     }))
   }
 
@@ -235,7 +235,7 @@ class EmailRegist extends Component {
       passwordAgain, recommendNo, language } = this.props
 
     if (!mobile.length) {
-      Toast.fail(transfer(language, 'login_inputPhone'))
+      Toast.fail(transfer(language, 'login_inputEmail'))
       return
     }
     if (!code.length) {
@@ -250,7 +250,6 @@ class EmailRegist extends Component {
           paddingRight: common.margin20,
         },
         text: transfer(language, 'login_passFormatterError'),
-        position: 'bottom',
       })
       return
     }
@@ -262,12 +261,12 @@ class EmailRegist extends Component {
       Toast.fail(transfer(language, 'login_samePass'))
       return
     }
-    if (!common.regMobile.test(mobile)) {
-      Toast.fail(transfer(language, 'login_inputCorrectId'))
+    if (!common.regEmail.test(mobile)) {
+      Toast.fail(transfer(language, 'login_inputCorrectEmail'))
       return
     }
     dispatch(actions.register({
-      mobile,
+      email: mobile, // 这里用mobile 记录的是 邮箱
       code,
       password,
       recommendNo,
@@ -410,7 +409,7 @@ class EmailRegist extends Component {
         maxLength={common.textInputMaxLenPwd}
         onChange={e => this.onChange(e, 'code')}
         onPressCheckCodeBtn={() => { this.codePress() }}
-        extraDisable={!mobile || !common.regMobile.test(mobile) || mobileIsExist}
+        extraDisable={!mobile || !common.regEmail.test(mobile) || mobileIsExist}
         textInputProps={{
           keyboardType: 'numeric',
         }}
