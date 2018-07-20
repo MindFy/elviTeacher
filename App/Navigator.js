@@ -36,7 +36,6 @@ import ReceiverInfo from './views/legalDeal/ReceiverInfo'
 import Payment from './views/legalDeal/Payment'
 import UpdateBank from './views/legalDeal/UpdateBank'
 import ScanBarCode from './views/balance/ScanBarCode'
-import Market2 from './views/transactions/Market2'
 import KLineFullScreen from './views/transactions/KLineFullScreen'
 
 import Balance from './views/balance/Balance'
@@ -178,7 +177,7 @@ const TabBarStack = StackNavigator(
         header: null,
       },
     },
-    Market2,
+    Market2: { screen: Market },
     Orders,
     ScanBarCode,
     History,

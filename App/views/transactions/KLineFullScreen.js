@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { BigNumber } from 'bignumber.js'
 import { Overlay } from 'teaset'
+import FS from 'rn-fs-d3j'
 import equal from 'deep-equal'
-import { WebView, Animated, View, StatusBar, Image, Text, TouchableOpacity } from 'react-native'
+import { WebView, Animated, View, StatusBar, Image, Text, TouchableOpacity, AsyncStorage } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -16,6 +17,7 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#101b23',
   },
   box: {
     width: common.sh,
@@ -27,8 +29,8 @@ const styles = {
   },
   navBar: {
     width: '100%',
-    height: common.IsIOS ? (common.navHeight - 64 + 50) : 50,
-    paddingTop: common.IsIOS ? (common.navHeight - 64) : 0,
+    height: 50,
+    paddingTop: 0,
     backgroundColor: '#0E1820',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -183,6 +185,16 @@ class KLineFullScreen extends Component {
     super(props)
     this.minuteRotate = new Animated.Value(0)
     this.hourRotate = new Animated.Value(0)
+    const { language } = this.props
+    this.array = [
+      '',
+      transfer(language, 'exchange_1min'),
+      transfer(language, 'exchange_5min'),
+      transfer(language, 'exchange_15min'),
+      transfer(language, 'exchange_30min'),
+      transfer(language, 'exchange_1hour'),
+      transfer(language, 'exchange_4hour'),
+    ]
   }
 
   componentWillMount() {
@@ -230,6 +242,7 @@ class KLineFullScreen extends Component {
 
   baseBtnDidClick(idx) {
     const { dispatch } = this.props
+    AsyncStorage.setItem('savedKlineIndex', idx.toString())
     dispatch(exchange.updateKLineIndex(idx))
   }
 
@@ -244,6 +257,7 @@ class KLineFullScreen extends Component {
       },
     ).start()
     const { dispatch } = this.props
+    AsyncStorage.setItem('savedKlineIndex', idx.toString())
     dispatch(exchange.updateKLineIndex(idx))
   }
 
@@ -258,12 +272,13 @@ class KLineFullScreen extends Component {
       },
     ).start()
     const { dispatch } = this.props
+    AsyncStorage.setItem('savedKlineIndex', idx.toString())
     dispatch(exchange.updateKLineIndex(idx))
   }
 
   showMinuteOverlay({ x, y, width, height }) {
     const fromBounds = { x, y, width, height }
-    const { language, kLineIndex } = this.props
+    const { kLineIndex } = this.props
     const overlayView = (
       <Overlay.PopoverView
         onAppearCompleted={() => {
@@ -299,7 +314,7 @@ class KLineFullScreen extends Component {
             }
             onPress={() => this.minuteBtnDidClick(1)}
           >
-            {transfer(language, 'exchange_1min')}
+            {this.array[1]}
           </Text>
           <Text
             style={
@@ -309,7 +324,7 @@ class KLineFullScreen extends Component {
             }
             onPress={() => this.minuteBtnDidClick(2)}
           >
-            {transfer(language, 'exchange_5min')}
+            {this.array[2]}
           </Text>
           <Text
             style={
@@ -319,7 +334,7 @@ class KLineFullScreen extends Component {
             }
             onPress={() => this.minuteBtnDidClick(3)}
           >
-            {transfer(language, 'exchange_15min')}
+            {this.array[3]}
           </Text>
           <Text
             style={
@@ -329,7 +344,7 @@ class KLineFullScreen extends Component {
             }
             onPress={() => this.minuteBtnDidClick(4)}
           >
-            {transfer(language, 'exchange_30min')}
+            {this.array[4]}
           </Text>
         </View>
       </Overlay.PopoverView>
@@ -339,7 +354,7 @@ class KLineFullScreen extends Component {
 
   showHourOverlay({ x, y, width, height }) {
     const fromBounds = { x, y, width, height }
-    const { language, kLineIndex } = this.props
+    const { kLineIndex } = this.props
     const overlayView = (
       <Overlay.PopoverView
         onAppearCompleted={() => {
@@ -375,7 +390,7 @@ class KLineFullScreen extends Component {
             }
             onPress={() => this.hourBtnDidClick(5)}
           >
-            {transfer(language, 'exchange_1hour')}
+            {this.array[5]}
           </Text>
           <Text
             style={
@@ -385,7 +400,7 @@ class KLineFullScreen extends Component {
             }
             onPress={() => this.hourBtnDidClick(6)}
           >
-            {transfer(language, 'exchange_4hour')}
+            {this.array[6]}
           </Text>
         </View>
       </Overlay.PopoverView>
@@ -505,7 +520,10 @@ class KLineFullScreen extends Component {
                 styles.textSelectedStyle :
                 styles.textStyle
             }
-          >{transfer(language, 'exchange_minute')}</Text>
+          >{(kLineIndex > 0 && kLineIndex <= 4) ?
+              this.array[kLineIndex] :
+              transfer(language, 'exchange_minute')
+            }</Text>
           <Animated.Image
             resizeMode="contain"
             style={[styles.arrowIcon,
@@ -540,7 +558,10 @@ class KLineFullScreen extends Component {
                 styles.textSelectedStyle :
                 styles.textStyle
             }
-          >{transfer(language, 'exchange_hour_l')}</Text>
+          >{(kLineIndex > 4 && kLineIndex <= 6) ?
+              this.array[kLineIndex] :
+              transfer(language, 'exchange_hour_l')
+            }</Text>
           <Animated.Image
             resizeMode="contain"
             style={[styles.arrowIcon,
@@ -607,9 +628,19 @@ class KLineFullScreen extends Component {
     const { selectedPair, kLineIndex } = this.props
     const goodsName = selectedPair.goods.name
     const currencyName = selectedPair.currency.name
+    let wh = {
+      width: common.sh,
+      height: common.sw,
+    }
+    if (!common.IsIOS) {
+      wh = {
+        width: FS.height,
+        height: FS.width,
+      }
+    }
     return (
       <View style={styles.conatiner}>
-        <View style={styles.box}>
+        <View style={[styles.box, { width: wh.width }]}>
           {this.renderHeaderBar()}
           <WebView
             ref={(e) => { this.webView = e }}
@@ -617,9 +648,9 @@ class KLineFullScreen extends Component {
             domStorageEnabled
             scalesPageToFit={false}
             automaticallyAdjustContentInsets={false}
-            style={styles.webview}
+            style={[styles.webview, { width: wh.width }]}
             injectedJavaScript={patchPostMessageJsCode}
-            source={{ uri: `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}` }}
+            source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
             onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
           />
           {this.renderFooterBar()}

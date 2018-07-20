@@ -31,6 +31,7 @@ export default class KLine extends Component {
       updateTime: 0,
     }
   }
+
   componentWillMount() {
     if (common.IsIOS) {
       this.panResponder = {
@@ -84,7 +85,7 @@ export default class KLine extends Component {
       preProps.currencyName !== currencyName
     ) {
       if (this.webView) {
-        const nextUrl = `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}`
+        const nextUrl = `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}`
         this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
       }
     }
@@ -99,9 +100,6 @@ export default class KLine extends Component {
   setLine(kLineIndex, delay) {
     this.timer = setTimeout(() => {
       if (this.webView) {
-        const { goodsName, currencyName } = this.props
-        const nextUrl = `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}`
-        this.webView.injectJavaScript(`window.location.href='${nextUrl}'`)
         this.setValue(kLineIndex)
       } else {
         this.setLine(kLineIndex, 500)
@@ -138,8 +136,8 @@ export default class KLine extends Component {
           automaticallyAdjustContentInsets={false}
           style={styles.webView}
           injectedJavaScript={patchPostMessageJsCode}
-          source={{ uri: `${api.API_ROOT}/mobile_black.html?p=${goodsName}/${currencyName}` }}
           onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}
+          source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
         />
       </View>
     )
