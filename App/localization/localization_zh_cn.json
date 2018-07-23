@@ -672,5 +672,6 @@
   "login_emailFormatError": "邮箱格式错误",
   "login_emailUnNull" : "邮箱不可为空",
   "login_inputCorrectEmail": "请输入正确的邮箱",
-  "login_inputEmail": "请输入邮箱"
+  "login_inputEmail": "请输入邮箱",
+  "me_idcard_auth_tips": "暂仅支持中国大陆用户身份认证!"
 }
