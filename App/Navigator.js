@@ -27,6 +27,7 @@ import Authentication from './views/me/Authentication'
 import SecurityCenter from './views/me/SecurityCenter'
 import Rebates from './views/me/Rebates'
 import UpdateEmail from './views/me/UpdateEmail'
+import UpdateMobile from './views/me/UpdateMobile'
 import Settings from './views/me/Settings'
 import Language from './views/me/Language'
 import UpdatePassword from './views/me/UpdatePassword'
@@ -198,6 +199,7 @@ const TabBarStack = StackNavigator(
     Announcement,
     SecurityCenter,
     UpdateEmail,
+    UpdateMobile,
     KLineFullScreen: {
       screen: KLineFullScreen,
       navigationOptions: {

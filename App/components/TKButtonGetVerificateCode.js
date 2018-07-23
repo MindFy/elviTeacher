@@ -13,6 +13,12 @@ export default class TKButtonGetVerificateCode extends Component {
   }
   componentDidMount() { }
 
+  componentWillUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
+  }
+
   onPress() {
     const { onPress, language } = this.props
     onPress(() => {

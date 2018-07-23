@@ -64,6 +64,7 @@ export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
 export const sync = makePostAPI('/1.0/app/user/sync')
 export const updateBank = makePostAPI('/1.0/app/user/updateBank')
 export const updateEmail = makePostAPI('/1.0/app/user/updateEmail')
+export const updateMobile = makePostAPI('/1.0/app/user/updateMobile')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
 // Rebates
 export const rebatesLink = `${API_ROOT}/signup?invitation=`

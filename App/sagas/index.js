@@ -51,6 +51,7 @@ export default function* rootSaga() {
     fork(user.register),
     fork(user.resetPassword),
     fork(user.updateEmail),
+    fork(user.updateMobile),
     fork(user.updatePassword),
     fork(user.mobileIsExist),
 

@@ -297,7 +297,7 @@ class Login extends PureComponent {
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
           title={transfer(language, 'login_id')}
-          placeholder={transfer(language, 'login_idPlaceholder')}
+          placeholder={transfer(language, 'login_idPlaceholder2')}
           value={formState.mobile}
           showDelBtn
           textInputProps={{

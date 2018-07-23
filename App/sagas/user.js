@@ -161,3 +161,15 @@ export function* updateEmail() {
     }
   }
 }
+
+export function* updateMobile() {
+  while (true) {
+    const request = yield take('me/update_mobile_request')
+    const response = yield call(api.updateMobile, request.data)
+    if (response.success) {
+      yield put({ type: 'me/update_mobile_success', payload: response.result })
+    } else {
+      yield put({ type: 'me/update_mobile_failed', payload: response.error })
+    }
+  }
+}

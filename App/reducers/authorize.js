@@ -119,6 +119,12 @@ export default function authorize(state = initialState, action) {
     case 'notify/clear_reducer':
       nextState = initialState
       break
+    case 'FIND_USER_SUCCEED':
+      nextState = {
+        ...state,
+        loggedInResult: action.user,
+      }
+      break
     default:
       nextState = state
       break

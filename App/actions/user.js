@@ -141,6 +141,13 @@ export function updateEmailUpdate(data) {
   }
 }
 
+export function updateMobile(data) {
+  return {
+    type: 'me/update_mobile_request',
+    data,
+  }
+}
+
 export function findAuditmanage(data) {
   return {
     type: constants.FIND_AUDIT_MANAGE,

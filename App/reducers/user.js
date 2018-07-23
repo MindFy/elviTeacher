@@ -66,6 +66,10 @@ const initialState = {
   updateEmailResult: null,
   updateEmailError: null,
 
+  updateMobileVisible: false,
+  updateMobileResult: null,
+  updateMobileError: null,
+
   findAuditmanageData: undefined,
 
   mobileIsExistRequesting: false,
@@ -393,6 +397,30 @@ export default function user(state = initialState, action) {
       break
     case 'notify/clear_reducer':
       nextState = initialState
+      break
+    case 'me/update_mobile_request':
+      nextState = {
+        ...state,
+        updateMobileVisible: true,
+        updateMobileResult: null,
+        updateMobileError: null,
+      }
+      break
+    case 'me/update_mobile_success':
+      nextState = {
+        ...state,
+        updateMobileVisible: false,
+        updateMobileResult: action.payload,
+        updateMobileError: null,
+      }
+      break
+    case 'me/update_mobile_failed':
+      nextState = {
+        ...state,
+        updateMobileVisible: false,
+        updateMobileResult: null,
+        updateMobileError: action.payload,
+      }
       break
     default:
       break
