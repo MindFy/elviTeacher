@@ -12,7 +12,6 @@ import {
 } from 'react-native'
 import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
-import HotUpdate from 'rn-hotupdate-d3j'
 import SplashScreen from 'react-native-splash-screen'
 import {
   common,
@@ -61,6 +60,13 @@ class Home extends Component {
     if (language !== systemLanguage) {
       dispatch(system.updateLanguage(systemLanguage))
     }
+    AsyncStorage.getItem('savedKlineIndex')
+      .then((savedIndex) => {
+        if (savedIndex) {
+          cache.setObject('savedKlineIndex', savedIndex)
+          this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
+        }
+      })
   }
 
   componentDidMount() {

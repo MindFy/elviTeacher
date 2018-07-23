@@ -11,3 +11,33 @@ export function updateCurrentPair(payload) {
     payload,
   }
 }
+
+export function toggleEdit(payload) {
+  return {
+    type: 'market/toggle_edit',
+    payload,
+  }
+}
+
+export function getFavorite(payload) {
+  return {
+    type: 'market/get_favorite_request',
+    payload,
+  }
+}
+
+export function setFavorite(payload) {
+  return {
+    type: 'market/set_favorite_request',
+    payload,
+  }
+}
+
+
+export function setInitialized(payload) {
+  return {
+    type: 'market/set_initialized_state',
+    payload,
+  }
+}
+

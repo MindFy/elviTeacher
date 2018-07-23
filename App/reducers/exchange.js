@@ -47,6 +47,13 @@ const initialState = {
   currPair: 'CNTY',
   pairs: {},
   kLineIndex: 3,
+
+  checkFavoriteStatus: {
+    requesting: false,
+    successful: false,
+    error: null,
+  },
+  isFavorited: false,
 }
 
 export default function exchange(state = initialState, action) {
@@ -252,6 +259,54 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         kLineIndex: payload,
+      }
+      break
+    case 'exchange/check_favorite_request':
+      nextState = {
+        ...state,
+        checkFavoriteStatus: {
+          requesting: true,
+          successful: false,
+          error: null,
+        },
+      }
+      break
+    case 'exchange/check_favorite_success':
+      nextState = {
+        ...state,
+        checkFavoriteStatus: {
+          requesting: false,
+          successful: true,
+        },
+        isFavorited: payload,
+      }
+      break
+    case 'exchange/check_favorite_failed':
+      nextState = {
+        ...state,
+        checkFavoriteStatus: {
+          requesting: false,
+          successful: false,
+          error: payload,
+        },
+      }
+      break
+    case 'exchange/set_favorite_request':
+      nextState = {
+        ...state,
+        checkFavoriteStatus: initialState.checkFavoriteStatus,
+      }
+      break
+    case 'exchange/set_favorite_success':
+      nextState = {
+        ...state,
+        isFavorited: payload,
+      }
+      break
+    case 'exchange/set_favorite_failed':
+      nextState = {
+        ...state,
+        isFavorited: payload,
       }
       break
     case 'notify/clear_reducer':

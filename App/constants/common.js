@@ -6,6 +6,7 @@ import {
 
 const sh = Dimensions.get('window').height
 const sw = Dimensions.get('window').width
+const scale = Dimensions.get('window').scale
 const w = 375
 const IsIOS = Platform.OS.toLowerCase() === 'ios'
 const Is5Series = (IsIOS && sw === 320 && sh === 568)
@@ -34,7 +35,7 @@ const common = {
   paddingTop,
   tabbarHeight,
   selectedTokenDefault: '选择币种',
-
+  scale,
   refreshIntervalTime: 2000,
 
   noti: {

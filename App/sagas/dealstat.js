@@ -20,7 +20,6 @@ export default function* getRose() {
       const homeRose = []
       const rose = response.result
       let homeRoseSelected = request.data.homeRoseSelected
-      const user = request.data.user
       let homeRoseSelectedTemp
       for (let i = 0; i < rose.length; i++) {
         const currency = rose[i]

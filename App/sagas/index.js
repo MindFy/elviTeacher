@@ -16,7 +16,7 @@ import {
 import * as withdraw from './withdraw'
 import * as addressAdd from './addressAdd'
 import * as home from './home'
-import { requestPairInfo } from './market'
+import { requestPairInfo, watchGetFavorite, watchSetFavorite } from './market'
 import { submitRequest } from './otc'
 import * as exchanges from './exchange'
 
@@ -26,6 +26,7 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from './balance'
+import watchRequestDailyChange from './balanceDetail'
 import * as recharge from './recharge'
 import * as history from './history'
 import watcherRequestReceiverInfo from './receiverInfo'
@@ -69,6 +70,8 @@ export default function* rootSaga() {
     fork(deal.findListSelf),
     fork(deal.latestDeals),
 
+    fork(watchRequestDailyChange),
+
     fork(asset.createAddress),
     fork(asset.getAssets),
     fork(asset.getValuation),
@@ -102,6 +105,8 @@ export default function* rootSaga() {
     fork(exchanges.requestDepthMap),
     fork(requestBalanceList),
     fork(requestBalanceValuation),
+    exchanges.watchCheckFavorite(),
+    exchanges.watchSetFavorite(),
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
@@ -129,5 +134,7 @@ export default function* rootSaga() {
     history.withdrawCancel(),
 
     watcherRequestReceiverInfo(),
+    watchGetFavorite(),
+    watchSetFavorite(),
   ]
 }

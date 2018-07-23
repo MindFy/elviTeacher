@@ -1,71 +1,16 @@
 import React, { Component } from 'react'
 import {
-  View,
-  Text,
   ListView,
-  StyleSheet,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
-import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 
-const styles = StyleSheet.create({
-  header: {
-    height: common.getH(48),
-    marginHorizontal: common.getH(10),
-  },
-  headerTextView: {
-    flexDirection: 'row',
-    marginTop: common.getH(20),
-    marginBottom: common.getH(10),
-  },
-  underLine: {
-    height: 0.5,
-    backgroundColor: common.placeholderColor,
-  },
-  headerName: {
-    width: common.getH(66),
-    fontSize: common.getH(12),
-    color: common.placeholderColor,
-    textAlign: 'left',
-  },
-  headerPrice: {
-    flex: 1,
-    fontSize: common.getH(12),
-    color: common.placeholderColor,
-    textAlign: 'right',
-  },
-  row: {
-    marginHorizontal: common.getH(10),
-  },
-  rowTextView: {
-    flexDirection: 'row',
-    height: common.getH(40),
-  },
-  rowNameView: {
-    width: common.getH(66),
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-  rowName: {
-    fontSize: common.getH(12),
-    color: common.textColor,
-  },
-  rowNameMark: {
-    fontSize: common.getH(8),
-    color: common.textColor,
-    paddingBottom: common.getH(2),
-    alignSelf: 'flex-end',
-  },
-  rowPrice: {
-    flex: 1,
-    fontSize: common.getH(12),
-    color: common.textColor,
-    textAlign: 'right',
-    alignSelf: 'center',
-  },
-})
+import MarketDetailCell from './components/MarketDetailCell'
+import MarketEditDetailCell from './components/MarketEditDetailCell'
+import MarketMarkedCell from './components/MarketMarkedCell'
+import MarketEditMarkedCell from './components/MarketEditMarkedCell'
+import MarketDetailHeader from './components/MarketDetailHeader'
 
 export default class MarketList extends Component {
   constructor(props) {
@@ -75,30 +20,7 @@ export default class MarketList extends Component {
     }).cloneWithRows(data)
   }
 
-  renderHeader() {
-    const { language } = this.props
-    return (
-      <View style={styles.header}>
-        <View style={styles.headerTextView}>
-          <Text style={styles.headerName}>
-            {transfer(language, 'market_marketName')}
-          </Text>
-          <Text style={styles.headerPrice}>
-            {transfer(language, 'market_marketVolume')}
-          </Text>
-          <Text style={styles.headerPrice}>
-            {transfer(language, 'market_marketLastPrice')}
-          </Text>
-          <Text style={styles.headerPrice}>
-            {transfer(language, 'market_24hourChange')}
-          </Text>
-        </View>
-        <View style={styles.underLine} />
-      </View>
-    )
-  }
-
-  renderRow(rd, currencyName) {
+  getDetailCellData = (rd, language) => {
     let typeColor = common.textColor
     let rose = new BigNumber(rd.rose).multipliedBy(100)
     let quantity
@@ -113,50 +35,123 @@ export default class MarketList extends Component {
       typeColor = common.textColor
     }
     rose = rose.toFixed(2, 1)
-    common.precision(rd.name, currencyName, (p, q) => {
+    common.precision(rd.goods.name, rd.currency.name, (p, q) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
       quantity = new BigNumber(rd.quantity).toFixed(q, 1)
     })
-    const { language } = this.props
+    const isFavorited = rd.isFavorited || false
+
+    return ({
+      goods: rd.goods,
+      currency: rd.currency,
+      subName: `（${transfer(language, `home_${rd.goods.name}Name`)}）`,
+      volume: quantity,
+      lastPrice: cprice,
+      lastPriceTextStyle: { color: typeColor },
+      dailyChangeTextStyle: { color: typeColor },
+      dailyChange: `${roseSymbol}${rose}%`,
+      isFavorited,
+    })
+  }
+
+  handlePressMarked = (rd) => {
+    if (this.props.onPressMarked) {
+      this.props.onPressMarked(rd)
+    }
+  }
+
+  renderMarkedCell = (isEdit, cellData, rd) => {
+    if (isEdit) {
+      return (
+        <MarketEditMarkedCell
+          goodsName={cellData.goods.name}
+          currencyName={cellData.currency.name}
+          volume={cellData.volume}
+          lastPrice={cellData.lastPrice}
+          lastPriceTextStyle={cellData.lastPriceTextStyle}
+          dailyChange={cellData.dailyChange}
+          dailyChangeTextStyle={cellData.dailyChangeTextStyle}
+          isFavorited={cellData.isFavorited}
+          onPressMarked={() => { this.handlePressMarked(rd) }}
+        />
+      )
+    }
     return (
-      <NextTouchableOpacity
-        style={styles.row}
-        onPress={() => {
+      <MarketMarkedCell
+        goodsName={cellData.goods.name}
+        currencyName={cellData.currency.name}
+        volume={cellData.volume}
+        lastPrice={cellData.lastPrice}
+        lastPriceTextStyle={cellData.lastPriceTextStyle}
+        dailyChange={cellData.dailyChange}
+        dailyChangeTextStyle={cellData.dailyChangeTextStyle}
+        onPressCell={() => {
           if (this.props.onClickMarketItem) {
-            this.props.onClickMarketItem(rd, currencyName)
+            this.props.onClickMarketItem(rd, rd.currency.name)
           }
         }}
-        activeOpacity={common.activeOpacity}
-      >
-        <View style={styles.rowTextView}>
-          <View style={styles.rowNameView}>
-            <Text style={styles.rowName}>{rd.name}</Text>
-            <Text style={styles.rowNameMark}>
-              {`（${transfer(language, `home_${rd.name}Name`)}）`}
-            </Text>
-          </View>
-          <Text style={styles.rowPrice}>{quantity}</Text>
-          <Text style={[styles.rowPrice, {
-            color: typeColor,
-          }]}
-          >{cprice}</Text>
-          <Text style={[styles.rowPrice, {
-            color: typeColor,
-          }]}
-          >{`${roseSymbol}${rose}%`}</Text>
-        </View>
+      />
+    )
+  }
 
-        <View style={styles.underLine} />
-      </NextTouchableOpacity>
+  renderHeader() {
+    const { language } = this.props
+    return (
+      <MarketDetailHeader
+        name={transfer(language, 'market_marketName')}
+        volume={transfer(language, 'market_marketVolume')}
+        lastPrice={transfer(language, 'market_marketLastPrice')}
+        dailyChange={transfer(language, 'market_24hourChange')}
+      />
+    )
+  }
+
+  renderRow(rd) {
+    const { language, isEdit, currPair } = this.props
+    const cellData = this.getDetailCellData(rd, language)
+    if (currPair === transfer(language, 'market_favorites')) {
+      return this.renderMarkedCell(isEdit, cellData, rd)
+    }
+
+    if (isEdit) {
+      return (
+        <MarketEditDetailCell
+          name={cellData.goods.name}
+          subName={cellData.subName}
+          volume={cellData.volume}
+          lastPrice={cellData.lastPrice}
+          lastPriceTextStyle={cellData.lastPriceTextStyle}
+          dailyChange={cellData.dailyChange}
+          dailyChangeTextStyle={cellData.dailyChangeTextStyle}
+          isFavorited={cellData.isFavorited}
+          onPressMarked={() => { this.handlePressMarked(rd) }}
+        />
+      )
+    }
+    return (
+      <MarketDetailCell
+        name={cellData.goods.name}
+        subName={cellData.subName}
+        volume={cellData.volume}
+        lastPrice={cellData.lastPrice}
+        lastPriceTextStyle={cellData.lastPriceTextStyle}
+        dailyChange={cellData.dailyChange}
+        dailyChangeTextStyle={cellData.dailyChangeTextStyle}
+        onPressCell={() => {
+          if (this.props.onClickMarketItem) {
+            this.props.onClickMarketItem(rd)
+          }
+        }}
+      />
     )
   }
 
   render() {
-    const { data, currencyName } = this.props
+    const { data } = this.props
     return (
       <ListView
         dataSource={this.listDS(data)}
-        renderRow={rd => this.renderRow(rd, currencyName)}
+        renderRow={rd => this.renderRow(rd)}
         renderHeader={() => this.renderHeader()}
         enableEmptySections
         removeClippedSubviews={false}
