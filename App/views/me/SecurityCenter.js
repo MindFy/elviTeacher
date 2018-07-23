@@ -13,6 +13,7 @@ import {
 } from 'teaset'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
+import SecurityCenterCell from './SecurityCenterCell'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
@@ -58,7 +59,9 @@ class SecurityCenter extends Component {
 
   componentDidMount() {
     this.listener = DeviceEventEmitter.addListener(common.noti.googleAuth, () => {
-      this.showOverlay()
+      const { googleAuth, language } = this.props
+      const msg = googleAuth ? transfer(language, 'me_googleBinded') : transfer(language, 'me_googleBindReminder')
+      this.showOverlay(msg)
     })
   }
 
@@ -66,8 +69,7 @@ class SecurityCenter extends Component {
     this.listener.remove()
   }
 
-  showOverlay() {
-    const { language } = this.props
+  showOverlay(msg) {
     const overlayView = (
       <Overlay.View
         style={{
@@ -93,7 +95,7 @@ class SecurityCenter extends Component {
               color: common.blackColor,
               alignSelf: 'center',
             }}
-          >{this.props.googleAuth ? transfer(language, 'me_googleBinded') : transfer(language, 'me_googleBindReminder')}</Text>
+          >{msg}</Text>
         </View>
       </Overlay.View>
     )
@@ -103,8 +105,23 @@ class SecurityCenter extends Component {
     }, 2000)
   }
 
+  maskMobile(value) {
+    return String(value).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  }
+
+  maskEmail(value = '') {
+    if (value) {
+      const arr = value.split('@')
+      if (arr[0].length > 3) {
+        return `${arr[0].substring(0, 3)}****@${arr[1]}`
+      }
+      return value
+    }
+    return ''
+  }
+
   render() {
-    const { navigation, loggedIn, dispatch, language } = this.props
+    const { navigation, loggedInResult, dispatch, language } = this.props
     return (
       <ScrollView
         style={{
@@ -115,27 +132,33 @@ class SecurityCenter extends Component {
         <StatusBar
           barStyle={'light-content'}
         />
-
-        <MeCell
-          viewStyle={{
-            marginTop: common.margin10,
-          }}
-          leftImageHide
-          onPress={() => {
-            if (loggedIn) navigation.navigate('UpdateEmail')
-            else navigation.navigate('LoginStack')
-          }}
+        <SecurityCenterCell
           title={transfer(language, 'me_linkEmail')}
-        />
-        <MeCell
-          leftImageHide
+          detail={this.maskEmail(loggedInResult.email || '')}
           onPress={() => {
-            if (loggedIn) dispatch(actions.getGoogleAuth())
-            else navigation.navigate('LoginStack')
+            if (!loggedInResult.email) {
+              navigation.navigate('UpdateEmail')
+            } else {
+              this.showOverlay(transfer(language, 'me_Email_binded'))
+            }
           }}
-          title={transfer(language, 'me_google_authenticator')}
         />
-
+        <SecurityCenterCell
+          title={transfer(language, 'me_linkMobile')}
+          detail={this.maskMobile(loggedInResult.mobile || '')}
+          onPress={() => {
+            if (!loggedInResult.mobile) {
+              navigation.navigate('UpdateMobile')
+            } else {
+              this.showOverlay(transfer(language, 'me_Mobile_binded'))
+            }
+          }}
+        />
+        <SecurityCenterCell
+          title={transfer(language, 'me_google_authenticator')}
+          detail=""
+          onPress={() => dispatch(actions.getGoogleAuth())}
+        />
       </ScrollView>
     )
   }
@@ -145,6 +168,7 @@ function mapStateToProps(state) {
   return {
     googleAuth: state.user.googleAuth,
     loggedIn: state.authorize.loggedIn,
+    loggedInResult: state.authorize.loggedInResult,
     language: state.system.language,
   }
 }
