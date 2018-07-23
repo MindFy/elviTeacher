@@ -71,11 +71,20 @@ class Me extends Component {
     )
   }
 
-  maskPhone(phone) {
-    if (!phone) return undefined
-
-    const str = String(phone)
-    return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  maskPhoneOrEmail(value) {
+    const mobile = value.mobile
+    const email = value.email
+    if (mobile) {
+      return String(mobile).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+    }
+    if (email) {
+      const arr = email.split('@')
+      if (arr[0].length > 3) {
+        return `${arr[0].substring(0, 3)}****@${arr[1]}`
+      }
+      return email
+    }
+    return ''
   }
 
   render() {
@@ -107,7 +116,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!loggedIn ? transfer(language, 'me_login') : this.maskPhone(loggedInResult.mobile)}
+            title={!loggedIn ? transfer(language, 'me_login') : this.maskPhoneOrEmail(loggedInResult)}
             rightImageHide
             target="global"
           />

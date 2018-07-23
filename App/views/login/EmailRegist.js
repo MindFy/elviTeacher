@@ -274,10 +274,10 @@ class EmailRegist extends Component {
   }
 
   handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateCodeVisible, getVerificateCodeResponse, language } = nextProps
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
+    const { getVerificateSmtpCodeVisible, getVerificateCodeResponse, language } = nextProps
+    if (!getVerificateSmtpCodeVisible && !this.showGetVerificateCodeResponse) return
 
-    if (getVerificateCodeVisible) {
+    if (getVerificateSmtpCodeVisible) {
       this.showGetVerificateCodeResponse = true
     } else {
       this.showGetVerificateCodeResponse = false
@@ -351,11 +351,11 @@ class EmailRegist extends Component {
               this.setState({ showTip: true })
             } else {
               // 需要修改
-              this.props.dispatch(actions.mobileIsExist({
-                type: 'mobile',
-                value: this.props.mobile,
-              }))
-              this.setState({ showTip: false })
+              // this.props.dispatch(actions.mobileIsExist({
+              //   type: 'email',
+              //   value: this.props.mobile,
+              // }))
+              // this.setState({ showTip: false })
             }
           },
         }}
@@ -645,8 +645,8 @@ function mapStateToProps(state) {
     registerVisible: state.user.registerVisible,
     registerResponse: state.user.registerResponse,
 
-    getVerificateCodeVisible: state.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: state.user.getVerificateCodeResponse,
+    getVerificateSmtpCodeVisible: state.user.getVerificateSmtpCodeVisible,
+    getVerificateCodeResponse: state.user.getVerificateSmtpCodeResponse,
 
     language: state.system.language,
   }
