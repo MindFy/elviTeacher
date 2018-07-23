@@ -672,5 +672,5 @@
   "login_emailFormatError": "Wrong email or service type",
   "login_emailUnNull" : "The email cannot be empty",
   "login_inputCorrectEmail": "Please enter correct email address",
-  "me_idcard_auth_tips": "暂仅支持中国大陆用户身份认证!"
+  "me_idcard_auth_tips": "Currently support only Mainland China User ID Verification!"
 }
