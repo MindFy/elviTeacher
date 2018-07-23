@@ -78,7 +78,9 @@ class ForgotPwd extends Component {
   constructor() {
     super()
     this.showGetVerificateCodeResponse = false
+    this.showGetVerificateSMPTCodeResponse = false
     this.showCheckVerificateCodeResponse = false
+    this.showCheckVerificateSMPTCodeResponse = false
     this.state = {
       showTip: false,
       nextBtnDisabled: true,
@@ -87,7 +89,9 @@ class ForgotPwd extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.handleGetVerificateCodeRequest(nextProps)
+    this.handleGetVerificateSMPTCodeRequest(nextProps)
     this.handleCheckVerificateCodeRequest(nextProps)
+    this.handleCheckVerificateSmptCodeRequest(nextProps)
   }
 
   componentWillUnmount() {
@@ -125,14 +129,21 @@ class ForgotPwd extends Component {
       Toast.fail(transfer(language, 'login_idUnNull'))
       return
     }
-    if (!common.regMobile.test(mobile)) {
-      Toast.fail(transfer(language, 'login_inputCorrectId'))
+    if (common.regMobile.test(mobile)) {
+      dispatch(actions.getVerificateCode({
+        mobile,
+        service: 'reset',
+      }))
       return
     }
-    dispatch(actions.getVerificateCode({
-      mobile,
-      service: 'reset',
-    }))
+    if (common.regEmail.test(mobile)) {
+      dispatch(actions.getVerificateSmtpCode({
+        email: mobile,
+        service: 'reset',
+      }))
+      return
+    }
+    Toast.fail(transfer(language, 'login_inputCorrectId'))
   }
 
   nextPress() {
@@ -147,22 +158,29 @@ class ForgotPwd extends Component {
       Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
-    if (!common.regMobile.test(mobile)) {
-      Toast.fail(transfer(language, 'login_inputCorrectId'))
+    if (common.regMobile.test(mobile)) {
+      dispatch(actions.checkVerificateCode({
+        mobile,
+        service: 'reset',
+        code,
+      }))
       return
     }
-    dispatch(actions.checkVerificateCode({
-      mobile,
-      service: 'reset',
-      code,
-    }))
+    if (common.regEmail.test(mobile)) {
+      dispatch(actions.checksmptVerificateCode({
+        email: mobile,
+        service: 'reset',
+        code,
+      }))
+      return
+    }
+    Toast.fail(transfer(language, 'login_inputCorrectId'))
   }
 
   /* 获取验证码请求结果处理 */
   handleGetVerificateCodeRequest(nextProps) {
     const { getVerificateCodeVisible, getVerificateCodeResponse, language } = nextProps
     if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
-
     if (getVerificateCodeVisible) {
       this.showGetVerificateCodeResponse = true
     } else {
@@ -179,6 +197,34 @@ class ForgotPwd extends Component {
       } else if (getVerificateCodeResponse.error.code === 4000104) {
         Toast.fail(transfer(language, 'login_phoneUnRegist'))
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
+        Toast.fail(transfer(language, 'login_networdError'))
+      } else {
+        Toast.fail(transfer(language, 'login_getCodeFailed'))
+      }
+    }
+  }
+
+  /* 获取验证码请求结果处理 */
+  handleGetVerificateSMPTCodeRequest(nextProps) {
+    const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse, language } = nextProps
+    if (!getVerificateSmtpCodeVisible && !this.showGetVerificateSMPTCodeResponse) return
+
+    if (getVerificateSmtpCodeVisible) {
+      this.showGetVerificateSMPTCodeResponse = true
+    } else {
+      this.showGetVerificateSMPTCodeResponse = false
+      if (getVerificateSmtpCodeResponse.success) {
+        Toast.success(transfer(language, 'get_code_succeed'))
+        this.setState({ nextBtnDisabled: false })
+      } else if (getVerificateSmtpCodeResponse.error.code === 4000101) {
+        Toast.fail(transfer(language, 'login_numberOrTypeError'))
+      } else if (getVerificateSmtpCodeResponse.error.code === 4000102) {
+        Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
+      } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
+        Toast.fail(transfer(language, 'login_codeOverDue'))
+      } else if (getVerificateSmtpCodeResponse.error.code === 4000104) {
+        Toast.fail(transfer(language, 'login_phoneUnRegist'))
+      } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
       } else {
         Toast.fail(transfer(language, 'login_getCodeFailed'))
@@ -204,6 +250,31 @@ class ForgotPwd extends Component {
       } else if (checkVerificateCodeResponse.error.code === 4000103) {
         Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (checkVerificateCodeResponse.error.message === common.badNet) {
+        Toast.fail(transfer(language, 'login_networdError'))
+      } else {
+        Toast.fail(transfer(language, 'login_verificateFailed'))
+      }
+    }
+  }
+
+  /* 检测验证码请求结果处理 */
+  handleCheckVerificateSmptCodeRequest(nextProps) {
+    const { checkVerificateSmtpCodeVisible, checkVerificateSmtpCodeResponse,
+      navigation, language } = nextProps
+    if (!checkVerificateSmtpCodeVisible && !this.showCheckVerificateCodeResponse) return
+    if (checkVerificateSmtpCodeVisible) {
+      this.showCheckVerificateCodeResponse = true
+    } else {
+      this.showCheckVerificateCodeResponse = false
+      if (checkVerificateSmtpCodeResponse.success) {
+        navigation.navigate('ConfirmPwd')
+      } else if (checkVerificateSmtpCodeResponse.error.code === 4000101) {
+        Toast.fail(transfer(language, 'login_numberOrTypeError2'))
+      } else if (checkVerificateSmtpCodeResponse.error.code === 4000102) {
+        Toast.fail(transfer(language, 'login_codeError'))
+      } else if (checkVerificateSmtpCodeResponse.error.code === 4000103) {
+        Toast.fail(transfer(language, 'login_codeOverDue'))
+      } else if (checkVerificateSmtpCodeResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
       } else {
         Toast.fail(transfer(language, 'login_verificateFailed'))
@@ -246,9 +317,8 @@ class ForgotPwd extends Component {
             inputStyle={styles.input}
             titleStyle={styles.inputText}
             textInputProps={{
-              keyboardType: 'phone-pad',
               onBlur: () => {
-                if (!common.regMobile.test(this.props.mobile)) {
+                if (!common.regMobile.test(mobile) && !common.regEmail.test(mobile)) {
                   this.setState({ showTip: true })
                 } else {
                   this.setState({ showTip: false })
@@ -256,9 +326,8 @@ class ForgotPwd extends Component {
               },
             }}
             title={transfer(language, 'login_id')}
-            placeholder={transfer(language, 'login_idPlaceholder')}
+            placeholder={transfer(language, 'login_idPlaceholder2')}
             value={mobile}
-            maxLength={11}
             onChange={e => this.onChange(e, 'mobile')}
           />
           {this.renderMobileTip()}
@@ -268,11 +337,11 @@ class ForgotPwd extends Component {
             titleStyle={styles.inputText}
             language={language}
             title={transfer(language, 'login_code')}
-            placeholder={transfer(language, 'login_enterSmsCode')}
+            placeholder={transfer(language, 'login_enterSmsCode2')}
             value={code}
             maxLength={6}
             onPressCheckCodeBtn={() => this.codePress()}
-            extraDisable={!mobile || !common.regMobile.test(mobile)}
+            extraDisable={!mobile || (!common.regMobile.test(mobile) && !common.regEmail.test(mobile))}
             onChange={e => this.onChange(e, 'code')}
             textInputProps={{
               keyboardType: 'numeric',
@@ -305,9 +374,14 @@ function mapStateToProps(store) {
 
     getVerificateCodeVisible: store.user.getVerificateCodeVisible,
     getVerificateCodeResponse: store.user.getVerificateCodeResponse,
+    getVerificateSmtpCodeVisible: store.user.getVerificateSmtpCodeVisible,
+    getVerificateSmtpCodeResponse: store.user.getVerificateSmtpCodeResponse,
 
     checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
     checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
+    checkVerificateSmtpCodeVisible: store.user.checkVerificateSmtpCodeVisible,
+    checkVerificateSmtpCodeResponse: store.user.checkVerificateSmtpCodeResponse,
+
     language: store.system.language,
   }
 }

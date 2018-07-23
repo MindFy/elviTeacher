@@ -20,6 +20,17 @@ export function* checkVerificateCode() {
     else yield put({ type: constants.CHECK_VERIFICATE_CODE_FAILED, response })
   }
 }
+
+/* 检测验证码 */
+export function* checksmptVerificateCode() {
+  while (true) {
+    const request = yield take('user/check_smtp_code_request')
+    const response = yield call(api.checkVerificateSmtpCode, request.data)
+    if (response.success) yield put({ type: 'user/check_smtp_code_success', response })
+    else yield put({ type: 'user/check_smtp_code_failed', response })
+  }
+}
+
 /* 获取谷歌验证信息 */
 export function* getGoogleAuth() {
   while (true) {

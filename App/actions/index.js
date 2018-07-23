@@ -32,6 +32,7 @@ import {
 } from './legalDeal'
 import {
   checkVerificateCode,
+  checksmptVerificateCode,
   getGoogleAuth,
   getVerificateCode,
   getVerificateSmtpCode,
@@ -111,6 +112,7 @@ const actions = {
   skipLegalDealUpdate,
 
   checkVerificateCode,
+  checksmptVerificateCode,
   getGoogleAuth,
   getVerificateCode,
   getVerificateSmtpCode,

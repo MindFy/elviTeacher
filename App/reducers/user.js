@@ -29,6 +29,9 @@ const initialState = {
   checkVerificateCodeVisible: false,
   checkVerificateCodeResponse: undefined,
 
+  checkVerificateSmtpCodeVisible: false,
+  checkVerificateSmtpCodeResponse: undefined,
+
   getVerificateCodeVisible: false,
   getVerificateCodeResponse: undefined,
 
@@ -84,6 +87,9 @@ export default function user(state = initialState, action) {
       nextState = {
         ...state,
         checkVerificateCodeVisible: true,
+        checkVerificateCodeResponse: undefined,
+        checkVerificateSmtpCodeVisible: false,
+        checkVerificateSmtpCodeResponse: undefined,
       }
       break
     case constants.CHECK_VERIFICATE_CODE_SUCCEED:
@@ -100,6 +106,29 @@ export default function user(state = initialState, action) {
         checkVerificateCodeResponse: action.response,
       }
       break
+    case 'user/check_smtp_code_request':
+      nextState = {
+        ...state,
+        checkVerificateSmtpCodeVisible: true,
+        checkVerificateSmtpCodeResponse: undefined,
+        checkVerificateCodeVisible: false,
+        checkVerificateCodeResponse: undefined,
+      }
+      break
+    case 'user/check_smtp_code_success':
+      nextState = {
+        ...state,
+        checkVerificateSmtpCodeVisible: false,
+        checkVerificateSmtpCodeResponse: action.response,
+      }
+      break
+    case 'user/check_smtp_code_failed':
+      nextState = {
+        ...state,
+        checkVerificateSmtpCodeVisible: false,
+        checkVerificateSmtpCodeResponse: action.response,
+      }
+      break
     case constants.GET_GOOGLE_AUTH_FAILED:
       nextState = {
         ...state,
@@ -110,6 +139,8 @@ export default function user(state = initialState, action) {
       nextState = {
         ...state,
         getVerificateCodeVisible: true,
+        getVerificateSmtpCodeVisible: false,
+        getVerificateSmtpCodeResponse: undefined,
       }
       break
     case constants.GET_VERIFICATE_CODE_SUCCEED:
@@ -130,6 +161,8 @@ export default function user(state = initialState, action) {
       nextState = {
         ...state,
         getVerificateSmtpCodeVisible: true,
+        getVerificateCodeVisible: false,
+        getVerificateCodeResponse: undefined,
       }
       break
     case constants.GET_VERIFICATE_SMTP_CODE_SUCCEED:
