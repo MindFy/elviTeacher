@@ -7,6 +7,13 @@ export function checkVerificateCode(data) {
   }
 }
 
+export function checksmptVerificateCode(data) {
+  return {
+    type: 'user/check_smtp_code_request',
+    data,
+  }
+}
+
 export function getGoogleAuth() {
   return {
     type: constants.GET_GOOGLE_AUTH_REQUEST,
@@ -137,6 +144,13 @@ export function updateEmail(data) {
 export function updateEmailUpdate(data) {
   return {
     type: constants.UPDATE_EMAIL_UPDATE,
+    data,
+  }
+}
+
+export function updateMobile(data) {
+  return {
+    type: 'me/update_mobile_request',
     data,
   }
 }

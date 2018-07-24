@@ -241,6 +241,16 @@ const common = {
   activeOpacity: 0.7,
 
   regMobile: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+
+  filterPwd(pwd) {
+    return typeof pwd === 'string' &&
+      pwd.length >= 6 &&
+      pwd.length <= 20 &&
+      new RegExp('[A-Z]', 'g').test(pwd) &&
+      new RegExp('[0-9]', 'g').test(pwd) &&
+      /^[^ ]+$/.test(pwd)
+  },
+
   regMobileMsg: '请输入正确的手机号', // 手机号提示
   regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
   regSpace: /^[^ ]+$/, // 空格正则

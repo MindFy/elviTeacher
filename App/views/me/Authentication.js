@@ -34,6 +34,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  tips: {
+    backgroundColor: 'transparent',
+    color: '#dfe4ff',
+    fontSize: 12,
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+  },
   inputView: {
     marginTop: common.margin10,
     marginLeft: common.margin10,
@@ -289,6 +296,7 @@ class Authentication extends Component {
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
         >
+          <Text style={styles.tips}>{transfer(language, 'me_idcard_auth_tips')}</Text>
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={{ fontSize: common.font14 }}
