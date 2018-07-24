@@ -97,8 +97,7 @@ class ConfirmPwd extends Component {
 
   confirmPress() {
     const { dispatch, mobile, code, password, passwordAgain, language } = this.props
-    if (!password.length || !common.regPassword.test(password)
-      || !common.regSpace.test(password)) {
+    if (!password.length || !common.filterPwd(password)) {
       Toast.show({
         style: {
           paddingLeft: common.margin20,
@@ -116,11 +115,19 @@ class ConfirmPwd extends Component {
       Toast.fail(transfer(language, 'login_passwordDidMatch'))
       return
     }
-    dispatch(actions.resetPassword({
-      mobile,
-      code,
-      newpassword: password,
-    }))
+    if (common.regMobile.test(mobile)) {
+      dispatch(actions.resetPassword({
+        mobile,
+        code,
+        newpassword: password,
+      }))
+    } else {
+      dispatch(actions.resetPassword({
+        email: mobile,
+        code,
+        newpassword: password,
+      }))
+    }
   }
 
   HandleResetPasswordRequest(nextProps) {
@@ -137,7 +144,7 @@ class ConfirmPwd extends Component {
         dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
         navigation.goBack('Login')
       } else if (resetPasswordResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneUnRegist'))
+        Toast.fail(transfer(language, 'login_phoneUnRegist2'))
       } else if (resetPasswordResponse.error.code === 4000101) {
         Toast.fail(transfer(language, 'login_codeNotNull'))
       } else if (resetPasswordResponse.error.code === 4000102) {

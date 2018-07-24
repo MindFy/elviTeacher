@@ -25,6 +25,7 @@
   "login_idNotExist": "The number doesn't exist or is wrong",
   "login_passError": "Incorrect password",
   "login_phoneUnRegist": "The mobile number isn't registered",
+  "login_phoneUnRegist2": "The account isn't registered",
   "login_idOrPassError": "Wrong ID or password",
   "login_success": "Login successfully",
   "login_tryAgain": "Login failed, please try again later",

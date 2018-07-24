@@ -261,11 +261,11 @@ class ForgotPwd extends Component {
   handleCheckVerificateSmptCodeRequest(nextProps) {
     const { checkVerificateSmtpCodeVisible, checkVerificateSmtpCodeResponse,
       navigation, language } = nextProps
-    if (!checkVerificateSmtpCodeVisible && !this.showCheckVerificateCodeResponse) return
+    if (!checkVerificateSmtpCodeVisible && !this.showCheckVerificateSMPTCodeResponse) return
     if (checkVerificateSmtpCodeVisible) {
-      this.showCheckVerificateCodeResponse = true
+      this.showCheckVerificateSMPTCodeResponse = true
     } else {
-      this.showCheckVerificateCodeResponse = false
+      this.showCheckVerificateSMPTCodeResponse = false
       if (checkVerificateSmtpCodeResponse.success) {
         navigation.navigate('ConfirmPwd')
       } else if (checkVerificateSmtpCodeResponse.error.code === 4000101) {

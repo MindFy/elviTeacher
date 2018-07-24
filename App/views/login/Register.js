@@ -269,8 +269,7 @@ class Register extends Component {
       Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
-    if (!password.length || !common.regPassword.test(password) ||
-      !common.regSpace.test(password)) {
+    if (!password.length || !common.filterPwd(password)) {
       Toast.show({
         style: {
           paddingLeft: common.margin20,
@@ -473,10 +472,7 @@ class Register extends Component {
   }
 
   renderErrorTip = (tip) => {
-    const hasTip = (
-      (tip && !common.regPassword.test(tip)) ||
-      (tip && !common.regSpace.test(tip))
-    )
+    const hasTip = (tip && !common.filterPwd(tip))
     const tipView = hasTip && (
       <Text
         style={{
