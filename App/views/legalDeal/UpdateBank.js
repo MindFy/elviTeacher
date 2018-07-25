@@ -163,7 +163,7 @@ class UpdateBank extends Component {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
     if (link) {
-      this.props.navigation.navigate('UpdateMobile')
+      this.props.navigation.navigate('EmailCheck')
       return
     }
     const { authCodeType, formState, dispatch, language } = this.props
