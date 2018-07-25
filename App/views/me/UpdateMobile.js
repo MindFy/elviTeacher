@@ -177,7 +177,7 @@ class UpdateMobile extends Component {
       }
       if (updateEmailResult) {
         Toast.success(transfer(language, 'me_Mobile_binded'))
-        user.emailStatus = common.user.status.bind
+        user.mobileStatus = common.user.status.bind
         dispatch(actions.findUserUpdate(JSON.parse(JSON.stringify(user))))
         dispatch(actions.findUser(schemas.findUser(user.id)))
         navigation.goBack()
@@ -229,10 +229,10 @@ class UpdateMobile extends Component {
             placeholder={transfer(language, 'me_enter_mobileAddress')}
             value={email}
             onChange={e => this.onChange(e, 'email')}
-            editable={user.emailStatus !== common.user.status.bind}
+            editable={user.mobileStatus !== common.user.status.bind}
           />
           {
-            user.emailStatus === common.user.status.bind ? null
+            user.mobileStatus === common.user.status.bind ? null
               : <TextInputPwd
                 language={language}
                 placeholder={transfer(language, 'me_enter_mobileVerification')}
@@ -246,14 +246,14 @@ class UpdateMobile extends Component {
 
           <TKButton
             style={{
-              marginTop: user.emailStatus === common.user.status.bind
+              marginTop: user.mobileStatus === common.user.status.bind
                 ? common.margin10 : common.margin40,
-              backgroundColor: user.emailStatus === common.user.status.bind
+              backgroundColor: user.mobileStatus === common.user.status.bind
                 ? 'transparent' : common.navBgColor,
             }}
             onPress={() => this.confirmPress()}
-            disabled={user.emailStatus === common.user.status.bind ? true : updateEmailVisible}
-            caption={user.emailStatus === common.user.status.bind ? transfer(language, 'me_Mobile_binded') : transfer(language, 'me_ID_confirm')}
+            disabled={user.mobileStatus === common.user.status.bind ? true : updateEmailVisible}
+            caption={user.mobileStatus === common.user.status.bind ? transfer(language, 'me_Mobile_binded') : transfer(language, 'me_ID_confirm')}
             theme={'gray'}
           />
 
