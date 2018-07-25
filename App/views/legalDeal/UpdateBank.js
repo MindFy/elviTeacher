@@ -159,10 +159,13 @@ class UpdateBank extends Component {
     }
   }
 
-  updateBank() {
+  updateBank(link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
-
+    if (link) {
+      this.props.navigation.navigate('UpdateMobile')
+      return
+    }
     const { authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码') {
       const { code } = formState
@@ -244,7 +247,7 @@ class UpdateBank extends Component {
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
-          confirmPress={() => this.updateBank()}
+          confirmPress={link => this.updateBank(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />

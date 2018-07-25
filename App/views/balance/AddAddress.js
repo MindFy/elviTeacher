@@ -258,10 +258,13 @@ class AddAddress extends Component {
     this.showAuthCode()
   }
 
-  addPress() {
+  addPress(link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
-
+    if (link) {
+      this.props.navigation.navigate('UpdateMobile')
+      return
+    }
     const { authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码') {
       if (!formState.authCode.length) {
@@ -343,7 +346,7 @@ class AddAddress extends Component {
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
-          confirmPress={() => this.addPress()}
+          confirmPress={link => this.addPress(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />

@@ -473,9 +473,13 @@ class WithDraw extends Component {
     this.showVerificationCode()
   }
 
-  confirmPress = () => {
+  confirmPress = (link) => {
     Keyboard.dismiss()
-
+    if (link) {
+      Overlay.hide(this.overlayViewKeyID)
+      this.props.navigation.navigate('UpdateMobile')
+      return
+    }
     const { dispatch, currCoin, formState, authCodeType, language } = this.props
 
     if (authCodeType === '谷歌验证码') {
@@ -545,7 +549,7 @@ class WithDraw extends Component {
   }
 
   showVerificationCode = () => {
-    const { dispatch, user, formState, language } = this.props
+    const { dispatch, user, formState, language, navigation } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
@@ -567,7 +571,7 @@ class WithDraw extends Component {
             this.count = count
             dispatch(requestGetCode({ mobile: user.mobile, service: 'auth' }))
           }}
-          confirmPress={() => this.confirmPress()}
+          confirmPress={link => this.confirmPress(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />

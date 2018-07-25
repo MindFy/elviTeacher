@@ -197,9 +197,13 @@ class OtcDetail extends Component {
     }
   }
 
-  confirmPayPress(id) {
+  confirmPayPress(id, link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
+    if (link) {
+      this.props.navigation.navigate('UpdateMobile')
+      return
+    }
     const { dispatch, formState, authCodeType, language } = this.props
     if (authCodeType === '短信验证码') {
       const { code } = formState
@@ -313,7 +317,7 @@ class OtcDetail extends Component {
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
-          confirmPress={() => this.confirmPayPress(id)}
+          confirmPress={link => this.confirmPayPress(id, link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />

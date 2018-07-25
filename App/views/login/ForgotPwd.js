@@ -195,7 +195,7 @@ class ForgotPwd extends Component {
       } else if (getVerificateCodeResponse.error.code === 4000103) {
         Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneUnRegist'))
+        Toast.fail(transfer(language, 'login_phoneUnRegist2'))
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
       } else {
@@ -223,7 +223,7 @@ class ForgotPwd extends Component {
       } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
         Toast.fail(transfer(language, 'login_codeOverDue'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneUnRegist'))
+        Toast.fail(transfer(language, 'login_phoneUnRegist2'))
       } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
       } else {

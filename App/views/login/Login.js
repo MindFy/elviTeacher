@@ -138,14 +138,7 @@ class Login extends PureComponent {
       const { formState } = this.props
       const nextFormState = {
         ...formState,
-        mobile: '',
-        email: '',
-      }
-      if (user.mobile) {
-        nextFormState.mobile = user.mobile
-      }
-      if (user.email) {
-        nextFormState.email = user.email
+        mobile: user.mobile || user.email,
       }
       dispatch(actions.loginUpdate(nextFormState))
     }
@@ -160,7 +153,6 @@ class Login extends PureComponent {
     dispatch(actions.loginUpdate({
       ...formState,
       mobile: '',
-      email: '',
       password: '',
     }))
   }
@@ -244,7 +236,7 @@ class Login extends PureComponent {
     const errs = {
       4000114: transfer(language, 'login_idNotExist'),
       4000115: transfer(language, 'login_passError'),
-      4000116: transfer(language, 'login_phoneUnRegist'),
+      4000116: transfer(language, 'login_phoneUnRegist2'),
       4000117: transfer(language, 'login_idOrPassError'),
     }
 
