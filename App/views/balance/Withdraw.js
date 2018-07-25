@@ -477,7 +477,7 @@ class WithDraw extends Component {
     Keyboard.dismiss()
     if (link) {
       Overlay.hide(this.overlayViewKeyID)
-      this.props.navigation.navigate('UpdateMobile')
+      this.props.navigation.navigate('EmailCheck')
       return
     }
     const { dispatch, currCoin, formState, authCodeType, language } = this.props

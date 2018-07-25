@@ -201,7 +201,7 @@ class OtcDetail extends Component {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
     if (link) {
-      this.props.navigation.navigate('UpdateMobile')
+      this.props.navigation.navigate('EmailCheck')
       return
     }
     const { dispatch, formState, authCodeType, language } = this.props

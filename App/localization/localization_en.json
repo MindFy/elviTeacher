@@ -687,5 +687,6 @@
   "login_inputEmail": "Please enter email",
   "me_idcard_auth_tips": "Currently support only Mainland China User ID Verification!",
   "auth_mobile_unbind": "Mobile unlinked",
-  "auth_go_bind": "Link"
+  "auth_go_bind": "Link",
+  "me_auth_email": "Email verification"
 }
