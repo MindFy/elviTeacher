@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     backgroundColor: common.bgColor,
   },
   inputView: {
-    marginTop: common.navHeight + 10,
+    marginTop: 10,
     marginHorizontal: 10,
   },
   input: {
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
 
 class EmailCheck extends Component {
   static navigationOptions(props) {
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerStyle: {
-        borderBottomWidth: 0,
-      },
-      headerTransparent: true,
-      headerTintColor: 'white',
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={{
@@ -89,6 +89,13 @@ class EmailCheck extends Component {
       showTip: false,
       nextBtnDisabled: true,
     }
+  }
+
+  componentWillMount() {
+    const { navigation, language } = this.props
+    navigation.setParams({
+      title: transfer(language, 'me_auth_email'),
+    })
   }
 
   componentDidMount() {
