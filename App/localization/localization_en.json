@@ -688,5 +688,7 @@
   "me_idcard_auth_tips": "Currently support only Mainland China User ID Verification!",
   "auth_mobile_unbind": "Mobile unlinked",
   "auth_go_bind": "Link",
-  "me_auth_email": "Email verification"
+  "me_auth_email": "Email verification",
+  "auth_go_ok": "OK",
+  "auth_google_unbind": "GA verification code is not linked yet. \nPlease go to the website to link GA verification code first."
 }

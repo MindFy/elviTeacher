@@ -200,6 +200,9 @@ class OtcDetail extends Component {
   confirmPayPress(id, link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
+    if (link === undefined) {
+      return
+    }
     if (link) {
       this.props.navigation.navigate('EmailCheck')
       return
@@ -211,7 +214,7 @@ class OtcDetail extends Component {
         Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
         return
       }
-      dispatch(requestConfirmPay({ id, code }))
+      dispatch(requestConfirmPay({ id, code: Number(code) }))
     } else {
       const { googleCode } = formState
       if (!googleCode.length) {

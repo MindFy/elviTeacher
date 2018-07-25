@@ -475,8 +475,11 @@ class WithDraw extends Component {
 
   confirmPress = (link) => {
     Keyboard.dismiss()
+    Overlay.hide(this.overlayViewKeyID)
+    if (link === undefined) {
+      return
+    }
     if (link) {
-      Overlay.hide(this.overlayViewKeyID)
       this.props.navigation.navigate('EmailCheck')
       return
     }
@@ -500,7 +503,6 @@ class WithDraw extends Component {
     }
     let code = new BigNumber(formState.verificationCode)
     code = code.isNaN() ? 0 : code.toNumber()
-    Overlay.hide(this.overlayViewKeyID)
     dispatch(requestWithdraw({
       token_id: tokenId,
       amount: formState.withdrawAmount,

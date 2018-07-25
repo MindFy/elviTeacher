@@ -11,6 +11,7 @@ import TKCheckCodeBtn from '../../../components/TKCheckCodeBtn'
 import WithdrawAuthSelecionBar from './WithdrawAuthSelecionBar'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import transfer from '../../../localization/utils'
+import * as api from '../../../services/api'
 
 const styles = StyleSheet.create({
   unbinkMobileContainer: {
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
   tip: {
     color: common.blackColor,
     fontSize: common.font12,
+    textAlign: 'center',
   },
   container: {
     backgroundColor: '#fff',
@@ -130,7 +132,41 @@ const styles = StyleSheet.create({
 })
 
 export default class TKViewCheckAuthorize extends Component {
-  componentDidMount() { }
+  constructor(props) {
+    super(props)
+    this.state = {
+      googleAuth: undefined,
+    }
+  }
+
+  getGoogleAuth() {
+    fetch(`${api.API_ROOT}/1.0/app/user/getGoogleAuth`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: '{}',
+      credentials: 'same-origin',
+    })
+      .then(e => e.json())
+      .then((e) => {
+        if (e && e.secret) {
+          this.setState({
+            googleAuth: false,
+          })
+        } else {
+          this.setState({
+            googleAuth: true,
+          })
+        }
+      })
+      .catch(() => {
+        this.setState({
+          googleAuth: false,
+        })
+      })
+  }
 
   renderTitles = () => {
     const { titles, segmentValueChanged } = this.props
@@ -140,6 +176,13 @@ export default class TKViewCheckAuthorize extends Component {
         onPress={(e) => {
           if (segmentValueChanged) {
             segmentValueChanged(e)
+          }
+          if (e.index === 1) {
+            this.getGoogleAuth()
+          } else {
+            this.setState({
+              googleAuth: undefined,
+            })
           }
         }}
         renderItem={this.renderContent}
@@ -199,7 +242,20 @@ export default class TKViewCheckAuthorize extends Component {
 
   renderGoogleCode = () => {
     const { onChangeText, titles, language } = this.props
+    const { googleAuth } = this.state
     const index = titles.indexOf(transfer(language, 'AuthCode_GV_code'))
+    if (!googleAuth) {
+      return (
+        <View>
+          <View style={styles.unbinkMobileContainer}>
+            <Text
+              style={styles.tip}
+            >{transfer(language, 'auth_google_unbind')}</Text>
+          </View>
+          {this.renderBtns('auth_go_ok')}
+        </View>
+      )
+    }
     return (
       <View>
         <View style={styles.googleCodeContainer}>
@@ -227,20 +283,30 @@ export default class TKViewCheckAuthorize extends Component {
       <View>
         <View style={styles.line} />
         <View style={styles.btnsContainer}>
-          <NextTouchableOpacity
-            style={styles.cancelBtn}
-            activeOpacity={common.activeOpacity}
-            onPress={cancelPress}
-          >
-            <Text style={styles.cancelBtnText}>{transfer(language, 'AuthCode_cancel')}</Text>
-          </NextTouchableOpacity>
+          {
+            comfirmTitle === 'auth_go_ok' ?
+              <View /> :
+              (<NextTouchableOpacity
+                style={styles.cancelBtn}
+                activeOpacity={common.activeOpacity}
+                onPress={cancelPress}
+              >
+                <Text style={styles.cancelBtnText}>{transfer(language, 'AuthCode_cancel')}</Text>
+              </NextTouchableOpacity>)
+          }
           <NextTouchableOpacity
             style={[styles.cancelBtn, {
               backgroundColor: common.btnTextColor,
               borderWidth: 0,
             }]}
             activeOpacity={common.activeOpacity}
-            onPress={() => confirmPress(comfirmTitle === 'auth_go_bind')}
+            onPress={() => {
+              if (comfirmTitle === 'auth_go_ok') {
+                confirmPress(undefined)
+              } else {
+                confirmPress(comfirmTitle === 'auth_go_bind')
+              }
+            }}
           >
             <Text
               style={[styles.cancelBtnText, {
