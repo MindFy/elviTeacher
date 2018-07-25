@@ -685,5 +685,7 @@
   "login_emailUnNull" : "邮箱不可为空",
   "login_inputCorrectEmail": "请输入正确的邮箱",
   "login_inputEmail": "请输入邮箱",
-  "me_idcard_auth_tips": "暂仅支持中国大陆用户身份认证!"
+  "me_idcard_auth_tips": "暂仅支持中国大陆用户身份认证!",
+  "auth_mobile_unbind": "手机号未绑定",
+  "auth_go_bind": "去绑定"
 }

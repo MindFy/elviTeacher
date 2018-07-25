@@ -13,6 +13,16 @@ import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import transfer from '../../../localization/utils'
 
 const styles = StyleSheet.create({
+  unbinkMobileContainer: {
+    height: 80,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tip: {
+    color: common.blackColor,
+    fontSize: common.font12,
+  },
   container: {
     backgroundColor: '#fff',
     marginLeft: common.getH(48),
@@ -140,6 +150,18 @@ export default class TKViewCheckAuthorize extends Component {
   renderSMSCode = () => {
     const { mobile, titles, smsCodePress, onChangeText, language } = this.props
     const index = titles.indexOf(transfer(language, 'AuthCode_SMS_code'))
+    if (!mobile) {
+      return (
+        <View>
+          <View style={styles.unbinkMobileContainer}>
+            <Text
+              style={styles.tip}
+            >{transfer(language, 'auth_mobile_unbind')}</Text>
+          </View>
+          {this.renderBtns('auth_go_bind')}
+        </View>
+      )
+    }
     return (
       <View>
         <View style={styles.mobileContainer}>
@@ -170,6 +192,7 @@ export default class TKViewCheckAuthorize extends Component {
             />
           </View>
         </View>
+        {this.renderBtns('AuthCode_confirm')}
       </View>
     )
   }
@@ -178,48 +201,54 @@ export default class TKViewCheckAuthorize extends Component {
     const { onChangeText, titles, language } = this.props
     const index = titles.indexOf(transfer(language, 'AuthCode_GV_code'))
     return (
-      <View style={styles.googleCodeContainer}>
-        <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_GV_code')}</Text>
-        <View style={styles.googleInputContainer}>
-          <TextInput
-            style={styles.textInput}
-            maxLength={6}
-            onChangeText={text => onChangeText({
-              title: '',
-              index,
-            }, text)}
-            underlineColorAndroid="transparent"
-          />
+      <View>
+        <View style={styles.googleCodeContainer}>
+          <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_GV_code')}</Text>
+          <View style={styles.googleInputContainer}>
+            <TextInput
+              style={styles.textInput}
+              maxLength={6}
+              onChangeText={text => onChangeText({
+                title: '',
+                index,
+              }, text)}
+              underlineColorAndroid="transparent"
+            />
+          </View>
         </View>
+        {this.renderBtns('AuthCode_confirm')}
       </View>
     )
   }
 
-  renderBtns = () => {
+  renderBtns = (comfirmTitle) => {
     const { confirmPress, cancelPress, language } = this.props
     return (
-      <View style={styles.btnsContainer}>
-        <NextTouchableOpacity
-          style={styles.cancelBtn}
-          activeOpacity={common.activeOpacity}
-          onPress={cancelPress}
-        >
-          <Text style={styles.cancelBtnText}>{transfer(language, 'AuthCode_cancel')}</Text>
-        </NextTouchableOpacity>
-        <NextTouchableOpacity
-          style={[styles.cancelBtn, {
-            backgroundColor: common.btnTextColor,
-            borderWidth: 0,
-          }]}
-          activeOpacity={common.activeOpacity}
-          onPress={() => confirmPress()}
-        >
-          <Text
-            style={[styles.cancelBtnText, {
-              color: 'white',
+      <View>
+        <View style={styles.line} />
+        <View style={styles.btnsContainer}>
+          <NextTouchableOpacity
+            style={styles.cancelBtn}
+            activeOpacity={common.activeOpacity}
+            onPress={cancelPress}
+          >
+            <Text style={styles.cancelBtnText}>{transfer(language, 'AuthCode_cancel')}</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            style={[styles.cancelBtn, {
+              backgroundColor: common.btnTextColor,
+              borderWidth: 0,
             }]}
-          >{transfer(language, 'AuthCode_confirm')}</Text>
-        </NextTouchableOpacity>
+            activeOpacity={common.activeOpacity}
+            onPress={() => confirmPress(comfirmTitle === 'auth_go_bind')}
+          >
+            <Text
+              style={[styles.cancelBtnText, {
+                color: 'white',
+              }]}
+            >{transfer(language, comfirmTitle)}</Text>
+          </NextTouchableOpacity>
+        </View>
       </View>
     )
   }
@@ -239,8 +268,6 @@ export default class TKViewCheckAuthorize extends Component {
         onPress={() => Keyboard.dismiss()}
       >
         {this.renderTitles()}
-        <View style={styles.line} />
-        {this.renderBtns()}
       </NextTouchableOpacity>
     )
   }
