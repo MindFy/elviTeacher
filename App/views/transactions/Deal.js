@@ -11,7 +11,6 @@ import {
   Animated,
   AsyncStorage,
 } from 'react-native'
-import equal from 'deep-equal'
 import { Toast, Overlay } from 'teaset'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'

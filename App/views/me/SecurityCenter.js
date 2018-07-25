@@ -12,7 +12,6 @@ import {
   Overlay,
 } from 'teaset'
 import { common } from '../../constants/common'
-import MeCell from './MeCell'
 import SecurityCenterCell from './SecurityCenterCell'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -72,9 +71,7 @@ class SecurityCenter extends Component {
   showOverlay(msg) {
     const overlayView = (
       <Overlay.View
-        style={{
-          justifyContent: 'center',
-        }}
+        style={{ justifyContent: 'center' }}
         modal={false}
         overlayOpacity={0}
       >

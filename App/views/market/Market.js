@@ -79,10 +79,8 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language, loggedIn } = this.props
-    navigation.setParams({
-      title: transfer(language, 'market_market'),
-    })
+    const { dispatch, navigation, language } = this.props
+    navigation.setParams({ title: transfer(language, 'market_market') })
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -282,7 +280,6 @@ class Market extends Component {
           {...this.props}
           language={language}
           data={marketData}
-          currencyName={currPair}
           isEdit={isEdit}
           onClickMarketItem={this.onClickMarketItem}
           onPressMarked={this.handlePressMarked}
@@ -296,7 +293,6 @@ function mapStateToProps(state) {
   return {
     currPair: state.market.currPair,
     pairs: state.market.pairs,
-    getFavoritePending: state.market.getFavoritePending,
     favoriteList: state.market.favoriteList,
     isEdit: state.market.isEdit,
     initialized: state.market.initialized,
