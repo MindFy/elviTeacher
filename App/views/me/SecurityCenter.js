@@ -145,7 +145,7 @@ class SecurityCenter extends Component {
           detail={this.maskMobile(loggedInResult.mobile || '')}
           onPress={() => {
             if (!loggedInResult.mobile) {
-              navigation.navigate('UpdateMobile')
+              navigation.navigate('EmailCheck')
             } else {
               this.showOverlay(transfer(language, 'me_Mobile_binded'))
             }

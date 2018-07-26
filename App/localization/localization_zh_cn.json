@@ -31,7 +31,7 @@
   "login_tryAgain": "登录失败, 请您稍后重试",
   "login_idUnNull": "手机号不可为空",
   "login_inputCorrectId": "请输入正确的账号",
-  "login_inputPhone": "请输入手机号",
+  "login_inputPhone": "请输入正确的手机号",
   "login_inputCode": "请输入验证码",
   "login_resetPass": "请再次设置密码",
   "login_samePass": "确认密码需要和密码保持一致",
@@ -189,7 +189,7 @@
   "me_linkMobile": "绑定手机号",
   "me_google_authenticator":"谷歌验证器",
   "me_enter_EmailAddress":"请输入邮箱地址",
-  "me_enter_mobileAddress":"请输入手机号",
+  "me_enter_mobileAddress":"请输入正确的手机号",
   "me_enter_EmailVerification":"请输入邮箱验证码",
   "me_enter_mobileVerification": "请输入短信验证码",
   "me_Email_correctFormat":"请输入正确格式的邮箱",
@@ -687,5 +687,8 @@
   "login_inputEmail": "请输入邮箱",
   "me_idcard_auth_tips": "暂仅支持中国大陆用户身份认证!",
   "auth_mobile_unbind": "手机号未绑定",
-  "auth_go_bind": "去绑定"
+  "auth_go_bind": "去绑定",
+  "me_auth_email": "邮箱验证",
+  "auth_go_ok": "确认",
+  "auth_google_unbind": "谷歌验证码未绑定,\n请先前往官网绑定谷歌验证码"
 }
