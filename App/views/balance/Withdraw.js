@@ -191,6 +191,10 @@ class WithDraw extends Component {
     this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC']
   }
 
+  componentWillMount() {
+    this.showForm()
+  }
+
   componentDidMount() {
     const { dispatch, user, navigation, language } = this.props
     navigation.setParams({

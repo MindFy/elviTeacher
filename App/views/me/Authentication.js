@@ -62,6 +62,20 @@ const styles = StyleSheet.create({
   overlay: {
     justifyContent: 'center',
   },
+  waitAuth: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  waitImage: {
+    marginTop: 115,
+    marginBottom: 20,
+    width: 80,
+    height: 80,
+  },
+  waitText: {
+    color: '#DFE4FF',
+    fontSize: 16,
+  },
 })
 
 class Authentication extends Component {
@@ -458,42 +472,55 @@ class Authentication extends Component {
         return null
     }
   }
-
   renderWaitingTip(language) {
     return (
-      <View
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'transparent',
-        }}
-      >
-        <View
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            top: common.margin30,
-            width: '50%',
-            paddingVertical: common.getH(8),
-            backgroundColor: 'white',
-            borderRadius: common.radius6,
-          }}
-        >
-          <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font16,
-              alignSelf: 'center',
-              textAlign: 'center',
-              lineHeight: common.margin20,
-            }}
-          >{transfer(language, 'me_submitAuthSuccess')}</Text>
-        </View>
+      <View style={styles.waitAuth}>
+        <Image
+          resizeMode="contain"
+          style={styles.waitImage}
+          source={require('../../assets/wait.png')}
+        />
+        <Text style={styles.waitText}>
+          {transfer(language, 'auth_wait_auth')}
+        </Text>
       </View>
     )
   }
+  // renderWaitingTip(language) {
+  //   return (
+  //     <View
+  //       style={{
+  //         position: 'absolute',
+  //         width: '100%',
+  //         height: '100%',
+  //         backgroundColor: 'transparent',
+  //       }}
+  //     >
+  //       <View
+  //         style={{
+  //           position: 'absolute',
+  //           alignSelf: 'center',
+  //           justifyContent: 'center',
+  //           top: common.margin30,
+  //           width: '50%',
+  //           paddingVertical: common.getH(8),
+  //           backgroundColor: 'white',
+  //           borderRadius: common.radius6,
+  //         }}
+  //       >
+  //         <Text
+  //           style={{
+  //             color: common.blackColor,
+  //             fontSize: common.font16,
+  //             alignSelf: 'center',
+  //             textAlign: 'center',
+  //             lineHeight: common.margin20,
+  //           }}
+  //         >{transfer(language, 'me_submitAuthSuccess')}</Text>
+  //       </View>
+  //     </View>
+  //   )
+  // }
 
   render() {
     const { idCardAuthVisible, user, language } = this.props
