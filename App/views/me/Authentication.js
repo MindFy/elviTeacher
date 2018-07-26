@@ -10,19 +10,19 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
-import Toast from 'teaset/components/Toast/Toast'
+import { Toast, Overlay } from 'teaset'
 import idcard from 'idcard'
 import PutObject from 'rn-put-object'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
 import TKButton from '../../components/TKButton'
-import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import UploadProgress from '../../components/UploadProgress'
 
 const styles = StyleSheet.create({
   container: {
@@ -58,6 +58,9 @@ const styles = StyleSheet.create({
     fontSize: common.font16,
     alignSelf: 'center',
     textAlign: 'center',
+  },
+  overlay: {
+    justifyContent: 'center',
   },
 })
 
@@ -96,6 +99,8 @@ class Authentication extends Component {
     super()
     this.showIdCardAuthResponse = false
     this.imgHash = false
+    this.uploadProgress = this.uploadProgress.bind(this)
+    PutObject.addListener('uploadProgress', this.uploadProgress)
   }
 
   componentDidMount() {
@@ -129,10 +134,12 @@ class Authentication extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.handleIdCardAuthRequest(nextProps)
+    this.handleProgressBar(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
+    PutObject.removeListener('uploadProgress', this.uploadProgress)
     dispatch(actions.idCardAuthUpdate({
       name: '',
       idNo: '',
@@ -155,6 +162,12 @@ class Authentication extends Component {
         break
       default:
         break
+    }
+  }
+
+  uploadProgress(v) {
+    if (this.k) {
+      this.k.updateIndex(v.index)
     }
   }
 
@@ -282,6 +295,27 @@ class Authentication extends Component {
       } else {
         Toast.fail(transfer(language, 'me_ID_AuthFailed'))
       }
+    }
+  }
+
+  handleProgressBar(nextProps) {
+    if (nextProps.idCardAuthVisible && !this.props.idCardAuthVisible) {
+      const lay = (<Overlay.View
+        style={styles.overlay}
+        modal
+        overlayOpacity={0}
+      >
+        <UploadProgress
+          ref={(e) => { this.k = e }}
+          language={this.props.language}
+        />
+      </Overlay.View>)
+      this.overLayKey = Overlay.show(lay)
+    } else if (!nextProps.idCardAuthVisible && this.props.idCardAuthVisible) {
+      if (this.overLayKey) {
+        Overlay.hide(this.overLayKey)
+      }
+      this.overLayKey = undefined
     }
   }
 
@@ -475,7 +509,6 @@ class Authentication extends Component {
       <View style={styles.container}>
         {contentView}
         {waitingTip}
-        <TKSpinner isVisible={idCardAuthVisible} />
         {transparentView}
       </View>
     )

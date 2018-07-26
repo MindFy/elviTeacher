@@ -690,5 +690,6 @@
   "auth_go_bind": "去绑定",
   "me_auth_email": "邮箱验证",
   "auth_go_ok": "确认",
-  "auth_google_unbind": "谷歌验证码未绑定,\n请先前往官网绑定谷歌验证码"
+  "auth_google_unbind": "谷歌验证码未绑定,\n请先前往官网绑定谷歌验证码",
+  "auth_upload_ing": "上传中......"
 }

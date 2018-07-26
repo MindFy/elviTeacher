@@ -690,5 +690,6 @@
   "auth_go_bind": "Link",
   "me_auth_email": "Email verification",
   "auth_go_ok": "OK",
-  "auth_google_unbind": "GA verification code is not linked yet. \nPlease go to the website to link GA verification code first."
+  "auth_google_unbind": "GA verification code is not linked yet. \nPlease go to the website to link GA verification code first.",
+  "auth_upload_ing": "Uploading......"
 }
