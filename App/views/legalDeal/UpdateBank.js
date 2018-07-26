@@ -162,6 +162,9 @@ class UpdateBank extends Component {
   updateBank(link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
+    if (link === undefined) {
+      return
+    }
     if (link) {
       this.props.navigation.navigate('EmailCheck')
       return

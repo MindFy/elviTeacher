@@ -688,5 +688,7 @@
   "me_idcard_auth_tips": "暂仅支持中国大陆用户身份认证!",
   "auth_mobile_unbind": "手机号未绑定",
   "auth_go_bind": "去绑定",
-  "me_auth_email": "邮箱验证"
+  "me_auth_email": "邮箱验证",
+  "auth_go_ok": "确认",
+  "auth_google_unbind": "谷歌验证码未绑定,\n请先前往官网绑定谷歌验证码"
 }
