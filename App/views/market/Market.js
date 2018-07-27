@@ -27,20 +27,20 @@ class Market extends Component {
       editPress = navigation.state.params.editPress
       headerRightTitle = navigation.state.params.headerRightTitle
       headerLeft = navigation.state.params.fromDeal &&
-      (
-        <NavigationItem
-          icon={require('../../assets/arrow_left_left.png')}
-          iconStyle={{
-            marginLeft: common.margin10,
-            width: common.w10,
-            height: common.h20,
-          }}
-          onPress={() => {
-            cache.setObject('currentComponentVisible', 'Deal')
-            navigation.goBack()
-          }}
-        />
-      )
+        (
+          <NavigationItem
+            icon={require('../../assets/arrow_left_left.png')}
+            iconStyle={{
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
+            }}
+            onPress={() => {
+              cache.setObject('currentComponentVisible', 'Deal')
+              navigation.goBack()
+            }}
+          />
+        )
     }
     return {
       headerTitle: title,
@@ -296,6 +296,10 @@ function mapStateToProps(state) {
     favoriteList: state.market.favoriteList,
     isEdit: state.market.isEdit,
     initialized: state.market.initialized,
+    nameSortType: state.market.nameSortType,
+    volumeSortType: state.market.volumeSortType,
+    lastPriceSortType: state.market.lastPriceSortType,
+    dailyChangeSortType: state.market.dailyChangeSortType,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }

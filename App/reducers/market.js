@@ -9,6 +9,11 @@ const initialState = {
   getFavoritePending: false,
   getFavoriteError: null,
   favoriteList: {},
+
+  nameSortType: 'idle',
+  volumeSortType: 'idle',
+  lastPriceSortType: 'idle',
+  dailyChangeSortType: 'idle',
 }
 
 export default function market(state = initialState, action) {
@@ -106,6 +111,42 @@ export default function market(state = initialState, action) {
         getFavoritePending: false,
         getFavoriteError: null,
         favoriteList: {},
+      }
+      break
+    case 'market/modify_name_Sort':
+      nextState = {
+        ...state,
+        nameSortType: payload,
+        volumeSortType: 'idle',
+        lastPriceSortType: 'idle',
+        dailyChangeSortType: 'idle',
+      }
+      break
+    case 'market/modify_volume_Sort':
+      nextState = {
+        ...state,
+        nameSortType: 'idle',
+        volumeSortType: payload,
+        lastPriceSortType: 'idle',
+        dailyChangeSortType: 'idle',
+      }
+      break
+    case 'market/modify_lastPrice_Sort':
+      nextState = {
+        ...state,
+        nameSortType: 'idle',
+        volumeSortType: 'idle',
+        lastPriceSortType: payload,
+        dailyChangeSortType: 'idle',
+      }
+      break
+    case 'market/modify_dailyChange_Sort':
+      nextState = {
+        ...state,
+        nameSortType: 'idle',
+        volumeSortType: 'idle',
+        lastPriceSortType: 'idle',
+        dailyChangeSortType: payload,
       }
       break
     default:

@@ -108,6 +108,10 @@ class Home extends Component {
     if (nextProps.language !== this.props.language) {
       return true
     }
+    if (nextProps.lastPriceSortType !== this.props.lastPriceSortType ||
+      nextProps.changeSortType !== this.props.changeSortType) {
+      return true
+    }
     if (nextProps.market.length && this.props.market.length) {
       return !equal(nextProps.market, this.props.market)
     }
@@ -319,8 +323,8 @@ class Home extends Component {
           />
 
           {this.renderMenuBtns()}
-
           <HomeMarket
+            {...this.props}
             data={market}
             language={language}
             onPress={rd => this.marketPress(rd)}

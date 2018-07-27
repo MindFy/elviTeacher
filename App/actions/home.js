@@ -53,3 +53,17 @@ export function requestMarketSucceed(payload) {
     payload,
   }
 }
+
+export function modifyLastPriceSort(payload) {
+  return {
+    type: 'home/modify_lastPrice_sort',
+    payload,
+  }
+}
+
+export function modifyChangeSort(payload) {
+  return {
+    type: 'home/modify_change_sort',
+    payload,
+  }
+}
