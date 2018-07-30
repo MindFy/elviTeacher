@@ -192,7 +192,11 @@ class WithDraw extends Component {
   }
 
   componentWillMount() {
-    this.showForm()
+    const { navigation } = this.props
+    const params = navigation.state.params
+    if (!params || !params.hideShowForm) {
+      this.showForm()
+    }
   }
 
   componentDidMount() {

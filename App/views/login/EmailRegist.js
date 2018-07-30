@@ -402,7 +402,7 @@ class EmailRegist extends Component {
           width: common.h80,
         }}
         title={transfer(language, 'login_code')}
-        placeholder={transfer(language, 'login_email_numberOrTypeError')}
+        placeholder={transfer(language, 'login_email_inputCode')}
         language={language}
         value={code}
         maxLength={common.textInputMaxLenPwd}
