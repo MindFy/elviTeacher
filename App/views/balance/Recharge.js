@@ -153,6 +153,10 @@ class Recharge extends Component {
     }
   }
 
+  componentWillMount() {
+    this.showForm()
+  }
+
   componentDidMount() {
     const { navigation, language } = this.props
     navigation.setParams({

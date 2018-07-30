@@ -10,19 +10,19 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
-import Toast from 'teaset/components/Toast/Toast'
+import { Toast, Overlay } from 'teaset'
 import idcard from 'idcard'
 import PutObject from 'rn-put-object'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
 import TKButton from '../../components/TKButton'
-import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import UploadProgress from '../../components/UploadProgress'
 
 const styles = StyleSheet.create({
   container: {
@@ -58,6 +58,23 @@ const styles = StyleSheet.create({
     fontSize: common.font16,
     alignSelf: 'center',
     textAlign: 'center',
+  },
+  overlay: {
+    justifyContent: 'center',
+  },
+  waitAuth: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  waitImage: {
+    marginTop: 115,
+    marginBottom: 20,
+    width: 80,
+    height: 80,
+  },
+  waitText: {
+    color: '#DFE4FF',
+    fontSize: 16,
   },
 })
 
@@ -96,6 +113,8 @@ class Authentication extends Component {
     super()
     this.showIdCardAuthResponse = false
     this.imgHash = false
+    this.uploadProgress = this.uploadProgress.bind(this)
+    PutObject.addListener('uploadProgress', this.uploadProgress)
   }
 
   componentDidMount() {
@@ -129,10 +148,12 @@ class Authentication extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.handleIdCardAuthRequest(nextProps)
+    this.handleProgressBar(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
+    PutObject.removeListener('uploadProgress', this.uploadProgress)
     dispatch(actions.idCardAuthUpdate({
       name: '',
       idNo: '',
@@ -155,6 +176,12 @@ class Authentication extends Component {
         break
       default:
         break
+    }
+  }
+
+  uploadProgress(v) {
+    if (this.k) {
+      this.k.updateIndex(v.index)
     }
   }
 
@@ -282,6 +309,27 @@ class Authentication extends Component {
       } else {
         Toast.fail(transfer(language, 'me_ID_AuthFailed'))
       }
+    }
+  }
+
+  handleProgressBar(nextProps) {
+    if (nextProps.idCardAuthVisible && !this.props.idCardAuthVisible) {
+      const lay = (<Overlay.View
+        style={styles.overlay}
+        modal
+        overlayOpacity={0}
+      >
+        <UploadProgress
+          ref={(e) => { this.k = e }}
+          language={this.props.language}
+        />
+      </Overlay.View>)
+      this.overLayKey = Overlay.show(lay)
+    } else if (!nextProps.idCardAuthVisible && this.props.idCardAuthVisible) {
+      if (this.overLayKey) {
+        Overlay.hide(this.overLayKey)
+      }
+      this.overLayKey = undefined
     }
   }
 
@@ -424,42 +472,55 @@ class Authentication extends Component {
         return null
     }
   }
-
   renderWaitingTip(language) {
     return (
-      <View
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'transparent',
-        }}
-      >
-        <View
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            top: common.margin30,
-            width: '50%',
-            paddingVertical: common.getH(8),
-            backgroundColor: 'white',
-            borderRadius: common.radius6,
-          }}
-        >
-          <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font16,
-              alignSelf: 'center',
-              textAlign: 'center',
-              lineHeight: common.margin20,
-            }}
-          >{transfer(language, 'me_submitAuthSuccess')}</Text>
-        </View>
+      <View style={styles.waitAuth}>
+        <Image
+          resizeMode="contain"
+          style={styles.waitImage}
+          source={require('../../assets/wait.png')}
+        />
+        <Text style={styles.waitText}>
+          {transfer(language, 'auth_wait_auth')}
+        </Text>
       </View>
     )
   }
+  // renderWaitingTip(language) {
+  //   return (
+  //     <View
+  //       style={{
+  //         position: 'absolute',
+  //         width: '100%',
+  //         height: '100%',
+  //         backgroundColor: 'transparent',
+  //       }}
+  //     >
+  //       <View
+  //         style={{
+  //           position: 'absolute',
+  //           alignSelf: 'center',
+  //           justifyContent: 'center',
+  //           top: common.margin30,
+  //           width: '50%',
+  //           paddingVertical: common.getH(8),
+  //           backgroundColor: 'white',
+  //           borderRadius: common.radius6,
+  //         }}
+  //       >
+  //         <Text
+  //           style={{
+  //             color: common.blackColor,
+  //             fontSize: common.font16,
+  //             alignSelf: 'center',
+  //             textAlign: 'center',
+  //             lineHeight: common.margin20,
+  //           }}
+  //         >{transfer(language, 'me_submitAuthSuccess')}</Text>
+  //       </View>
+  //     </View>
+  //   )
+  // }
 
   render() {
     const { idCardAuthVisible, user, language } = this.props
@@ -475,7 +536,6 @@ class Authentication extends Component {
       <View style={styles.container}>
         {contentView}
         {waitingTip}
-        <TKSpinner isVisible={idCardAuthVisible} />
         {transparentView}
       </View>
     )
