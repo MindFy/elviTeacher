@@ -29,6 +29,7 @@ import transfer from '../../localization/utils'
 import * as system from '../../actions/system'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
+import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
 
 global.Buffer = require('buffer').Buffer
 
@@ -44,6 +45,8 @@ class Home extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Home')
+      this.props.dispatch(modifyLastPriceSort('idle'))
+      this.props.dispatch(modifyChangeSort('idle'))
     })
   }
 
@@ -106,6 +109,10 @@ class Home extends Component {
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.language !== this.props.language) {
+      return true
+    }
+    if (nextProps.lastPriceSortType !== this.props.lastPriceSortType ||
+      nextProps.changeSortType !== this.props.changeSortType) {
       return true
     }
     if (nextProps.market.length && this.props.market.length) {
@@ -319,8 +326,8 @@ class Home extends Component {
           />
 
           {this.renderMenuBtns()}
-
           <HomeMarket
+            {...this.props}
             data={market}
             language={language}
             onPress={rd => this.marketPress(rd)}

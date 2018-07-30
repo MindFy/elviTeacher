@@ -551,7 +551,7 @@ class WithDraw extends Component {
   }
 
   showVerificationCode = () => {
-    const { dispatch, user, formState, language, navigation } = this.props
+    const { dispatch, user, formState, language } = this.props
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,

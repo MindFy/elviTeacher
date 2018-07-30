@@ -83,6 +83,8 @@ const actions = {
   requestBanners: home.requestBanners,
   requestAnnouncements: home.requestAnnouncements,
   requestMarket: home.requestMarket,
+  modifyLastPriceSort: home.modifyLastPriceSort,
+  modifyChangeSort: home.modifyChangeSort,
 
   add,
   addUpdate,
