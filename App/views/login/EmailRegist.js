@@ -342,7 +342,7 @@ class EmailRegist extends Component {
           width: common.h80,
         }}
         title={transfer(language, 'login_id')}
-        placeholder={transfer(language, 'login_email_inputCode')}
+        placeholder={transfer(language, 'login_email_input')}
         textInputProps={{
           onBlur: () => {
             if (!common.regEmail.test(this.props.mobile)) {

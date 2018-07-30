@@ -9,6 +9,10 @@ import {
   toggleEdit,
   getFavorite,
   setFavorite,
+  modifyDailyChangeSort,
+  modifyNameSort,
+  modifyVolumeSort,
+  modifyLastPriceSort,
 } from '../../actions/market'
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
@@ -27,20 +31,20 @@ class Market extends Component {
       editPress = navigation.state.params.editPress
       headerRightTitle = navigation.state.params.headerRightTitle
       headerLeft = navigation.state.params.fromDeal &&
-      (
-        <NavigationItem
-          icon={require('../../assets/arrow_left_left.png')}
-          iconStyle={{
-            marginLeft: common.margin10,
-            width: common.w10,
-            height: common.h20,
-          }}
-          onPress={() => {
-            cache.setObject('currentComponentVisible', 'Deal')
-            navigation.goBack()
-          }}
-        />
-      )
+        (
+          <NavigationItem
+            icon={require('../../assets/arrow_left_left.png')}
+            iconStyle={{
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
+            }}
+            onPress={() => {
+              cache.setObject('currentComponentVisible', 'Deal')
+              navigation.goBack()
+            }}
+          />
+        )
     }
     return {
       headerTitle: title,
@@ -58,6 +62,7 @@ class Market extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Market')
+      this.resetSortState()
       this.isNeedtoGetFavorites()
     })
     props.navigation.addListener('didBlur', () => {
@@ -79,10 +84,8 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language, loggedIn } = this.props
-    navigation.setParams({
-      title: transfer(language, 'market_market'),
-    })
+    const { dispatch, navigation, language } = this.props
+    navigation.setParams({ title: transfer(language, 'market_market') })
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -130,6 +133,14 @@ class Market extends Component {
     const { dispatch } = this.props
     const parms = { currency: rd.currency, goods: rd.goods }
     dispatch(setFavorite(parms))
+  }
+
+  resetSortState = () => {
+    const { dispatch } = this.props
+    dispatch(modifyDailyChangeSort('idle'))
+    dispatch(modifyNameSort('idle'))
+    dispatch(modifyVolumeSort('idle'))
+    dispatch(modifyLastPriceSort('idle'))
   }
 
   isNeedtoGetFavorites = () => {
@@ -282,7 +293,6 @@ class Market extends Component {
           {...this.props}
           language={language}
           data={marketData}
-          currencyName={currPair}
           isEdit={isEdit}
           onClickMarketItem={this.onClickMarketItem}
           onPressMarked={this.handlePressMarked}
@@ -296,10 +306,13 @@ function mapStateToProps(state) {
   return {
     currPair: state.market.currPair,
     pairs: state.market.pairs,
-    getFavoritePending: state.market.getFavoritePending,
     favoriteList: state.market.favoriteList,
     isEdit: state.market.isEdit,
     initialized: state.market.initialized,
+    nameSortType: state.market.nameSortType,
+    volumeSortType: state.market.volumeSortType,
+    lastPriceSortType: state.market.lastPriceSortType,
+    dailyChangeSortType: state.market.dailyChangeSortType,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }

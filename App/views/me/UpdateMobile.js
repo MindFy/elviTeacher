@@ -6,8 +6,6 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Keyboard,
-  View,
-  Text,
 } from 'react-native'
 import {
   Toast,

@@ -3,6 +3,9 @@ const initialState = {
   announcements: [],
   market: [],
 
+  lastPriceSortType: 'idle',
+  changeSortType: 'idle',
+
   bannersLoading: false,
   announcementLoading: false,
 
@@ -61,6 +64,20 @@ export default function home(state = initialState, action) {
       nextState = {
         ...state,
         market: payload,
+      }
+      break
+    case 'home/modify_lastPrice_sort':
+      nextState = {
+        ...state,
+        lastPriceSortType: payload,
+        changeSortType: 'idle',
+      }
+      break
+    case 'home/modify_change_sort':
+      nextState = {
+        ...state,
+        changeSortType: payload,
+        lastPriceSortType: 'idle',
       }
       break
     default:

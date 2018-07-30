@@ -12,6 +12,8 @@ import {
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import HomeMarkHeader from './components/HomeMarkHeader'
+import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
 
 const styles = StyleSheet.create({
   header: {
@@ -115,14 +117,105 @@ export default class HomeMarket extends Component {
     EIEC: require('../../assets/market_EIEC.png'),
   }
 
+  marketHeaderIcons = {
+    headerIdle: require('../../assets/icon_change_normal.png'),
+    headerDecending: require('../../assets/icon_change_decending.png'),
+    headerAscending: require('../../assets/icon_change_ascending.png'),
+  }
+
+  compareWithKey = (array, sortTye, key) => {
+    if (sortTye === 'decending') {
+      return this.compareDecendingWithKey(array, key)
+    }
+    return this.compareAscendingWithKey(array, key)
+  }
+
+  compareDecendingWithKey = (array, key) => {
+    const tempArray = array
+    tempArray.sort((a, b) => {
+      if (Number(a[key]) < Number(b[key])) {
+        return 1
+      } else if (Number(a[key]) > Number(b[key])) {
+        return -1
+      }
+      return 0
+    })
+    return tempArray
+  }
+
+  compareAscendingWithKey = (array, key) => {
+    const tempArray = array
+    tempArray.sort((a, b) => {
+      if (Number(a[key]) < Number(b[key])) {
+        return -1
+      } else if (Number(a[key]) > Number(b[key])) {
+        return 1
+      }
+      return 0
+    })
+    return tempArray
+  }
+
+  configureData = (data) => {
+    const tempData = [...data]
+    const { lastPriceSortType } = this.props
+    if (lastPriceSortType !== 'idle') {
+      return this.compareWithKey(tempData, lastPriceSortType, 'cprice')
+    }
+
+    const { changeSortType } = this.props
+    if (changeSortType !== 'idle') {
+      return this.compareWithKey(tempData, changeSortType, 'rose')
+    }
+
+    return tempData
+  }
+
+  obtainIconImageBySortString = (sortString) => {
+    if (sortString === 'idle') {
+      return this.marketHeaderIcons.headerIdle
+    } else if (sortString === 'decending') {
+      return this.marketHeaderIcons.headerDecending
+    } else if (sortString === 'ascending') {
+      return this.marketHeaderIcons.headerAscending
+    }
+    throw new Error('must have sort string')
+  }
+
+  obtainNextSortString = (sortString) => {
+    if (sortString === 'idle') {
+      return 'decending'
+    } else if (sortString === 'decending') {
+      return 'ascending'
+    } else if (sortString === 'ascending') {
+      return 'idle'
+    }
+    throw new Error('must have sort string')
+  }
+
+  handleLastPrice = (sortString) => {
+    const nextSortType = this.obtainNextSortString(sortString)
+    this.props.dispatch(modifyLastPriceSort(nextSortType))
+  }
+
+  handleChange = (sortString) => {
+    const nextSortType = this.obtainNextSortString(sortString)
+    this.props.dispatch(modifyChangeSort(nextSortType))
+  }
+
   renderHeader() {
-    const { language } = this.props
+    const { language, lastPriceSortType, changeSortType } = this.props
+    const lastPirceIcon = this.obtainIconImageBySortString(lastPriceSortType)
+    const changeIcon = this.obtainIconImageBySortString(changeSortType)
     return (
-      <View style={styles.header}>
-        <Text style={{ width: '30%' }} />
-        <Text style={[styles.headerTitle, { width: '40%' }]}>    {transfer(language, 'home_pairLastPrice')}</Text>
-        <Text style={[styles.headerTitle, { width: '30%' }]}>{transfer(language, 'home_change')}</Text>
-      </View>
+      <HomeMarkHeader
+        lastPrice={transfer(language, 'home_pairLastPrice')}
+        lastPriceIcon={lastPirceIcon}
+        onPressLastPrice={() => { this.handleLastPrice(lastPriceSortType) }}
+        change={transfer(language, 'home_change')}
+        changeIcon={changeIcon}
+        onPressChange={() => { this.handleChange(changeSortType) }}
+      />
     )
   }
 
@@ -194,9 +287,10 @@ export default class HomeMarket extends Component {
 
   render() {
     const { data } = this.props
+    const listDS = this.configureData(data)
     return (
       <ListView
-        dataSource={this.dataSource(data)}
+        dataSource={this.dataSource(listDS)}
         renderRow={rd => this.renderRow(rd)}
         renderHeader={() => this.renderHeader()}
         enableEmptySections
