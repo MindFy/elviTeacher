@@ -9,6 +9,10 @@ import {
   toggleEdit,
   getFavorite,
   setFavorite,
+  modifyDailyChangeSort,
+  modifyNameSort,
+  modifyVolumeSort,
+  modifyLastPriceSort,
 } from '../../actions/market'
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
@@ -58,6 +62,7 @@ class Market extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Market')
+      this.resetSortState()
       this.isNeedtoGetFavorites()
     })
     props.navigation.addListener('didBlur', () => {
@@ -128,6 +133,14 @@ class Market extends Component {
     const { dispatch } = this.props
     const parms = { currency: rd.currency, goods: rd.goods }
     dispatch(setFavorite(parms))
+  }
+
+  resetSortState = () => {
+    const { dispatch } = this.props
+    dispatch(modifyDailyChangeSort('idle'))
+    dispatch(modifyNameSort('idle'))
+    dispatch(modifyVolumeSort('idle'))
+    dispatch(modifyLastPriceSort('idle'))
   }
 
   isNeedtoGetFavorites = () => {

@@ -29,6 +29,7 @@ import transfer from '../../localization/utils'
 import * as system from '../../actions/system'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
+import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
 
 global.Buffer = require('buffer').Buffer
 
@@ -44,6 +45,8 @@ class Home extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Home')
+      this.props.dispatch(modifyLastPriceSort('idle'))
+      this.props.dispatch(modifyChangeSort('idle'))
     })
   }
 
