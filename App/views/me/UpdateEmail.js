@@ -264,10 +264,12 @@ class UpdateEmail extends Component {
               />
           }
 
+          {user.emailStatus !== common.user.status.bind && this.renderTip()}
+
           <TKButton
             style={{
               marginTop: user.emailStatus === common.user.status.bind
-                ? common.margin10 : common.margin40,
+                ? common.margin10 : common.margin20,
               backgroundColor: user.emailStatus === common.user.status.bind
                 ? 'transparent' : common.navBgColor,
             }}
@@ -276,8 +278,6 @@ class UpdateEmail extends Component {
             caption={user.emailStatus === common.user.status.bind ? transfer(language, 'me_Email_binded') : transfer(language, 'me_ID_confirm')}
             theme={'gray'}
           />
-
-          {user.emailStatus !== common.user.status.bind && this.renderTip()}
 
           <TKSpinner
             isVisible={updateEmailVisible}

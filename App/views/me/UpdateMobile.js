@@ -6,6 +6,8 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Keyboard,
+  View,
+  Text,
 } from 'react-native'
 import {
   Toast,
@@ -209,6 +211,21 @@ class UpdateMobile extends Component {
     }
   }
 
+  renderTip = () => (
+    <View style={{ marginHorizontal: common.margin10 }}>
+      <Text
+        style={styles.tipsContainer}
+      >
+        {transfer(this.props.language, 'me_Email_pleaes_note')}
+      </Text>
+      <Text
+        style={styles.tipsContent}
+      >
+        {transfer(this.props.language, 'me_Mobile_note_content')}
+      </Text>
+    </View>
+  )
+
   render() {
     const { email, codeEmail, updateEmailVisible, user, language } = this.props
 
@@ -241,11 +258,11 @@ class UpdateMobile extends Component {
                 maxLength={8}
               />
           }
-
+          {this.renderTip()}
           <TKButton
             style={{
               marginTop: user.mobileStatus === common.user.status.bind
-                ? common.margin10 : common.margin40,
+                ? common.margin10 : common.margin20,
               backgroundColor: user.mobileStatus === common.user.status.bind
                 ? 'transparent' : common.navBgColor,
             }}
