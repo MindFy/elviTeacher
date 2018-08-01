@@ -154,7 +154,11 @@ class Recharge extends Component {
   }
 
   componentWillMount() {
-    this.showForm()
+    const { navigation } = this.props
+    const params = navigation.state.params
+    if (!params || !params.hideShowForm) {
+      this.showForm()
+    }
   }
 
   componentDidMount() {
@@ -302,6 +306,7 @@ class Recharge extends Component {
     )
     return (
       <NextTouchableOpacity
+        delay={100}
         activeOpacity={common.activeOpacity}
         onPress={() => {
           if (showForm) {

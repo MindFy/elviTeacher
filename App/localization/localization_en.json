@@ -207,6 +207,7 @@
   "me_Mobile_bind_failed": "Failed to link mobile, please try again later",
   "me_Email_pleaes_note": "Please Note",
   "me_Email_note_content": "1.The verification mail can be marked as junk mail. Please check your spam\n2.The email address cannot be revised after being bound",
+  "me_Mobile_note_content": "1.The mobile cannot be revised after being bound",
   "me_getCode": "Get code",
   "me_googleBinded": "GA code linked",
   "me_googleBindReminder": "Please bind GA code in official website page.",
