@@ -86,7 +86,7 @@
   "market_marketName": "Name",
   "market_marketVolume": "Volume",
   "market_marketLastPrice": "Last Price",
-  "market_24hourChange": "Daily Change",
+  "market_24hourChange": "Change",
   "market_favorites": "Favorites",
   "market_add_favorites": "Add Favorites",
   "market_complete": "Complete",
