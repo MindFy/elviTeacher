@@ -7,6 +7,7 @@
   "language": "中文",
   "login_id": "账号",
   "login_idPlaceholder": "请输入11位手机号",
+  "login_idPlaceholder3": "请输入11位手机号",
   "login_idPlaceholder2": "请输入邮箱/手机号",
   "login_idError": "请输入正确的账号",
   "login_inputId": "请输入账号",
