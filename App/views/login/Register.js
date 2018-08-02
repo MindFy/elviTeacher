@@ -389,7 +389,7 @@ class Register extends Component {
           </View>
         )}
         // title={transfer(language, 'login_id')}
-        placeholder={transfer(language, 'login_idPlaceholder')}
+        placeholder={transfer(language, 'login_idPlaceholder3')}
         textInputProps={{
           keyboardType: 'phone-pad',
           onBlur: () => {

@@ -7,6 +7,7 @@
   "language": "繁體中文",
   "login_id": "帳號",
   "login_idPlaceholder": "請輸入11位手機號碼",
+  "login_idPlaceholder3": "請輸入11位手機號碼",
   "login_idPlaceholder2": "请输入信箱/手機號碼",
   "login_idError": "請輸入11位手機號碼",
   "login_inputId": "請輸入帳號",

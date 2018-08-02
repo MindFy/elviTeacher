@@ -42,9 +42,20 @@ const styles = StyleSheet.create({
     color: common.redColor,
   },
   nextBtn: {
-    marginTop: common.getH(35),
+    marginTop: common.getH(20),
     marginLeft: 10,
     marginRight: 10,
+  },
+  tipsContainer: {
+    marginTop: common.margin15,
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  tipsContent: {
+    marginTop: common.margin10,
+    color: common.textColor,
+    fontSize: common.font10,
+    lineHeight: 14,
   },
 })
 
@@ -227,17 +238,20 @@ class EmailCheck extends Component {
     }
   }
 
-  renderMobileTip = () => {
-    const { showTip } = this.state
-    return (
-      <View style={{ height: 40 }}>
-        {showTip ?
-          <Text style={styles.mobileTip}>
-            {transfer(this.props.language, 'login_inputCorrectId')}
-          </Text> : null}
-      </View>
-    )
-  }
+  renderTip = () => (
+    <View style={{ marginHorizontal: common.margin10 }}>
+      <Text
+        style={styles.tipsContainer}
+      >
+        {transfer(this.props.language, 'me_Email_pleaes_note')}
+      </Text>
+      <Text
+        style={styles.tipsContent}
+      >
+        {transfer(this.props.language, 'me_Email_note_content2')}
+      </Text>
+    </View>
+  )
 
   render() {
     const { mobile, email, code, getVerificateSmtpCodeVisible,
@@ -292,6 +306,7 @@ class EmailCheck extends Component {
               keyboardType: 'numeric',
             }}
           />
+          {this.renderTip()}
           <TKButton
             style={[
               styles.nextBtn,
