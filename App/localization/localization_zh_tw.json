@@ -208,6 +208,7 @@
   "me_Mobile_bind_failed": "手機號碼綁定失敗，請稍後重試",
   "me_Email_pleaes_note": "溫馨提示",
   "me_Email_note_content": "1.驗證郵件可能會被誤判為垃圾郵件，請注意查收\n2.信箱綁定後不可更改",
+  "me_Email_note_content2": "1.驗證郵件可能會被誤判為垃圾郵件，請注意查收",
   "me_Mobile_note_content": "1.手機號碼綁定後不可更改",
   "me_getCode":"獲取驗證碼",
   "me_googleBinded":"Google驗證器已綁定",
