@@ -17,20 +17,26 @@ import {
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 import transfer from '../../localization/utils'
 import NavigationItem from '../../components/NavigationItem'
 
 class Market extends Component {
   static navigationOptions({ navigation }) {
-    let title = ''
+    const title = transfer(getDefaultLanguage(), 'market_market')
     let editPress
     let headerRightTitle = ''
     let headerLeft = null
-    if (navigation.state.params) {
-      title = navigation.state.params.title
-      editPress = navigation.state.params.editPress
-      headerRightTitle = navigation.state.params.headerRightTitle
-      headerLeft = navigation.state.params.fromDeal &&
+    const params = navigation.state.params || {}
+
+    if (params) {
+      headerRightTitle =
+        params.isFavoritedMode ?
+          transfer(getDefaultLanguage(), 'market_complete') :
+          transfer(getDefaultLanguage(), 'market_add_favorites')
+
+      editPress = params.editPress
+      headerLeft = params.fromDeal &&
         (
           <NavigationItem
             icon={require('../../assets/arrow_left_left.png')}
@@ -66,26 +72,21 @@ class Market extends Component {
       this.isNeedtoGetFavorites()
     })
     props.navigation.addListener('didBlur', () => {
-      const { language } = this.props
       props.dispatch(toggleEdit(false))
-      props.navigation.setParams({
-        headerRightTitle: transfer(language, 'market_add_favorites'),
-      })
+      props.navigation.setParams({ isFavoritedMode: false })
     })
     this.marketTitles = [transfer(props.language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
   }
 
   componentWillMount() {
-    const { language, navigation } = this.props
-    navigation.setParams({
+    this.props.navigation.setParams({
       editPress: this.pressEdit,
-      headerRightTitle: transfer(language, 'market_add_favorites'),
+      isFavoritedMode: false,
     })
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language } = this.props
-    navigation.setParams({ title: transfer(language, 'market_market') })
+    const { dispatch, navigation } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -174,16 +175,16 @@ class Market extends Component {
       this.props.navigation.navigate('LoginStack')
       return
     }
-    const { isEdit, dispatch, navigation, language } = this.props
-    let headerRightTitle
+    const { isEdit, dispatch, navigation } = this.props
+    let isFavoritedMode
     if (!isEdit) {
       cache.setObject('currentComponentVisible', 'unknown')
-      headerRightTitle = transfer(language, 'market_complete')
+      isFavoritedMode = true
     } else {
       cache.setObject('currentComponentVisible', 'Market')
-      headerRightTitle = transfer(language, 'market_add_favorites')
+      isFavoritedMode = false
     }
-    navigation.setParams({ headerRightTitle })
+    navigation.setParams({ isFavoritedMode })
     dispatch(toggleEdit(!isEdit))
   }
 

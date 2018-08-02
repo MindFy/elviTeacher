@@ -14,15 +14,15 @@ import actions from '../../actions/index'
 import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 
 class Me extends Component {
-  static navigationOptions({ navigation }) {
-    let title = ''
-    if (navigation.state.params) {
-      title = navigation.state.params.title
-    }
+  static navigationOptions = () => {
+    const language = getDefaultLanguage()
+    const title = transfer(language, 'me_me')
     return {
       headerTitle: title,
+      tabBarLabel: transfer(language, 'accountTab'),
     }
   }
 
@@ -89,7 +89,6 @@ class Me extends Component {
 
   render() {
     const { loggedIn, navigation, loading, loggedInResult, language } = this.props
-
     return (
       <View
         style={{

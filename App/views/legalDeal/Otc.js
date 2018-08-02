@@ -26,6 +26,7 @@ import {
 import findAssetList from '../../schemas/asset'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 import transfer from '../../localization/utils'
 
 const styles = StyleSheet.create({
@@ -63,12 +64,8 @@ const styles = StyleSheet.create({
 class Otc extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
-    let title = ''
-    let detail = ''
-    if (params.title) {
-      title = params.title
-      detail = params.detail
-    }
+    const title = transfer(getDefaultLanguage(), 'Otc')
+    const detail = transfer(getDefaultLanguage(), 'Otc_detail')
     return {
       headerTitle: title,
       headerRight: (
@@ -96,11 +93,9 @@ class Otc extends Component {
   }
 
   componentWillMount() {
-    const { language, navigation } = this.props
+    const { navigation } = this.props
     navigation.setParams({
       detailPress: this._detailPress,
-      title: transfer(language, 'Otc'),
-      detail: transfer(language, 'Otc_detail'),
     })
   }
 
