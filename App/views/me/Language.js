@@ -11,6 +11,8 @@ import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import * as system from '../../actions/system'
 import transfer from '../../localization/utils'
+import { storeSysterLanguage } from '../../utils/languageHelper'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -85,6 +87,10 @@ class Language extends Component {
     const { dispatch, language } = this.props
     if (launageEvt !== language) {
       dispatch(system.updateLanguage(launageEvt))
+      storeSysterLanguage(launageEvt)
+      this.props.navigation.popToTop()
+      cache.setObject('duration', '10')
+      this.props.navigation.navigate('Home')
     }
   }
 

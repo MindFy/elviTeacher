@@ -1,5 +1,7 @@
+import { getDefaultLanguage } from '../utils/languageHelper'
+
 const initialState = {
-  language: 'zh_cn',
+  language: getDefaultLanguage(),
 }
 
 export default function system(state = initialState, action) {
