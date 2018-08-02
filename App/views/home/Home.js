@@ -10,7 +10,6 @@ import {
   AsyncStorage,
   Linking,
 } from 'react-native'
-import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
 import SplashScreen from 'react-native-splash-screen'
 import {
@@ -26,7 +25,6 @@ import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
 import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
-import * as system from '../../actions/system'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
 import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
@@ -47,22 +45,11 @@ class Home extends Component {
       cache.setObject('currentComponentVisible', 'Home')
       this.props.dispatch(modifyLastPriceSort('idle'))
       this.props.dispatch(modifyChangeSort('idle'))
+      cache.removeObject('duration')
     })
   }
 
   componentWillMount() {
-    const { language, dispatch } = this.props
-    let systemLanguage = 'en'
-    const evt = deviceInfo.getDeviceLocale()
-    if (evt.indexOf('zh') > -1) {
-      systemLanguage = 'zh_cn'
-    }
-    setTimeout(() => {
-      this.checkUpdate(systemLanguage)
-    }, 1000)
-    if (language !== systemLanguage) {
-      dispatch(system.updateLanguage(systemLanguage))
-    }
     AsyncStorage.getItem('savedKlineIndex')
       .then((savedIndex) => {
         if (savedIndex) {
@@ -248,7 +235,7 @@ class Home extends Component {
     const { navigation, user, language } = this.props
     const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     if (!user) {
-      navigation.navigate('LoginStack')
+      navigation.navigate('LoginStack', { transition: 'forVertical' })
     } else if (i === 2) {
       navigation.navigate('Orders', {
         title: transfer(language, 'home_currentDelegate'),

@@ -21,6 +21,7 @@ import { updateCurrentToken } from '../../actions/balanceDetail'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 
 const styles = StyleSheet.create({
   container: {
@@ -60,8 +61,10 @@ class Balance extends Component {
   static navigationOptions(props) {
     const { navigation } = props
     const params = navigation.state.params || {}
+    const headerTitle = transfer(getDefaultLanguage(), 'balances_pageTitle')
+    const headerRightTitle = transfer(getDefaultLanguage(), 'recharge_historyList')
     return {
-      headerTitle: (params.title || ''),
+      headerTitle,
       headerRight: (
         <NextTouchableOpacity
           activeOpacity={common.activeOpacity}
@@ -73,7 +76,7 @@ class Balance extends Component {
               fontSize: common.font16,
               color: 'white',
             }}
-          >{params.right || ''}</Text>
+          >{headerRightTitle}</Text>
         </NextTouchableOpacity>
       ),
       tabBarOnPress: ({ scene, jumpToIndex }) => {
@@ -109,9 +112,10 @@ class Balance extends Component {
   componentWillMount() {
     const { navigation, language } = this.props
     navigation.setParams({
-      title: transfer(language, 'balances_pageTitle'),
+      // title: transfer(language, 'balances_pageTitle'),
       historyPress: this._historyPress,
-      right: transfer(language, 'recharge_historyList'),
+      language,
+      // right: transfer(language, 'recharge_historyList'),
     })
   }
 
