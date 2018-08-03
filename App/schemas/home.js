@@ -10,9 +10,13 @@ export function findAnnouncement() {
   }`
 }
 
-export function findBanners() {
+export function findBanners(language) {
   return `{
-    find_banners{
+    find_banners(
+      where: {
+        language: "${language}"
+      },
+    ){
       id,
       hyperlink,
       imghash,

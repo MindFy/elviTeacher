@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
 } from 'react-native'
+import equal from 'deep-equal'
 import Swiper from 'react-native-swiper'
 import FastImage from 'react-native-fast-image'
 import { common } from '../../constants/common'
@@ -45,13 +46,17 @@ export default class HomeSwiper extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.banners !== nextProps.banners
-    || this.props.announcements !== nextProps.announcements
+    if (!equal(nextProps.banners, this.props.banners)) {
+      return true
+    }
+    if (!equal(nextProps.announcements, this.props.announcements)) {
+      return true
+    }
+    return false
   }
 
   render() {
     const { banners, announcements, onPress } = this.props
-
     const renderBannersSwiper = () => {
       if (!banners.length) return null
       const items = banners.map(element => (
