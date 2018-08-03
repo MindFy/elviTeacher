@@ -16,6 +16,7 @@ export function findBanners(language) {
       where: {
         language: "${language}"
       },
+      order: "-weight"
     ){
       id,
       hyperlink,
