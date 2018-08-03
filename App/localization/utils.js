@@ -1,15 +1,19 @@
 export default function (language, key) {
   let localizationJSON = {}
   switch (language) {
-    case 'zh_hans':
+    case 'zh_hans': // 简体中文
       localizationJSON = require('./localization_zh_cn.json')
       break
-    case 'zh_hant':
+    case 'zh_hant': // 繁体中文
       localizationJSON = require('./localization_zh_tw.json')
       break
-    case 'ja':
-    case 'ko':
-    default:
+    case 'ja': // 日文
+      localizationJSON = require('./localization_ja_jp.json')
+      break
+    case 'ko': // 韩文
+      localizationJSON = require('./localization_ko_kr.json')
+      break
+    default: // 英文
       localizationJSON = require('./localization_en.json')
       break
   }

@@ -81,6 +81,9 @@ class Home extends Component {
   componentWillReceiveProps(props) {
     const { market, dispatch } = this.props
     const { selectedPair } = props
+    if (props.language !== this.props.language) {
+      this.refreshData(props.language)
+    }
     for (let i = 0; i < market.length; i++) {
       const item = market[i]
       if (item.currency.id === selectedPair.currency.id
@@ -100,6 +103,12 @@ class Home extends Component {
     }
     if (nextProps.lastPriceSortType !== this.props.lastPriceSortType ||
       nextProps.changeSortType !== this.props.changeSortType) {
+      return true
+    }
+    if (!equal(nextProps.banners, this.props.banners)) {
+      return true
+    }
+    if (!equal(nextProps.announcements, this.props.announcements)) {
       return true
     }
     if (nextProps.market.length && this.props.market.length) {
@@ -218,9 +227,9 @@ class Home extends Component {
       .catch(() => { })
   }
 
-  refreshData() {
-    const { dispatch } = this.props
-    dispatch(actions.requestBanners(schemas.findBanners()))
+  refreshData(lan) {
+    const { dispatch, language } = this.props
+    dispatch(actions.requestBanners(schemas.findBanners(lan || language)))
     dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
     dispatch(actions.requestMarket())
   }
