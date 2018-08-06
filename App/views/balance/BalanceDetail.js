@@ -155,6 +155,7 @@ class BalanceDetail extends Component {
     ETC: require('../../assets/market_ETC.png'),
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
+    WCN: require('../../assets/market_WCN.png'),
   }
 
   withdrawOrDepositTokens = ['BTC', 'ETH', 'ETC', 'LTC']

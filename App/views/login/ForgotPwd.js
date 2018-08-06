@@ -341,7 +341,10 @@ class ForgotPwd extends Component {
             value={code}
             maxLength={6}
             onPressCheckCodeBtn={() => this.codePress()}
-            extraDisable={!mobile || (!common.regMobile.test(mobile) && !common.regEmail.test(mobile))}
+            extraDisable={
+              !mobile ||
+              (!common.regMobile.test(mobile) && !common.regEmail.test(mobile))
+            }
             onChange={e => this.onChange(e, 'code')}
             textInputProps={{
               keyboardType: 'numeric',

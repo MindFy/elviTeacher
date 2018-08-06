@@ -237,7 +237,12 @@ class AddAddress extends Component {
     const { navigation } = this.props
     const { title } = navigation.state.params
 
-    if (this.checkWithdrawAddressIsIneligible(address, title)) {
+    let validatorCoin = title
+    if (validatorCoin === 'WCN') {
+      validatorCoin = 'ETH'
+    }
+
+    if (this.checkWithdrawAddressIsIneligible(address, validatorCoin)) {
       Alert.alert(
         transfer(language, 'withdraw_scanNote'),
         `${transfer(language, 'withdrawal_address_correct_required_1')}${title}${transfer(language, 'withdrawal_address_correct_required_2')}`,

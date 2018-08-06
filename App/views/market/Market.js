@@ -204,6 +204,9 @@ class Market extends Component {
     ETC: {
       id: 6,
     },
+    WCN: {
+      id: 8,
+    },
   }
 
   obtainMarketData = () => {
