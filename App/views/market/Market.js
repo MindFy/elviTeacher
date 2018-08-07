@@ -75,7 +75,6 @@ class Market extends Component {
       props.dispatch(toggleEdit(false))
       props.navigation.setParams({ isFavoritedMode: false })
     })
-    this.marketTitles = [transfer(props.language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
   }
 
   componentWillMount() {
@@ -280,7 +279,9 @@ class Market extends Component {
   render() {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
-    const index = this.marketTitles.indexOf(currPair)
+    const marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
+    const index = marketTitles.indexOf(currPair)
+
     return (
       <View
         style={{
@@ -290,7 +291,7 @@ class Market extends Component {
       >
         <HeaderScrollView
           indexSelected={index}
-          titles={this.marketTitles}
+          titles={marketTitles}
           onClickItem={this.onClickItem}
         />
         <MarketList
