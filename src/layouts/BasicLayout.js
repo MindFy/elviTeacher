@@ -16,6 +16,7 @@ import { getRoutes } from '../utils/utils';
 import Authorized from '../utils/Authorized';
 import { getMenuData } from '../common/menu';
 import logo from '../assets/logo.svg';
+import styles from './UserLayout.less';
 
 const { Content, Header, Footer } = Layout;
 const { AuthorizedRoute, check } = Authorized;
@@ -211,85 +212,42 @@ class BasicLayout extends React.PureComponent {
     } = this.props;
     const { isMobile: mb } = this.state;
     const baseRedirect = this.getBaseRedirect();
+    
+    const copyright = (
+      <Fragment>
+        Copyright <Icon type="copyright" /> 2018 TOK
+      </Fragment>
+    );
+
     const layout = (
-      <Layout>
-        <SiderMenu
-          logo={logo}
-          // 不带Authorized参数的情况下如果没有权限,会强制跳到403界面
-          // If you do not have the Authorized parameter
-          // you will be forced to jump to the 403 interface without permission
-          Authorized={Authorized}
-          menuData={getMenuData()}
-          collapsed={collapsed}
-          location={location}
-          isMobile={mb}
-          onCollapse={this.handleMenuCollapse}
-        />
-        <Layout>
-          <Header style={{ padding: 0 }}>
-            <GlobalHeader
-              logo={logo}
-              currentUser={currentUser}
-              fetchingNotices={fetchingNotices}
-              notices={notices}
-              collapsed={collapsed}
-              isMobile={mb}
-              onNoticeClear={this.handleNoticeClear}
-              onCollapse={this.handleMenuCollapse}
-              onMenuClick={this.handleMenuClick}
-              onNoticeVisibleChange={this.handleNoticeVisibleChange}
-            />
-          </Header>
-          <Content style={{ margin: '24px 24px 0', height: '100%' }}>
-            <Switch>
-              {redirectData.map(item => (
-                <Redirect key={item.from} exact from={item.from} to={item.to} />
-              ))}
-              {getRoutes(match.path, routerData).map(item => (
-                <AuthorizedRoute
-                  key={item.key}
-                  path={item.path}
-                  component={item.component}
-                  exact={item.exact}
-                  authority={item.authority}
-                  redirectPath="/exception/403"
-                />
-              ))}
-              <Redirect exact from="/" to={baseRedirect} />
-              <Route render={NotFound} />
-            </Switch>
-          </Content>
-          <Footer style={{ padding: 0 }}>
-            <GlobalFooter
-              links={[
-                {
-                  key: 'Pro 首页',
-                  title: 'Pro 首页',
-                  href: 'http://pro.ant.design',
-                  blankTarget: true,
-                },
-                {
-                  key: 'github',
-                  title: <Icon type="github" />,
-                  href: 'https://github.com/ant-design/ant-design-pro',
-                  blankTarget: true,
-                },
-                {
-                  key: 'Ant Design',
-                  title: 'Ant Design',
-                  href: 'http://ant.design',
-                  blankTarget: true,
-                },
-              ]}
-              copyright={
-                <Fragment>
-                  Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
-                </Fragment>
-              }
-            />
-          </Footer>
-        </Layout>
-      </Layout>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          <div className={styles.top}>
+            <div className={styles.header}>
+              <span className={styles.title}>TOK 币种价格调整工具</span>                
+            </div>
+            <div className={styles.desc}></div>
+          </div>
+          <Switch>
+            {redirectData.map(item => (
+              <Redirect key={item.from} exact from={item.from} to={item.to} />
+            ))}
+            {getRoutes(match.path, routerData).map(item => (
+              <AuthorizedRoute
+                key={item.key}
+                path={item.path}
+                component={item.component}
+                exact={item.exact}
+                authority={item.authority}
+                redirectPath="/exception/403"
+              />
+            ))}
+            <Redirect exact from="/" to={baseRedirect} />
+            <Route render={NotFound} />
+          </Switch>
+        </div>
+        <GlobalFooter copyright={copyright} />
+      </div>
     );
 
     return (

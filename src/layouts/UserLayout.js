@@ -73,7 +73,7 @@ class UserLayout extends React.PureComponent {
                   exact={item.exact}
                 />
               ))}
-              <Redirect from="/" to="/form/basic-form" />
+              <Redirect from="/user" to="/user/login" />
             </Switch>
           </div>
           <GlobalFooter copyright={copyright} />
