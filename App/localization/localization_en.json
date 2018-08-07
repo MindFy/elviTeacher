@@ -695,5 +695,6 @@
   "auth_go_ok": "OK",
   "auth_google_unbind": "GA verification code is not linked yet. \nPlease go to the website to link GA verification code first.",
   "auth_upload_ing": "Uploading......",
-  "auth_wait_auth": "Verifying, please wait for the result"
+  "auth_wait_auth": "Verifying, please wait for the result",
+  "otc_visible_chinese": "Unavailable now. Stay tuned"
 }
