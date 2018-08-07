@@ -1,6 +1,6 @@
 const initialState = {
   currPair: 'CNTY',
-  pairs: {},
+  pairs: [],
   isEdit: false,
   markedTokenPairs: {},
 
