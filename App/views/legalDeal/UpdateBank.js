@@ -24,6 +24,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: common.blackColor,
   },
+  container1: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txt: {
+    fontSize: 16,
+    color: '#DFE4FF',
+    marginHorizontal: 30,
+    textAlign: 'center',
+  },
   tipView: {
     marginTop: common.margin5,
     backgroundColor: common.navBgColor,
@@ -350,8 +362,21 @@ class UpdateBank extends Component {
     </View>
   )
 
+  renderChineseVisible(language) {
+    return (
+      <View
+        style={styles.container1}
+      >
+        <Text style={styles.txt}>{transfer(language, 'otc_visible_chinese')}</Text>
+      </View>
+    )
+  }
+
   render() {
     const { loading, formState, navigation, user, language } = this.props
+    if (language !== 'zh_hans') {
+      return this.renderChineseVisible(language)
+    }
     let bankName = ''
     if (user) {
       bankName = user.bankName
