@@ -210,7 +210,7 @@
   "me_Email_pleaes_note": "温馨提示",
   "me_Email_note_content": "1.验证邮件可能会被误判为垃圾邮件，请注意查收\n2.邮箱绑定后不可更改",
   "me_Email_note_content2": "1.验证邮件可能会被误判为垃圾邮件，请注意查收",
-  "me_Mobile_note_content": "1.手机号绑定后不可更改",
+  "me_Mobile_note_content": "1.手机绑定后不可更改",
   "me_getCode":"获取验证码",
   "me_googleBinded":"谷歌认证已绑定",
   "me_googleBindReminder":"请前去官网完成绑定",
