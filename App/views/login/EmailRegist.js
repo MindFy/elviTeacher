@@ -29,6 +29,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  containerX: {
+    marginTop: common.margin10,
+    alignItems: 'flex-start',
+  },
+  viewContainer: {
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
   title: {
     alignSelf: 'center',
     color: common.textColor,
@@ -533,6 +541,27 @@ class EmailRegist extends Component {
 
   renderExtraBtns = () => {
     const { navigation, language } = this.props
+    if (language === 'ja') {
+      return (
+        <View style={styles.containerX}>
+          <View style={styles.viewContainer} >
+            <Text
+              style={styles.title}
+            >{transfer(language, 'login_registAsAgree')}</Text>
+            <TKButton
+              theme={'small'}
+              caption={`《${transfer(language, 'login_agreement')}》`}
+              onPress={() => navigation.navigate('Agreement')}
+            />
+          </View>
+          <TKButton
+            theme={'small'}
+            caption={transfer(language, 'login_hasAccount')}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <View style={{ flexDirection: 'row' }} >
