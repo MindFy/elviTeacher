@@ -34,6 +34,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: common.bgColor,
   },
+  container1: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txt: {
+    fontSize: 16,
+    color: '#DFE4FF',
+    marginHorizontal: 30,
+    textAlign: 'center',
+  },
   scrollviewContentContainer: {
     marginHorizontal: common.margin10,
   },
@@ -64,8 +76,14 @@ const styles = StyleSheet.create({
 class Otc extends Component {
   static navigationOptions(props) {
     const params = props.navigation.state.params || {}
-    const title = transfer(getDefaultLanguage(), 'Otc')
-    const detail = transfer(getDefaultLanguage(), 'Otc_detail')
+    const language = getDefaultLanguage()
+    const title = transfer(language, 'Otc')
+    if (language !== 'zh_hans') {
+      return {
+        headerTitle: title,
+      }
+    }
+    const detail = transfer(language, 'Otc_detail')
     return {
       headerTitle: title,
       headerRight: (
@@ -356,9 +374,21 @@ class Otc extends Component {
     </View>
   )
 
-  render() {
-    const { loading } = this.props
+  renderChineseVisible(language) {
+    return (
+      <View
+        style={styles.container1}
+      >
+        <Text style={styles.txt}>{transfer(language, 'otc_visible_chinese')}</Text>
+      </View>
+    )
+  }
 
+  render() {
+    const { loading, language } = this.props
+    if (language !== 'zh_hans') {
+      return this.renderChineseVisible(language)
+    }
     return (
       <View
         style={styles.container}

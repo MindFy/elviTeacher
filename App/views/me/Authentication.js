@@ -29,6 +29,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: common.bgColor,
   },
+  container1: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txt: {
+    fontSize: 16,
+    color: '#DFE4FF',
+    marginHorizontal: 30,
+    textAlign: 'center',
+  },
   transparentView: {
     position: 'absolute',
     width: '100%',
@@ -344,7 +356,7 @@ class Authentication extends Component {
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
         >
-          <Text style={styles.tips}>{transfer(language, 'me_idcard_auth_tips')}</Text>
+          {/* <Text style={styles.tips}>{transfer(language, 'me_idcard_auth_tips')}</Text> */}
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={{ fontSize: common.font14 }}
@@ -522,8 +534,21 @@ class Authentication extends Component {
   //   )
   // }
 
+  renderChineseVisible(language) {
+    return (
+      <View
+        style={styles.container1}
+      >
+        <Text style={styles.txt}>{transfer(language, 'otc_visible_chinese')}</Text>
+      </View>
+    )
+  }
+
   render() {
     const { idCardAuthVisible, user, language } = this.props
+    if (language !== 'zh_hans') {
+      return this.renderChineseVisible(language)
+    }
     const isShowWaitingTip =
       user && user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting
     const contentView = !isShowWaitingTip && this.renderContentView()

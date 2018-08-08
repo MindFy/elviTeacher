@@ -63,7 +63,7 @@ class Language extends Component {
   }
   constructor() {
     super()
-    this.language = ['zh_cn', 'en']
+    this.language = ['zh_hans', 'zh_hant', 'en', 'ja', 'ko']
   }
 
   componentWillMount() {
@@ -96,7 +96,6 @@ class Language extends Component {
 
   render() {
     const languageIndex = this.language.indexOf(this.props.language)
-    const { language } = this.props
     const rightImage = (<Image
       style={styles.checkBox}
       source={require('../../assets/check_box.png')}
@@ -106,18 +105,42 @@ class Language extends Component {
         <MeCell
           viewStyle={styles.topCell}
           leftImageHide
-          rightImageHide={languageIndex}
-          rightImage={!languageIndex ? rightImage : null}
-          onPress={() => this.setLanguage('zh_cn')}
-          title={transfer(language, 'me_settings_languageChinese')}
+          rightImageHide={languageIndex !== 0}
+          rightImage={rightImage}
+          onPress={() => this.setLanguage('zh_hans')}
+          title="简体中文"
           delay={500}
         />
         <MeCell
           leftImageHide
-          rightImageHide={!languageIndex}
-          rightImage={languageIndex ? rightImage : null}
+          rightImageHide={languageIndex !== 1}
+          rightImage={rightImage}
+          onPress={() => this.setLanguage('zh_hant')}
+          title="繁體中文"
+          delay={500}
+        />
+        <MeCell
+          leftImageHide
+          rightImageHide={languageIndex !== 2}
+          rightImage={rightImage}
           onPress={() => this.setLanguage('en')}
-          title={transfer(language, 'me_settings_languageEnglish')}
+          title="English"
+          delay={500}
+        />
+        <MeCell
+          leftImageHide
+          rightImageHide={languageIndex !== 3}
+          rightImage={rightImage}
+          onPress={() => this.setLanguage('ja')}
+          title="日本語"
+          delay={500}
+        />
+        <MeCell
+          leftImageHide
+          rightImageHide={languageIndex !== 4}
+          rightImage={rightImage}
+          onPress={() => this.setLanguage('ko')}
+          title="한국어"
           delay={500}
         />
       </ScrollView>
