@@ -275,11 +275,11 @@ class Rebates extends Component {
   }
 
   showLinkQr() {
-    const { user } = this.props
+    const { user, language } = this.props
     const { prefixNo, recommendId } = user
     let rebatesLinkQr = ''
     if (recommendId.length) {
-      rebatesLinkQr = `${api.rebatesLinkQr}${prefixNo}${recommendId}&ts=${Math.random()}`
+      rebatesLinkQr = `${api.rebatesLinkQr}${prefixNo}${recommendId}&ts=${Math.random()}&language=${language}`
     }
     const overlayView = (
       <Overlay.View
