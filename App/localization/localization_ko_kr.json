@@ -9,7 +9,7 @@
   "login_idPlaceholder": "11자리 휴대전화 번호를 입력하십시오",
   "login_idPlaceholder3": "China only for the time being",
   "login_idPlaceholder2": "Please enter email / mobile",
-  "login_idError": "11자리 휴대전화 번호를 입력하십시오",
+  "login_idError": "Please enter the id with the correct format",
   "login_inputId": "계정을 입력하십시오",
   "login_inputPass": "비밀번호를 입력하십시오",
   "login_password": "비밀번호",
