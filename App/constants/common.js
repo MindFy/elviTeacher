@@ -96,7 +96,6 @@ const common = {
     ETH: 'ETH',
     ETC: 'ETC',
     LTC: 'LTC',
-    WCN: 'WCN',
   },
 
   coinChinese: {
@@ -106,7 +105,6 @@ const common = {
     ETH: '以太坊',
     ETC: '以太经典',
     LTC: '莱特币',
-    WCN: '享快充',
   },
 
   legalDeal: {
@@ -322,10 +320,8 @@ const common = {
       && currencyName === common.token.BTC)) {
       // p:6 q:4 a:6
       block(6, 4, 6)
-    } else if (
-      (goodsName === common.token.TK && currencyName === common.token.CNYT) ||
-      (goodsName === common.token.WCN && currencyName === common.token.CNYT)
-    ) {
+    } else if (goodsName === common.token.TK
+      && currencyName === common.token.CNYT) {
       // p:4 q:0 a:4
       block(4, 0, 4)
     } else if (goodsName === common.token.TK

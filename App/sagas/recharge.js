@@ -29,7 +29,6 @@ export function* requestCoinListWorker() {
       { name: 'ETH', id: 5 },
       { name: 'ETC', id: 6 },
       { name: 'LTC', id: 7 },
-      { name: 'WCN', id: 8 },
     ],
   })
 }
@@ -40,8 +39,8 @@ export function* requestRechargeAddressWorker(action) {
   if (response.success) {
     const tokenId = (payload.token_ids)[0]
     if (Object.keys(response.result).length
-      && response.result[tokenId]
-      && response.result[tokenId].rechargeaddr) {
+    && response.result[tokenId]
+    && response.result[tokenId].rechargeaddr) {
       const addressObjc = response.result
       yield put({
         type: 'recharge/request_recharge_address_succeed',

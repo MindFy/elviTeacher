@@ -289,7 +289,7 @@ class Recharge extends Component {
     }
   }
 
-  canRechargeAddress = ['BTC', 'ETH', 'ETC', 'LTC', 'WCN']
+  canRechargeAddress = ['BTC', 'ETH', 'ETC', 'LTC']
 
   renderCoinSelector = (currCoin, listToggled, showForm) => {
     const { language } = this.props

@@ -150,10 +150,12 @@ const styles = StyleSheet.create({
 
 class WithDraw extends Component {
   static navigationOptions(props) {
-    const params = props.navigation.state.params || {}
-
+    let title = ''
+    if (props.navigation.state.params) {
+      title = props.navigation.state.params.title
+    }
     return {
-      headerTitle: params.title,
+      headerTitle: title,
       headerLeft: (
         <NextTouchableOpacity
           style={styles.headerLeft}
@@ -186,8 +188,7 @@ class WithDraw extends Component {
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码']
-    this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC', 'WCN']
-
+    this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC']
   }
 
   componentWillMount() {
@@ -352,9 +353,9 @@ class WithDraw extends Component {
       verificationCode: '',
       googleCode: '',
     }))
-    dispatch(coinSelected(ele.name))
+    dispatch(coinSelected(ele))
     dispatch(requestBalance({
-      token_ids: [ele.id],
+      token_ids: [this.coinsIdDic[ele].id],
     }))
   }
 
@@ -384,11 +385,6 @@ class WithDraw extends Component {
       id: 7,
       fee: 0.01,
       minAmount: 0.1,
-    },
-    WCN: {
-      id: 8,
-      fee: 100,
-      minAmount: 500,
     },
   }
 
@@ -468,12 +464,7 @@ class WithDraw extends Component {
       return
     }
 
-    let validatorCoin = currCoin
-    if (validatorCoin === 'WCN') {
-      validatorCoin = 'ETH'
-    }
-
-    if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, validatorCoin)) {
+    if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, currCoin)) {
       Alert.alert(
         transfer(language, 'withdraw_scanNote'),
         `${transfer(language, 'withdrawal_address_correct_required_1')}${currCoin}${transfer(language, 'withdrawal_address_correct_required_2')}`,
@@ -690,10 +681,11 @@ class WithDraw extends Component {
 
   renderCoinList() {
     const { listToggled, coinList } = this.props
+
     return !listToggled ? null : coinList.map(ele => (
       <NextTouchableOpacity
         style={styles.coinView}
-        key={ele.id}
+        key={ele}
         activeOpacity={common.activeOpacity}
         onPress={() => {
           this.tapCoinListCell(ele)
@@ -702,7 +694,7 @@ class WithDraw extends Component {
       >
         <Text
           style={styles.coinText}
-        >{ele.name}</Text>
+        >{ele}</Text>
       </NextTouchableOpacity>
     ))
   }

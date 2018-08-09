@@ -209,18 +209,6 @@ class Balance extends Component {
       rmbValue: '0.00',
       platformFreeze: '0.00000000',
       btcValue: '0.00000000',
-    },
-    {
-      token: {
-        id: 8,
-        name: 'WCN',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
     }]
     const indexs = {
       TK: 0,
@@ -229,7 +217,6 @@ class Balance extends Component {
       ETH: 3,
       ETC: 4,
       LTC: 5,
-      WCN: 6,
     }
     balanceList.forEach((e) => {
       initBalance[indexs[e.token.name]] = e
@@ -237,7 +224,6 @@ class Balance extends Component {
     return initBalance
   }
 
-  // TODO: WCN miss
   marketIcons = {
     TK: require('../../assets/market_TK.png'),
     CNYT: require('../../assets/market_TK.png'),
@@ -246,7 +232,6 @@ class Balance extends Component {
     ETC: require('../../assets/market_ETC.png'),
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
-    WCN: require('../../assets/market_WCN.png'),
   }
 
   jumpToBalanceDetail = (rd) => {

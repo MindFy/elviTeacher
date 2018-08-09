@@ -60,14 +60,8 @@ class ScanBarCode extends Component {
     const { navigation, language } = this.props
     const { coin, didScan } = navigation.state.params
     const data = barCode.data
-
-    let validateCoin = coin
-    if (validateCoin === 'WCN') {
-      validateCoin = 'ETH'
-    }
-
-    const disMatch = !WAValidator.validate(data, validateCoin) &&
-    !WAValidator.validate(data, validateCoin, 'testnet')
+    const disMatch = !WAValidator.validate(data, coin) &&
+    !WAValidator.validate(data, coin, 'testnet')
     if (disMatch) {
       const params1 = transfer(language, 'withdrawal_address_correct_required_1')
       const params2 = transfer(language, 'withdrawal_address_correct_required_2')
