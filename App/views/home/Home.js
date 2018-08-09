@@ -230,7 +230,7 @@ class Home extends Component {
   refreshData(lan) {
     const { dispatch, language } = this.props
     dispatch(actions.requestBanners(schemas.findBanners(lan || language)))
-    dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
+    dispatch(actions.requestAnnouncements())
     dispatch(actions.requestMarket())
   }
 

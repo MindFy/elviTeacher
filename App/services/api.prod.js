@@ -1,5 +1,20 @@
 export const API_ROOT = 'https://www.tok.com'
 export const ws = 'wss://tok.com/1.0/push'
+export const announcements1 = 'https://toksupport.zendesk.com/api/v2/help_center/'
+export const announcements2 = '/sections/360001728931/articles.json'
+
+function makeGetAPI(endPoint) {
+  return () => fetch(endPoint)
+    .then(response => response.json())
+    .then(json => ({
+      success: true,
+      result: json,
+    }))
+    .catch(e => ({
+      success: false,
+      error: e,
+    }))
+}
 
 function makePostAPI(endpoint) {
   return params => fetch(`${API_ROOT}${endpoint}`, {
@@ -106,6 +121,8 @@ export const getValuation = makePostAPI('/1.0/app/asset/getValuation')
 export const add = makePostAPI('/1.0/app/address/add')
 
 export const graphql = graphqlAPI('/1.0/app')
+
+export const getAPI = uri => makeGetAPI(uri)
 
 /** 查看用户自选列表 */
 export const getFavorite = makePostAPI('/1.0/app/user/getFavorite')
