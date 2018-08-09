@@ -2,6 +2,7 @@ import {
   call,
   put,
   takeEvery,
+  select,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 import getHomeMarket from '../utils'
@@ -23,17 +24,38 @@ export function* requestBannersWorker(action) {
 }
 
 export function* requestAnnouncementsWorker(action) {
-  const response = yield call(api.graphql, action.payload)
-
+  const lang = yield select(state => state.system.language)
+  const dict = {
+    zh_hans: 'zh-cn',
+    zh_hant: 'zh-tw',
+    ja: 'ja',
+    ko: 'ko',
+    en: 'en-us',
+  }
+  const uri = `${api.announcements1}${dict[lang]}${api.announcements2}`
+  const response = yield call(api.getAPI(uri), action.payload)
   if (response.success) {
+    let next = []
+    try {
+      const { articles } = response.result
+      next = articles.map(e => ({
+        id: e.id,
+        title: e.title,
+        content: '',
+        imghash: e.html_url,
+        createdAt: e.created_at,
+      }))
+    } catch (e) {
+      // empty code
+    }
     yield put({
       type: 'home/request_announcements_succeed',
-      payload: response.result.data.find_announcement,
+      payload: next,
     })
   } else {
     yield put({
       type: 'home/request_announcements_failed',
-      payload: response.error,
+      payload: [],
     })
   }
 }
