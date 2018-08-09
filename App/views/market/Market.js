@@ -187,23 +187,7 @@ class Market extends Component {
     dispatch(toggleEdit(!isEdit))
   }
 
-  coinsIdDic = {
-    TK: {
-      id: 1,
-    },
-    BTC: {
-      id: 2,
-    },
-    CNYT: {
-      id: 3,
-    },
-    ETH: {
-      id: 5,
-    },
-    ETC: {
-      id: 6,
-    },
-  }
+  coinsIdDic = common.getDefaultPair().coinIdDic
 
   obtainMarketData = () => {
     const { currPair, pairs, language, favoriteList } = this.props

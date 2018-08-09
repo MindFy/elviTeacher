@@ -188,7 +188,7 @@ class WithDraw extends Component {
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码']
-    this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC']
+    this.canWithdrawCoins = common.getDefaultPair().canWithdrawCoins
   }
 
   componentWillMount() {
@@ -359,34 +359,7 @@ class WithDraw extends Component {
     }))
   }
 
-  coinsIdDic = {
-    TK: {
-      id: 1,
-    },
-    BTC: {
-      id: 2,
-      fee: 0.001,
-      minAmount: 0.01,
-    },
-    CNYT: {
-      id: 3,
-    },
-    ETH: {
-      id: 5,
-      fee: 0.01,
-      minAmount: 0.015,
-    },
-    ETC: {
-      id: 6,
-      fee: 0.01,
-      minAmount: 0.5,
-    },
-    LTC: {
-      id: 7,
-      fee: 0.01,
-      minAmount: 0.1,
-    },
-  }
+  coinsIdDic = common.getDefaultPair().coinIdDic
 
   checkValuationIsEmpty = () => {
     const { valuation } = this.props

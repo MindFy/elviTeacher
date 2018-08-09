@@ -90,3 +90,55 @@ export function* requestAnnouncements() {
 export function* requestMarket() {
   yield takeEvery('home/request_market', requestMarketWorker)
 }
+
+// 转换币币对配置信息
+function parseConfig(data) {
+  const { tokens, coinPairs } = data
+  const canWithdrawCoins = []
+  const canRechargeAddress = []
+  const coinIdDic = {}
+  const accuracy = {}
+  tokens.forEach((e) => {
+    coinIdDic[e.name] = {
+      id: e.id,
+      fee: e.withdrawFree,
+      minAmount: e.withdrawMin,
+    }
+    if (e.allowWithdraw) {
+      canWithdrawCoins.push(e.name)
+    }
+    if (e.allowRecharge) {
+      canRechargeAddress.push(e.name)
+    }
+  })
+
+  // 配置精度
+  coinPairs.forEach((e) => {
+    e.pairs.forEach((elem) => {
+      accuracy[`${elem.name}_${e.name}`] = {
+        priceLimit: elem.priceLimit,
+        quantityLimit: elem.quantityLimit,
+        moneyLimit: elem.moneyLimit,
+      }
+    })
+  })
+  return {
+    canWithdrawCoins,
+    canRechargeAddress,
+    coinIdDic,
+    accuracy,
+  }
+}
+
+
+function* requestPairsWorker() {
+  yield put({
+    type: 'home/request_pair_success',
+    payload: parseConfig(require('../constants/response.json')),
+  })
+}
+
+
+export function* requestPairs() {
+  yield takeEvery('home/request_pair_request', requestPairsWorker)
+}

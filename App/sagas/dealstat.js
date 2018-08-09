@@ -6,9 +6,6 @@ import {
 } from 'redux-saga/effects'
 import * as constants from '../constants/index'
 import * as api from '../services/api'
-import {
-  common,
-} from '../constants/common'
 // import ws from '../websocket/ws'
 
 /* 获取交易中心的涨幅，包含：左上角以及顶上数据 */
@@ -51,7 +48,7 @@ export default function* getRose() {
       homeRoseSelected = homeRoseSelectedTemp
 
       if (rose.length) {
-        DeviceEventEmitter.emit(common.noti.home, constants.GET_ROSE_SUCCEED, homeRoseSelected)
+        DeviceEventEmitter.emit('home', constants.GET_ROSE_SUCCEED, homeRoseSelected)
       }
       yield put({ type: constants.GET_ROSE_SUCCEED, data: { rose, homeRose, homeRoseSelected } })
     } else {
