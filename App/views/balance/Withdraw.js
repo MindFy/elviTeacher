@@ -191,6 +191,14 @@ class WithDraw extends Component {
     this.canWithdrawCoins = ['BTC', 'ETC', 'ETH', 'LTC']
   }
 
+  componentWillMount() {
+    const { navigation } = this.props
+    const params = navigation.state.params
+    if (!params || !params.hideShowForm) {
+      this.showForm()
+    }
+  }
+
   componentDidMount() {
     const { dispatch, user, navigation, language } = this.props
     navigation.setParams({
@@ -473,9 +481,16 @@ class WithDraw extends Component {
     this.showVerificationCode()
   }
 
-  confirmPress = () => {
+  confirmPress = (link) => {
     Keyboard.dismiss()
-
+    Overlay.hide(this.overlayViewKeyID)
+    if (link === undefined) {
+      return
+    }
+    if (link) {
+      this.props.navigation.navigate('EmailCheck')
+      return
+    }
     const { dispatch, currCoin, formState, authCodeType, language } = this.props
 
     if (authCodeType === '谷歌验证码') {
@@ -496,7 +511,6 @@ class WithDraw extends Component {
     }
     let code = new BigNumber(formState.verificationCode)
     code = code.isNaN() ? 0 : code.toNumber()
-    Overlay.hide(this.overlayViewKeyID)
     dispatch(requestWithdraw({
       token_id: tokenId,
       amount: formState.withdrawAmount,
@@ -567,7 +581,7 @@ class WithDraw extends Component {
             this.count = count
             dispatch(requestGetCode({ mobile: user.mobile, service: 'auth' }))
           }}
-          confirmPress={() => this.confirmPress()}
+          confirmPress={link => this.confirmPress(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />

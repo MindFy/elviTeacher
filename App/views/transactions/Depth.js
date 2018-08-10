@@ -213,12 +213,27 @@ export default class Depth extends Component {
           const seriesName = params[0].seriesName
           let price = ''
           let quality = ''
-          if (seriesName === '买入') {
-            price = '价格'
-            quality = '数量'
-          } else {
-            price = 'Price'
-            quality = 'Amount'
+          switch (seriesName) {
+            case '买入':
+              price = '价格'
+              quality = '数量'
+              break
+            case '買入':
+              price = '價格'
+              quality = '數量'
+              break
+            case '買い':
+              price = '価格'
+              quality = '数'
+              break
+            case '매수':
+              price = '가격'
+              quality = '수량'
+              break
+            default:
+              price = 'Price'
+              quality = 'Amount'
+              break
           }
           if (params[0].data !== '-') {
             const name = params[0].name

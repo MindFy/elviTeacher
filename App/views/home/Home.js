@@ -10,7 +10,6 @@ import {
   AsyncStorage,
   Linking,
 } from 'react-native'
-import deviceInfo from 'react-native-device-info'
 import equal from 'deep-equal'
 import SplashScreen from 'react-native-splash-screen'
 import {
@@ -26,9 +25,9 @@ import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
 import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
-import * as system from '../../actions/system'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
+import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
 
 global.Buffer = require('buffer').Buffer
 
@@ -44,22 +43,13 @@ class Home extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Home')
+      this.props.dispatch(modifyLastPriceSort('idle'))
+      this.props.dispatch(modifyChangeSort('idle'))
+      cache.removeObject('duration')
     })
   }
 
   componentWillMount() {
-    const { language, dispatch } = this.props
-    let systemLanguage = 'en'
-    const evt = deviceInfo.getDeviceLocale()
-    if (evt.indexOf('zh') > -1) {
-      systemLanguage = 'zh_cn'
-    }
-    setTimeout(() => {
-      this.checkUpdate(systemLanguage)
-    }, 1000)
-    if (language !== systemLanguage) {
-      dispatch(system.updateLanguage(systemLanguage))
-    }
     AsyncStorage.getItem('savedKlineIndex')
       .then((savedIndex) => {
         if (savedIndex) {
@@ -91,6 +81,9 @@ class Home extends Component {
   componentWillReceiveProps(props) {
     const { market, dispatch } = this.props
     const { selectedPair } = props
+    if (props.language !== this.props.language) {
+      this.refreshData(props.language)
+    }
     for (let i = 0; i < market.length; i++) {
       const item = market[i]
       if (item.currency.id === selectedPair.currency.id
@@ -106,6 +99,16 @@ class Home extends Component {
 
   shouldComponentUpdate(nextProps) {
     if (nextProps.language !== this.props.language) {
+      return true
+    }
+    if (nextProps.lastPriceSortType !== this.props.lastPriceSortType ||
+      nextProps.changeSortType !== this.props.changeSortType) {
+      return true
+    }
+    if (!equal(nextProps.banners, this.props.banners)) {
+      return true
+    }
+    if (!equal(nextProps.announcements, this.props.announcements)) {
       return true
     }
     if (nextProps.market.length && this.props.market.length) {
@@ -224,10 +227,10 @@ class Home extends Component {
       .catch(() => { })
   }
 
-  refreshData() {
-    const { dispatch } = this.props
-    dispatch(actions.requestBanners(schemas.findBanners()))
-    dispatch(actions.requestAnnouncements(schemas.findAnnouncement()))
+  refreshData(lan) {
+    const { dispatch, language } = this.props
+    dispatch(actions.requestBanners(schemas.findBanners(lan || language)))
+    dispatch(actions.requestAnnouncements())
     dispatch(actions.requestMarket())
   }
 
@@ -241,7 +244,7 @@ class Home extends Component {
     const { navigation, user, language } = this.props
     const navigateKeys = ['Recharge', 'Withdraw', 'Orders', 'Orders']
     if (!user) {
-      navigation.navigate('LoginStack')
+      navigation.navigate('LoginStack', { transition: 'forVertical' })
     } else if (i === 2) {
       navigation.navigate('Orders', {
         title: transfer(language, 'home_currentDelegate'),
@@ -319,8 +322,8 @@ class Home extends Component {
           />
 
           {this.renderMenuBtns()}
-
           <HomeMarket
+            {...this.props}
             data={market}
             language={language}
             onPress={rd => this.marketPress(rd)}

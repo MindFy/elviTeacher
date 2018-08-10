@@ -129,7 +129,9 @@ class BalanceDetail extends Component {
     dispatch(recharge.requestRechargeAddress({
       token_ids: [currentToken.id],
     }))
-    navigation.navigate('Recharge')
+    navigation.navigate('Recharge', {
+      hideShowForm: true,
+    })
   }
 
   jumpToWithdraw = () => {
@@ -139,7 +141,9 @@ class BalanceDetail extends Component {
     dispatch(withdraw.requestBalance({
       token_ids: [currentToken.id],
     }))
-    navigation.navigate('Withdraw')
+    navigation.navigate('Withdraw', {
+      hideShowForm: true,
+    })
   }
 
   keyExtractor = (item, index) => index

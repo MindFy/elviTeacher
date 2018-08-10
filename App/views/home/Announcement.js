@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
 import {
-  Text,
   Image,
-  ScrollView,
   StyleSheet,
+  WebView,
 } from 'react-native'
 import { connect } from 'react-redux'
-import FastImage from 'react-native-fast-image'
 import {
   common,
 } from '../../constants/common'
-import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 
@@ -80,12 +77,6 @@ class Announcement extends Component {
       ),
     }
   }
-  constructor() {
-    super()
-    this.state = {
-      pictureHeight: 0,
-    }
-  }
 
   componentWillMount() {
     const { navigation, language } = this.props
@@ -94,43 +85,13 @@ class Announcement extends Component {
     })
   }
 
-  componentDidMount() {
-    const { navigation } = this.props
-    const imghash = navigation.state.params.element.imghash
-    if (imghash && imghash.length) {
-      const uri = `${imgHashApi}${imghash}`
-      Image.getSize(uri, (w, h) => {
-        this.setState({ pictureHeight: (common.sw - common.getH(40)) / w * h })
-      })
-    }
-  }
-
   render() {
     const { navigation } = this.props
-
-    const createdAt = common.dfFullDate(navigation.state.params.element.createdAt)
-    const title = navigation.state.params.element.title
-    const content = `        ${navigation.state.params.element.content}`
     const imghash = navigation.state.params.element.imghash
-    const { pictureHeight } = this.state
-    let picture = null
-    if (imghash && imghash.length) {
-      const uri = `${imgHashApi}${imghash}`
-      picture = (<FastImage
-        style={[styles.picture, {
-          height: pictureHeight,
-        }]}
-        resizeMode={'contain'}
-        source={{ uri }}
-      />)
-    }
     return (
-      <ScrollView style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.createdAt}>{createdAt}</Text>
-        {picture}
-        <Text style={styles.content}>{content}</Text>
-      </ScrollView>
+      <WebView
+        source={{ uri: imghash }}
+      />
     )
   }
 }

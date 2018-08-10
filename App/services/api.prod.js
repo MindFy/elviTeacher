@@ -1,5 +1,22 @@
 export const API_ROOT = 'https://www.tok.com'
 export const ws = 'wss://tok.com/1.0/push'
+// export const API_ROOT = 'http://47.91.202.112:8080'
+// export const ws = 'ws://47.91.202.112:8080/1.0/push'
+export const announcements1 = 'https://toksupport.zendesk.com/api/v2/help_center/'
+export const announcements2 = '/sections/360001728931/articles.json'
+
+function makeGetAPI(endPoint) {
+  return () => fetch(endPoint)
+    .then(response => response.json())
+    .then(json => ({
+      success: true,
+      result: json,
+    }))
+    .catch(e => ({
+      success: false,
+      error: e,
+    }))
+}
 
 function makePostAPI(endpoint) {
   return params => fetch(`${API_ROOT}${endpoint}`, {
@@ -51,6 +68,7 @@ function graphqlAPI(endpoint) {
 
 // User
 export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCode')
+export const checkVerificateSmtpCode = makePostAPI('/1.0/app/user/checkVerificateSmtpCode')
 export const check2GoogleAuth = makePostAPI('/1.0/app/user/check2GoogleAuth')
 export const getGoogleAuth = makePostAPI('/1.0/app/user/getGoogleAuth')
 export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
@@ -64,6 +82,7 @@ export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
 export const sync = makePostAPI('/1.0/app/user/sync')
 export const updateBank = makePostAPI('/1.0/app/user/updateBank')
 export const updateEmail = makePostAPI('/1.0/app/user/updateEmail')
+export const updateMobile = makePostAPI('/1.0/app/user/updateMobile')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
 // Rebates
 export const rebatesLink = `${API_ROOT}/signup?invitation=`
@@ -104,6 +123,8 @@ export const getValuation = makePostAPI('/1.0/app/asset/getValuation')
 export const add = makePostAPI('/1.0/app/address/add')
 
 export const graphql = graphqlAPI('/1.0/app')
+
+export const getAPI = uri => makeGetAPI(uri)
 
 /** 查看用户自选列表 */
 export const getFavorite = makePostAPI('/1.0/app/user/getFavorite')

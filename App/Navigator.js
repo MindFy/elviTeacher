@@ -5,7 +5,6 @@ import {
   Animated,
   StyleSheet,
 } from 'react-native'
-import deviceInfo from 'react-native-device-info'
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import {
   common,
@@ -27,6 +26,8 @@ import Authentication from './views/me/Authentication'
 import SecurityCenter from './views/me/SecurityCenter'
 import Rebates from './views/me/Rebates'
 import UpdateEmail from './views/me/UpdateEmail'
+import EmailCheck from './views/me/EmailCheck'
+import UpdateMobile from './views/me/UpdateMobile'
 import Settings from './views/me/Settings'
 import Language from './views/me/Language'
 import UpdatePassword from './views/me/UpdatePassword'
@@ -44,16 +45,19 @@ import BalanceDetail from './views/balance/BalanceDetail'
 import DismissableStackNavigator from './DismissableStackNavigator'
 import Login from './views/login/Login'
 import Register from './views/login/Register'
+import EmailRegist from './views/login/EmailRegist'
 import ForgotPwd from './views/login/ForgotPwd'
 import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
 import transfer from './localization/utils'
 
-let systemLanguage = 'en'
-const evt = deviceInfo.getDeviceLocale()
-if (evt.indexOf('zh') > -1) {
-  systemLanguage = 'zh_cn'
-}
+import { getDefaultLanguage } from './utils/languageHelper'
+
+// let systemLanguage = 'en'
+// const evt = deviceInfo.getDeviceLocale()
+// if (evt.indexOf('zh') > -1) {
+//   systemLanguage = 'zh_cn'
+// }
 
 const styles = StyleSheet.create({
   tabBarIcon: {
@@ -73,59 +77,59 @@ const TabBar = TabNavigator(
   {
     Home: {
       screen: Home,
-      navigationOptions: {
+      navigationOptions: () => ({
         header: null,
-        tabBarLabel: transfer(systemLanguage, 'homeTab'),
+        tabBarLabel: transfer(getDefaultLanguage(), 'homeTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/home_selected.png'),
           customSource: require('./assets/home.png'),
         }),
-      },
+      }),
     },
     Market: {
       screen: Market,
-      navigationOptions: {
-        tabBarLabel: transfer(systemLanguage, 'marketTab'),
+      navigationOptions: () => ({
+        tabBarLabel: transfer(getDefaultLanguage(), 'marketTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/market_selected.png'),
           customSource: require('./assets/market.png'),
         }),
-      },
+      }),
     },
     Otc: {
       screen: Otc,
-      navigationOptions: {
-        tabBarLabel: transfer(systemLanguage, 'otcTab'),
+      navigationOptions: () => ({
+        tabBarLabel: transfer(getDefaultLanguage(), 'otcTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/transaction_yellow.png'),
           customSource: require('./assets/transaction_white.png'),
         }),
-      },
+      }),
     },
     Balance: {
       screen: Balance,
-      navigationOptions: {
-        tabBarLabel: transfer(systemLanguage, 'balancesTab'),
+      navigationOptions: () => ({
+        tabBarLabel: transfer(getDefaultLanguage(), 'balancesTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/personal_funds_selected.png'),
           customSource: require('./assets/personal_funds.png'),
         }),
-      },
+      }),
     },
     Me: {
       screen: Me,
-      navigationOptions: {
-        tabBarLabel: transfer(systemLanguage, 'accountTab'),
+      navigationOptions: () => ({
+        // tabBarLabel: transfer(getDefaultLanguage(), 'accountTab'),
         tabBarIcon: ({ focused }) => tabBarIcon({
           focused,
           focusedSource: require('./assets/me_selected.png'),
           customSource: require('./assets/me.png'),
         }),
-      },
+      }),
     },
   },
   {
@@ -133,6 +137,21 @@ const TabBar = TabNavigator(
     animationEnabled: false,
     lazy: true,
     tabBarPosition: 'bottom',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: common.navBgColor,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: 'white',
+      headerTitleStyle: {
+        flex: 1,
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontSize: common.font16,
+      },
+      // headerLeft: <View />,
+      // headerRight: <View />,
+    },
     tabBarOptions: {
       showIcon: true,
       activeTintColor: common.btnTextColor,
@@ -197,6 +216,8 @@ const TabBarStack = StackNavigator(
     Announcement,
     SecurityCenter,
     UpdateEmail,
+    EmailCheck,
+    UpdateMobile,
     KLineFullScreen: {
       screen: KLineFullScreen,
       navigationOptions: {
@@ -207,7 +228,8 @@ const TabBarStack = StackNavigator(
       screen: Rebates,
     },
   }, {
-    navigationOptions: {
+    initialRouteName: 'TabBar',
+    navigationOptions: () => ({
       headerStyle: {
         backgroundColor: common.navBgColor,
         borderBottomWidth: 0,
@@ -219,9 +241,7 @@ const TabBarStack = StackNavigator(
         textAlign: 'center',
         fontSize: common.font16,
       },
-      // headerLeft: <View />,
-      // headerRight: <View />,
-    },
+    }),
     headerMode: 'screen',
     transitionConfig: TransitionConfiguration,
   },
@@ -231,6 +251,7 @@ const LoginStack = DismissableStackNavigator(
   {
     Login,
     Register,
+    EmailRegist,
     ForgotPwd,
     ConfirmPwd,
     Agreement,
@@ -251,7 +272,7 @@ const LoginStack = DismissableStackNavigator(
       // headerRight: <View />,
     },
     headerMode: 'screen',
-    transitionConfig: TransitionConfiguration,
+    // transitionConfig: TransitionConfiguration,
   })
 const loginStackDefaultGetStateForAction = LoginStack.router.getStateForAction
 LoginStack.router.getStateForAction = (action, state) => {
@@ -270,6 +291,20 @@ LoginStack.router.getStateForAction = (action, state) => {
   return loginStackDefaultGetStateForAction(action, state)
 }
 
+const TransitionConfiguration1 = () => ({
+  transitionSpec: {
+    timing: Animated.timing,
+    duration: Number(cache.getObject('duration')) || 250,
+  },
+  screenInterpolator: (sceneProps) => {
+    const { scene } = sceneProps
+    const { route } = scene
+    const params = route.params || {}
+    const transition = params.transition || 'forVertical'
+    return CardStackStyleInterpolator[transition](sceneProps)
+  },
+})
+
 const RootStack = StackNavigator(
   {
     TabBarStack: {
@@ -287,6 +322,7 @@ const RootStack = StackNavigator(
     },
   }, {
     mode: 'modal',
+    transitionConfig: TransitionConfiguration1,
   })
 
 export default RootStack

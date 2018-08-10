@@ -121,8 +121,7 @@ class UpdatePassword extends Component {
       Toast.fail(transfer(language, 'me_settings_oldPwdLength0'))
       return
     }
-    if (!newPassword.length || !common.regPassword.test(newPassword)
-      || !common.regSpace.test(newPassword)) {
+    if (!newPassword.length || !common.filterPwd(newPassword)) {
       Toast.show({
         style: {
           paddingLeft: common.margin15,

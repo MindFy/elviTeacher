@@ -32,6 +32,7 @@ import {
 } from './legalDeal'
 import {
   checkVerificateCode,
+  checksmptVerificateCode,
   getGoogleAuth,
   getVerificateCode,
   getVerificateSmtpCode,
@@ -53,6 +54,7 @@ import {
   updatePassword,
   updatePasswordUpdate,
   updateEmail,
+  updateMobile,
   updateEmailUpdate,
   findAuditmanage,
   registerResetNexus,
@@ -81,6 +83,8 @@ const actions = {
   requestBanners: home.requestBanners,
   requestAnnouncements: home.requestAnnouncements,
   requestMarket: home.requestMarket,
+  modifyLastPriceSort: home.modifyLastPriceSort,
+  modifyChangeSort: home.modifyChangeSort,
 
   add,
   addUpdate,
@@ -110,6 +114,7 @@ const actions = {
   skipLegalDealUpdate,
 
   checkVerificateCode,
+  checksmptVerificateCode,
   getGoogleAuth,
   getVerificateCode,
   getVerificateSmtpCode,
@@ -130,6 +135,7 @@ const actions = {
   updatePassword,
   updatePasswordUpdate,
   updateEmail,
+  updateMobile,
   updateEmailUpdate,
   findAuditmanage,
   registerResetNexus,

@@ -24,6 +24,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: common.blackColor,
   },
+  container1: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txt: {
+    fontSize: 16,
+    color: '#DFE4FF',
+    marginHorizontal: 30,
+    textAlign: 'center',
+  },
   tipView: {
     marginTop: common.margin5,
     backgroundColor: common.navBgColor,
@@ -159,10 +171,16 @@ class UpdateBank extends Component {
     }
   }
 
-  updateBank() {
+  updateBank(link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
-
+    if (link === undefined) {
+      return
+    }
+    if (link) {
+      this.props.navigation.navigate('EmailCheck')
+      return
+    }
     const { authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码') {
       const { code } = formState
@@ -244,7 +262,7 @@ class UpdateBank extends Component {
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
-          confirmPress={() => this.updateBank()}
+          confirmPress={link => this.updateBank(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />
@@ -344,8 +362,21 @@ class UpdateBank extends Component {
     </View>
   )
 
+  renderChineseVisible(language) {
+    return (
+      <View
+        style={styles.container1}
+      >
+        <Text style={styles.txt}>{transfer(language, 'otc_visible_chinese')}</Text>
+      </View>
+    )
+  }
+
   render() {
     const { loading, formState, navigation, user, language } = this.props
+    if (language !== 'zh_hans') {
+      return this.renderChineseVisible(language)
+    }
     let bankName = ''
     if (user) {
       bankName = user.bankName

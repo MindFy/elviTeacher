@@ -9,38 +9,48 @@ import {
   toggleEdit,
   getFavorite,
   setFavorite,
+  modifyDailyChangeSort,
+  modifyNameSort,
+  modifyVolumeSort,
+  modifyLastPriceSort,
 } from '../../actions/market'
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 import transfer from '../../localization/utils'
 import NavigationItem from '../../components/NavigationItem'
 
 class Market extends Component {
   static navigationOptions({ navigation }) {
-    let title = ''
+    const title = transfer(getDefaultLanguage(), 'market_market')
     let editPress
     let headerRightTitle = ''
     let headerLeft = null
-    if (navigation.state.params) {
-      title = navigation.state.params.title
-      editPress = navigation.state.params.editPress
-      headerRightTitle = navigation.state.params.headerRightTitle
-      headerLeft = navigation.state.params.fromDeal &&
-      (
-        <NavigationItem
-          icon={require('../../assets/arrow_left_left.png')}
-          iconStyle={{
-            marginLeft: common.margin10,
-            width: common.w10,
-            height: common.h20,
-          }}
-          onPress={() => {
-            cache.setObject('currentComponentVisible', 'Deal')
-            navigation.goBack()
-          }}
-        />
-      )
+    const params = navigation.state.params || {}
+
+    if (params) {
+      headerRightTitle =
+        params.isFavoritedMode ?
+          transfer(getDefaultLanguage(), 'market_complete') :
+          transfer(getDefaultLanguage(), 'market_add_favorites')
+
+      editPress = params.editPress
+      headerLeft = params.fromDeal &&
+        (
+          <NavigationItem
+            icon={require('../../assets/arrow_left_left.png')}
+            iconStyle={{
+              marginLeft: common.margin10,
+              width: common.w10,
+              height: common.h20,
+            }}
+            onPress={() => {
+              cache.setObject('currentComponentVisible', 'Deal')
+              navigation.goBack()
+            }}
+          />
+        )
     }
     return {
       headerTitle: title,
@@ -58,31 +68,24 @@ class Market extends Component {
     super(props)
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Market')
+      this.resetSortState()
       this.isNeedtoGetFavorites()
     })
     props.navigation.addListener('didBlur', () => {
-      const { language } = this.props
       props.dispatch(toggleEdit(false))
-      props.navigation.setParams({
-        headerRightTitle: transfer(language, 'market_add_favorites'),
-      })
+      props.navigation.setParams({ isFavoritedMode: false })
     })
-    this.marketTitles = [transfer(props.language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
   }
 
   componentWillMount() {
-    const { language, navigation } = this.props
-    navigation.setParams({
+    this.props.navigation.setParams({
       editPress: this.pressEdit,
-      headerRightTitle: transfer(language, 'market_add_favorites'),
+      isFavoritedMode: false,
     })
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language, loggedIn } = this.props
-    navigation.setParams({
-      title: transfer(language, 'market_market'),
-    })
+    const { dispatch, navigation } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -132,6 +135,14 @@ class Market extends Component {
     dispatch(setFavorite(parms))
   }
 
+  resetSortState = () => {
+    const { dispatch } = this.props
+    dispatch(modifyDailyChangeSort('idle'))
+    dispatch(modifyNameSort('idle'))
+    dispatch(modifyVolumeSort('idle'))
+    dispatch(modifyLastPriceSort('idle'))
+  }
+
   isNeedtoGetFavorites = () => {
     if (this.props.initialized || !this.props.loggedIn) {
       return
@@ -163,16 +174,16 @@ class Market extends Component {
       this.props.navigation.navigate('LoginStack')
       return
     }
-    const { isEdit, dispatch, navigation, language } = this.props
-    let headerRightTitle
+    const { isEdit, dispatch, navigation } = this.props
+    let isFavoritedMode
     if (!isEdit) {
       cache.setObject('currentComponentVisible', 'unknown')
-      headerRightTitle = transfer(language, 'market_complete')
+      isFavoritedMode = true
     } else {
       cache.setObject('currentComponentVisible', 'Market')
-      headerRightTitle = transfer(language, 'market_add_favorites')
+      isFavoritedMode = false
     }
-    navigation.setParams({ headerRightTitle })
+    navigation.setParams({ isFavoritedMode })
     dispatch(toggleEdit(!isEdit))
   }
 
@@ -265,7 +276,9 @@ class Market extends Component {
   render() {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
-    const index = this.marketTitles.indexOf(currPair)
+    const marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
+    const index = marketTitles.indexOf(currPair)
+
     return (
       <View
         style={{
@@ -275,14 +288,13 @@ class Market extends Component {
       >
         <HeaderScrollView
           indexSelected={index}
-          titles={this.marketTitles}
+          titles={marketTitles}
           onClickItem={this.onClickItem}
         />
         <MarketList
           {...this.props}
           language={language}
           data={marketData}
-          currencyName={currPair}
           isEdit={isEdit}
           onClickMarketItem={this.onClickMarketItem}
           onPressMarked={this.handlePressMarked}
@@ -296,10 +308,13 @@ function mapStateToProps(state) {
   return {
     currPair: state.market.currPair,
     pairs: state.market.pairs,
-    getFavoritePending: state.market.getFavoritePending,
     favoriteList: state.market.favoriteList,
     isEdit: state.market.isEdit,
     initialized: state.market.initialized,
+    nameSortType: state.market.nameSortType,
+    volumeSortType: state.market.volumeSortType,
+    lastPriceSortType: state.market.lastPriceSortType,
+    dailyChangeSortType: state.market.dailyChangeSortType,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }

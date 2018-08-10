@@ -51,6 +51,7 @@ function graphqlAPI(endpoint) {
 
 // User
 export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCode')
+export const checkVerificateSmtpCode = makePostAPI('/1.0/app/user/checkVerificateSmtpCode')
 export const check2GoogleAuth = makePostAPI('/1.0/app/user/check2GoogleAuth')
 export const getGoogleAuth = makePostAPI('/1.0/app/user/getGoogleAuth')
 export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
@@ -64,6 +65,7 @@ export const resetPassword = makePostAPI('/1.0/app/user/resetPassword')
 export const sync = makePostAPI('/1.0/app/user/sync')
 export const updateBank = makePostAPI('/1.0/app/user/updateBank')
 export const updateEmail = makePostAPI('/1.0/app/user/updateEmail')
+export const updateMobile = makePostAPI('/1.0/app/user/updateMobile')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
 // Rebates
 export const rebatesLink = `${API_ROOT}/signup?invitation=`

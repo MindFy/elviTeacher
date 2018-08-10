@@ -197,9 +197,16 @@ class OtcDetail extends Component {
     }
   }
 
-  confirmPayPress(id) {
+  confirmPayPress(id, link) {
     Keyboard.dismiss()
     Overlay.hide(this.overlayViewKeyID)
+    if (link === undefined) {
+      return
+    }
+    if (link) {
+      this.props.navigation.navigate('EmailCheck')
+      return
+    }
     const { dispatch, formState, authCodeType, language } = this.props
     if (authCodeType === '短信验证码') {
       const { code } = formState
@@ -207,7 +214,7 @@ class OtcDetail extends Component {
         Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
         return
       }
-      dispatch(requestConfirmPay({ id, code }))
+      dispatch(requestConfirmPay({ id, code: Number(code) }))
     } else {
       const { googleCode } = formState
       if (!googleCode.length) {
@@ -313,7 +320,7 @@ class OtcDetail extends Component {
           onChangeText={this.authCodeChanged}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={this.SMSCodePress}
-          confirmPress={() => this.confirmPayPress(id)}
+          confirmPress={link => this.confirmPayPress(id, link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
           language={language}
         />

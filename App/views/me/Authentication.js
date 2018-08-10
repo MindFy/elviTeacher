@@ -10,29 +10,48 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
-import Toast from 'teaset/components/Toast/Toast'
+import { Toast, Overlay } from 'teaset'
 import idcard from 'idcard'
 import PutObject from 'rn-put-object'
 import { common } from '../../constants/common'
 import SelectImage from './SelectImage'
 import TKButton from '../../components/TKButton'
-import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import UploadProgress from '../../components/UploadProgress'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: common.bgColor,
   },
+  container1: {
+    flex: 1,
+    backgroundColor: common.bgColor,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  txt: {
+    fontSize: 16,
+    color: '#DFE4FF',
+    marginHorizontal: 30,
+    textAlign: 'center',
+  },
   transparentView: {
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
+  tips: {
+    backgroundColor: 'transparent',
+    color: '#dfe4ff',
+    fontSize: 12,
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
   },
   inputView: {
     marginTop: common.margin10,
@@ -51,6 +70,23 @@ const styles = StyleSheet.create({
     fontSize: common.font16,
     alignSelf: 'center',
     textAlign: 'center',
+  },
+  overlay: {
+    justifyContent: 'center',
+  },
+  waitAuth: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  waitImage: {
+    marginTop: 115,
+    marginBottom: 20,
+    width: 80,
+    height: 80,
+  },
+  waitText: {
+    color: '#DFE4FF',
+    fontSize: 16,
   },
 })
 
@@ -89,6 +125,8 @@ class Authentication extends Component {
     super()
     this.showIdCardAuthResponse = false
     this.imgHash = false
+    this.uploadProgress = this.uploadProgress.bind(this)
+    PutObject.addListener('uploadProgress', this.uploadProgress)
   }
 
   componentDidMount() {
@@ -122,10 +160,12 @@ class Authentication extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.handleIdCardAuthRequest(nextProps)
+    this.handleProgressBar(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
+    PutObject.removeListener('uploadProgress', this.uploadProgress)
     dispatch(actions.idCardAuthUpdate({
       name: '',
       idNo: '',
@@ -148,6 +188,12 @@ class Authentication extends Component {
         break
       default:
         break
+    }
+  }
+
+  uploadProgress(v) {
+    if (this.k) {
+      this.k.updateIndex(v.index)
     }
   }
 
@@ -278,6 +324,27 @@ class Authentication extends Component {
     }
   }
 
+  handleProgressBar(nextProps) {
+    if (nextProps.idCardAuthVisible && !this.props.idCardAuthVisible) {
+      const lay = (<Overlay.View
+        style={styles.overlay}
+        modal
+        overlayOpacity={0}
+      >
+        <UploadProgress
+          ref={(e) => { this.k = e }}
+          language={this.props.language}
+        />
+      </Overlay.View>)
+      this.overLayKey = Overlay.show(lay)
+    } else if (!nextProps.idCardAuthVisible && this.props.idCardAuthVisible) {
+      if (this.overLayKey) {
+        Overlay.hide(this.overLayKey)
+      }
+      this.overLayKey = undefined
+    }
+  }
+
   renderScrollView() {
     const { name, idNo, idCardImages, language } = this.props
     return (
@@ -289,6 +356,7 @@ class Authentication extends Component {
           contentContainerStyle={{ justifyContent: 'center' }}
           behavior="padding"
         >
+          {/* <Text style={styles.tips}>{transfer(language, 'me_idcard_auth_tips')}</Text> */}
           <TKInputItem
             viewStyle={styles.inputView}
             inputStyle={{ fontSize: common.font14 }}
@@ -416,45 +484,71 @@ class Authentication extends Component {
         return null
     }
   }
-
   renderWaitingTip(language) {
     return (
+      <View style={styles.waitAuth}>
+        <Image
+          resizeMode="contain"
+          style={styles.waitImage}
+          source={require('../../assets/wait.png')}
+        />
+        <Text style={styles.waitText}>
+          {transfer(language, 'auth_wait_auth')}
+        </Text>
+      </View>
+    )
+  }
+  // renderWaitingTip(language) {
+  //   return (
+  //     <View
+  //       style={{
+  //         position: 'absolute',
+  //         width: '100%',
+  //         height: '100%',
+  //         backgroundColor: 'transparent',
+  //       }}
+  //     >
+  //       <View
+  //         style={{
+  //           position: 'absolute',
+  //           alignSelf: 'center',
+  //           justifyContent: 'center',
+  //           top: common.margin30,
+  //           width: '50%',
+  //           paddingVertical: common.getH(8),
+  //           backgroundColor: 'white',
+  //           borderRadius: common.radius6,
+  //         }}
+  //       >
+  //         <Text
+  //           style={{
+  //             color: common.blackColor,
+  //             fontSize: common.font16,
+  //             alignSelf: 'center',
+  //             textAlign: 'center',
+  //             lineHeight: common.margin20,
+  //           }}
+  //         >{transfer(language, 'me_submitAuthSuccess')}</Text>
+  //       </View>
+  //     </View>
+  //   )
+  // }
+
+  renderChineseVisible(language) {
+    return (
       <View
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'transparent',
-        }}
+        style={styles.container1}
       >
-        <View
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            justifyContent: 'center',
-            top: common.margin30,
-            width: '50%',
-            paddingVertical: common.getH(8),
-            backgroundColor: 'white',
-            borderRadius: common.radius6,
-          }}
-        >
-          <Text
-            style={{
-              color: common.blackColor,
-              fontSize: common.font16,
-              alignSelf: 'center',
-              textAlign: 'center',
-              lineHeight: common.margin20,
-            }}
-          >{transfer(language, 'me_submitAuthSuccess')}</Text>
-        </View>
+        <Text style={styles.txt}>{transfer(language, 'otc_visible_chinese')}</Text>
       </View>
     )
   }
 
   render() {
     const { idCardAuthVisible, user, language } = this.props
+    if (language !== 'zh_hans') {
+      return this.renderChineseVisible(language)
+    }
     const isShowWaitingTip =
       user && user && user.idCardAuthStatus && user.idCardAuthStatus === common.user.status.waiting
     const contentView = !isShowWaitingTip && this.renderContentView()
@@ -467,7 +561,6 @@ class Authentication extends Component {
       <View style={styles.container}>
         {contentView}
         {waitingTip}
-        <TKSpinner isVisible={idCardAuthVisible} />
         {transparentView}
       </View>
     )

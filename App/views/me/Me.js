@@ -14,15 +14,15 @@ import actions from '../../actions/index'
 import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 
 class Me extends Component {
-  static navigationOptions({ navigation }) {
-    let title = ''
-    if (navigation.state.params) {
-      title = navigation.state.params.title
-    }
+  static navigationOptions = () => {
+    const language = getDefaultLanguage()
+    const title = transfer(language, 'me_me')
     return {
       headerTitle: title,
+      tabBarLabel: transfer(language, 'accountTab'),
     }
   }
 
@@ -71,16 +71,24 @@ class Me extends Component {
     )
   }
 
-  maskPhone(phone) {
-    if (!phone) return undefined
-
-    const str = String(phone)
-    return str.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  maskPhoneOrEmail(value) {
+    const mobile = value.mobile
+    const email = value.email
+    if (mobile) {
+      return String(mobile).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+    }
+    if (email) {
+      const arr = email.split('@')
+      if (arr[0].length > 3) {
+        return `${arr[0].substring(0, 3)}****@${arr[1]}`
+      }
+      return email
+    }
+    return ''
   }
 
   render() {
     const { loggedIn, navigation, loading, loggedInResult, language } = this.props
-
     return (
       <View
         style={{
@@ -107,7 +115,7 @@ class Me extends Component {
             titleStyle={{
               fontSize: common.font16,
             }}
-            title={!loggedIn ? transfer(language, 'me_login') : this.maskPhone(loggedInResult.mobile)}
+            title={!loggedIn ? transfer(language, 'me_login') : this.maskPhoneOrEmail(loggedInResult)}
             rightImageHide
             target="global"
           />

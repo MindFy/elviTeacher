@@ -6,6 +6,13 @@ import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import transfer from '../../localization/utils'
 
+import {
+  modifyDailyChangeSort,
+  modifyNameSort,
+  modifyVolumeSort,
+  modifyLastPriceSort,
+} from '../../actions/market'
+
 import MarketDetailCell from './components/MarketDetailCell'
 import MarketEditDetailCell from './components/MarketEditDetailCell'
 import MarketMarkedCell from './components/MarketMarkedCell'
@@ -54,12 +61,141 @@ export default class MarketList extends Component {
     })
   }
 
+  compareWithNameKey = (array, sortTye) => {
+    const tempArray = array
+    if (sortTye === 'decending') {
+      tempArray.sort((a, b) => {
+        if (a.goods.name < b.goods.name) {
+          return 1
+        } else if (a.goods.name > b.goods.name) {
+          return -1
+        }
+        return 0
+      })
+      return tempArray
+    }
+    tempArray.sort((a, b) => {
+      if (a.goods.name < b.goods.name) {
+        return -1
+      } else if (a.goods.name > b.goods.name) {
+        return 1
+      }
+      return 0
+    })
+    return tempArray
+  }
+
+  compareWithKey = (array, sortTye, key) => {
+    if (sortTye === 'decending') {
+      return this.compareDecendingWithKey(array, key)
+    }
+    return this.compareAscendingWithKey(array, key)
+  }
+
+  compareDecendingWithKey = (array, key) => {
+    const tempArray = array
+    tempArray.sort((a, b) => {
+      if (Number(a[key]) < Number(b[key])) {
+        return 1
+      } else if (Number(a[key]) > Number(b[key])) {
+        return -1
+      }
+      return 0
+    })
+    return tempArray
+  }
+
+  compareAscendingWithKey = (array, key) => {
+    const tempArray = array
+    tempArray.sort((a, b) => {
+      if (Number(a[key]) < Number(b[key])) {
+        return -1
+      } else if (Number(a[key]) > Number(b[key])) {
+        return 1
+      }
+      return 0
+    })
+    return tempArray
+  }
+
+  configureData = (data) => {
+    const tempData = [...data]
+    const { nameSortType } = this.props
+    if (nameSortType !== 'idle') {
+      return this.compareWithNameKey(tempData, nameSortType)
+    }
+
+    const { volumeSortType } = this.props
+    if (volumeSortType !== 'idle') {
+      return this.compareWithKey(tempData, volumeSortType, 'quantity')
+    }
+
+    const { lastPriceSortType } = this.props
+    if (lastPriceSortType !== 'idle') {
+      return this.compareWithKey(tempData, lastPriceSortType, 'cprice')
+    }
+
+    const { dailyChangeSortType } = this.props
+    if (dailyChangeSortType !== 'idle') {
+      return this.compareWithKey(tempData, dailyChangeSortType, 'rose')
+    }
+
+    return tempData
+  }
+
+  obtainNextSortString = (sortString) => {
+    if (sortString === 'idle') {
+      return 'decending'
+    } else if (sortString === 'decending') {
+      return 'ascending'
+    } else if (sortString === 'ascending') {
+      return 'idle'
+    }
+    throw new Error('must have sort string')
+  }
+
+  obtainIconImageBySortString = (sortString) => {
+    if (sortString === 'idle') {
+      return this.marketHeaderIcons.headerIdle
+    } else if (sortString === 'decending') {
+      return this.marketHeaderIcons.headerDecending
+    } else if (sortString === 'ascending') {
+      return this.marketHeaderIcons.headerAscending
+    }
+    throw new Error('must have sort string')
+  }
+
+  marketHeaderIcons = {
+    headerIdle: require('../../assets/icon_change_normal.png'),
+    headerDecending: require('../../assets/icon_change_decending.png'),
+    headerAscending: require('../../assets/icon_change_ascending.png'),
+  }
+
   handlePressMarked = (rd) => {
     if (this.props.onPressMarked) {
       this.props.onPressMarked(rd)
     }
   }
 
+  handlePressName = (sortString) => {
+    const nextSortType = this.obtainNextSortString(sortString)
+    this.props.dispatch(modifyNameSort(nextSortType))
+  }
+
+  handlePresVolume = (sortString) => {
+    const nextSortType = this.obtainNextSortString(sortString)
+    this.props.dispatch(modifyVolumeSort(nextSortType))
+  }
+
+  handlePressLastPrice = (sortString) => {
+    const nextSortType = this.obtainNextSortString(sortString)
+    this.props.dispatch(modifyLastPriceSort(nextSortType))
+  }
+
+  handlePressDailyChange = (sortString) => {
+    const nextSortType = this.obtainNextSortString(sortString)
+    this.props.dispatch(modifyDailyChangeSort(nextSortType))
+  }
   renderMarkedCell = (isEdit, cellData, rd) => {
     if (isEdit) {
       return (
@@ -95,13 +231,33 @@ export default class MarketList extends Component {
   }
 
   renderHeader() {
-    const { language } = this.props
+    const {
+      language,
+      nameSortType,
+      volumeSortType,
+      lastPriceSortType,
+      dailyChangeSortType,
+      isEdit,
+    } = this.props
+    const nameIcon = this.obtainIconImageBySortString(nameSortType)
+    const volumeIcon = this.obtainIconImageBySortString(volumeSortType)
+    const lastPriceIcon = this.obtainIconImageBySortString(lastPriceSortType)
+    const dailyChangeIcon = this.obtainIconImageBySortString(dailyChangeSortType)
     return (
       <MarketDetailHeader
+        disabled={isEdit}
         name={transfer(language, 'market_marketName')}
+        nameIcon={nameIcon}
+        onPressName={() => { this.handlePressName(nameSortType) }}
         volume={transfer(language, 'market_marketVolume')}
+        volumeIcon={volumeIcon}
+        onPressVolume={() => { this.handlePresVolume(volumeSortType) }}
         lastPrice={transfer(language, 'market_marketLastPrice')}
+        lastPriceIcon={lastPriceIcon}
+        onPressLastPrice={() => { this.handlePressLastPrice(lastPriceSortType) }}
         dailyChange={transfer(language, 'market_24hourChange')}
+        dailyChangeIcon={dailyChangeIcon}
+        onPressDailyChange={() => { this.handlePressDailyChange(dailyChangeSortType) }}
       />
     )
   }
@@ -148,9 +304,10 @@ export default class MarketList extends Component {
 
   render() {
     const { data } = this.props
+    const listDS = this.configureData(data)
     return (
       <ListView
-        dataSource={this.listDS(data)}
+        dataSource={this.listDS(listDS)}
         renderRow={rd => this.renderRow(rd)}
         renderHeader={() => this.renderHeader()}
         enableEmptySections

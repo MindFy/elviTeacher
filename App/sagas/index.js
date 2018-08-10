@@ -41,6 +41,7 @@ export default function* rootSaga() {
     syncWatcher(),
     watchRequestLoginout(),
     fork(user.checkVerificateCode),
+    fork(user.checksmptVerificateCode),
     fork(user.getGoogleAuth),
     fork(user.getVerificateCode),
     fork(user.getVerificateSmtpCode),
@@ -51,6 +52,7 @@ export default function* rootSaga() {
     fork(user.register),
     fork(user.resetPassword),
     fork(user.updateEmail),
+    fork(user.updateMobile),
     fork(user.updatePassword),
     fork(user.mobileIsExist),
 

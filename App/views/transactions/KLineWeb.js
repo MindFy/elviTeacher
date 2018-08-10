@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { WebView, PanResponder, View, AsyncStorage } from 'react-native'
+import { WebView, PanResponder, View } from 'react-native'
 import { common } from '../../constants/common'
 import * as api from '../../services/api'
-import * as exchange from '../../actions/exchange'
 
 /* eslint-disable */
 // fix issue https://github.com/facebook/react-native/issues/10865

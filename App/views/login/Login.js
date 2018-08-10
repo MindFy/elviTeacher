@@ -138,7 +138,7 @@ class Login extends PureComponent {
       const { formState } = this.props
       const nextFormState = {
         ...formState,
-        mobile: user.mobile,
+        mobile: user.mobile || user.email,
       }
       dispatch(actions.loginUpdate(nextFormState))
     }
@@ -195,7 +195,13 @@ class Login extends PureComponent {
       Toast.fail(transfer(language, 'login_inputId'))
       return
     }
-    if (!common.regMobile.test(formState.mobile)) {
+    const nextFormData = {}
+    if (common.regMobile.test(formState.mobile)) {
+      nextFormData.mobile = formState.mobile
+    } else if (common.regEmail.test(formState.mobile)) {
+      nextFormData.email = formState.mobile
+    }
+    if (Object.keys(nextFormData).length === 0) {
       Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
@@ -203,7 +209,8 @@ class Login extends PureComponent {
       Toast.fail(transfer(language, 'login_inputPass'))
       return
     }
-    dispatch(actions.login(formState))
+    nextFormData.password = formState.password
+    dispatch(actions.login(nextFormData))
   }
 
   loginHandle(nextProps) {
@@ -229,7 +236,7 @@ class Login extends PureComponent {
     const errs = {
       4000114: transfer(language, 'login_idNotExist'),
       4000115: transfer(language, 'login_passError'),
-      4000116: transfer(language, 'login_phoneUnRegist'),
+      4000116: transfer(language, 'login_phoneUnRegist2'),
       4000117: transfer(language, 'login_idOrPassError'),
     }
 
@@ -282,14 +289,13 @@ class Login extends PureComponent {
           viewStyle={{ flex: undefined }}
           titleStyle={{ width: common.w60 }}
           title={transfer(language, 'login_id')}
-          placeholder={transfer(language, 'login_idPlaceholder')}
+          placeholder={transfer(language, 'login_idPlaceholder2')}
           value={formState.mobile}
           showDelBtn
-          maxLength={11}
           textInputProps={{
-            keyboardType: 'phone-pad',
             onBlur: () => {
-              if (!common.regMobile.test(this.props.formState.mobile)) {
+              if (!common.regMobile.test(formState.mobile) &&
+                !common.regEmail.test(formState.mobile)) {
                 this.setState({ showTip: true })
               } else {
                 this.setState({ showTip: false })

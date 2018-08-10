@@ -29,6 +29,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  containerX: {
+    marginTop: common.margin10,
+    alignItems: 'flex-start',
+  },
+  viewContainer: {
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
   title: {
     alignSelf: 'center',
     color: common.textColor,
@@ -45,10 +53,53 @@ const styles = StyleSheet.create({
     color: common.redColor,
     width: common.sw * 0.8 - common.getH(80),
   },
+  leftIcon: {
+    height: common.w40,
+    width: common.w40,
+    justifyContent: 'center',
+  },
+  rightMenu: {
+    fontSize: 16,
+    color: '#ffffff',
+    marginRight: 10,
+  },
+  nextContainer: {
+    width: 80,
+    height: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  nextTitle: {
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  phoneContainer: {
+    width: 37,
+    height: 17,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  numberArea: {
+    color: common.textColor,
+    fontSize: common.font12,
+  },
+  whiteArrow: {
+    width: 7,
+    height: 5,
+    marginLeft: 5,
+  },
 })
 
 class Register extends Component {
-  static navigationOptions(props) {
+  static navigationOptions({ navigation }) {
+    let rightText = ''
+    let rightHandler
+    if (navigation.state.params) {
+      rightText = navigation.state.params.rightText
+      rightHandler = navigation.state.params.rightHandler
+    }
     return {
       headerStyle: {
         backgroundColor: common.bgColor,
@@ -57,13 +108,9 @@ class Register extends Component {
       headerTintColor: 'white',
       headerLeft: (
         <NextTouchableOpacity
-          style={{
-            height: common.w40,
-            width: common.w40,
-            justifyContent: 'center',
-          }}
+          style={styles.leftIcon}
           activeOpacity={common.activeOpacity}
-          onPress={() => props.navigation.goBack()}
+          onPress={() => navigation.goBack()}
         >
           <Image
             style={{
@@ -73,6 +120,20 @@ class Register extends Component {
             }}
             source={require('../../assets/arrow_left_left.png')}
           />
+        </NextTouchableOpacity>
+      ),
+      headerRight: (
+        <NextTouchableOpacity
+          activeOpacity={common.activeOpacity}
+          onPress={() => {
+            if (rightHandler) {
+              rightHandler()
+            }
+          }}
+        >
+          <Text
+            style={styles.rightMenu}
+          >{rightText}</Text>
         </NextTouchableOpacity>
       ),
     }
@@ -93,6 +154,23 @@ class Register extends Component {
         showTip: false,
       }
     }
+  }
+
+  componentWillMount() {
+    const { navigation, language, dispatch } = this.props
+    navigation.setParams({
+      rightText: transfer(language, 'login_email_regist'),
+      rightHandler: () => {
+        dispatch(actions.registerUpdate({
+          mobile: '',
+          code: '',
+          password: '',
+          passwordAgain: '',
+          recommendNo: '',
+        }))
+        navigation.replace('EmailRegist')
+      },
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -199,8 +277,7 @@ class Register extends Component {
       Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
-    if (!password.length || !common.regPassword.test(password) ||
-      !common.regSpace.test(password)) {
+    if (!password.length || !common.filterPwd(password)) {
       Toast.show({
         style: {
           paddingLeft: common.margin20,
@@ -300,8 +377,27 @@ class Register extends Component {
         titleStyle={{
           width: common.h80,
         }}
-        title={transfer(language, 'login_id')}
-        placeholder={transfer(language, 'login_idPlaceholder')}
+        title={() => (
+          <View style={styles.nextContainer}>
+            <Text style={styles.nextTitle}>
+              {transfer(language, 'login_id')}
+            </Text>
+            <NextTouchableOpacity
+              style={styles.phoneContainer}
+              activeOpacity={1}
+              delay={0}
+            >
+              <Text style={styles.numberArea}>+86</Text>
+              {/* <Image
+                style={styles.whiteArrow}
+                resizeMode="contain"
+                source={require('../../assets/white_arrow_up.png')}
+              /> */}
+            </NextTouchableOpacity>
+          </View>
+        )}
+        // title={transfer(language, 'login_id')}
+        placeholder={transfer(language, 'login_idPlaceholder3')}
         textInputProps={{
           keyboardType: 'phone-pad',
           onBlur: () => {
@@ -384,10 +480,7 @@ class Register extends Component {
   }
 
   renderErrorTip = (tip) => {
-    const hasTip = (
-      (tip && !common.regPassword.test(tip)) ||
-      (tip && !common.regSpace.test(tip))
-    )
+    const hasTip = (tip && !common.filterPwd(tip))
     const tipView = hasTip && (
       <Text
         style={{
@@ -496,6 +589,27 @@ class Register extends Component {
 
   renderExtraBtns = () => {
     const { navigation, language } = this.props
+    if (language === 'ja') {
+      return (
+        <View style={styles.containerX}>
+          <View style={styles.viewContainer} >
+            <Text
+              style={styles.title}
+            >{transfer(language, 'login_registAsAgree')}</Text>
+            <TKButton
+              theme={'small'}
+              caption={`《${transfer(language, 'login_agreement')}》`}
+              onPress={() => navigation.navigate('Agreement')}
+            />
+          </View>
+          <TKButton
+            theme={'small'}
+            caption={transfer(language, 'login_hasAccount')}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      )
+    }
     return (
       <View style={styles.container}>
         <View style={{ flexDirection: 'row' }} >
