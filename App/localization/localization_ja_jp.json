@@ -9,7 +9,7 @@
   "login_idPlaceholder": "11桁の電話番号を入力してください",
   "login_idPlaceholder3": "China only for the time being",
   "login_idPlaceholder2": "Please enter email / mobile",
-  "login_idError": "11桁の電話番号を入力してください",
+  "login_idError": "Please enter the id with the correct format",
   "login_inputId": "アカウント名を入力してください",
   "login_inputPass": "パスワードを入力してください",
   "login_password": "パスワード",

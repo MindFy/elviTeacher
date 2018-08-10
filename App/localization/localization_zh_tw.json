@@ -9,7 +9,7 @@
   "login_idPlaceholder": "請輸入11位手機號碼",
   "login_idPlaceholder3": "請輸入11位手機號碼",
   "login_idPlaceholder2": "请输入信箱/手機號碼",
-  "login_idError": "Please enter the id with the correct format",
+  "login_idError": "請輸入正確的帳號",
   "login_inputId": "請輸入帳號",
   "login_inputPass": "請輸入密碼",
   "login_password": "密碼",
