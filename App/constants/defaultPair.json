@@ -14,38 +14,38 @@
   "coinIdDic": {
     "TK": {
       "id": 1,
-      "fee": 0,
-      "minAmount": 0
+      "fee": "0",
+      "minAmount": "0"
     },
     "BTC": {
       "id": 2,
-      "fee": 0.001,
-      "minAmount": 0.01
+      "fee": "0.001",
+      "minAmount": "0.01"
     },
     "CNYT": {
       "id": 3,
-      "fee": 0,
-      "minAmount": 0
+      "fee": "0",
+      "minAmount": "0"
     },
     "CNY": {
       "id": 4,
-      "fee": 0,
-      "minAmount": 0
+      "fee": "0",
+      "minAmount": "0"
     },
     "ETH": {
       "id": 5,
-      "fee": 0.01,
-      "minAmount": 0.015
+      "fee": "0.01",
+      "minAmount": "0.015"
     },
     "ETC": {
       "id": 6,
-      "fee": 0.01,
-      "minAmount": 0.5
+      "fee": "0.01",
+      "minAmount": "0.5"
     },
     "LTC": {
       "id": 7,
-      "fee": 0.01,
-      "minAmount": 0.1
+      "fee": "0.01",
+      "minAmount": "0.1"
     }
   },
   "accuracy": {
