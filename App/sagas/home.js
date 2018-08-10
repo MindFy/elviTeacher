@@ -116,9 +116,9 @@ function parseConfig(data) {
   coinPairs.forEach((e) => {
     e.pairs.forEach((elem) => {
       accuracy[`${elem.name}_${e.name}`] = {
-        priceLimit: elem.priceLimit,
-        quantityLimit: elem.quantityLimit,
-        moneyLimit: elem.moneyLimit,
+        priceLimit: Number(elem.priceLimit),
+        quantityLimit: Number(elem.quantityLimit),
+        moneyLimit: Number(elem.moneyLimit),
       }
     })
   })
@@ -132,10 +132,18 @@ function parseConfig(data) {
 
 
 function* requestPairsWorker() {
-  yield put({
-    type: 'home/request_pair_success',
-    payload: parseConfig(require('../constants/response.json')),
-  })
+  const response = yield call(api.getToken)
+  if (response.success) {
+    yield put({
+      type: 'home/request_pair_success',
+      payload: parseConfig(response.result),
+    })
+  } else {
+    yield put({
+      type: 'home/request_pair_failed',
+      payload: undefined,
+    })
+  }
 }
 
 

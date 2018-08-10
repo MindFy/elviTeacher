@@ -336,7 +336,7 @@ class WithDraw extends Component {
     const { dispatch, user } = this.props
 
     dispatch(toggleForm())
-    dispatch(requestCoinList(user.id))
+    // dispatch(requestCoinList(user.id))
   }
 
   tapCoinListCell = (ele) => {
@@ -653,8 +653,8 @@ class WithDraw extends Component {
   }
 
   renderCoinList() {
-    const { listToggled, coinList } = this.props
-
+    const { listToggled } = this.props
+    const coinList = common.getDefaultPair().canWithdrawCoins
     return !listToggled ? null : coinList.map(ele => (
       <NextTouchableOpacity
         style={styles.coinView}

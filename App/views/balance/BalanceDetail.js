@@ -157,7 +157,7 @@ class BalanceDetail extends Component {
     EIEC: require('../../assets/market_EIEC.png'),
   }
 
-  withdrawOrDepositTokens = ['BTC', 'ETH', 'ETC', 'LTC']
+  withdrawOrDepositTokens = common.getDefaultPair().canWithdrawCoins
 
   renderBalanceInfoCell = (title, value) => (
     <View style={styles.infoCell}>

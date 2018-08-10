@@ -70,7 +70,6 @@ export function* requestOrderhistoryListWorker(action) {
 export function* createOrderWorker(action) {
   const { payload } = action
   const response = yield call(api.create, payload)
-
   if (response.success) {
     yield put({
       type: 'exchange/create_order_succeed',
