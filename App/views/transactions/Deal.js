@@ -246,7 +246,8 @@ class Deal extends Component {
       clearInterval(this.timer)
       this.timer = undefined
     }
-    ws.destory()
+    // ws.destory()
+    this.props.dispatch(exchange.resetExchangeReducer())
     cache.setObject('currentComponentVisible', 'Home')
   }
 

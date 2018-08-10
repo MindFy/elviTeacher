@@ -312,6 +312,9 @@ export default function exchange(state = initialState, action) {
     case 'notify/clear_reducer':
       nextState = initialState
       break
+    case 'exchange/reset_exchange':
+      nextState = initialState
+      break
     default:
       nextState = state
       break
