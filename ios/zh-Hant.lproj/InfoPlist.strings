@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* 
   InfoPlist.strings
   tok
@@ -5,6 +6,15 @@
   Created by fuck on 2018/7/17.
   Copyright © 2018年 Facebook. All rights reserved.
 */
+=======
+/*
+ InfoPlist.strings
+ tok
+ 
+ Created by named on 2018/6/27.
+ Copyright © 2018 Facebook. All rights reserved.
+ */
+>>>>>>> 3733eb93fb31d53c9139c3ccffc52d71dc580898
 
 CFBundleDisplayName = "TOK";
 NSCameraUsageDescription = "tok wants to access your camera";
