@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View } from 'react-native'
+import Toast from 'antd-mobile/lib/toast'
 import { common } from '../../constants/common'
 import MarketList from './MarketList'
 import {
@@ -85,7 +86,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation } = this.props
+    const { dispatch, navigation, language } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -94,11 +95,18 @@ class Market extends Component {
     } else {
       dispatch(updateCurrentPair({ title: 'CNYT' }))
     }
+    Toast.loading(transfer(language, 'exchange_loadingData'), 0)
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
         dispatch(requestPairInfo({}))
       }
     }, common.refreshIntervalTime)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.pairs.length !== 0 && this.props.pairs.length === 0) {
+      Toast.hide()
+    }
   }
 
   componentWillUnmount() {
