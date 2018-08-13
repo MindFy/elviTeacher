@@ -91,8 +91,10 @@ class Market extends Component {
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
-    } else {
+    } else if (getDefaultLanguage() === 'zh_hans') {
       dispatch(updateCurrentPair({ title: 'CNYT' }))
+    } else {
+      dispatch(updateCurrentPair({ title: 'BTC' }))
     }
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
@@ -276,9 +278,14 @@ class Market extends Component {
   render() {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
-    const marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
-    const index = marketTitles.indexOf(currPair)
+    let marketTitles
 
+    if (getDefaultLanguage() === 'zh_hans') {
+      marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
+    } else {
+      marketTitles = [transfer(language, 'market_favorites'), 'BTC', 'TK']
+    }
+    const index = marketTitles.indexOf(currPair)
     return (
       <View
         style={{

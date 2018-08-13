@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import { Toast } from 'teaset'
 import { connect } from 'react-redux'
+import { NavigationActions } from 'react-navigation'
 import { common } from '../../constants/common'
 import MeCell from './MeCell'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -88,9 +89,15 @@ class Language extends Component {
     if (launageEvt !== language) {
       dispatch(system.updateLanguage(launageEvt))
       storeSysterLanguage(launageEvt)
-      this.props.navigation.popToTop()
       cache.setObject('duration', '10')
-      this.props.navigation.navigate('Home')
+
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [
+          NavigationActions.navigate({ routeName: 'TabBar' }),
+        ],
+      })
+      this.props.navigation.dispatch(resetAction)
     }
   }
 
