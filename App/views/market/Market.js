@@ -103,6 +103,14 @@ class Market extends Component {
     }, common.refreshIntervalTime)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.language !== this.props.language &&
+      this.props.language === 'zh_hans' &&
+      this.props.currPair === 'CNYT') {
+      this.props.dispatch(updateCurrentPair({ title: 'BTC' }))
+    }
+  }
+
   componentWillUnmount() {
     if (this.timeId) {
       clearInterval(this.timeId)
