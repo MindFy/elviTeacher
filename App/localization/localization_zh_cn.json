@@ -139,7 +139,7 @@
   "exchange_availble": "可用",
   "exchange_total": "成交金额",
   "exchange_loadingData": "加载中..",
-  "exchange_noOrders": "暂无委托单",
+  "exchange_noOrder": "暂无委托单",
   "exchange_cancelOrder": "撤单",
   "exchange_complete": "已完成",
   "exchange_canceled": "已取消",
@@ -696,5 +696,9 @@
   "auth_google_unbind": "谷歌验证码未绑定,\n请先前往官网绑定谷歌验证码",
   "auth_upload_ing": "上传中......",
   "auth_wait_auth": "认证中,请等待认证结果",
-  "otc_visible_chinese": "尚未开放，敬请期待"
+  "otc_visible_chinese": "尚未开放，敬请期待",
+  "auth_uploading": "上传中",
+  "auth_upload_success": "上传成功",
+  "auth_upload_failed": "上传失败",
+  "auth_upload_repeat": "重新上传"
 }
