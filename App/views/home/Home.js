@@ -178,7 +178,7 @@ class Home extends Component {
     cache.removeObject('isLoginIn')
     const { dispatch } = this.props
     dispatch(actions.findUserUpdate(undefined))
-    dispatch(actions.clearAllReducer())
+    // dispatch(actions.clearAllReducer())
     dispatch(actions.findAssetListUpdate({
       asset: [],
       amountVisible: undefined,

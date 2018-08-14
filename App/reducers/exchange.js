@@ -215,7 +215,6 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         valuationRequesting: false,
-        valuation: payload,
       }
       break
     case 'exchange/request_depth_map':
