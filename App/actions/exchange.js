@@ -183,3 +183,9 @@ export function setFavoriteSuccess(payload) {
     payload,
   }
 }
+
+export function resetExchangeReducer() {
+  return {
+    type: 'exchange/reset_exchange',
+  }
+}
