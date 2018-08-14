@@ -92,8 +92,10 @@ class Market extends Component {
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
-    } else {
+    } else if (getDefaultLanguage() === 'zh_hans') {
       dispatch(updateCurrentPair({ title: 'CNYT' }))
+    } else {
+      dispatch(updateCurrentPair({ title: 'BTC' }))
     }
     Toast.loading(transfer(language, 'exchange_loadingData'), 0)
     this.timeId = setInterval(() => {
@@ -106,6 +108,11 @@ class Market extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.pairs.length !== 0 && this.props.pairs.length === 0) {
       Toast.hide()
+    }
+    if (nextProps.language !== this.props.language &&
+      this.props.language === 'zh_hans' &&
+      this.props.currPair === 'CNYT') {
+      this.props.dispatch(updateCurrentPair({ title: 'BTC' }))
     }
   }
 
@@ -268,9 +275,14 @@ class Market extends Component {
   render() {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
-    const marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
-    const index = marketTitles.indexOf(currPair)
+    let marketTitles
 
+    if (getDefaultLanguage() === 'zh_hans') {
+      marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
+    } else {
+      marketTitles = [transfer(language, 'market_favorites'), 'BTC', 'TK']
+    }
+    const index = marketTitles.indexOf(currPair)
     return (
       <View
         style={{

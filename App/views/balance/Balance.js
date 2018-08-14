@@ -221,6 +221,19 @@ class Balance extends Component {
     balanceList.forEach((e) => {
       initBalance[indexs[e.token.name]] = e
     })
+    if (getDefaultLanguage() !== 'zh_hans') {
+      const CNYTBal = initBalance[indexs.CNYT]
+      const amount =
+        new BigNumber(CNYTBal.amount)
+          .plus(CNYTBal.freezed)
+          .plus(CNYTBal.platformFreeze)
+
+      if (amount.isZero) {
+        const newInitBalance = [...initBalance]
+        newInitBalance.splice(indexs.CNYT, 1)
+        return newInitBalance
+      }
+    }
     return initBalance
   }
 
@@ -290,6 +303,10 @@ class Balance extends Component {
     }
     amountBTC = amountBTC.toFixed(8, 1)
     amountRMB = amountRMB.toFixed(2, 1)
+    let amountRMBHint = ''
+    if (getDefaultLanguage() === 'zh_hans') {
+      amountRMBHint = `(¥${amountRMB})`
+    }
 
     return (
       <ScrollView
@@ -297,7 +314,7 @@ class Balance extends Component {
         refreshControl={this.renderRefreshControl()}
       >
         <Text style={styles.balance}>{amountBTC}</Text>
-        <Text style={styles.balanceRMB}>{`(¥${amountRMB})`}</Text>
+        <Text style={styles.balanceRMB}>{amountRMBHint}</Text>
         <Text style={styles.balanceTip}>
           {`${transfer(language, 'balances_total_value')} (BTC)`}
         </Text>
