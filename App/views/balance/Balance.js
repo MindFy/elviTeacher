@@ -228,7 +228,7 @@ class Balance extends Component {
           .plus(CNYTBal.freezed)
           .plus(CNYTBal.platformFreeze)
 
-      if (amount.isZero) {
+      if (amount.isZero()) {
         const newInitBalance = [...initBalance]
         newInitBalance.splice(indexs.CNYT, 1)
         return newInitBalance
