@@ -61,23 +61,7 @@ class Market2 extends Component {
 
   cellPressAction(e) {
     const { currPair, dispatch, navigation } = this.props
-    const coinsIdDic = {
-      TK: {
-        id: 1,
-      },
-      BTC: {
-        id: 2,
-      },
-      CNYT: {
-        id: 3,
-      },
-      ETH: {
-        id: 5,
-      },
-      ETC: {
-        id: 6,
-      },
-    }
+    const coinsIdDic = common.getDefaultPair().coinIdDic
     const goods = {
       id: e.id,
       name: e.name,

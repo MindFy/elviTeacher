@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View } from 'react-native'
+import Toast from 'antd-mobile/lib/toast'
 import { common } from '../../constants/common'
 import MarketList from './MarketList'
 import {
@@ -85,7 +86,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation } = this.props
+    const { dispatch, navigation, language } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -96,6 +97,7 @@ class Market extends Component {
     } else {
       dispatch(updateCurrentPair({ title: 'BTC' }))
     }
+    Toast.loading(transfer(language, 'exchange_loadingData'), 0)
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
         dispatch(requestPairInfo({}))
@@ -104,6 +106,9 @@ class Market extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.pairs.length !== 0 && this.props.pairs.length === 0) {
+      Toast.hide()
+    }
     if (nextProps.language !== this.props.language &&
       this.props.language === 'zh_hans' &&
       this.props.currPair === 'CNYT') {
@@ -197,23 +202,7 @@ class Market extends Component {
     dispatch(toggleEdit(!isEdit))
   }
 
-  coinsIdDic = {
-    TK: {
-      id: 1,
-    },
-    BTC: {
-      id: 2,
-    },
-    CNYT: {
-      id: 3,
-    },
-    ETH: {
-      id: 5,
-    },
-    ETC: {
-      id: 6,
-    },
-  }
+  coinsIdDic = common.getDefaultPair().coinIdDic
 
   obtainMarketData = () => {
     const { currPair, pairs, language, favoriteList } = this.props

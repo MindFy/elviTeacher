@@ -41,7 +41,7 @@ export function* getGoogleAuth() {
     } else if (response.error.code === 4000180) {
       yield put({ type: constants.GET_GOOGLE_AUTH_FAILED })
     }
-    DeviceEventEmitter.emit(common.noti.googleAuth)
+    DeviceEventEmitter.emit('googleAuth')
   }
 }
 /* 获取验证码 */
@@ -81,7 +81,7 @@ export function* idCardAuth() {
     const response = yield call(api.idCardAuth, request.data)
     if (response.success) {
       yield put({ type: constants.ID_CARD_AUTH_SUCCEED, response })
-      DeviceEventEmitter.emit(common.noti.idCardAuth)
+      DeviceEventEmitter.emit('idCardAuth')
     } else {
       yield put({ type: constants.ID_CARD_AUTH_FAILED, response })
     }

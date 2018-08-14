@@ -58,7 +58,7 @@ export default class HomeSwiper extends Component {
   render() {
     const { banners, announcements, onPress } = this.props
     const renderBannersSwiper = () => {
-      if (!banners.length) return null
+      if (!banners || !banners.length) return null
       const items = banners.map(element => (
         <NextTouchableOpacity
           key={element.id}

@@ -1,0 +1,113 @@
+{
+  "canWithdrawCoins": [
+    "BTC",
+    "ETH",
+    "ETC",
+    "LTC"
+  ],
+  "canRechargeAddress": [
+    "BTC",
+    "ETH",
+    "ETC",
+    "LTC"
+  ],
+  "coinIdDic": {
+    "TK": {
+      "id": 1,
+      "fee": "0",
+      "minAmount": "0"
+    },
+    "BTC": {
+      "id": 2,
+      "fee": "0.001",
+      "minAmount": "0.01"
+    },
+    "CNYT": {
+      "id": 3,
+      "fee": "0",
+      "minAmount": "0"
+    },
+    "CNY": {
+      "id": 4,
+      "fee": "0",
+      "minAmount": "0"
+    },
+    "ETH": {
+      "id": 5,
+      "fee": "0.01",
+      "minAmount": "0.015"
+    },
+    "ETC": {
+      "id": 6,
+      "fee": "0.01",
+      "minAmount": "0.5"
+    },
+    "LTC": {
+      "id": 7,
+      "fee": "0.01",
+      "minAmount": "0.1"
+    }
+  },
+  "accuracy": {
+    "TK_CNYT": {
+      "priceLimit": 4,
+      "quantityLimit": 0,
+      "moneyLimit": 4
+    },
+    "BTC_CNYT": {
+      "priceLimit": 2,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "ETH_CNYT": {
+      "priceLimit": 2,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "ETC_CNYT": {
+      "priceLimit": 2,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "LTC_CNYT": {
+      "priceLimit": 2,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "TK_BTC": {
+      "priceLimit": 8,
+      "quantityLimit": 0,
+      "moneyLimit": 8
+    },
+    "ETH_BTC": {
+      "priceLimit": 6,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "ETC_BTC": {
+      "priceLimit": 6,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "LTC_BTC": {
+      "priceLimit": 6,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "ETH_TK": {
+      "priceLimit": 2,
+      "quantityLimit": 4,
+      "moneyLimit": 6
+    },
+    "ETC_TK": {
+      "priceLimit": 0,
+      "quantityLimit": 4,
+      "moneyLimit": 4
+    },
+    "LTC_TK": {
+      "priceLimit": 0,
+      "quantityLimit": 4,
+      "moneyLimit": 4
+    }
+  }
+}

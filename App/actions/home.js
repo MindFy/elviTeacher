@@ -67,3 +67,9 @@ export function modifyChangeSort(payload) {
     payload,
   }
 }
+
+export function requestPairs() {
+  return {
+    type: 'home/request_pair_request',
+  }
+}

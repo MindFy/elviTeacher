@@ -215,7 +215,6 @@ export default function exchange(state = initialState, action) {
       nextState = {
         ...state,
         valuationRequesting: false,
-        valuation: payload,
       }
       break
     case 'exchange/request_depth_map':
@@ -310,6 +309,9 @@ export default function exchange(state = initialState, action) {
       }
       break
     case 'notify/clear_reducer':
+      nextState = initialState
+      break
+    case 'exchange/reset_exchange':
       nextState = initialState
       break
     default:
