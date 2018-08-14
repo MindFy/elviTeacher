@@ -697,8 +697,8 @@
   "auth_upload_ing": "上傳中……",
   "auth_wait_auth": "認證中，請等待認證結果",
   "otc_visible_chinese": "尚未開放，敬請期待",
-  "auth_uploading": "上传中",
-  "auth_upload_success": "上传成功",
-  "auth_upload_failed": "上传失败",
-  "auth_upload_repeat": "重新上传"
+  "auth_uploading": "上傳中",
+  "auth_upload_success": "上傳成功",
+  "auth_upload_failed": "上傳失敗",
+  "auth_upload_repeat": "重新上傳"
 }
