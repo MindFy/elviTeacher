@@ -150,7 +150,7 @@ class BalanceDetail extends Component {
   configureDataSource = (dataSource) => {
     if (!dataSource) return []
     let newDataSource = [...dataSource]
-    if (getDefaultLanguage() !== 'CNYT') {
+    if (getDefaultLanguage() !== 'zh_hans') {
       newDataSource = newDataSource.filter(e => e.currency.name !== 'CNYT')
     }
     return newDataSource
@@ -255,7 +255,7 @@ class BalanceDetail extends Component {
     const btcValueTitle = `${transfer(language, 'balance_detail_value')} (BTC)`
     const isChinese = getDefaultLanguage() === 'CNYT'
     const rmbValueTitle = `${transfer(language, 'balance_detail_value')} (¥)`
-    const isNotCNYT = currentToken.name !== 'CNYT'
+    const isNotCNYT = getDefaultLanguage() === 'zh_hans' || currentToken.name !== 'CNYT'
     const goToTrade = transfer(language, 'balance_detail_goToTrade')
 
 
@@ -310,11 +310,12 @@ class BalanceDetail extends Component {
           <View style={styles.line} />
           {isNotCNYT && this.renderBalanceInfoCell(goToTrade)}
 
-          {isLoading && isNotCNYT
+          {isNotCNYT &&
+          (isLoading
             ? <ActivityIndicator
               color="white"
             />
-            : this.renderBalanceTrade()}
+            : this.renderBalanceTrade())}
         </ScrollView>
         {this.withdrawOrDepositTokens.includes(currentToken.name)
           && this.renderBottomToolbar(rechargeTitle, withdrawTitle)}
