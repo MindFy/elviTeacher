@@ -66,6 +66,8 @@ function graphqlAPI(endpoint) {
     }))
 }
 
+// Token
+export const getToken = makePostAPI('/1.0/app/tokenmanage/getTokens')
 // User
 export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCode')
 export const checkVerificateSmtpCode = makePostAPI('/1.0/app/user/checkVerificateSmtpCode')

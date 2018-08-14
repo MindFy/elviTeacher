@@ -29,7 +29,16 @@ if (IsIOS) {
   paddingTop = 0
   tabbarHeight = 49
 }
+
+let defaultPair = require('./defaultPair.json')
+
 const common = {
+  setDefaultPair(p) {
+    defaultPair = p
+  },
+  getDefaultPair() {
+    return defaultPair
+  },
   badNet: 'Network request failed',
   navHeight,
   paddingTop,
@@ -51,8 +60,6 @@ const common = {
 
   buy: 'buy',
   sell: 'sell',
-  btcAddress: '52e0f0b18bd737ba65cc1028195342533bd2184b939e26dc51031b0dfeeefacb',
-
   IsIOS,
   Is5Series,
 
@@ -79,13 +86,6 @@ const common = {
       complete: 'complete',
       cancel: 'cancel',
     },
-  },
-
-  ws: {
-    handicap: 'handicap',
-    market: 'market',
-    deals: 'deals',
-    delegates: 'delegates',
   },
 
   token: {
@@ -312,40 +312,10 @@ const common = {
 
   // 币币交易小数精度规则
   precision(goodsName, currencyName, block) {
-    if ((goodsName === common.token.ETH
-      && currencyName === common.token.BTC)
-      || (goodsName === common.token.ETC
-      && currencyName === common.token.BTC)
-      || (goodsName === common.token.LTC
-      && currencyName === common.token.BTC)) {
-      // p:6 q:4 a:6
-      block(6, 4, 6)
-    } else if (goodsName === common.token.TK
-      && currencyName === common.token.CNYT) {
-      // p:4 q:0 a:4
-      block(4, 0, 4)
-    } else if (goodsName === common.token.TK
-      && currencyName === common.token.BTC) {
-      // p:8 q:0 a:8
-      block(8, 0, 8)
-    } else if ((goodsName === common.token.ETC
-      && currencyName === common.token.TK)
-      || (goodsName === common.token.LTC
-        && currencyName === common.token.TK)) {
-      // p:0 q:4 a:4
-      block(0, 4, 4)
-      // } else if (
-      //   ((goodsName === common.token.BTC
-      //     && currencyName === common.token.CNYT))
-      //   || ((goodsName === common.token.ETC
-      //     && currencyName === common.token.CNYT))
-      //   || ((goodsName === common.token.ETC
-      //     && currencyName === common.token.CNYT))
-      //   || ((goodsName === common.token.LTC
-      //     && currencyName === common.token.CNYT))
-      //   || ((goodsName === common.token.ETH
-      //     && currencyName === common.token.TK))
-      // ) {
+    const accuracy = defaultPair.accuracy
+    const resp = accuracy[`${goodsName}_${currencyName}`]
+    if (resp) {
+      block(resp.priceLimit, resp.quantityLimit, resp.moneyLimit)
     } else {
       // p:2 q:4 a:6
       block(2, 4, 6)

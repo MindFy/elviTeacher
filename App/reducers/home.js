@@ -11,6 +11,9 @@ const initialState = {
 
   bannersError: null,
   announcementError: null,
+
+  requestPair: {},
+  requestPairStatus: 0, // 加载币币对 的状态 (0: default, 1: 成功 2: 失败)
 }
 
 export default function home(state = initialState, action) {
@@ -78,6 +81,20 @@ export default function home(state = initialState, action) {
         ...state,
         changeSortType: payload,
         lastPriceSortType: 'idle',
+      }
+      break
+    case 'home/request_pair_success':
+      nextState = {
+        ...state,
+        requestPairStatus: 1,
+        requestPair: payload,
+      }
+      break
+    case 'home/request_pair_failed':
+      nextState = {
+        ...state,
+        requestPairStatus: 2,
+        requestPair: {},
       }
       break
     default:

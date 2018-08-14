@@ -27,7 +27,7 @@ import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
-import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
+import { modifyLastPriceSort, modifyChangeSort, requestPairs } from '../../actions/home'
 
 global.Buffer = require('buffer').Buffer
 
@@ -63,6 +63,7 @@ class Home extends Component {
     setTimeout(() => {
       SplashScreen.hide()
     }, 200)
+    this.configPair()
     cache.setObject('currentComponentVisible', 'Home')
     const { dispatch } = this.props
     this.isNeedAutoLogin(() => { dispatch(actions.sync()) })
@@ -79,8 +80,8 @@ class Home extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { market, dispatch } = this.props
-    const { selectedPair } = props
+    const { market, dispatch, requestPairStatus } = this.props
+    const { selectedPair, requestPair } = props
     if (props.language !== this.props.language) {
       this.refreshData(props.language)
     }
@@ -95,6 +96,13 @@ class Home extends Component {
       }
     }
     this.handleSync(props)
+    if (props.requestPairStatus === 2 && requestPairStatus !== 1) {
+      // 加载失败
+      dispatch(requestPairs())
+    } else if (props.requestPairStatus === 1 && requestPairStatus !== 1) {
+      common.setDefaultPair(requestPair)
+      AsyncStorage.setItem('local_pair', JSON.stringify(requestPair), () => {})
+    }
   }
 
   shouldComponentUpdate(nextProps) {
@@ -133,6 +141,16 @@ class Home extends Component {
     }
   }
 
+  configPair() {
+    const { dispatch } = this.props
+    AsyncStorage.getItem('local_pair', (error, result) => {
+      if (!error && result) {
+        common.setDefaultPair(JSON.parse(result))
+      }
+      dispatch(requestPairs())
+    })
+  }
+
   handleSync = (nextProps) => {
     if (this.props.authorize.syncing && !nextProps.authorize.syncing) {
       const { syncSuccess } = nextProps.authorize
@@ -160,7 +178,7 @@ class Home extends Component {
     cache.removeObject('isLoginIn')
     const { dispatch } = this.props
     dispatch(actions.findUserUpdate(undefined))
-    dispatch(actions.clearAllReducer())
+    // dispatch(actions.clearAllReducer())
     dispatch(actions.findAssetListUpdate({
       asset: [],
       amountVisible: undefined,

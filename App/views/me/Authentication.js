@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
 } from 'react-native'
-import { Toast, Overlay } from 'teaset'
+import { Toast } from 'teaset'
 import idcard from 'idcard'
 import PutObject from 'rn-put-object'
 import { common } from '../../constants/common'
@@ -22,7 +22,6 @@ import schemas from '../../schemas/index'
 import { imgHashApi } from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
-import UploadProgress from '../../components/UploadProgress'
 
 const styles = StyleSheet.create({
   container: {
@@ -125,8 +124,6 @@ class Authentication extends Component {
     super()
     this.showIdCardAuthResponse = false
     this.imgHash = false
-    this.uploadProgress = this.uploadProgress.bind(this)
-    PutObject.addListener('uploadProgress', this.uploadProgress)
   }
 
   componentDidMount() {
@@ -160,7 +157,6 @@ class Authentication extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.handleIdCardAuthRequest(nextProps)
-    this.handleProgressBar(nextProps)
   }
 
   componentWillUnmount() {
@@ -188,12 +184,6 @@ class Authentication extends Component {
         break
       default:
         break
-    }
-  }
-
-  uploadProgress(v) {
-    if (this.k) {
-      this.k.updateIndex(v.index)
     }
   }
 
@@ -225,7 +215,6 @@ class Authentication extends Component {
       Toast.fail(transfer(language, 'me_ID_uploadIDcard_HandPhoto'))
       return
     }
-
     const hash = {}
     hash[idCardImages.first.hash] = true
     hash[idCardImages.second.hash] = true
@@ -235,12 +224,66 @@ class Authentication extends Component {
       Toast.fail(transfer(language, 'me_ID_notUploadSamePhoto'))
       return
     }
-
     dispatch(actions.imgHash())
-    this.imgHash = true
-    PutObject.mulitPutObject({
+    const h1 = idCardImages.first.hash
+    const h2 = idCardImages.second.hash
+    const h3 = idCardImages.third.hash
+    dispatch(actions.idCardAuth({
+      name,
+      idNo,
+      idCardImages: [h1, h2, h3],
+    }))
+    // dispatch(actions.imgHash())
+    // this.imgHash = true
+    // PutObject.mulitPutObject({
+    //   url: imgHashApi,
+    //   path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
+    //   async: true,
+    //   header: [{
+    //     key: 'Content-Type',
+    //     value: 'application/octet-stream',
+    //   }],
+    //   method: 'POST',
+    // }, (r) => {
+    //   this.imgHash = false
+    //   if (r.result && r.res) {
+    //     const h1 = r.res[0] !== '' ? JSON.parse(r.res[0]).hash : ''
+    //     const h2 = r.res[1] !== '' ? JSON.parse(r.res[1]).hash : ''
+    //     const h3 = r.res[2] !== '' ? JSON.parse(r.res[2]).hash : ''
+    //   } else {
+    //     Toast.fail(transfer(language, 'me_ID_uploadPhotoFailed'))
+    //     dispatch(actions.imgHashFailed())
+    //   }
+    // })
+  }
+
+  imagePicker(err, uri, tag) {
+    if (err) {
+      Toast.fail(err)
+      return
+    }
+    const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
+    let target
+    switch (tag) {
+      case 'first':
+        idCardImages.first = { uri }
+        target = this.image1
+        break
+      case 'second':
+        idCardImages.second = { uri }
+        target = this.image2
+        break
+      case 'third':
+        idCardImages.third = { uri }
+        target = this.image3
+        break
+      default:
+        break
+    }
+    target.setStatus(1)
+    PutObject.putObject({
       url: imgHashApi,
-      path: [idCardImages.first.uri, idCardImages.second.uri, idCardImages.third.uri],
+      path: uri,
       async: true,
       header: [{
         key: 'Content-Type',
@@ -248,61 +291,52 @@ class Authentication extends Component {
       }],
       method: 'POST',
     }, (r) => {
-      this.imgHash = false
-      if (r.result && r.res) {
-        const h1 = r.res[0] !== '' ? JSON.parse(r.res[0]).hash : ''
-        const h2 = r.res[1] !== '' ? JSON.parse(r.res[1]).hash : ''
-        const h3 = r.res[2] !== '' ? JSON.parse(r.res[2]).hash : ''
-        if (!h1.length || !h2.length || !h3.length) {
-          Toast.fail(transfer(language, 'me_ID_uploadPhotoFailed'))
-          dispatch(actions.imgHashFailed())
-        } else if ((h1 === h2)
-          || (h1 === h3)
-          || (h2 === h3)) {
-          Toast.fail(transfer(language, 'me_ID_notUploadSamePhoto'))
-          dispatch(actions.imgHashFailed())
-        } else {
-          dispatch(actions.idCardAuth({
-            name,
-            idNo,
-            idCardImages: [h1, h2, h3],
-          }))
-        }
+      let hash
+      if (r.result) {
+        target.setStatus(2)
+        hash = JSON.parse(r.res).hash
       } else {
-        Toast.fail(transfer(language, 'me_ID_uploadPhotoFailed'))
-        dispatch(actions.imgHashFailed())
+        target.setStatus(3)
       }
+      const idCardImages2 = this.props.idCardImages
+      if (tag === 'first') {
+        idCardImages2.first = { uri, hash }
+      } else if (tag === 'second') {
+        idCardImages2.second = { uri, hash }
+      } else {
+        idCardImages2.third = { uri, hash }
+      }
+      this.imageUpdate(
+        dispatch,
+        this.props.name,
+        this.props.idNo,
+        idCardImages2.first,
+        idCardImages2.second,
+        idCardImages2.third,
+        this.props.authenticationAgain,
+      )
     })
+    this.imageUpdate(
+      dispatch,
+      name,
+      idNo,
+      idCardImages.first,
+      idCardImages.second,
+      idCardImages.third,
+      authenticationAgain,
+    )
   }
 
-  imagePicker(err, uri, hash, tag) {
-    if (err) {
-      Toast.fail(err)
-      return
-    }
-    const { dispatch, name, idNo, idCardImages, authenticationAgain } = this.props
-    switch (tag) {
-      case 'first':
-        idCardImages.first = { uri, hash }
-        break
-      case 'second':
-        idCardImages.second = { uri, hash }
-        break
-      case 'third':
-        idCardImages.third = { uri, hash }
-        break
-      default:
-        break
-    }
+  imageUpdate(dispatch, name, idNo, first, second, third, again) {
     dispatch(actions.idCardAuthUpdate({
       name,
       idNo,
       idCardImages: {
-        first: idCardImages.first,
-        second: idCardImages.second,
-        third: idCardImages.third,
+        first,
+        second,
+        third,
       },
-      authenticationAgain,
+      authenticationAgain: again,
     }))
   }
 
@@ -321,27 +355,6 @@ class Authentication extends Component {
       } else {
         Toast.fail(transfer(language, 'me_ID_AuthFailed'))
       }
-    }
-  }
-
-  handleProgressBar(nextProps) {
-    if (nextProps.idCardAuthVisible && !this.props.idCardAuthVisible) {
-      const lay = (<Overlay.View
-        style={styles.overlay}
-        modal
-        overlayOpacity={0}
-      >
-        <UploadProgress
-          ref={(e) => { this.k = e }}
-          language={this.props.language}
-        />
-      </Overlay.View>)
-      this.overLayKey = Overlay.show(lay)
-    } else if (!nextProps.idCardAuthVisible && this.props.idCardAuthVisible) {
-      if (this.overLayKey) {
-        Overlay.hide(this.overLayKey)
-      }
-      this.overLayKey = undefined
     }
   }
 
@@ -375,24 +388,27 @@ class Authentication extends Component {
           />
 
           <SelectImage
+            ref={(e) => { this.image1 = e }}
             title={transfer(language, 'me_ID_uploadIDcard_FrontPhoto')}
             onPress={() => Keyboard.dismiss()}
             language={language}
-            imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'first')}
+            imagePickerBlock={(err, response) => this.imagePicker(err, response, 'first')}
             avatarSource={idCardImages.first ? idCardImages.first.uri : undefined}
           />
           <SelectImage
+            ref={(e) => { this.image2 = e }}
             title={transfer(language, 'me_ID_uploadIDcard_BackPhoto')}
             onPress={() => Keyboard.dismiss()}
             language={language}
-            imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'second')}
+            imagePickerBlock={(err, response) => this.imagePicker(err, response, 'second')}
             avatarSource={idCardImages.second ? idCardImages.second.uri : undefined}
           />
           <SelectImage
+            ref={(e) => { this.image3 = e }}
             title={transfer(language, 'me_ID_uploadIDcard_HandPhoto')}
             onPress={() => Keyboard.dismiss()}
             language={language}
-            imagePickerBlock={(err, response, hash) => this.imagePicker(err, response, hash, 'third')}
+            imagePickerBlock={(err, response) => this.imagePicker(err, response, 'third')}
             avatarSource={idCardImages.third ? idCardImages.third.uri : undefined}
           />
 
@@ -498,41 +514,6 @@ class Authentication extends Component {
       </View>
     )
   }
-  // renderWaitingTip(language) {
-  //   return (
-  //     <View
-  //       style={{
-  //         position: 'absolute',
-  //         width: '100%',
-  //         height: '100%',
-  //         backgroundColor: 'transparent',
-  //       }}
-  //     >
-  //       <View
-  //         style={{
-  //           position: 'absolute',
-  //           alignSelf: 'center',
-  //           justifyContent: 'center',
-  //           top: common.margin30,
-  //           width: '50%',
-  //           paddingVertical: common.getH(8),
-  //           backgroundColor: 'white',
-  //           borderRadius: common.radius6,
-  //         }}
-  //       >
-  //         <Text
-  //           style={{
-  //             color: common.blackColor,
-  //             fontSize: common.font16,
-  //             alignSelf: 'center',
-  //             textAlign: 'center',
-  //             lineHeight: common.margin20,
-  //           }}
-  //         >{transfer(language, 'me_submitAuthSuccess')}</Text>
-  //       </View>
-  //     </View>
-  //   )
-  // }
 
   renderChineseVisible(language) {
     return (

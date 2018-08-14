@@ -696,5 +696,9 @@
   "auth_google_unbind": "谷歌驗證碼未綁定，\n請先前往官網綁定",
   "auth_upload_ing": "上傳中……",
   "auth_wait_auth": "認證中，請等待認證結果",
-  "otc_visible_chinese": "尚未開放，敬請期待"
+  "otc_visible_chinese": "尚未開放，敬請期待",
+  "auth_uploading": "上傳中",
+  "auth_upload_success": "上傳成功",
+  "auth_upload_failed": "上傳失敗",
+  "auth_upload_repeat": "重新上傳"
 }

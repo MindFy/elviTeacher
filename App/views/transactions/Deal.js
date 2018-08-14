@@ -12,6 +12,8 @@ import {
   AsyncStorage,
 } from 'react-native'
 import { Toast, Overlay } from 'teaset'
+import equal from 'deep-equal'
+import Toast2 from 'antd-mobile/lib/toast'
 import { BigNumber } from 'bignumber.js'
 import { common } from '../../constants/common'
 import KLine from './KLineWeb'
@@ -175,12 +177,13 @@ class Deal extends Component {
   }
 
   componentDidMount() {
-    const { selectedPair, loggedIn } = this.props
+    const { selectedPair, loggedIn, language } = this.props
     const { currency, goods } = selectedPair
     if (loggedIn) {
       this.props.dispatch(exchange.checkFavorite({ goods, currency }))
     }
     this.props.dispatch(exchange.updateSegmentIndex(0))
+    Toast2.loading(transfer(language, 'exchange_loadingData'), 2.5)
     this.loadNecessaryData()
     // this.initWebSocket(this.props)
     this.timer = setInterval(() => {
@@ -196,7 +199,10 @@ class Deal extends Component {
     //   this.initWebSocket(nextProps)
     // }
     const { dispatch, createOrderIndex, language } = this.props
-    const { createResponse } = nextProps
+    const { createResponse, valuation } = nextProps
+    if (!equal(valuation, this.props.valuation)) {
+      Toast2.hide()
+    }
     if (this.props.cancelOrderLoading && !nextProps.cancelOrderLoading) {
       Toast.success(transfer(language, 'exchange_withdrawalSuccess'))
     }
@@ -246,7 +252,8 @@ class Deal extends Component {
       clearInterval(this.timer)
       this.timer = undefined
     }
-    ws.destory()
+    // ws.destory()
+    this.props.dispatch(exchange.resetExchangeReducer())
     cache.setObject('currentComponentVisible', 'Home')
   }
 

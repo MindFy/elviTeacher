@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View } from 'react-native'
+import Toast from 'antd-mobile/lib/toast'
 import { common } from '../../constants/common'
 import MarketList from './MarketList'
 import {
@@ -85,20 +86,34 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation } = this.props
+    const { dispatch, navigation, language } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
     if (params.fromDeal && params.currencyName) {
       dispatch(updateCurrentPair({ title: navigation.state.params.currencyName }))
-    } else {
+    } else if (getDefaultLanguage() === 'zh_hans') {
       dispatch(updateCurrentPair({ title: 'CNYT' }))
+    } else {
+      dispatch(updateCurrentPair({ title: 'BTC' }))
     }
+    Toast.loading(transfer(language, 'exchange_loadingData'), 0)
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
         dispatch(requestPairInfo({}))
       }
     }, common.refreshIntervalTime)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.pairs.length !== 0 && this.props.pairs.length === 0) {
+      Toast.hide()
+    }
+    if (nextProps.language !== this.props.language &&
+      this.props.language === 'zh_hans' &&
+      this.props.currPair === 'CNYT') {
+      this.props.dispatch(updateCurrentPair({ title: 'BTC' }))
+    }
   }
 
   componentWillUnmount() {
@@ -187,23 +202,7 @@ class Market extends Component {
     dispatch(toggleEdit(!isEdit))
   }
 
-  coinsIdDic = {
-    TK: {
-      id: 1,
-    },
-    BTC: {
-      id: 2,
-    },
-    CNYT: {
-      id: 3,
-    },
-    ETH: {
-      id: 5,
-    },
-    ETC: {
-      id: 6,
-    },
-  }
+  coinsIdDic = common.getDefaultPair().coinIdDic
 
   obtainMarketData = () => {
     const { currPair, pairs, language, favoriteList } = this.props
@@ -276,9 +275,14 @@ class Market extends Component {
   render() {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
-    const marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
-    const index = marketTitles.indexOf(currPair)
+    let marketTitles
 
+    if (getDefaultLanguage() === 'zh_hans') {
+      marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
+    } else {
+      marketTitles = [transfer(language, 'market_favorites'), 'BTC', 'TK']
+    }
+    const index = marketTitles.indexOf(currPair)
     return (
       <View
         style={{
