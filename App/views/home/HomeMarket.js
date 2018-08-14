@@ -14,6 +14,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import HomeMarkHeader from './components/HomeMarkHeader'
 import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 
 const styles = StyleSheet.create({
   header: {
@@ -157,7 +158,10 @@ export default class HomeMarket extends Component {
   }
 
   configureData = (data) => {
-    const tempData = [...data]
+    let tempData = [...data]
+    if (getDefaultLanguage() !== 'zh_hans') {
+      tempData = tempData.filter(e => e.currency.name !== 'CNYT')
+    }
     const { lastPriceSortType } = this.props
     if (lastPriceSortType !== 'idle') {
       return this.compareWithKey(tempData, lastPriceSortType, 'cprice')

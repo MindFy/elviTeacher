@@ -19,6 +19,7 @@ import * as exchange from '../../actions/exchange'
 import * as withdraw from '../../actions/withdraw'
 import * as recharge from '../../actions/recharge'
 import { requestDailyChange } from '../../actions/balanceDetail'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 
 const styles = StyleSheet.create({
   container: {
@@ -146,6 +147,15 @@ class BalanceDetail extends Component {
     })
   }
 
+  configureDataSource = (dataSource) => {
+    if (!dataSource) return []
+    let newDataSource = [...dataSource]
+    if (getDefaultLanguage() !== 'CNYT') {
+      newDataSource = newDataSource.filter(e => e.currency.name !== 'CNYT')
+    }
+    return newDataSource
+  }
+
   keyExtractor = (item, index) => index
 
   marketIcons = {
@@ -204,7 +214,7 @@ class BalanceDetail extends Component {
 
   renderBalanceTrade = () => (
     <FlatList
-      data={this.props.tradeTokenDatas || []}
+      data={this.configureDataSource(this.props.tradeTokenDatas)}
       renderItem={this.renderBalanceTradeCell}
       keyExtractor={this.keyExtractor}
     />
@@ -243,7 +253,9 @@ class BalanceDetail extends Component {
     const availableTitle = transfer(language, 'balance_detail_available')
     const freezedTitle = transfer(language, 'balance_detail_freezed')
     const btcValueTitle = `${transfer(language, 'balance_detail_value')} (BTC)`
+    const isChinese = getDefaultLanguage() === 'CNYT'
     const rmbValueTitle = `${transfer(language, 'balance_detail_value')} (¥)`
+    const isNotCNYT = currentToken.name !== 'CNYT'
     const goToTrade = transfer(language, 'balance_detail_goToTrade')
 
 
@@ -293,12 +305,12 @@ class BalanceDetail extends Component {
           <View style={styles.line} />
 
           {this.renderBalanceInfoCell(btcValueTitle, btcValue)}
-          {this.renderBalanceInfoCell(rmbValueTitle, rmbValue)}
+          {isChinese && this.renderBalanceInfoCell(rmbValueTitle, rmbValue)}
 
           <View style={styles.line} />
-          {this.renderBalanceInfoCell(goToTrade)}
+          {isNotCNYT && this.renderBalanceInfoCell(goToTrade)}
 
-          {isLoading
+          {isLoading && isNotCNYT
             ? <ActivityIndicator
               color="white"
             />
