@@ -140,17 +140,20 @@ class SecurityCenter extends Component {
             }
           }}
         />
-        <SecurityCenterCell
-          title={transfer(language, 'me_linkMobile')}
-          detail={this.maskMobile(loggedInResult.mobile || '')}
-          onPress={() => {
-            if (!loggedInResult.mobile) {
-              navigation.navigate('EmailCheck')
-            } else {
-              this.showOverlay(transfer(language, 'me_Mobile_binded'))
-            }
-          }}
-        />
+        {
+          language === 'zh_hans' ?
+            (<SecurityCenterCell
+              title={transfer(language, 'me_linkMobile')}
+              detail={this.maskMobile(loggedInResult.mobile || '')}
+              onPress={() => {
+                if (!loggedInResult.mobile) {
+                  navigation.navigate('EmailCheck')
+                } else {
+                  this.showOverlay(transfer(language, 'me_Mobile_binded'))
+                }
+              }}
+            />) : null
+        }
         <SecurityCenterCell
           title={transfer(language, 'me_google_authenticator')}
           detail=""
