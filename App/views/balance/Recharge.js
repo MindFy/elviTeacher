@@ -273,7 +273,7 @@ class Recharge extends Component {
   showForm = () => {
     const { dispatch, user } = this.props
     dispatch(toggleForm())
-    dispatch(requestCoinList(user.id))
+    // dispatch(requestCoinList(user.id))
   }
 
   tapCoinListCell = (ele) => {
@@ -415,7 +415,12 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
   }
 
   render() {
-    const { currCoin, listToggled, coinList, rechargeAddress } = this.props
+    const { currCoin, listToggled, rechargeAddress } = this.props
+    const { canRechargeAddress, coinIdDic } = common.getDefaultPair()
+    const coinList = canRechargeAddress.map(e => ({
+      id: coinIdDic[e].id,
+      name: coinIdDic[e].name,
+    }))
     const coinSelector = this.renderCoinSelector(currCoin, listToggled, this.showForm)
     const coinListView = this.renderCoinList(coinList, listToggled, this.tapCoinListCell)
     const ishasAddress =
@@ -423,7 +428,6 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
       this.canRechargeAddress.includes(currCoin.name) &&
       rechargeAddress[currCoin.id] &&
       !listToggled
-
     const rechargeAddressView =
       ishasAddress &&
       this.renderRechargeAddress(

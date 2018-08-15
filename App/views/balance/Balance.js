@@ -138,86 +138,24 @@ class Balance extends Component {
 
   filterDataSource() {
     const { balanceList = [] } = this.props
-    const initBalance = [{
-      token: {
-        id: 1,
-        name: 'TK',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
-    },
-    {
-      token: {
-        id: 2,
-        name: 'BTC',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
-    },
-    {
-      token: {
-        id: 3,
-        name: 'CNYT',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
-    },
-    {
-      token: {
-        id: 5,
-        name: 'ETH',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
-    },
-    {
-      token: {
-        id: 6,
-        name: 'ETC',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
-    },
-    {
-      token: {
-        id: 7,
-        name: 'LTC',
-      },
-      amount: '0.00000000',
-      availableCash: '0.00000000',
-      freezed: '0.00000000',
-      rmbValue: '0.00',
-      platformFreeze: '0.00000000',
-      btcValue: '0.00000000',
-    }]
-    const indexs = {
-      TK: 0,
-      BTC: 1,
-      CNYT: 2,
-      ETH: 3,
-      ETC: 4,
-      LTC: 5,
-    }
+    const coinIdDic = common.getDefaultPair().coinIdDic
+    const keys = Object.keys(coinIdDic).sort()
+    const indexs = {}
+    const initBalance = keys.map((e, idx) => {
+      indexs[coinIdDic[e].name] = idx
+      return {
+        token: {
+          id: coinIdDic[e].id,
+          name: coinIdDic[e].name,
+        },
+        amount: '0.00000000',
+        availableCash: '0.00000000',
+        freezed: '0.00000000',
+        rmbValue: '0.00',
+        platformFreeze: '0.00000000',
+        btcValue: '0.00000000',
+      }
+    })
     balanceList.forEach((e) => {
       initBalance[indexs[e.token.name]] = e
     })
@@ -257,7 +195,7 @@ class Balance extends Component {
 
   renderRow(rd) {
     const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
-    const source = this.marketIcons[rd.token.name]
+    const source = this.marketIcons[rd.token.name] || this.marketIcons.TK
     return (
       <BalanceCell
         leftImageSource={source}

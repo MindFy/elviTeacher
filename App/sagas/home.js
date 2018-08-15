@@ -99,18 +99,20 @@ function parseConfig(data) {
   const coinIdDic = {}
   const accuracy = {}
   tokens.forEach((e) => {
-    coinIdDic[e.name] = {
-      id: e.id,
-      fee: e.withdrawFree,
-      minAmount: e.withdrawMin,
-      name: e.name,
-      cnName: e.cnName,
-    }
-    if (e.allowWithdraw) {
-      canWithdrawCoins.push(e.name)
-    }
-    if (e.allowRecharge) {
-      canRechargeAddress.push(e.name)
+    if (e.name !== 'CNY') {
+      coinIdDic[e.name] = {
+        id: e.id,
+        fee: e.withdrawFee,
+        minAmount: e.withdrawMin,
+        name: e.name,
+        cnName: e.cnName,
+      }
+      if (e.allowWithdraw) {
+        canWithdrawCoins.push(e.name)
+      }
+      if (e.allowRecharge) {
+        canRechargeAddress.push(e.name)
+      }
     }
   })
 
