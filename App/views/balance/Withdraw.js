@@ -20,7 +20,6 @@ import { common } from '../../constants/common'
 import {
   coinSelected,
   toggleForm,
-  requestCoinList,
   updateForm,
   requestBalance,
   requestWithdraw,
@@ -333,10 +332,8 @@ class WithDraw extends Component {
   }
 
   showForm() {
-    const { dispatch, user } = this.props
-
+    const { dispatch } = this.props
     dispatch(toggleForm())
-    // dispatch(requestCoinList(user.id))
   }
 
   tapCoinListCell = (ele) => {

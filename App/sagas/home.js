@@ -135,7 +135,6 @@ function parseConfig(data) {
 
 function* requestPairsWorker() {
   const response = yield call(api.getToken)
-  console.log('2222:', JSON.stringify(parseConfig(response.result)))
   if (response.success) {
     yield put({
       type: 'home/request_pair_success',
