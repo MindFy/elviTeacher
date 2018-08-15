@@ -248,8 +248,14 @@ export default class HomeMarket extends Component {
     common.precision(rd.goods.name, rd.currency.name, (p) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
     })
-    const iconSource = this.marketIcons[rd.goods.name]
-
+    const iconSource = this.marketIcons[rd.goods.name] || this.marketIcons.TK
+    const coinIdDic = common.getDefaultPair().coinIdDic
+    let subName = null
+    if (language === 'zh_hans') {
+      if (coinIdDic[rd.goods.name]) {
+        subName = `（${coinIdDic[rd.goods.name].cnName}）`
+      }
+    }
     return (
       <NextTouchableOpacity
         style={styles.row}
@@ -266,7 +272,12 @@ export default class HomeMarket extends Component {
         <View style={styles.rowMiddleView}>
           <View style={styles.rowCoinView}>
             <Text style={styles.goods}>{rd.goods.name}</Text>
-            <Text style={styles.goodsMark}>{`（${transfer(language, `home_${rd.goods.name}Name`)}）`}</Text>
+            {
+              subName ?
+                <Text style={styles.goodsMark}>{subName}</Text>
+                :
+                null
+            }
             <Text style={styles.currency}>{`/${rd.currency.name}`}</Text>
           </View>
 

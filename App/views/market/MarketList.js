@@ -47,11 +47,17 @@ export default class MarketList extends Component {
       quantity = new BigNumber(rd.quantity).toFixed(q, 1)
     })
     const isFavorited = rd.isFavorited || false
-
+    const coinIdDic = common.getDefaultPair().coinIdDic
+    let subName = null
+    if (language === 'zh_hans') {
+      if (coinIdDic[rd.goods.name]) {
+        subName = `（${coinIdDic[rd.goods.name].cnName}）`
+      }
+    }
     return ({
       goods: rd.goods,
       currency: rd.currency,
-      subName: `（${transfer(language, `home_${rd.goods.name}Name`)}）`,
+      subName,
       volume: quantity,
       lastPrice: cprice,
       lastPriceTextStyle: { color: typeColor },

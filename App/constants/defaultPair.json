@@ -3,49 +3,64 @@
     "BTC",
     "ETH",
     "ETC",
-    "LTC"
+    "LTC",
+    "WCN"
   ],
   "canRechargeAddress": [
     "BTC",
     "ETH",
     "ETC",
-    "LTC"
+    "LTC",
+    "WCN"
   ],
   "coinIdDic": {
     "TK": {
       "id": 1,
-      "fee": "0",
-      "minAmount": "0"
+      "minAmount": "0",
+      "name": "TK",
+      "cnName": "TK币"
     },
     "BTC": {
       "id": 2,
-      "fee": "0.001",
-      "minAmount": "0.01"
+      "minAmount": "0.01",
+      "name": "BTC",
+      "cnName": "比特币"
     },
     "CNYT": {
       "id": 3,
-      "fee": "0",
-      "minAmount": "0"
+      "minAmount": "0",
+      "name": "CNYT",
+      "cnName": "CNYT"
     },
     "CNY": {
       "id": 4,
-      "fee": "0",
-      "minAmount": "0"
+      "minAmount": "0",
+      "name": "CNY",
+      "cnName": "CNY"
     },
     "ETH": {
       "id": 5,
-      "fee": "0.01",
-      "minAmount": "0.015"
+      "minAmount": "0.015",
+      "name": "ETH",
+      "cnName": "以太坊"
     },
     "ETC": {
       "id": 6,
-      "fee": "0.01",
-      "minAmount": "0.5"
+      "minAmount": "0.5",
+      "name": "ETC",
+      "cnName": "以太经典"
     },
     "LTC": {
       "id": 7,
-      "fee": "0.01",
-      "minAmount": "0.1"
+      "minAmount": "0.1",
+      "name": "LTC",
+      "cnName": "莱特币"
+    },
+    "WCN": {
+      "id": 8,
+      "minAmount": "500",
+      "name": "WCN",
+      "cnName": "不知道"
     }
   },
   "accuracy": {
