@@ -103,6 +103,8 @@ function parseConfig(data) {
       id: e.id,
       fee: e.withdrawFree,
       minAmount: e.withdrawMin,
+      name: e.name,
+      cnName: e.cnName,
     }
     if (e.allowWithdraw) {
       canWithdrawCoins.push(e.name)
@@ -133,6 +135,7 @@ function parseConfig(data) {
 
 function* requestPairsWorker() {
   const response = yield call(api.getToken)
+  console.log('2222:', JSON.stringify(parseConfig(response.result)))
   if (response.success) {
     yield put({
       type: 'home/request_pair_success',
