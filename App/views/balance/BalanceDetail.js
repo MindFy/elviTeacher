@@ -177,7 +177,7 @@ class BalanceDetail extends Component {
   )
 
   renderBalanceTradeCell = ({ item }) => {
-    const icon = this.marketIcons[item.goods.name]
+    const icon = this.marketIcons[item.goods.name] || this.marketIcons.TK
 
     let cPirce = 0
     common.precision(item.goods.name, item.currency.name, (p) => {
