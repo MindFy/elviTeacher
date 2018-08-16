@@ -139,7 +139,7 @@
   "exchange_availble": "可用",
   "exchange_total": "成交金额",
   "exchange_loadingData": "加载中..",
-  "exchange_noOrder": "暂无委托单",
+  "exchange_noOrders": "暂无委托单",
   "exchange_cancelOrder": "撤单",
   "exchange_complete": "已完成",
   "exchange_canceled": "已取消",
