@@ -15,7 +15,6 @@ import {
   ActionSheet,
 } from 'teaset'
 import { BigNumber } from 'bignumber.js'
-import WAValidator from 'wallet-address-validator'
 import { common } from '../../constants/common'
 import {
   coinSelected,
@@ -39,6 +38,7 @@ import findAddress from '../../schemas/address'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import TKWAValidator from '../../utils/TKWAValidator'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -379,8 +379,8 @@ class WithDraw extends Component {
 
   checkWithdrawAddressIsIneligible = (address, coin) => {
     const isIneligible =
-      !WAValidator.validate(address, coin) &&
-      !WAValidator.validate(address, coin, 'testnet')
+      !TKWAValidator.validate(address, coin) &&
+      !TKWAValidator.validate(address, coin, 'testnet')
 
     return isIneligible
   }

@@ -12,7 +12,6 @@ import {
   Toast,
   Overlay,
 } from 'teaset'
-import WAValidator from 'wallet-address-validator'
 import { common } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import {
@@ -31,6 +30,7 @@ import findAddress from '../../schemas/address'
 import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import TKWAValidator from '../../utils/TKWAValidator'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -220,8 +220,8 @@ class AddAddress extends Component {
 
   checkWithdrawAddressIsIneligible = (address, coin) => {
     const isIneligible =
-    !WAValidator.validate(address, coin) &&
-    !WAValidator.validate(address, coin, 'testnet')
+    !TKWAValidator.validate(address, coin) &&
+    !TKWAValidator.validate(address, coin, 'testnet')
 
     return isIneligible
   }

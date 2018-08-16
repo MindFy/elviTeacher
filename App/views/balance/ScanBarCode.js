@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import WAValidator from 'wallet-address-validator'
 import { Image } from 'react-native'
 import { common } from '../../constants/common'
 import QRScannerView from './scan/QRScannerView'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import TKWAValidator from '../../utils/TKWAValidator'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {
@@ -60,8 +60,8 @@ class ScanBarCode extends Component {
     const { navigation, language } = this.props
     const { coin, didScan } = navigation.state.params
     const data = barCode.data
-    const disMatch = !WAValidator.validate(data, coin) &&
-    !WAValidator.validate(data, coin, 'testnet')
+    const disMatch = !TKWAValidator.validate(data, coin) &&
+    !TKWAValidator.validate(data, coin, 'testnet')
     if (disMatch) {
       const params1 = transfer(language, 'withdrawal_address_correct_required_1')
       const params2 = transfer(language, 'withdrawal_address_correct_required_2')
