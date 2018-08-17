@@ -28,6 +28,7 @@ import transfer from '../../localization/utils'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
 import { modifyLastPriceSort, modifyChangeSort, requestPairs } from '../../actions/home'
+import { getDefaultLanguage } from '../../utils/languageHelper'
 
 global.Buffer = require('buffer').Buffer
 
@@ -57,6 +58,9 @@ class Home extends Component {
           this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
         }
       })
+    setTimeout(() => {
+      this.checkUpdate(getDefaultLanguage())
+    }, 1000)
   }
 
   componentDidMount() {
@@ -101,7 +105,7 @@ class Home extends Component {
       dispatch(requestPairs())
     } else if (props.requestPairStatus === 1 && requestPairStatus !== 1) {
       common.setDefaultPair(requestPair)
-      AsyncStorage.setItem('local_pair', JSON.stringify(requestPair), () => {})
+      AsyncStorage.setItem('local_pair', JSON.stringify(requestPair), () => { })
     }
   }
 
