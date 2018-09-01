@@ -14,9 +14,10 @@ export function checksmptVerificateCode(data) {
   }
 }
 
-export function getGoogleAuth() {
+export function getGoogleAuth(schema) {
   return {
     type: constants.GET_GOOGLE_AUTH_REQUEST,
+    schema,
   }
 }
 

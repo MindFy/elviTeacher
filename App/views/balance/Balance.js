@@ -183,6 +183,7 @@ class Balance extends Component {
     ETC: require('../../assets/market_ETC.png'),
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
+    MDT: require('../../assets/market_MDT.png'),
   }
 
   jumpToBalanceDetail = (rd) => {
@@ -195,7 +196,7 @@ class Balance extends Component {
 
   renderRow(rd) {
     const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
-    const source = this.marketIcons[rd.token.name] || this.marketIcons.TK
+    const source = this.marketIcons[rd.token.name] || this.marketIcons.ETH
     return (
       <BalanceCell
         leftImageSource={source}

@@ -11,11 +11,12 @@ import {
 import {
   Overlay,
 } from 'teaset'
-import { common } from '../../constants/common'
+import { common, storeRead } from '../../constants/common'
 import SecurityCenterCell from './SecurityCenterCell'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import schemas from '../../schemas/index'
 
 class SecurityCenter extends Component {
   static navigationOptions(props) {
@@ -157,7 +158,17 @@ class SecurityCenter extends Component {
         <SecurityCenterCell
           title={transfer(language, 'me_google_authenticator')}
           detail=""
-          onPress={() => dispatch(actions.getGoogleAuth())}
+          onPress={() => {
+            storeRead(common.user.string, (result) => {
+              if (result) {
+                const user = JSON.parse(result)
+                const { dispatch } = this.props
+                dispatch(actions.findUserUpdate(user))
+                dispatch(actions.findUser(schemas.findUser(user.id)))
+                dispatch(actions.getGoogleAuth(schemas.findUser(user.id)))}
+              })
+            }
+          }
         />
       </ScrollView>
     )

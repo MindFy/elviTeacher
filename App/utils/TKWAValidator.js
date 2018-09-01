@@ -4,7 +4,7 @@ const orginCoins = ['BTC', 'ETC', 'ETH', 'LTC']
 
 function validate(address, currencyNameOrSymbol, networkType) {
   let validateCurrency = currencyNameOrSymbol
-  if (orginCoins.some(e => e !== validateCurrency)) {
+  if (orginCoins.every(e => e !== validateCurrency)) {
     validateCurrency = 'ETH'
   }
 

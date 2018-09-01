@@ -34,11 +34,11 @@ export function* checksmptVerificateCode() {
 /* 获取谷歌验证信息 */
 export function* getGoogleAuth() {
   while (true) {
-    yield take(constants.GET_GOOGLE_AUTH_REQUEST)
-    const response = yield call(api.getGoogleAuth)
-    if (response.success) {
-      yield put({ type: constants.GET_GOOGLE_AUTH_SUCCEED, response })
-    } else if (response.error.code === 4000180) {
+    const request = yield take(constants.FIND_USER_REQUEST)
+    const response = yield call(api.graphql, request.schema)
+    if (response.result.data.user.googleSecret) {
+      yield put({ type: constants.GET_GOOGLE_AUTH_SUCCEED })
+    } else {
       yield put({ type: constants.GET_GOOGLE_AUTH_FAILED })
     }
     DeviceEventEmitter.emit('googleAuth')

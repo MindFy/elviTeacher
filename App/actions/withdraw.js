@@ -148,3 +148,9 @@ export function requestGetCode(payload) {
     payload,
   }
 }
+
+export function requestPairs(payload) {
+  return {
+    type: 'withdraw/request_pair_request',
+  }
+}
