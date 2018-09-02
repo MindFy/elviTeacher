@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   StyleSheet,
   Keyboard,
+  AsyncStorage,
 } from 'react-native'
 import {
   Toast,
@@ -30,6 +31,7 @@ import {
   check2GoogleAuthSetError,
   check2GoogleAuth,
   requestGetCode,
+  requestPairs,
 } from '../../actions/withdraw'
 import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import TKButton from '../../components/TKButton'
@@ -203,12 +205,13 @@ class WithDraw extends Component {
     navigation.setParams({
       title: transfer(language, 'balances_withdraw'),
     })
+    dispatch(requestPairs())
     dispatch(requestValuation())
     dispatch(requestWithdrawAddress(findAddress(user.id)))
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading, language } = this.props
+    const { dispatch, withdrawLoading, language, requestPairStatus } = this.props
     this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
@@ -223,7 +226,15 @@ class WithDraw extends Component {
       }
       dispatch(requestWithdrawClearError())
     }
-
+    if (nextProps.requestPairStatus === 2 && requestPairStatus !== 1) {
+      // 加载失败
+      dispatch(requestPairs())
+    } else if (nextProps.requestPairStatus === 1 && requestPairStatus !== 1) {
+      common.setDefaultPair(nextProps.requestPair)
+      AsyncStorage.setItem('local_pair', JSON.stringify(nextProps.requestPair), () => { })
+      this.canWithdrawCoins = common.getDefaultPair().canWithdrawCoins
+      this.coinsIdDic = common.getDefaultPair().coinIdDic
+    }
     if (!nextProps.googleCodeCheckLoading && this.props.googleCodeCheckLoading) {
       const { currCoin, formState } = this.props
       const tokenId = this.coinsIdDic[currCoin].id

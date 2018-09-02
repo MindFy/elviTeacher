@@ -116,6 +116,7 @@ export default class HomeMarket extends Component {
     ETC: require('../../assets/market_ETC.png'),
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
+    MDT: require('../../assets/market_MDT.png'),
   }
 
   marketHeaderIcons = {
@@ -248,7 +249,7 @@ export default class HomeMarket extends Component {
     common.precision(rd.goods.name, rd.currency.name, (p) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
     })
-    const iconSource = this.marketIcons[rd.goods.name] || this.marketIcons.TK
+    const iconSource = this.marketIcons[rd.goods.name] || this.marketIcons.ETH
     const coinIdDic = common.getDefaultPair().coinIdDic
     let subName = null
     if (language === 'zh_hans') {

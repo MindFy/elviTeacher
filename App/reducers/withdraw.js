@@ -25,6 +25,9 @@ const initialState = {
   getCodeLoading: false,
   getCodeResult: null,
   getCodeError: null,
+
+  requestPair: {},
+  requestPairStatus: 0,
 }
 
 export default function withdraw(state = initialState, action) {
@@ -204,6 +207,20 @@ export default function withdraw(state = initialState, action) {
       break
     case 'notify/clear_reducer':
       nextState = initialState
+      break
+    case 'withdraw/request_pair_success':
+      nextState = {
+        ...state,
+        requestPairStatus: 1,
+        requestPair: payload,
+      }
+      break
+    case 'withdraw/request_pair_failed':
+      nextState = {
+        ...state,
+        requestPairStatus: 2,
+        requestPair: {},
+      }
       break
     default:
       nextState = state

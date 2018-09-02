@@ -60,8 +60,12 @@ class ScanBarCode extends Component {
     const { navigation, language } = this.props
     const { coin, didScan } = navigation.state.params
     const data = barCode.data
-    const disMatch = !TKWAValidator.validate(data, coin) &&
-    !TKWAValidator.validate(data, coin, 'testnet')
+    var address = data
+    let pos = address.indexOf(':')
+    if(pos >= 0 && pos != (address.length - 1)){
+      address = address.substring(pos + 1)
+    }
+    const disMatch = (!TKWAValidator.validate(address, coin) && !TKWAValidator.validate(address, coin, 'testnet'))
     if (disMatch) {
       const params1 = transfer(language, 'withdrawal_address_correct_required_1')
       const params2 = transfer(language, 'withdrawal_address_correct_required_2')
@@ -79,7 +83,7 @@ class ScanBarCode extends Component {
       )
       return
     } else if (didScan) {
-      didScan(data)
+      didScan(address)
     }
     navigation.goBack()
   }

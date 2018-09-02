@@ -165,6 +165,7 @@ class BalanceDetail extends Component {
     ETC: require('../../assets/market_ETC.png'),
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
+    MDT: require('../../assets/market_MDT.png'),
   }
 
   withdrawOrDepositTokens = common.getDefaultPair().canWithdrawCoins
@@ -177,7 +178,7 @@ class BalanceDetail extends Component {
   )
 
   renderBalanceTradeCell = ({ item }) => {
-    const icon = this.marketIcons[item.goods.name] || this.marketIcons.TK
+    const icon = this.marketIcons[item.goods.name] || this.marketIcons.ETH
 
     let cPirce = 0
     common.precision(item.goods.name, item.currency.name, (p) => {
