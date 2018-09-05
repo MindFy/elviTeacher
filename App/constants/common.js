@@ -49,6 +49,7 @@ const common = {
 
   noti: {
     home: 'home',
+    requestPairs: 'requestPairs',
     updateEmail: 'updateEmail',
     idCardAuth: 'idCardAuth',
     delegateAllCancel: 'delegateAllCancel',

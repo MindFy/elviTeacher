@@ -554,6 +554,7 @@ class WithDraw extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
+          dispatch={this.props.dispatch}
           titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
           mobile={user.mobile}
           onChangeText={this.onChangeAuthCode}

@@ -5,13 +5,16 @@ import {
   TextInput,
   StyleSheet,
   Keyboard,
+  DeviceEventEmitter,
 } from 'react-native'
-import { common } from '../../../constants/common'
+import { common, storeRead } from '../../../constants/common'
 import TKCheckCodeBtn from '../../../components/TKCheckCodeBtn'
 import WithdrawAuthSelecionBar from './WithdrawAuthSelecionBar'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import transfer from '../../../localization/utils'
 import * as api from '../../../services/api'
+import schemas from '../../../schemas/index'
+import actions from '../../../actions/index'
 
 const styles = StyleSheet.create({
   unbinkMobileContainer: {
@@ -134,38 +137,38 @@ const styles = StyleSheet.create({
 export default class TKViewCheckAuthorize extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      googleAuth: undefined,
-    }
+    this.setState({
+      googleAuth: false
+    })
   }
 
-  getGoogleAuth() {
-    fetch(`${api.API_ROOT}/1.0/app/user/getGoogleAuth`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: '{}',
-      credentials: 'same-origin',
-    })
-      .then(e => e.json())
-      .then((e) => {
-        if (e && e.secret) {
+  componentDidMount() {
+    this.listener = DeviceEventEmitter.addListener(common.noti.googleAuth, () => {
+      storeRead(common.noti.googleAuth, (result) => {
+        if (result) {
           this.setState({
-            googleAuth: false,
+            googleAuth: result
           })
-        } else {
+        }
+        else{
           this.setState({
-            googleAuth: true,
+            googleAuth: false
           })
         }
       })
-      .catch(() => {
-        this.setState({
-          googleAuth: false,
-        })
+    })
+    storeRead(common.user.string, (result) => {
+      if (result) {
+        const user = JSON.parse(result)
+        const { dispatch } = this.props
+        dispatch(actions.findUserUpdate(user))
+        dispatch(actions.findUser(schemas.findUser(user.id)))
+        dispatch(actions.getGoogleAuth(schemas.findUser(user.id)))}
       })
+  }
+
+  componentWillUnmount() {
+    this.listener.remove()
   }
 
   renderTitles = () => {
@@ -178,11 +181,14 @@ export default class TKViewCheckAuthorize extends Component {
             segmentValueChanged(e)
           }
           if (e.index === 1) {
-            this.getGoogleAuth()
-          } else {
-            this.setState({
-              googleAuth: undefined,
-            })
+            storeRead(common.user.string, (result) => {
+              if (result) {
+                const user = JSON.parse(result)
+                const { dispatch } = this.props
+                dispatch(actions.findUserUpdate(user))
+                dispatch(actions.findUser(schemas.findUser(user.id)))
+                dispatch(actions.getGoogleAuth(schemas.findUser(user.id)))}
+              })
           }
         }}
         renderItem={this.renderContent}
@@ -244,7 +250,7 @@ export default class TKViewCheckAuthorize extends Component {
     const { onChangeText, titles, language } = this.props
     const { googleAuth } = this.state
     const index = titles.indexOf(transfer(language, 'AuthCode_GV_code'))
-    if (!googleAuth) {
+    if (!googleAuth || googleAuth === 'false') {
       return (
         <View>
           <View style={styles.unbinkMobileContainer}>

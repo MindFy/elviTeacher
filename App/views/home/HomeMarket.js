@@ -117,6 +117,7 @@ export default class HomeMarket extends Component {
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
     MDT: require('../../assets/market_MDT.png'),
+    FO: require('../../assets/market_FO.png'),
   }
 
   marketHeaderIcons = {
@@ -302,8 +303,18 @@ export default class HomeMarket extends Component {
   }
 
   render() {
-    const { data } = this.props
-    const listDS = this.configureData(data)
+    const { data, requestPair } = this.props
+    let dataTemp = []
+    if(requestPair !== undefined && requestPair.accuracy !== undefined){
+      data.map(ele => {
+        let pairName = ele.goods.name + '_' + ele.currency.name
+        if(requestPair['accuracy'][pairName] !== undefined && requestPair['accuracy'][pairName].istransaction === true){
+          dataTemp.push(ele)
+        }
+      })
+    }
+
+    const listDS = this.configureData(dataTemp)
     return (
       <ListView
         dataSource={this.dataSource(listDS)}
