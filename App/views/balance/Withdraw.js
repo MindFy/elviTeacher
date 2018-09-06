@@ -662,14 +662,28 @@ class WithDraw extends Component {
   }
 
   renderCoinList() {
-    const { listToggled } = this.props
+    const { listToggled, language } = this.props
     const coinList = common.getDefaultPair().canWithdrawCoins
-    return !listToggled ? null : coinList.map(ele => (
+    let coinListEx = []
+    if(coinList && common.getDefaultPair()['coinIdDic']['FO']){
+      coinListEx = [transfer(language, 'FO_temp_hint')]
+    }
+    coinListEx = coinList.concat(coinListEx)
+    return !listToggled ? null : coinListEx.map(ele => (
       <NextTouchableOpacity
-        style={styles.coinView}
+        style={{
+          marginTop: common.margin5,
+          height: ele === transfer(language, 'FO_temp_hint') ? common.h60 : common.h40,
+          backgroundColor: common.navBgColor,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
         key={ele}
         activeOpacity={common.activeOpacity}
         onPress={() => {
+          if(ele === transfer(language, 'FO_temp_hint')){
+            return
+          }
           this.tapCoinListCell(ele)
         }}
         delay={100}

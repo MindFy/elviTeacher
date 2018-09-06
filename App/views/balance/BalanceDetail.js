@@ -8,9 +8,10 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
+  DeviceEventEmitter,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
-import { common } from '../../constants/common'
+import { common, storeRead } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import BalanceDetailTradeCell from './components/BalanceDetailTradeCell'
 import transfer from '../../localization/utils'
@@ -110,8 +111,27 @@ class BalanceDetail extends Component {
     ),
   })
 
+  constructor(props) {
+    super(props)
+    this.pairData = {}
+    this.state={ showPairs: false }
+  }
+
   componentDidMount = () => {
     this.requsetDailyChange()
+    storeRead(common.noti.requestPairs, (result) => {
+      if (result) {
+        this.pairData = JSON.parse(result)
+      }
+    })
+    this.listener = DeviceEventEmitter.addListener(common.noti.requestPairs, () => {
+      storeRead(common.noti.requestPairs, (result) => {
+        if (result) {
+          this.pairData = JSON.parse(result)
+          this.setState({ showPairs: !this.showPairs })
+        }
+      })
+    })
   }
 
   requsetDailyChange = () => {
@@ -214,13 +234,23 @@ class BalanceDetail extends Component {
     )
   }
 
-  renderBalanceTrade = () => (
+  renderBalanceTrade = () => {
+    let dataTemp = []
+    if( this.pairData !== undefined &&  this.pairData.accuracy !== undefined){
+      this.props.tradeTokenDatas.map(ele => {
+        let pairName = ele.goods.name + '_' + ele.currency.name
+        if( this.pairData['accuracy'][pairName] !== undefined &&  this.pairData['accuracy'][pairName].istransaction === true){
+          dataTemp.push(ele)
+        }
+      })
+    }
+    return (
     <FlatList
-      data={this.configureDataSource(this.props.tradeTokenDatas)}
+      data={this.configureDataSource(dataTemp)}
       renderItem={this.renderBalanceTradeCell}
       keyExtractor={this.keyExtractor}
     />
-  )
+  )}
 
 
   renderBottomToolbar = (leftTitle, rightTitle) => (
