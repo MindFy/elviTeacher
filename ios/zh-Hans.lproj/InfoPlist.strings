@@ -1,0 +1,11 @@
+/*
+ InfoPlist.strings
+ tok
+ 
+ Created by named on 2018/6/27.
+ Copyright © 2018 Facebook. All rights reserved.
+ */
+CFBundleDisplayName = "币图";
+NSCameraUsageDescription = "tok想要访问您的相机";
+NSPhotoLibraryUsageDescription = "tok想要访问您的相册";
+NSPhotoLibraryAddUsageDescription = "tok想要保存图片到您的相册";

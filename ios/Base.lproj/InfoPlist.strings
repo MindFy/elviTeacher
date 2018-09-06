@@ -1,0 +1,12 @@
+/*
+ InfoPlist.strings
+ tok
+ 
+ Created by named on 2018/6/27.
+ Copyright © 2018 Facebook. All rights reserved.
+ */
+
+CFBundleDisplayName = "TOK";
+NSCameraUsageDescription = "tok wants to access your camera";
+NSPhotoLibraryUsageDescription = "tok wants to access your album";
+NSPhotoLibraryAddUsageDescription = "tok wants to save the picture to your album";
