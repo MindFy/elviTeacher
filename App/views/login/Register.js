@@ -368,6 +368,21 @@ class Register extends Component {
     }
   }
 
+  isPureNumberString(event)
+  {
+    const { text } = event.nativeEvent
+    const newText = text.trim()
+    var bNotNum = false
+    var reg = '0123456789';
+    for(var i = 0; i < newText.length; i++){
+      if(0 > reg.indexOf(newText.charAt(i)))
+      {
+        return false
+      }
+    }
+    return true
+  }
+
   renderAccount = () => {
     const { mobile, language } = this.props
     return (
@@ -414,7 +429,12 @@ class Register extends Component {
         }}
         value={mobile}
         maxLength={11}
-        onChange={e => this.onChange(e, 'mobile')}
+        onChange={e => {
+          if(this.isPureNumberString(e)){
+            this.onChange(e, 'mobile')
+            }
+          }
+        }
         onFocus={() => {
           if (common.IsIOS) {
             this.setState({
@@ -442,7 +462,7 @@ class Register extends Component {
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            {transfer(language, 'login_idError')}
+            {transfer(language, 'login_inputPhone')}
           </Text> : null}
       </View>
     )

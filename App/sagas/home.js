@@ -6,6 +6,13 @@ import {
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 import getHomeMarket from '../utils'
+import {
+  common,
+  storeSave,
+} from '../constants/common'
+import {
+  DeviceEventEmitter,
+} from 'react-native'
 
 export function* requestBannersWorker(action) {
   const response = yield call(api.graphql, action.payload)
@@ -62,7 +69,6 @@ export function* requestAnnouncementsWorker(action) {
 
 function* requestMarketWorker() {
   const response = yield call(api.getRose)
-
   if (response.success) {
     const market = response.result
     const homeMarket = getHomeMarket(market)
@@ -123,6 +129,7 @@ function parseConfig(data) {
         priceLimit: Number(elem.priceLimit),
         quantityLimit: Number(elem.quantityLimit),
         moneyLimit: Number(elem.moneyLimit),
+        istransaction: elem.istransaction
       }
     })
   })
@@ -142,12 +149,15 @@ function* requestPairsWorker() {
       type: 'home/request_pair_success',
       payload: parseConfig(response.result),
     })
+    storeSave(common.noti.requestPairs, parseConfig(response.result), (e) => {})
+    DeviceEventEmitter.emit(common.noti.requestPairs)
   } else {
     yield put({
       type: 'home/request_pair_failed',
       payload: undefined,
     })
   }
+
 }
 
 

@@ -488,7 +488,6 @@ class Authentication extends Component {
     const { user, authenticationAgain } = this.props
     if (!user || !user.idCardAuthStatus) return null
     if (authenticationAgain) return this.renderScrollView()
-
     switch (user.idCardAuthStatus) {
       case common.user.status.never: case common.user.status.waiting:
         return this.renderScrollView()

@@ -34,14 +34,17 @@ export function* checksmptVerificateCode() {
 /* 获取谷歌验证信息 */
 export function* getGoogleAuth() {
   while (true) {
-    const request = yield take(constants.FIND_USER_REQUEST)
+    const request = yield take(constants.GET_GOOGLE_AUTH_REQUEST)
     const response = yield call(api.graphql, request.schema)
     if (response.result.data.user.googleSecret) {
+      const user = response.result.data.user
+      storeSave(common.noti.googleAuth, user.googleSecret, (e) => {})
       yield put({ type: constants.GET_GOOGLE_AUTH_SUCCEED })
     } else {
+      storeSave(common.noti.googleAuth, false, (e) => {})
       yield put({ type: constants.GET_GOOGLE_AUTH_FAILED })
     }
-    DeviceEventEmitter.emit('googleAuth')
+    DeviceEventEmitter.emit(common.noti.googleAuth)
   }
 }
 /* 获取验证码 */

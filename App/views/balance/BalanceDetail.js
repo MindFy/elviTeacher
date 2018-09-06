@@ -166,6 +166,7 @@ class BalanceDetail extends Component {
     LTC: require('../../assets/market_LTC.png'),
     EIEC: require('../../assets/market_EIEC.png'),
     MDT: require('../../assets/market_MDT.png'),
+    FO: require('../../assets/market_FO.png'),
   }
 
   withdrawOrDepositTokens = common.getDefaultPair().canWithdrawCoins

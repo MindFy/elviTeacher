@@ -13,7 +13,6 @@ const getFavoriteList = state => state.market.favoriteList
 export function* requestPairInfoWorker(action) {
   const { payload } = action
   const response = yield call(api.getRose, payload)
-
   if (response.success) {
     const result = response.result
     yield put({

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View } from 'react-native'
+import { View, DeviceEventEmitter } from 'react-native'
 import Toast from 'antd-mobile/lib/toast'
-import { common } from '../../constants/common'
+import { common, storeRead } from '../../constants/common'
 import MarketList from './MarketList'
 import {
   requestPairInfo,
@@ -67,6 +67,7 @@ class Market extends Component {
 
   constructor(props) {
     super(props)
+    this.pairData = {}
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Market')
       this.resetSortState()
@@ -86,7 +87,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language } = this.props
+    const { dispatch, navigation, language, marketData } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -103,6 +104,18 @@ class Market extends Component {
         dispatch(requestPairInfo({}))
       }
     }, common.refreshIntervalTime)
+    storeRead(common.noti.requestPairs, (result) => {
+      if (result) {
+        this.pairData = JSON.parse(result)
+      }
+    })
+    this.listener = DeviceEventEmitter.addListener(common.noti.requestPairs, () => {
+      storeRead(common.noti.requestPairs, (result) => {
+        if (result) {
+          this.pairData = JSON.parse(result)
+        }
+      })
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -275,6 +288,16 @@ class Market extends Component {
   render() {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
+    let dataTemp = []
+    if( this.pairData !== undefined &&  this.pairData.accuracy !== undefined){
+      marketData.map(ele => {
+        let pairName = ele.goods.name + '_' + ele.currency.name
+        if( this.pairData['accuracy'][pairName] !== undefined &&  this.pairData['accuracy'][pairName].istransaction === true){
+          dataTemp.push(ele)
+        }
+      })
+    }
+
     let marketTitles
 
     if (getDefaultLanguage() === 'zh_hans') {
@@ -298,7 +321,7 @@ class Market extends Component {
         <MarketList
           {...this.props}
           language={language}
-          data={marketData}
+          data={dataTemp}
           isEdit={isEdit}
           onClickMarketItem={this.onClickMarketItem}
           onPressMarked={this.handlePressMarked}

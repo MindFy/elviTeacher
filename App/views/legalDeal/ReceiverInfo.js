@@ -117,7 +117,6 @@ class ReceiverInfo extends Component {
           <TKSpinner isVisible={receiverInfoLoading} />
         </View>)
     }
-
     const amount =
       new BigNumber(receiverInfoData.dealPrice)
         .multipliedBy(receiverInfoData.quantity)
@@ -134,7 +133,6 @@ class ReceiverInfo extends Component {
     const remarkTip = transfer(language, 'payment_remark')
     const remark =
       `${receiverInfoData.traderPayinfo.remark}（${transfer(language, 'payment_please_fill_in')}）`
-
     const pleaseNoteTitle = transfer(language, 'payment_s_please_note')
     const pleaseNote = transfer(language, 'payment_s_please_note_content')
     return (
