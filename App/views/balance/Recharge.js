@@ -329,11 +329,15 @@ class Recharge extends Component {
 
   renderCoinList = (coinList, listToggled, tapCoinListCell) => {
     if (!listToggled) return null
+    const { language } = this.props
     const coinListView = coinList.map(ele => (
       <NextTouchableOpacity
         key={ele.id}
         activeOpacity={common.activeOpacity}
         onPress={() => {
+          if(ele.name === transfer(language, 'FO_temp_hint')){
+            return
+          }
           if (tapCoinListCell) {
             tapCoinListCell(ele)
           }
@@ -342,7 +346,7 @@ class Recharge extends Component {
         <View
           style={{
             marginTop: common.margin5,
-            height: common.h40,
+            height: ele.name === transfer(language, 'FO_temp_hint') ? common.h60 : common.h40,
             backgroundColor: common.navBgColor,
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -415,14 +419,19 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
   }
 
   render() {
-    const { currCoin, listToggled, rechargeAddress } = this.props
+    const { currCoin, listToggled, rechargeAddress, language } = this.props
     const { canRechargeAddress, coinIdDic } = common.getDefaultPair()
     const coinList = canRechargeAddress.map(e => ({
       id: coinIdDic[e].id,
       name: coinIdDic[e].name,
     }))
+    let coinListEx = []
+    if(coinList && coinIdDic && coinIdDic['FO']){
+      coinListEx = [{id: coinIdDic['FO'].id, name: transfer(language, 'FO_temp_hint')}]
+    }
+    coinListEx = coinList.concat(coinListEx)
     const coinSelector = this.renderCoinSelector(currCoin, listToggled, this.showForm)
-    const coinListView = this.renderCoinList(coinList, listToggled, this.tapCoinListCell)
+    const coinListView = this.renderCoinList(coinListEx, listToggled, this.tapCoinListCell)
     const ishasAddress =
       rechargeAddress &&
       this.canRechargeAddress.includes(currCoin.name) &&

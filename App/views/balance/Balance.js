@@ -235,10 +235,15 @@ class Balance extends Component {
           new BigNumber(element.amount)
             .plus(new BigNumber(element.freezed))
             .plus(new BigNumber(element.platformFreeze))
-        const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
-        const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
-        amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
-        amountRMB = amount.multipliedBy(scaleCNYT).plus(amountRMB)
+      if(valuation.rates[element.token.name] !== undefined && 
+        valuation.rates[element.token.name][common.token.BTC] !== undefined &&
+        valuation.rates[element.token.name][common.token.CNYT] !== undefined)
+        {
+          const scaleBTC = valuation.rates[element.token.name][common.token.BTC]
+          const scaleCNYT = valuation.rates[element.token.name][common.token.CNYT]
+          amountBTC = amount.multipliedBy(scaleBTC).plus(amountBTC)
+          amountRMB = amount.multipliedBy(scaleCNYT).plus(amountRMB)
+        }
       }
     }
     amountBTC = amountBTC.toFixed(8, 1)

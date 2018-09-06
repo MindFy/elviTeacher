@@ -700,5 +700,6 @@
   "auth_uploading": "Uploading",
   "auth_upload_success": "Uploaded",
   "auth_upload_failed": "Failed to upload",
-  "auth_upload_repeat": "Reupload"
+  "auth_upload_repeat": "Reupload",
+  "FO_temp_hint": "FO deposit and withdrawal can only be operated manually for the time being. Please contact our customer service: service@tok.com"
 }
