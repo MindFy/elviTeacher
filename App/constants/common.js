@@ -49,7 +49,6 @@ const common = {
 
   noti: {
     home: 'home',
-    requestPairs: 'requestPairs',
     updateEmail: 'updateEmail',
     idCardAuth: 'idCardAuth',
     delegateAllCancel: 'delegateAllCancel',
@@ -153,6 +152,7 @@ const common = {
   askColor: 'rgba(205,0,0,1)',
   greenColor: 'rgb(36,199,139)',
   blackColor: 'rgb(24,27,42)',
+  blackColor2: 'rgb(24,27,43)',
 
   navBgColor: 'rgb(38,43,65)', // 导航栏背景色
   borderColor: 'rgb(53,61,92)',

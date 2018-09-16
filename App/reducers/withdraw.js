@@ -11,6 +11,7 @@ const initialState = {
     withdrawAddress: '',
     verificationCode: '',
     googleCode: '',
+    emailCode: '',
   },
   authCodeType: '短信验证码',
   valuation: null,
@@ -22,9 +23,15 @@ const initialState = {
   address: [],
   googleCodeCheckLoading: false,
   googleCodeCheckError: null,
+  checkSMSCodeLoading: false,
+  checkSMSCodeResponse: null,
+  checkSmtpCodeLoading: false,
+  checkSmtpCodeResponse: null,
   getCodeLoading: false,
   getCodeResult: null,
   getCodeError: null,
+  getVerificateSmtpCodeLoading: false,
+  getVerificateSmtpCodeResponse: null,
 
   requestPair: {},
   requestPairStatus: 0,
@@ -179,6 +186,32 @@ export default function withdraw(state = initialState, action) {
       nextState = {
         ...state,
         googleCodeCheckError: payload,
+      }
+      break
+    case 'withdraw/check2_sms_auth':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: true,
+      }
+      break
+    case 'withdraw/check2_sms_auth_set_response':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: false,
+        checkSMSCodeResponse: payload,
+      }
+      break
+    case 'withdraw/check2_smtp_auth':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: true,
+      }
+      break
+    case 'withdraw/check2_smtp_auth_set_response':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: false,
+        checkSmtpCodeResponse: payload,
       }
       break
     case 'withdraw/request_get_code':

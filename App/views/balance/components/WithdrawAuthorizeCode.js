@@ -74,6 +74,13 @@ const styles = StyleSheet.create({
     fontSize: common.font14,
     width: '50%',
   },
+  textInput2: {
+    padding: 0,
+    marginLeft: common.getH(5),
+    color: common.blackColor2,
+    fontSize: common.font14,
+    width: '50%',
+  },
   codeContainer: {
     marginRight: common.getH(5),
     alignSelf: 'center',
@@ -132,14 +139,25 @@ const styles = StyleSheet.create({
     fontSize: common.font12,
     alignSelf: 'center',
   },
+  unbinkEmailContainer: {
+    height: 80,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  email: {
+    color: common.blackColor,
+    fontSize: common.font14,
+    width: '62%',
+  },
 })
 
 export default class TKViewCheckAuthorize extends Component {
   constructor(props) {
     super(props)
-    this.setState({
+        this.state={
       googleAuth: false
-    })
+    }
   }
 
   componentDidMount() {
@@ -188,7 +206,7 @@ export default class TKViewCheckAuthorize extends Component {
                 dispatch(actions.findUserUpdate(user))
                 dispatch(actions.findUser(schemas.findUser(user.id)))
                 dispatch(actions.getGoogleAuth(schemas.findUser(user.id)))}
-              })
+            })
           }
         }}
         renderItem={this.renderContent}
@@ -221,7 +239,7 @@ export default class TKViewCheckAuthorize extends Component {
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_sms_tip')}</Text>
           <View style={styles.inputInnerContainer}>
             <TextInput
-              style={styles.textInput}
+              style={styles.textInput2}
               maxLength={6}
               onChangeText={text => onChangeText({
                 title: '',
@@ -283,6 +301,56 @@ export default class TKViewCheckAuthorize extends Component {
     )
   }
 
+  renderEmailCode = () => {
+    const { email, emailStatus, titles, emsCodePress, onChangeText, language } = this.props
+    const index = titles.indexOf(transfer(language, 'AuthCode_EMS_code'))
+    if (!email || emailStatus === 'unbind') {
+      return (
+        <View>
+          <View style={styles.unbinkEmailContainer}>
+            <Text
+              style={styles.tip}
+            >{transfer(language, 'auth_email_unbind')}</Text>
+          </View>
+          {this.renderBtns('auth_go_ok')}
+        </View>
+      )
+    }
+    return (
+      <View>
+        <View style={styles.mobileContainer}>
+          <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_email_tip')}</Text>
+          <Text style={styles.email}>{email}</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_email_code')}</Text>
+          <View style={styles.inputInnerContainer}>
+            <TextInput
+              style={styles.textInput}
+              maxLength={6}
+              onChangeText={text => onChangeText({
+                title: '',
+                index,
+              }, text)}
+              underlineColorAndroid="transparent"
+            />
+            <TKCheckCodeBtn
+              style={styles.codeContainer}
+              titleStyle={styles.fetchCodeTitle}
+              language={language}
+              onPress={() => {
+                if (emsCodePress) {
+                  emsCodePress()
+                }
+              }}
+            />
+          </View>
+        </View>
+        {this.renderBtns('AuthCode_confirm')}
+      </View>
+    )
+  }
+
   renderBtns = (comfirmTitle) => {
     const { confirmPress, cancelPress, language } = this.props
     return (
@@ -328,8 +396,10 @@ export default class TKViewCheckAuthorize extends Component {
   renderContent = (segmentIndex) => {
     if (segmentIndex === 0) {
       return this.renderSMSCode()
+    } else if(segmentIndex === 1){
+      return this.renderGoogleCode()
     }
-    return this.renderGoogleCode()
+    return this.renderEmailCode()
   }
 
   render() {

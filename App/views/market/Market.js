@@ -98,24 +98,14 @@ class Market extends Component {
     } else {
       dispatch(updateCurrentPair({ title: 'BTC' }))
     }
-    Toast.loading(transfer(language, 'exchange_loadingData'), 0)
+    if(this.props.pairs && this.props.pairs.length === 0){
+      Toast.loading(transfer(language, 'exchange_loadingData'), 0)
+    }
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
         dispatch(requestPairInfo({}))
       }
     }, common.refreshIntervalTime)
-    storeRead(common.noti.requestPairs, (result) => {
-      if (result) {
-        this.pairData = JSON.parse(result)
-      }
-    })
-    this.listener = DeviceEventEmitter.addListener(common.noti.requestPairs, () => {
-      storeRead(common.noti.requestPairs, (result) => {
-        if (result) {
-          this.pairData = JSON.parse(result)
-        }
-      })
-    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -289,10 +279,10 @@ class Market extends Component {
     const { currPair, language, isEdit } = this.props
     const marketData = this.obtainMarketData()
     let dataTemp = []
-    if( this.pairData !== undefined &&  this.pairData.accuracy !== undefined){
+    if( this.props.pairData !== undefined &&  this.props.pairData.accuracy !== undefined){
       marketData.map(ele => {
         let pairName = ele.goods.name + '_' + ele.currency.name
-        if( this.pairData['accuracy'][pairName] !== undefined &&  this.pairData['accuracy'][pairName].istransaction === true){
+        if( this.props.pairData['accuracy'][pairName] !== undefined &&  this.props.pairData['accuracy'][pairName].istransaction === true){
           dataTemp.push(ele)
         }
       })
@@ -344,6 +334,7 @@ function mapStateToProps(state) {
     dailyChangeSortType: state.market.dailyChangeSortType,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
+    pairData: state.home.requestPair
   }
 }
 

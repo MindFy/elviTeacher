@@ -5,6 +5,7 @@ const initialState = {
     code: '',
     allegeText: '',
     googleCode: '',
+    emailCode: '',
   },
   getCodeLoading: false,
   getCodeResult: null,
@@ -26,6 +27,13 @@ const initialState = {
 
   googleCodeLoading: false,
   googleCodeResponse: null,
+  getVerificateSmtpCodeLoading: false,
+  getVerificateSmtpCodeResponse: null,
+
+  checkSMSCodeLoading: false,
+  checkSMSCodeResponse: null,
+  checkSmtpCodeLoading: false,
+  checkSmtpCodeResponse: null,
 }
 
 export default function otcDetail(state = initialState, action) {
@@ -210,6 +218,32 @@ export default function otcDetail(state = initialState, action) {
         ...state,
         googleCodeLoading: false,
         googleCodeResponse: payload,
+      }
+      break
+    case 'otcDetail/check2_sms_auth':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: true,
+      }
+      break
+    case 'otcDetail/check2_sms_auth_set_response':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: false,
+        checkSMSCodeResponse: payload,
+      }
+      break
+    case 'otcDetail/check2_smtp_auth':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: true,
+      }
+      break
+    case 'otcDetail/check2_smtp_auth_set_response':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: false,
+        checkSmtpCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

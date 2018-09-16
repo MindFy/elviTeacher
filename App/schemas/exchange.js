@@ -11,7 +11,7 @@ export default function findOpenOrders({ id, goodId, currencyId }) {
                   in: ["waiting",  "dealing"]
               }
           },
-          order: "-createdAt"
+          order: "-id"
       ){
           id
           direct

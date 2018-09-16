@@ -9,7 +9,7 @@ export function findDelegateSelfCurrent(id, skip, limit) {
                 in: ["waiting","dealing"]
             }
         },
-        order: "-createdAt"
+        order: "-id"
     ){
         id
         direct
@@ -44,7 +44,7 @@ export function findDelegateSelfCurrentWithGoodsId(id, goodsId, currencyId) {
                 in: ["waiting","dealing"]
             }
         },
-        order: "-createdAt"
+        order: "-id"
     ){
         id
         direct
@@ -77,7 +77,7 @@ export function findDelegateSelfHistory(id, skip, limit) {
                 in: ["complete", "cancel", "canceling"]
             }
         },
-        order: "-createdAt"
+        order: "-id"
     ){
         id
         direct
