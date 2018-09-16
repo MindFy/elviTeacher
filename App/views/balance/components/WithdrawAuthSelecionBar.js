@@ -17,12 +17,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   titlesMiddleLine: {
-    position: 'absolute',
     width: common.getH(1),
     top: common.getH(4),
     bottom: common.getH(4),
     backgroundColor: common.lineColor,
-    alignSelf: 'center',
   },
   titleView: {
     marginTop: common.getH(10),
@@ -63,8 +61,8 @@ class BalanceAuthSelectionBar extends Component {
         <Text
           style={{
             color: selected ? common.btnTextColor : common.blackColor,
-            marginRight: index === 0 ? common.getH(28) : 0,
-            marginLeft: index === 1 ? common.getH(28) : 0,
+             marginRight: index === 2 ? 0 : common.getH(14),
+             marginLeft: index === 0 ? 0 : common.getH(14),
             fontSize: common.font12,
             alignSelf: 'center',
           }}
@@ -78,9 +76,9 @@ class BalanceAuthSelectionBar extends Component {
     return (
       <View style={styles.container}>
         {titles.map((title, index) => (
-          this.item(index, title, this.state.selectedIdx === index)
+          index === (titles.length - 1) ? this.item(index, title, this.state.selectedIdx === index) : 
+            [this.item(index, title, this.state.selectedIdx === index), <View style={styles.titlesMiddleLine} key={index}/>]
         ))}
-        <View style={styles.titlesMiddleLine} />
       </View>
     )
   }

@@ -8,7 +8,6 @@ import {
   Image,
   FlatList,
   ActivityIndicator,
-  DeviceEventEmitter,
 } from 'react-native'
 import { BigNumber } from 'bignumber.js'
 import { common, storeRead } from '../../constants/common'
@@ -113,25 +112,12 @@ class BalanceDetail extends Component {
 
   constructor(props) {
     super(props)
-    this.pairData = {}
+    this.pairData = undefined
     this.state={ showPairs: false }
   }
 
   componentDidMount = () => {
     this.requsetDailyChange()
-    storeRead(common.noti.requestPairs, (result) => {
-      if (result) {
-        this.pairData = JSON.parse(result)
-      }
-    })
-    this.listener = DeviceEventEmitter.addListener(common.noti.requestPairs, () => {
-      storeRead(common.noti.requestPairs, (result) => {
-        if (result) {
-          this.pairData = JSON.parse(result)
-          this.setState({ showPairs: !this.showPairs })
-        }
-      })
-    })
   }
 
   requsetDailyChange = () => {
@@ -236,10 +222,10 @@ class BalanceDetail extends Component {
 
   renderBalanceTrade = () => {
     let dataTemp = []
-    if( this.pairData !== undefined &&  this.pairData.accuracy !== undefined){
+    if( this.props.pairData !== undefined &&  this.props.pairData.accuracy !== undefined){
       this.props.tradeTokenDatas.map(ele => {
         let pairName = ele.goods.name + '_' + ele.currency.name
-        if( this.pairData['accuracy'][pairName] !== undefined &&  this.pairData['accuracy'][pairName].istransaction === true){
+        if( this.props.pairData['accuracy'][pairName] !== undefined &&  this.props.pairData['accuracy'][pairName].istransaction === true){
           dataTemp.push(ele)
         }
       })
@@ -392,6 +378,9 @@ const mapStateToProps = (state) => {
     currentTokenBalance,
     currentTokenRates,
     language: state.system.language,
+    pairData: state.home.requestPair,
+    getVerificateSmtpCodeLoading: state.user.getVerificateSmtpCodeVisible,
+    getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
   }
 }
 

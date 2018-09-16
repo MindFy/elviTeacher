@@ -91,6 +91,15 @@ export default function* rootSaga() {
     fork(withdraw.requsetCheck2GoogleAuth),
     fork(withdraw.requestGetCode),
 
+    fork(addressAdd.requsetCheck2SMSAuth),
+    fork(updateBank.requsetCheck2SMSAuth),
+    fork(otcDetail.requsetCheck2SMSAuth),
+    fork(withdraw.requsetCheck2SMSAuth),
+    fork(addressAdd.requsetCheck2SmtpAuth),
+    fork(updateBank.requsetCheck2SmtpAuth),
+    fork(otcDetail.requsetCheck2SmtpAuth),
+    fork(withdraw.requsetCheck2SmtpAuth),
+
     fork(orderHistoryRequest),
     fork(openOrderRequest),
     fork(requestCancelOrder),

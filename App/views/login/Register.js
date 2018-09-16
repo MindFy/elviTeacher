@@ -296,7 +296,7 @@ class Register extends Component {
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.fail(transfer(language, 'login_inputCorrectId'))
+      Toast.fail(transfer(language, 'login_inputPhone'))
       return
     }
     dispatch(actions.register({
@@ -322,7 +322,7 @@ class Register extends Component {
       } else if (getVerificateCodeResponse.error.code === 4000102) {
         Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
       } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneRegisted'))
+        Toast.fail(transfer(language, 'login_getCodeFailed'))
       } else if (getVerificateCodeResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
       } else {

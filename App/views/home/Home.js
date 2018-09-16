@@ -327,7 +327,7 @@ class Home extends Component {
   )
 
   render() {
-    const { announcements, banners, market, navigation, language, requestPair } = this.props
+    const { announcements, banners, market, navigation, language } = this.props
     return (
       <View style={styles.container}>
         <StatusBar barStyle={'light-content'} />
@@ -347,7 +347,7 @@ class Home extends Component {
           <HomeMarket
             {...this.props}
             data={market}
-            requestPair={requestPair}
+            requestPair={this.props.requestPair}
             language={language}
             onPress={rd => this.marketPress(rd)}
           />

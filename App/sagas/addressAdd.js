@@ -37,6 +37,38 @@ export function* requsetCheck2GoogleAuthWorker(action) {
   }
 }
 
+export function* requsetCheck2SMSAuthWorker(action) {
+  const { payload } = action
+  const response = yield call(api.checkVerificateCode, payload)
+  if (response.success) {
+    yield put({
+      type: 'addressAdd/check2_sms_auth_set_response',
+      payload: response,
+    })
+  } else {
+    yield put({
+      type: 'addressAdd/check2_sms_auth_set_response',
+      payload: response,
+    })
+  }
+}
+
+export function* requsetCheck2SmtpAuthWorker(action) {
+  const { payload } = action
+  const response = yield call(api.checkVerificateSmtpCode, payload)
+  if (response.success) {
+    yield put({
+      type: 'addressAdd/check2_smtp_auth_set_response',
+      payload: response,
+    })
+  } else {
+    yield put({
+      type: 'addressAdd/check2_smtp_auth_set_response',
+      payload: response,
+    })
+  }
+}
+
 export function* requestGetCodeWorker(action) {
   const { payload } = action
   const response = yield call(api.getVerificateCode, payload)
@@ -44,12 +76,12 @@ export function* requestGetCodeWorker(action) {
   if (response.success) {
     yield put({
       type: 'addressAdd/request_get_code_succeed',
-      payload: response.result,
+      payload: response,
     })
   } else {
     yield put({
       type: 'addressAdd/request_get_code_failed',
-      payload: response.error,
+      payload: response,
     })
   }
 }
@@ -60,6 +92,14 @@ export function* requestAddressAdd() {
 
 export function* requsetCheck2GoogleAuthWatcher() {
   yield takeLatest('addressAdd/check2_google_auth', requsetCheck2GoogleAuthWorker)
+}
+
+export function* requsetCheck2SMSAuth() {
+  yield takeEvery('addressAdd/check2_sms_auth', requsetCheck2SMSAuthWorker)
+}
+
+export function* requsetCheck2SmtpAuth() {
+  yield takeEvery('addressAdd/check2_smtp_auth', requsetCheck2SmtpAuthWorker)
 }
 
 export function* requestGetCode() {

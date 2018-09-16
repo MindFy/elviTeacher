@@ -701,5 +701,11 @@
   "auth_upload_success": "上传成功",
   "auth_upload_failed": "上传失败",
   "auth_upload_repeat": "重新上传",
+  "AuthCode_EMS_code": "邮箱验证码",
+  "AuthCode_email_code": "邮箱验证码",
+  "AuthCode_email_tip": "邮箱",
+  "auth_email_unbind": "邮箱未绑定",
+  "me_inputEmailCode": "请输入邮箱验证码",
+  
   "FO_temp_hint": "由于安全原因，FO暂时仅支持人工充提服务，请联系客服service@tok.com进行充提币"
 }

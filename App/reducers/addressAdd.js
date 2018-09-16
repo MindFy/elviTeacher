@@ -6,6 +6,7 @@ const initialState = {
     remark: '',
     authCode: '',
     googleCode: '',
+    emailCode: '',
   },
   authCodeType: '短信验证码',
   googleCodeLoading: false,
@@ -13,6 +14,13 @@ const initialState = {
   getCodeLoading: false,
   getCodeResult: null,
   getCodeError: null,
+  getVerificateSmtpCodeLoading: false,
+  getVerificateSmtpCodeResponse: null,
+  
+  checkSMSCodeLoading: false,
+  checkSMSCodeResponse: null,
+  checkSmtpCodeLoading: false,
+  checkSmtpCodeResponse: null,
 }
 
 export default function addressAdd(state = initialState, action) {
@@ -67,6 +75,32 @@ export default function addressAdd(state = initialState, action) {
         ...state,
         googleCodeLoading: false,
         googleCodeResponse: payload,
+      }
+      break
+    case 'addressAdd/check2_sms_auth':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: true,
+      }
+      break
+    case 'addressAdd/check2_sms_auth_set_response':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: false,
+        checkSMSCodeResponse: payload,
+      }
+      break
+    case 'addressAdd/check2_smtp_auth':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: true,
+      }
+      break
+    case 'addressAdd/check2_smtp_auth_set_response':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: false,
+        checkSmtpCodeResponse: payload,
       }
       break
     case 'addressAdd/request_get_code':

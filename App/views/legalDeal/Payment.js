@@ -4,6 +4,7 @@ import {
   View,
   Image,
   ScrollView,
+  Clipboard,
 } from 'react-native'
 import BigNumber from 'bignumber.js'
 import {
@@ -11,6 +12,9 @@ import {
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import {
+  Toast,
+} from 'teaset'
 
 export default class Payment extends Component {
   static navigationOptions(props) {
@@ -159,7 +163,17 @@ export default class Payment extends Component {
             }}
           >{titleBankNo}</Text>
           <Text
+            onLongPress={() => {
+              Clipboard.setString(bankNo.toString())
+              Toast.success(transfer(lang, 'recharge_copyed'), 2000)
+            }}
+            value={bankNo}
             style={{
+              paddingLeft: common.margin5,
+              paddingRight: common.margin5,
+              textAlign: 'center',
+              borderColor: common.textColor,
+              borderBottomWidth: 1,
               marginRight: common.margin10,
               color: common.textColor,
               fontSize: common.font12,

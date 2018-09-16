@@ -701,5 +701,11 @@
   "auth_upload_success": "Uploaded",
   "auth_upload_failed": "Failed to upload",
   "auth_upload_repeat": "Reupload",
+  "AuthCode_EMS_code": "email code",
+  "AuthCode_email_code": "email code",
+  "AuthCode_email_tip": "email",
+  "auth_email_unbind": "email unlinked",
+  "me_inputEmailCode": "Please enter verification code",
+  
   "FO_temp_hint": "FO deposit and withdrawal can only be operated manually for the time being. Please contact our customer service: service@tok.com"
 }

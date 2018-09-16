@@ -701,5 +701,11 @@
   "auth_upload_success": "上傳成功",
   "auth_upload_failed": "上傳失敗",
   "auth_upload_repeat": "重新上傳",
+  "AuthCode_EMS_code": "信箱驗證碼",
+  "AuthCode_email_code": "信箱驗證碼",
+  "AuthCode_email_tip": "信箱",
+  "auth_email_unbind": "信箱未綁定",
+  "me_inputEmailCode": "請輸入信箱驗證碼",
+  
   "FO_temp_hint": "FO目前僅提供人工儲值/提領服務，請聯繫客服service@tok.com"
 }
