@@ -231,19 +231,16 @@ class UpdateBank extends Component {
   authCodeChanged = (e, code) => {
     const { dispatch, formState, authCodeType } = this.props
     if (authCodeType === '短信验证码') {
-      console.log('test_app:', JSON.stringify(authCodeType) + code)
       dispatch(updateForm({
         ...formState,
         code: code,
       }))
     } else if(authCodeType === '谷歌验证码'){
-      console.log('test_app:', JSON.stringify(authCodeType) + code)
       dispatch(updateForm({
         ...formState,
         googleCode: code,
       }))
     } else{
-      console.log('test_app:', JSON.stringify(authCodeType) + code)
       dispatch(updateForm({
         ...formState,
         emailCode: code,
@@ -256,7 +253,6 @@ class UpdateBank extends Component {
     const title = this.codeTitles[e.index]
     dispatch(updateAuthCodeType(title))
     if (e.index === 0) {
-      console.log('test_app：segmentValueChanged:', JSON.stringify(e))
       dispatch(updateForm({
         ...formState,
         code: '',
@@ -264,7 +260,6 @@ class UpdateBank extends Component {
         emailCode: '', 
       }))
     } else if (e.index === 1) {
-      console.log('test_app：segmentValueChanged:', JSON.stringify(e))
       dispatch(updateForm({
         ...formState,
         code: '',
@@ -272,7 +267,6 @@ class UpdateBank extends Component {
         emailCode: '', 
       }))
     } else{
-      console.log('test_app：segmentValueChanged:', JSON.stringify(e))
       dispatch(updateForm({
         ...formState,
         code: '',
