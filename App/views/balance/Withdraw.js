@@ -30,9 +30,12 @@ import {
   updateAuthCodeType,
   check2GoogleAuthSetError,
   check2GoogleAuth,
+  check2SMSAuth,
+  check2SmtpAuth,
   requestGetCode,
   requestPairs,
 } from '../../actions/withdraw'
+import actions from '../../actions/index'
 import WithdrawAuthorizeCode from './components/WithdrawAuthorizeCode'
 import TKButton from '../../components/TKButton'
 import TKInputItem from '../../components/TKInputItem'
@@ -188,7 +191,7 @@ class WithDraw extends Component {
       4000104: 'me_phoneRegisted',
     }
 
-    this.codeTitles = ['短信验证码', '谷歌验证码']
+    this.codeTitles = ['短信验证码', '谷歌验证码', '邮箱验证码']
     this.canWithdrawCoins = common.getDefaultPair().canWithdrawCoins
   }
 
@@ -257,11 +260,99 @@ class WithDraw extends Component {
       }
       dispatch(check2GoogleAuthSetError(null))
     }
+    this.handleGetVerificateSMPTCodeRequest(nextProps)
+    this.handleCheckVerificateSmptCodeRequest(nextProps)
+    this.handleCheckVerificateCodeRequest(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
     dispatch(withdrawClear())
+  }
+
+  /* 获取邮箱验证码请求结果处理 */
+  handleGetVerificateSMPTCodeRequest(nextProps) {
+    const { getVerificateSmtpCodeLoading, getVerificateSmtpCodeResponse, language } = nextProps
+    if (!this.props.getVerificateSmtpCodeLoading || getVerificateSmtpCodeLoading){
+      return
+    } 
+    if (getVerificateSmtpCodeResponse.success) {
+      Toast.success(transfer(language, 'get_code_succeed'))
+    } else if (getVerificateSmtpCodeResponse.error.code === 4000101) {
+      Toast.fail(transfer(language, 'login_numberOrTypeError'))
+    } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
+      Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
+    } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
+      Toast.fail(transfer(language, 'login_codeOverDue'))
+    } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
+      Toast.fail(transfer(language, 'login_networdError'))
+    } else {
+      Toast.fail(transfer(language, 'login_getCodeFailed'))
+    }
+  }
+
+  /* 检测邮箱验证码请求结果处理 */
+  handleCheckVerificateSmptCodeRequest(nextProps) {
+    const { user, checkSmtpCodeLoading, checkSmtpCodeResponse, dispatch, formState, language, currCoin } = nextProps
+    if (!this.props.checkSmtpCodeLoading || checkSmtpCodeLoading ){
+      return
+    } 
+    if (checkSmtpCodeResponse.success) {
+      Overlay.hide(this.overlayViewKeyID)
+      const tokenId = this.coinsIdDic[currCoin].id
+      let code = new BigNumber(formState.emailCode)
+      code = code.isNaN() ? 0 : code.toNumber()
+      dispatch(requestWithdraw({
+        token_id: tokenId,
+        amount: formState.withdrawAmount,
+        toaddr: formState.withdrawAddress,
+        code: formState.emailCode,
+        email: user.email,
+      }))
+      return
+    } else if (checkSmtpCodeResponse.error.code === 4000101) {
+      Toast.fail(transfer(language, 'login_numberOrTypeError2'))
+    } else if (checkSmtpCodeResponse.error.code === 4000102) {
+      Toast.fail(transfer(language, 'login_codeError'))
+    } else if (checkSmtpCodeResponse.error.code === 4000103) {
+      Toast.fail(transfer(language, 'login_codeOverDue'))
+    } else if (checkSmtpCodeResponse.error.message === common.badNet) {
+      Toast.fail(transfer(language, 'login_networdError'))
+    } else {
+      Toast.fail(transfer(language, 'login_verificateFailed'))
+    }
+  }
+
+  /* 检测短信验证码请求结果处理 */
+  handleCheckVerificateCodeRequest(nextProps) {
+    const { user, checkSMSCodeLoading, checkSMSCodeResponse, dispatch, formState, language, currCoin } = nextProps
+    if (!this.props.checkSMSCodeLoading || checkSMSCodeLoading ){
+      return
+    } 
+    if (checkSMSCodeResponse.success) {
+      Overlay.hide(this.overlayViewKeyID)
+      const tokenId = this.coinsIdDic[currCoin].id
+      let code = new BigNumber(formState.code)
+      code = code.isNaN() ? 0 : code.toNumber()
+      dispatch(requestWithdraw({
+        token_id: tokenId,
+        amount: formState.withdrawAmount,
+        toaddr: formState.withdrawAddress,
+        code: formState.verificationCode,
+        email: user.email,
+      }))
+      return
+    } else if (checkSMSCodeResponse.error.code === 4000101) {
+      Toast.fail(transfer(language, 'login_numberOrTypeError'))
+    } else if (checkSMSCodeResponse.error.code === 4000102) {
+      Toast.fail(transfer(language, 'login_codeError'))
+    } else if (checkSMSCodeResponse.error.code === 4000103) {
+      Toast.fail(transfer(language, 'login_codeOverDue'))
+    } else if (checkSMSCodeResponse.error.message === common.badNet) {
+      Toast.fail(transfer(language, 'login_networdError'))
+    } else {
+      Toast.fail(transfer(language, 'login_verificateFailed'))
+    }                         
   }
 
   onChangeAuthCode = (e, code) => {
@@ -271,10 +362,15 @@ class WithDraw extends Component {
         ...formState,
         verificationCode: code,
       }))
-    } else {
+    } else if(authCodeType === '谷歌验证码'){
       dispatch(updateForm({
         ...formState,
         googleCode: code,
+      }))
+    } else{
+      dispatch(updateForm({
+        ...formState,
+        emailCode: code,
       }))
     }
   }
@@ -360,6 +456,7 @@ class WithDraw extends Component {
       withdrawAddress: '',
       verificationCode: '',
       googleCode: '',
+      emailCode: '',
     }))
     dispatch(coinSelected(ele))
     dispatch(requestBalance({
@@ -472,7 +569,7 @@ class WithDraw extends Component {
       this.props.navigation.navigate('EmailCheck')
       return
     }
-    const { dispatch, currCoin, formState, authCodeType, language } = this.props
+    const { dispatch, currCoin, formState, authCodeType, language, user } = this.props
 
     if (authCodeType === '谷歌验证码') {
       const { googleCode } = formState
@@ -485,19 +582,26 @@ class WithDraw extends Component {
       }))
       return
     }
-    const tokenId = this.coinsIdDic[currCoin].id
-    if (!formState.verificationCode.length) {
+    const code = authCodeType === '邮箱验证码' ? formState.emailCode : formState.verificationCode
+    if(!code.length){
       Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
-    let code = new BigNumber(formState.verificationCode)
-    code = code.isNaN() ? 0 : code.toNumber()
-    dispatch(requestWithdraw({
-      token_id: tokenId,
-      amount: formState.withdrawAmount,
-      toaddr: formState.withdrawAddress,
-      code,
-    }))
+    if (authCodeType === '短信验证码') {
+      dispatch(check2SMSAuth({
+        mobile: user.mobile,
+        service: 'auth',
+        code: formState.verificationCode,
+      }))
+      return
+    }
+    if (authCodeType === '邮箱验证码') {
+      dispatch(check2SmtpAuth({
+        email: user.email,
+        service: 'auth',
+        code: formState.emailCode,
+      }))
+    }
   }
 
   alertBindingGoogleCode = () => {
@@ -530,10 +634,19 @@ class WithDraw extends Component {
       dispatch(updateForm({
         ...formState,
         verificationCode: '',
+        emailCode: '',
       }))
+    } else if(title === '短信验证码'){
+      dispatch(updateForm({
+        ...formState,
+        googleCode: '',
+        emailCode: '',
+      }))
+
     } else {
       dispatch(updateForm({
         ...formState,
+        verificationCode: '',
         googleCode: '',
       }))
     }
@@ -546,6 +659,7 @@ class WithDraw extends Component {
       ...formState,
       verificationCode: '',
       googleCode: '',
+      emailCode: '',
     }))
     const overlayView = (
       <Overlay.View
@@ -555,13 +669,19 @@ class WithDraw extends Component {
       >
         <WithdrawAuthorizeCode
           dispatch={this.props.dispatch}
-          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code')]}
+          titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code'), transfer(language, 'AuthCode_email_code')]}
           mobile={user.mobile}
+          email={user.email}
+          emailStatus={user.emailStatus}
           onChangeText={this.onChangeAuthCode}
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={(count) => {
             this.count = count
             dispatch(requestGetCode({ mobile: user.mobile, service: 'auth' }))
+          }}
+          emsCodePress={(count) => {
+            this.count = count
+            dispatch(actions.getVerificateSmtpCode({ email: user.email, service: 'check' }))
           }}
           confirmPress={link => this.confirmPress(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
@@ -923,6 +1043,8 @@ function mapStateToProps(state) {
     ...state.withdraw,
     user: state.user.user,
     language: state.system.language,
+    getVerificateSmtpCodeLoading: state.user.getVerificateSmtpCodeVisible,
+    getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
   }
 }
 

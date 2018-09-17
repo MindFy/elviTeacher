@@ -199,7 +199,7 @@ class EmailCheck extends Component {
         this.setState({ nextBtnDisabled: false })
       } else if (getVerificateSmtpCodeResponse.error.code === 4000101) {
         Toast.fail(transfer(language, 'login_numberOrTypeError'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000102) {
+      } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
         Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
       } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
         Toast.fail(transfer(language, 'login_codeOverDue'))

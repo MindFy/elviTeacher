@@ -5,6 +5,7 @@ const initialState = {
     bankNo: '',
     code: '',
     googleCode: '',
+    emailCode: '',
   },
   mobile: '',
   loading: false,
@@ -14,6 +15,12 @@ const initialState = {
   getCodeResult: null,
   googleCodeLoading: false,
   googleCodeResponse: null,
+  checkSMSCodeLoading: false,
+  checkSMSCodeResponse: null,
+  checkSmtpCodeLoading: false,
+  checkSmtpCodeResponse: null,
+  getVerificateSmtpCodeLoading: false,
+  getVerificateSmtpCodeResponse: null,
 }
 
 export default function updateBank(state = initialState, action) {
@@ -92,6 +99,32 @@ export default function updateBank(state = initialState, action) {
         ...state,
         googleCodeLoading: false,
         googleCodeResponse: payload,
+      }
+      break
+    case 'updateBank/check2_sms_auth':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: true,
+      }
+      break
+    case 'updateBank/check2_sms_auth_set_response':
+      nextState = {
+        ...state,
+        checkSMSCodeLoading: false,
+        checkSMSCodeResponse: payload,
+      }
+      break
+    case 'updateBank/check2_smtp_auth':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: true,
+      }
+      break
+    case 'updateBank/check2_smtp_auth_set_response':
+      nextState = {
+        ...state,
+        checkSmtpCodeLoading: false,
+        checkSmtpCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

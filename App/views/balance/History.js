@@ -202,7 +202,7 @@ class History extends Component {
       withdrawState,
       otcState,
     } = this.state
-
+    
     const listLanguage = {
       date: transfer(language, 'history_date'),
       coin: transfer(language, 'history_coin'),
@@ -264,7 +264,7 @@ class History extends Component {
                 this.setState({ depositState: RefreshState.FooterRefreshing })
                 this.depositSkip += 1
                 dispatch(depositPageUpdate(this.depositSkip))
-                dispatch(requestWithdraw(schemas.findPaymentListRecharge(
+                dispatch(requestDeposit(schemas.findPaymentListRecharge(
                   loggedInResult.id,
                   this.depositSkip,
                   this.limit,

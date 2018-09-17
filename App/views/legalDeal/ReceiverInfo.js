@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   StyleSheet,
+  Clipboard,
 } from 'react-native'
 import BigNumber from 'bignumber.js'
 import {
@@ -18,6 +19,9 @@ import requesetReceiverInfo from '../../actions/receiverInfo'
 import { findOtcReceiverInfo } from '../../schemas/otcDetail'
 
 import TKSpinner from '../../components/TKSpinner'
+import {
+  Toast,
+} from 'teaset'
 
 const styles = StyleSheet.create({
   container: {
@@ -152,7 +156,23 @@ class ReceiverInfo extends Component {
 
         <View style={styles.contentContainer} >
           <Text style={styles.contentTip}>{titleBankNo}</Text>
-          <Text style={styles.content}>{bankNo}</Text>
+          <Text
+            onLongPress={() => {
+              Clipboard.setString(bankNo.toString())
+              Toast.success(transfer(language, 'recharge_copyed'), 2000)
+            }}
+            value={bankNo}
+            style={{
+              paddingLeft: common.margin5,
+              paddingRight: common.margin5,
+              textAlign: 'center',
+              borderColor: common.textColor,
+              borderBottomWidth: 1,
+              marginRight: common.margin10,
+              color: common.textColor,
+              fontSize: common.font12,
+            }}
+          >{bankNo}</Text>
         </View>
 
         <View style={styles.contentContainer}>

@@ -8,7 +8,6 @@ import * as api from '../services/api'
 import getHomeMarket from '../utils'
 import {
   common,
-  storeSave,
 } from '../constants/common'
 import {
   DeviceEventEmitter,
@@ -149,8 +148,6 @@ function* requestPairsWorker() {
       type: 'home/request_pair_success',
       payload: parseConfig(response.result),
     })
-    storeSave(common.noti.requestPairs, parseConfig(response.result), (e) => {})
-    DeviceEventEmitter.emit(common.noti.requestPairs)
   } else {
     yield put({
       type: 'home/request_pair_failed',
