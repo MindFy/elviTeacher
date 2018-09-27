@@ -9,6 +9,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native'
+import actions from '../../actions/index'
 import { BigNumber } from 'bignumber.js'
 import { common, storeRead } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -114,6 +115,9 @@ class BalanceDetail extends Component {
     super(props)
     this.pairData = undefined
     this.state={ showPairs: false }
+    props.navigation.addListener('didFocus', () => {
+      props.dispatch(actions.requestPairs())
+    })
   }
 
   componentDidMount = () => {
@@ -175,8 +179,6 @@ class BalanceDetail extends Component {
     FO: require('../../assets/market_FO.png'),
     ACAR: require('../../assets/market_ACAR.png'),
   }
-
-  withdrawOrDepositTokens = common.getDefaultPair().canWithdrawCoins
 
   renderBalanceInfoCell = (title, value) => (
     <View style={styles.infoCell}>
@@ -240,23 +242,32 @@ class BalanceDetail extends Component {
   )}
 
 
-  renderBottomToolbar = (leftTitle, rightTitle) => (
+  renderBottomToolbar = (leftTitle, rightTitle, bShowWithdraw, bShowRecharge) => (
     <View style={styles.bottomToolbarContainer}>
-      <NextTouchableOpacity
-        style={styles.bottomToolBarItem}
-        onPress={this.jumpToRecharge}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.bottomToolbarItemText}>{leftTitle}</Text>
-      </NextTouchableOpacity>
-      <View style={{ backgroundColor: common.bgColor, width: 1 }} />
-      <NextTouchableOpacity
-        style={styles.bottomToolBarItem}
-        onPress={this.jumpToWithdraw}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.bottomToolbarItemText}>{rightTitle}</Text>
-      </NextTouchableOpacity>
+      {
+        !bShowRecharge ? null : 
+        <NextTouchableOpacity
+          style={styles.bottomToolBarItem}
+          onPress={this.jumpToRecharge}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.bottomToolbarItemText}>{leftTitle}</Text>
+        </NextTouchableOpacity>
+      }
+      {
+        !(bShowWithdraw && bShowRecharge) ? null :
+        <View style={{ backgroundColor: common.bgColor, width: 1 }} />
+      }
+      {
+        !bShowWithdraw ? null :
+        <NextTouchableOpacity
+          style={styles.bottomToolBarItem}
+          onPress={this.jumpToWithdraw}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.bottomToolbarItemText}>{rightTitle}</Text>
+        </NextTouchableOpacity>
+      }
     </View>
   )
 
@@ -306,6 +317,15 @@ class BalanceDetail extends Component {
     const rechargeTitle = transfer(language, 'balance_detail_recharge')
     const withdrawTitle = transfer(language, 'balance_detail_withdraw')
 
+    let bShowWithdraw = false
+    let bShowRecharge = false
+    if(this.props.pairData && this.props.pairData.canWithdrawCoins && this.props.pairData.canWithdrawCoins.includes(currentToken.name)){
+      bShowWithdraw = true
+    }
+    if(this.props.pairData && this.props.pairData.canRechargeAddress && this.props.pairData.canRechargeAddress.includes(currentToken.name)){
+      bShowRecharge = true
+    }
+
     return (
       <View style={styles.container}>
         <ScrollView
@@ -336,8 +356,7 @@ class BalanceDetail extends Component {
             />
             : this.renderBalanceTrade())}
         </ScrollView>
-        {this.withdrawOrDepositTokens.includes(currentToken.name)
-          && this.renderBottomToolbar(rechargeTitle, withdrawTitle)}
+        {this.renderBottomToolbar(rechargeTitle, withdrawTitle, bShowWithdraw, bShowRecharge)}
       </View >
     )
   }

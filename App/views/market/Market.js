@@ -15,6 +15,7 @@ import {
   modifyVolumeSort,
   modifyLastPriceSort,
 } from '../../actions/market'
+import actions from '../../actions/index'
 import HeaderScrollView from './HeaderScrollView'
 import * as exchange from '../../actions/exchange'
 import cache from '../../utils/cache'
@@ -69,6 +70,7 @@ class Market extends Component {
     super(props)
     this.pairData = {}
     props.navigation.addListener('didFocus', () => {
+      props.dispatch(actions.requestPairs())
       cache.setObject('currentComponentVisible', 'Market')
       this.resetSortState()
       this.isNeedtoGetFavorites()

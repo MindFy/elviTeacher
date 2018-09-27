@@ -87,6 +87,7 @@ class Language extends Component {
     const { dispatch, language } = this.props
     if (launageEvt !== language) {
       dispatch(system.updateLanguage(launageEvt))
+      dispatch(system.updateRemoteLanguage({lang: launageEvt}))
       storeSysterLanguage(launageEvt)
       this.props.navigation.popToTop()
       cache.setObject('duration', '10')

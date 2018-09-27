@@ -442,7 +442,7 @@
   "payment_s_account_No": "Account No.",
   "payment_remark": "Note",
   "payment_s_please_note": "Pleaes Note",
-  "payment_s_please_note_content": "1. Please pay the seller according to the following information. \n2. Must fill in transfer payment notes. \n3. After the seller confirms your payment, the token will automatically be deposited to your account. \n4. You can only use the credit cards with your own name for transaction, or the seller may not confirm the payment.",
+  "payment_s_please_note_content": "1. Please pay the seller according to the following information. \n2. Must fill in transfer payment notes. \n3. After the seller confirms your payment, the token will automatically be deposited to your account. \n4. You can only use the credit cards with your own name for transaction, or the seller may not confirm the payment.\n5.After successful purchase,please complete payment within 1 hour and click the \"I have paid\" button,the overdue order will be cancelled.",
   "payer_s_please_note_content": "1. Please check the buyer's payment information. \n2. Please check the transfer notes. \n3. If the information is correct, please click confirm payment.",
   "payment_please_fill_in": "must add",
   "payment_b": "Receiver Info",

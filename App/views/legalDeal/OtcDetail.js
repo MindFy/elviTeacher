@@ -215,11 +215,10 @@ class OtcDetail extends Component {
     const { loggedInResult, dispatch, formState, authCodeType, language } = this.props
     if (authCodeType === '短信验证码' || authCodeType === '邮箱验证码') {
       const code = authCodeType === '短信验证码' ? formState.code : formState.emailCode
-      if (!code.length) {
+      if (!code || code.length === 0) {
         Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
         return
       }
-      Overlay.hide(this.overlayViewKeyID)
       this.id = id
       if (authCodeType === '短信验证码') {
         dispatch(check2SMSAuth({
@@ -238,11 +237,10 @@ class OtcDetail extends Component {
       }
     } else {
       const { googleCode } = formState
-      if (!googleCode.length) {
+      if (!googleCode || googleCode.length === 0) {
         Toast.fail(transfer(language, 'AuthCode_enter_gv_code'))
         return
       }
-      Overlay.hide(this.overlayViewKeyID)
       this.id = id
       dispatch(check2GoogleAuth({
         googleCode: formState.googleCode,
@@ -349,6 +347,7 @@ class OtcDetail extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
+          initialIndexSelected={language === 'zh_hans' ? 0 : 1}
           dispatch={this.props.dispatch}
           titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code'), transfer(language, 'AuthCode_email_code')]}
           mobile={loggedInResult.mobile}
@@ -397,13 +396,16 @@ class OtcDetail extends Component {
   }
 
   handleRequestCancel(nextProps) {
-    const { dispatch, cancelResult, cancelError, otcList, language } = nextProps
+    const { cancelResult, cancelError, language } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
       Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
-      const nextOtcList = otcList.concat()
-      nextOtcList[this.operateIndex].status = 'cancel'
-      dispatch(updateOtcList(nextOtcList))
+      const { loggedInResult } = this.props
+      this.refreshOtcList({
+        id: loggedInResult.id,
+        skip: 0,
+        limit: this.limit,
+      })
     }
     if (cancelError && cancelError !== this.props.cancelError) {
       if (cancelError.message === common.badNet) {
@@ -417,11 +419,11 @@ class OtcDetail extends Component {
   }
 
   handleRequestConfirmPay(nextProps) {
-    const { dispatch, confirmPayResult, confirmPayError, otcList, language } = nextProps
+    const { dispatch, confirmPayResult, confirmPayError, otcList, language, authCodeType } = nextProps
 
     if (confirmPayResult && confirmPayResult !== this.props.confirmPayResult) {
       Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
-      Overlay.hide(this.overlayViewKey)
+      Overlay.hide(this.overlayViewKeyID)
       const nextOtcList = otcList.concat()
       nextOtcList[this.operateIndex].status = 'complete'
       dispatch(updateOtcList(nextOtcList))
@@ -434,17 +436,24 @@ class OtcDetail extends Component {
         if (msg) Toast.fail(transfer(language, msg))
         else Toast.fail(transfer(language, 'OtcDetail_confirm_failed'))
       }
+      if(authCodeType !== '谷歌验证码')
+      {
+        Overlay.hide(this.overlayViewKeyID)
+      }
     }
   }
 
   handleRequestHavedPay(nextProps) {
-    const { dispatch, havedPayResult, havedPayError, otcList, language } = nextProps
+    const { havedPayResult, havedPayError,language } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
       Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
-      const nextOtcList = otcList.concat()
-      nextOtcList[this.operateIndex].status = 'waitconfirm'
-      dispatch(updateOtcList(nextOtcList))
+      const { loggedInResult } = this.props
+      this.refreshOtcList({
+        id: loggedInResult.id,
+        skip: 0,
+        limit: this.limit,
+      })
     }
     if (havedPayError && havedPayError !== this.props.havedPayError) {
       if (havedPayError.message === common.badNet) {
@@ -697,7 +706,7 @@ class OtcDetail extends Component {
               style={styles.paymentBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => {
-                navigation.navigate('Payment', { data: rd, lang: language })
+                navigation.navigate('Payment', { havedPayDisabled: havedPayDisabled, cancelBtnDisabled: cancelBtnDisabled, cancelPress: this.cancelPress.bind(this), havedPayPress: this.havedPayPress.bind(this), data: rd, lang: language })
               }}
             >
               <Text style={styles.paymentTitle}>

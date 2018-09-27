@@ -442,7 +442,7 @@
   "payment_s_account_No": "支払者アカウント",
   "payment_remark": "注記情報",
   "payment_s_please_note": "ご注意",
-  "payment_s_please_note_content": "1.情報に従い売り手に送金してください\n2.送金時には振替注記を必ず記入してください\n3.売り手が入金を確認すると、通貨は自動的にあなたのアカウントにチャージされます。\n4.必ず本人が設定したキャッシュカードで送金してください。それを使用しないと売り手は入金確認ができないおそれがあります。",
+  "payment_s_please_note_content": "1.情報に従い売り手に送金してください\n2.送金時には振替注記を必ず記入してください\n3.売り手が入金を確認すると、通貨は自動的にあなたのアカウントにチャージされます。\n4.必ず本人が設定したキャッシュカードで送金してください。それを使用しないと売り手は入金確認ができないおそれがあります。\n5.After successful purchase,please complete payment within 1 hour and click the \"I have paid\" button,the overdue order will be cancelled.",
   "payer_s_please_note_content": "1.買い手の支払い情報を確認してください\n2.振替注記を確認してください\n3.情報が正しいことを確認の上、入金確認を行ってください",
   "payment_please_fill_in": "記入必須",
   "payment_b": "入金者情報",

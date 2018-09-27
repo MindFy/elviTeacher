@@ -86,6 +86,7 @@ export const updateBank = makePostAPI('/1.0/app/user/updateBank')
 export const updateEmail = makePostAPI('/1.0/app/user/updateEmail')
 export const updateMobile = makePostAPI('/1.0/app/user/updateMobile')
 export const updatePassword = makePostAPI('/1.0/app/user/updatePassword')
+export const updateRemoteLanguage = makePostAPI('/1.0/app/user/language')
 // Rebates
 export const rebatesLink = `${API_ROOT}/signup?invitation=`
 export const rebatesLinkQr = `${API_ROOT}/img-qr/${rebatesLink}`

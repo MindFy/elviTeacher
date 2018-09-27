@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class HomeMarket extends Component {
+class HomeMarket extends Component {
   constructor() {
     super()
     this.dataSource = data => new ListView.DataSource({
@@ -327,3 +328,13 @@ export default class HomeMarket extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    requestPair: store.home.requestPair,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(HomeMarket)
