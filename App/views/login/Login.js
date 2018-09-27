@@ -21,6 +21,7 @@ import TKSpinner from '../../components/TKSpinner'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import * as system from '../../actions/system'
 
 const styles = StyleSheet.create({
   container: {
@@ -218,6 +219,7 @@ class Login extends PureComponent {
 
     if (loggedIn !== this.props.loggedIn) {
       Toast.success(transfer(language, 'login_success'))
+      dispatch(system.updateRemoteLanguage({lang: language}))
       const user = loggedInResult
       const { isAutoLogin } = this.props
       AsyncStorage.setItem('isAutoLogin', isAutoLogin.toString())
@@ -349,7 +351,7 @@ class Login extends PureComponent {
         <TKButton
           theme="small"
           caption={transfer(language, 'login_newUser')}
-          onPress={() => navigation.navigate('Register')}
+          onPress={() => navigation.navigate(language === 'zh_hans' ? 'Register' : 'EmailRegist')}
         />
         <TKButton
           theme="small"

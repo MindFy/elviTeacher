@@ -185,6 +185,7 @@ class Balance extends Component {
     EIEC: require('../../assets/market_EIEC.png'),
     MDT: require('../../assets/market_MDT.png'),
     FO: require('../../assets/market_FO.png'),
+    ACAR: require('../../assets/market_ACAR.png'),
   }
 
   jumpToBalanceDetail = (rd) => {

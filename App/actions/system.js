@@ -10,3 +10,10 @@ export function test() {
     type: 'system/reset_language',
   }
 }
+
+export function updateRemoteLanguage(payload) {
+  return {
+    type: 'system/update_remote_language',
+    payload,
+  }
+}

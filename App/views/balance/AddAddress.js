@@ -108,14 +108,17 @@ class AddAddress extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { navigation, dispatch, user, language } = this.props
+    const { navigation, dispatch, user, language, authCodeType } = this.props
     this.handleRequestGetCode(nextProps)
     this.handleRequestCheck2GoogleCode(nextProps)
     this.handleGetVerificateSMPTCodeRequest(nextProps)
     this.handleCheckVerificateSmptCodeRequest(nextProps)
     this.handleCheckVerificateCodeRequest(nextProps)
     if (nextProps.error) {
-      Overlay.hide(this.overlayViewKey)
+      if(authCodeType !== '谷歌验证码')
+      {
+        Overlay.hide(this.overlayViewKeyID)
+      }
       const errCode = nextProps.error.code
       const errMsg = this.errMsgs[errCode]
       if (errMsg) {
@@ -128,7 +131,7 @@ class AddAddress extends Component {
 
     if (this.props.loading && !nextProps.loading) {
       Toast.success(transfer(language, 'add_address_succeed'))
-      Overlay.hide(this.overlayViewKey)
+      Overlay.hide(this.overlayViewKeyID)
       dispatch(requestWithdrawAddress(findAddress(user.id)))
       navigation.goBack()
     }
@@ -155,7 +158,6 @@ class AddAddress extends Component {
 
   errMsgs = {
     4000413: 'withdraw_address_length_error',
-    4000414: 'withdraw_address_exist',
     4000416: 'withdraw_address_error',
     4000156: 'me_authFailed',
   }
@@ -346,7 +348,6 @@ class AddAddress extends Component {
 
   addPress(link) {
     Keyboard.dismiss()
-    Overlay.hide(this.overlayViewKeyID)
     if (link === undefined) {
       return
     }
@@ -357,7 +358,7 @@ class AddAddress extends Component {
     const { user, authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码' || authCodeType === '邮箱验证码') {
       const code = authCodeType === '短信验证码' ? formState.authCode : formState.emailCode
-      if (!code) {
+      if (!code || code.length === 0) {
         Toast.fail(transfer(language, 'login_inputCode'))
         return
       }
@@ -377,7 +378,7 @@ class AddAddress extends Component {
         }))
       }
     } else{
-      if (!formState.googleCode.length) {
+      if (!formState.googleCode || formState.googleCode.length === 0) {
         Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
@@ -453,6 +454,7 @@ class AddAddress extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
+          initialIndexSelected={language === 'zh_hans' ? 0 : 1}
           dispatch={this.props.dispatch}
           titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code'), transfer(language, 'AuthCode_email_code')]}
           mobile={user.mobile}

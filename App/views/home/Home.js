@@ -29,6 +29,7 @@ import * as api from '../../services/api'
 import Alert from '../../components/Alert'
 import { modifyLastPriceSort, modifyChangeSort, requestPairs } from '../../actions/home'
 import { getDefaultLanguage } from '../../utils/languageHelper'
+import * as system from '../../actions/system'
 
 global.Buffer = require('buffer').Buffer
 
@@ -47,6 +48,7 @@ class Home extends Component {
       this.props.dispatch(modifyLastPriceSort('idle'))
       this.props.dispatch(modifyChangeSort('idle'))
       cache.removeObject('duration')
+      this.props.dispatch(requestPairs())
     })
   }
 
@@ -167,6 +169,7 @@ class Home extends Component {
   }
 
   syncSuccess = () => {
+    const { language } = this.props
     storeRead(common.user.string, (result) => {
       if (result) {
         cache.setObject('isLoginIn', 'true')
@@ -174,12 +177,12 @@ class Home extends Component {
         const { dispatch } = this.props
         dispatch(actions.findUserUpdate(user))
         dispatch(actions.findUser(schemas.findUser(user.id)))
+        dispatch(system.updateRemoteLanguage({lang: language}))
       }
     })
   }
 
   syncFailed = () => {
-    cache.removeObject('isLoginIn')
     const { dispatch } = this.props
     dispatch(actions.findUserUpdate(undefined))
     // dispatch(actions.clearAllReducer())

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   View,
   Text,
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class HomeMarket extends Component {
+class HomeMarket extends Component {
   constructor() {
     super()
     this.dataSource = data => new ListView.DataSource({
@@ -118,6 +119,7 @@ export default class HomeMarket extends Component {
     EIEC: require('../../assets/market_EIEC.png'),
     MDT: require('../../assets/market_MDT.png'),
     FO: require('../../assets/market_FO.png'),
+    ACAR: require('../../assets/market_ACAR.png'),
   }
 
   marketHeaderIcons = {
@@ -326,3 +328,13 @@ export default class HomeMarket extends Component {
     )
   }
 }
+
+function mapStateToProps(store) {
+  return {
+    requestPair: store.home.requestPair,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(HomeMarket)

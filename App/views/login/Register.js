@@ -296,7 +296,7 @@ class Register extends Component {
       return
     }
     if (!common.regMobile.test(mobile)) {
-      Toast.fail(transfer(language, 'login_inputPhone'))
+      Toast.fail(transfer(language, 'login_inputCorrectId'))
       return
     }
     dispatch(actions.register({
@@ -462,7 +462,7 @@ class Register extends Component {
       <View style={{ height: 40 }}>
         {showTip ?
           <Text style={styles.mobileTip}>
-            {transfer(language, 'login_inputPhone')}
+            {transfer(language, 'login_inputCorrectId')}
           </Text> : null}
       </View>
     )

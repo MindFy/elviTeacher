@@ -214,10 +214,11 @@ class WithDraw extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading, language, requestPairStatus } = this.props
+    const { dispatch, withdrawLoading, language, requestPairStatus, authCodeType } = this.props
     this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
+      Overlay.hide(this.overlayViewKeyID)
     }
 
     if (nextProps.withdrawError) {
@@ -226,6 +227,10 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, errMsg))
       } else {
         Toast.fail(transfer(language, 'withdrawal_failed'))
+      }
+      if(authCodeType !== '谷歌验证码')
+      {
+        Overlay.hide(this.overlayViewKeyID)
       }
       dispatch(requestWithdrawClearError())
     }
@@ -241,7 +246,6 @@ class WithDraw extends Component {
     if (!nextProps.googleCodeCheckLoading && this.props.googleCodeCheckLoading) {
       const { currCoin, formState } = this.props
       const tokenId = this.coinsIdDic[currCoin].id
-      Overlay.hide(this.overlayViewKeyID)
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: formState.withdrawAmount,
@@ -251,7 +255,6 @@ class WithDraw extends Component {
     }
 
     if (nextProps.googleCodeCheckError) {
-      Overlay.hide(this.overlayViewKeyID)
       const errorCode = nextProps.googleCodeCheckError.code
       if (errorCode === 4000171) {
         Toast.fail(transfer(language, 'me_bindBankCardFirst'))
@@ -298,7 +301,6 @@ class WithDraw extends Component {
       return
     } 
     if (checkSmtpCodeResponse.success) {
-      Overlay.hide(this.overlayViewKeyID)
       const tokenId = this.coinsIdDic[currCoin].id
       let code = new BigNumber(formState.emailCode)
       code = code.isNaN() ? 0 : code.toNumber()
@@ -330,7 +332,6 @@ class WithDraw extends Component {
       return
     } 
     if (checkSMSCodeResponse.success) {
-      Overlay.hide(this.overlayViewKeyID)
       const tokenId = this.coinsIdDic[currCoin].id
       let code = new BigNumber(formState.code)
       code = code.isNaN() ? 0 : code.toNumber()
@@ -339,7 +340,7 @@ class WithDraw extends Component {
         amount: formState.withdrawAmount,
         toaddr: formState.withdrawAddress,
         code: formState.verificationCode,
-        email: user.email,
+        email: user.email,        
       }))
       return
     } else if (checkSMSCodeResponse.error.code === 4000101) {
@@ -561,7 +562,7 @@ class WithDraw extends Component {
 
   confirmPress = (link) => {
     Keyboard.dismiss()
-    Overlay.hide(this.overlayViewKeyID)
+
     if (link === undefined) {
       return
     }
@@ -570,7 +571,7 @@ class WithDraw extends Component {
       return
     }
     const { dispatch, currCoin, formState, authCodeType, language, user } = this.props
-
+    
     if (authCodeType === '谷歌验证码') {
       const { googleCode } = formState
       if (!googleCode || googleCode.length === 0) {
@@ -583,7 +584,7 @@ class WithDraw extends Component {
       return
     }
     const code = authCodeType === '邮箱验证码' ? formState.emailCode : formState.verificationCode
-    if(!code.length){
+    if(!code || code.length === 0){
       Toast.fail(transfer(language, 'login_inputCode'))
       return
     }
@@ -668,6 +669,7 @@ class WithDraw extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
+          initialIndexSelected={language === 'zh_hans' ? 0 : 1}
           dispatch={this.props.dispatch}
           titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code'), transfer(language, 'AuthCode_email_code')]}
           mobile={user.mobile}

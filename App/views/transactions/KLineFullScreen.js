@@ -195,6 +195,8 @@ class KLineFullScreen extends Component {
       transfer(language, 'exchange_1hour'),
       transfer(language, 'exchange_4hour'),
     ]
+    this.realOutHeight = 0
+    this.state=({testState: 0})
   }
 
   componentWillMount() {
@@ -639,8 +641,20 @@ class KLineFullScreen extends Component {
       }
     }
     return (
-      <View style={styles.conatiner}>
-        <View style={[styles.box, { width: wh.width }]}>
+      <View style={styles.conatiner}
+        onLayout={(event) => {
+          this.realOutHeight = Math.max(event.nativeEvent.layout.height, event.nativeEvent.layout.width)
+          if(this.realOutHeight != this.realInHeight)
+          {
+            this.forceUpdate()
+          }
+        }
+      }>
+        <View style={[styles.box, { width: this.realOutHeight }]} 
+          onLayout={(event) => {
+            this.realInHeight = Math.max(event.nativeEvent.layout.height, event.nativeEvent.layout.width)
+          }
+         }>
           {this.renderHeaderBar()}
           <WebView
             ref={(e) => { this.webView = e }}
@@ -648,7 +662,7 @@ class KLineFullScreen extends Component {
             domStorageEnabled
             scalesPageToFit={false}
             automaticallyAdjustContentInsets={false}
-            style={[styles.webview, { width: wh.width }]}
+            style={[styles.webview, { width: this.realHeight }]}
             injectedJavaScript={patchPostMessageJsCode}
             source={{ uri: `${api.API_ROOT}/mobile.html?p=${goodsName}/${currencyName}` }}
             onMessage={() => setTimeout(() => this.setValue(kLineIndex), 100)}

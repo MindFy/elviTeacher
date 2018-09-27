@@ -442,7 +442,7 @@
   "payment_s_account_No": "대금 지불자 계좌 번호",
   "payment_remark": "특이사항",
   "payment_s_please_note": "주의사항",
-  "payment_s_please_note_content": "1. 정보에 따라 매도자에게 대금을 지불하십시오\n2. 이체 시 반드시 이체 비고란을 작성하십시오\n3. 매도자가 대금 수취를 확정하면 코인이 자동으로 귀하의 계정에 충전됩니다\n4. 반드시 본인과 연동된 은행 카드를 사용해 이체를 진행하십시오. 그렇지 않을 경우 매도자가 대금 수취를 확인하지 못할 수도 있습니다",
+  "payment_s_please_note_content": "1. 정보에 따라 매도자에게 대금을 지불하십시오\n2. 이체 시 반드시 이체 비고란을 작성하십시오\n3. 매도자가 대금 수취를 확정하면 코인이 자동으로 귀하의 계정에 충전됩니다\n4. 반드시 본인과 연동된 은행 카드를 사용해 이체를 진행하십시오. 그렇지 않을 경우 매도자가 대금 수취를 확인하지 못할 수도 있습니다\n5.After successful purchase,please complete payment within 1 hour and click the \"I have paid\" button,the overdue order will be cancelled",
   "payer_s_please_note_content": "1. 매수자의 결제 정보를 확인하십시오\n2. 이체 비고란의 내용을 확인하십시오\n3. 정보에 이상이 없는 경우 수취 확인 버튼을 클릭하십시오",
   "payment_please_fill_in": "반드시 입력하십시오",
   "payment_b": "대금 수취자 정보",

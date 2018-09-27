@@ -85,7 +85,8 @@ const actions = {
   requestMarket: home.requestMarket,
   modifyLastPriceSort: home.modifyLastPriceSort,
   modifyChangeSort: home.modifyChangeSort,
-
+  requestPairs: home.requestPairs,
+  
   add,
   addUpdate,
   findAddress,

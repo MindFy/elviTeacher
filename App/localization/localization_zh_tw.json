@@ -442,7 +442,7 @@
   "payment_s_account_No": "付款方帳號",
   "payment_remark": "備註信息",
   "payment_s_please_note": "溫馨提示",
-  "payment_s_please_note_content": "1.請按資訊向賣家匯款\n2.匯款時一定要填寫轉帳備註\n3.賣家確認收到款後，貨幣將自動充值到您的帳戶上\n4.請務必使用本人綁定的銀行卡進行匯款,否則賣家可能不會確認收款",
+  "payment_s_please_note_content": "1.請按資訊向賣家匯款\n2.匯款時一定要填寫轉帳備註\n3.賣家確認收到款後，貨幣將自動充值到您的帳戶上\n4.請務必使用本人綁定的銀行卡進行匯款,否則賣家可能不會確認收款\n5.After successful purchase,please complete payment within 1 hour and click the \"I have paid\" button,the overdue order will be cancelled",
   "payer_s_please_note_content": "1.請核對買家付款資訊\n2.請核對轉帳備註\n3.如資訊無誤請點擊確認收款",
   "payment_please_fill_in": "請務必填寫",
   "payment_b": "收款方資訊",
