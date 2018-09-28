@@ -235,6 +235,7 @@ class EmailRegist extends Component {
     dispatch(actions.getVerificateSmtpCode({
       email: mobile, // 这里用mobile 记录的是 邮箱
       service: 'auth',
+      language,
     }))
   }
 

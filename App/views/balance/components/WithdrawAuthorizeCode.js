@@ -158,6 +158,9 @@ export default class TKViewCheckAuthorize extends Component {
         this.state={
       googleAuth: false
     }
+    if (props.segmentValueChanged && props.initialIndexSelected) {
+      props.segmentValueChanged({index: props.initialIndexSelected})
+    }
   }
 
   componentDidMount() {
@@ -190,9 +193,11 @@ export default class TKViewCheckAuthorize extends Component {
   }
 
   renderTitles = () => {
-    const { titles, segmentValueChanged } = this.props
+    const { titles, segmentValueChanged, language, initialIndexSelected } = this.props
     return (
       <WithdrawAuthSelecionBar
+        initialIndexSelected={initialIndexSelected}
+        language={language}
         titles={titles}
         onPress={(e) => {
           if (segmentValueChanged) {
@@ -214,6 +219,21 @@ export default class TKViewCheckAuthorize extends Component {
     )
   }
 
+  maskMobile(value) {
+    return String(value).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  }
+
+  maskEmail(value = '') {
+    if (value) {
+      const arr = value.split('@')
+      if (arr[0].length > 3) {
+        return `${arr[0].substring(0, 3)}****@${arr[1]}`
+      }
+      return value
+    }
+    return ''
+  }
+
   renderSMSCode = () => {
     const { mobile, titles, smsCodePress, onChangeText, language } = this.props
     const index = titles.indexOf(transfer(language, 'AuthCode_SMS_code'))
@@ -233,7 +253,7 @@ export default class TKViewCheckAuthorize extends Component {
       <View>
         <View style={styles.mobileContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_mobile_tip')}</Text>
-          <Text style={styles.mobile}>{mobile}</Text>
+          <Text style={styles.mobile}>{this.maskMobile(mobile)}</Text>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_sms_tip')}</Text>
@@ -320,7 +340,7 @@ export default class TKViewCheckAuthorize extends Component {
       <View>
         <View style={styles.mobileContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_email_tip')}</Text>
-          <Text style={styles.email}>{email}</Text>
+          <Text style={styles.email}>{this.maskEmail(email)}</Text>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_email_code')}</Text>

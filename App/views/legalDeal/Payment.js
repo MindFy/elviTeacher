@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Text,
   View,
@@ -15,8 +16,10 @@ import transfer from '../../localization/utils'
 import {
   Toast,
 } from 'teaset'
+import TKButton from '../../components/TKButton'
+import * as otcDetail from '../../actions/otcDetail'
 
-export default class Payment extends Component {
+class Payment extends Component {
   static navigationOptions(props) {
     const { navigation } = props
     return {
@@ -48,10 +51,30 @@ export default class Payment extends Component {
   }
   componentDidMount() { }
 
+  cancelPress(id) {
+    const { dispatch } = this.props
+    dispatch(otcDetail.requestCancel({ id }))
+  }
+
+  havedPayPress(id) {
+    const { dispatch } = this.props
+    dispatch(otcDetail.requestHavedPay({ id }))
+  }
+
   render() {
     const { navigation } = this.props
     const rd = navigation.state.params.data
     const lang = navigation.state.params.lang
+    
+    let havedPayDisabled = true
+    let cancelBtnDisabled = true
+    for(var i = 0; i < this.props.otcList.length; i++){
+      if(this.props.otcList[i].id === rd.id && this.props.otcList[i].status === common.legalDeal.status.waitpay){
+        cancelBtnDisabled = false
+        havedPayDisabled = false
+      }
+    }
+ 
     let titleName = ''
     let titleBankName = ''
     let titleBankNo = ''
@@ -61,6 +84,8 @@ export default class Payment extends Component {
     let remark = ''
     let titleTips = ''
     const amount = new BigNumber(rd.dealPrice).multipliedBy(rd.quantity).toFixed(2, 1)
+    let havedPayTitle = ''
+    let cancelBtnTitle = ''
     if (rd.direct === common.buy) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
@@ -70,6 +95,8 @@ export default class Payment extends Component {
       titleBankName = transfer(lang, 'payment_b_bank')
       titleBankNo = transfer(lang, 'payment_b_account_No')
       titleTips = transfer(lang, 'payment_s_please_note_content')
+      havedPayTitle = transfer(lang, 'OtcDetail_i_paid')
+      cancelBtnTitle = transfer(lang, 'OtcDetail_cancelOrder')
     } else if (rd.direct === common.sell) {
       name = rd.traderPayinfo.cardHolderName
       bankName = rd.traderPayinfo.bankName + rd.traderPayinfo.subbankName
@@ -81,147 +108,185 @@ export default class Payment extends Component {
       titleTips = transfer(lang, 'payer_s_please_note_content')
     }
     return (
-      <ScrollView
-        style={{
-          flex: 1,
-          backgroundColor: common.blackColor,
-        }}
-      >
-        <Text
+      <View style={{flex: 1, backgroundColor: common.blackColor,}}>
+        <ScrollView
           style={{
-            marginTop: common.margin15,
-            fontSize: common.font16,
-            color: common.placeholderColor,
-            alignSelf: 'center',
+            flex: 1,
+            backgroundColor: common.blackColor,
           }}
-        >{transfer(lang, 'payment_transaction_amount')}</Text>
-        <Text
-          style={{
-            marginTop: common.margin20,
-            fontSize: common.font30,
-            color: common.textColor,
-            alignSelf: 'center',
-          }}
-        >{`¥${amount}`}</Text>
+        >
+          <Text
+            style={{
+              marginTop: common.margin15,
+              fontSize: common.font16,
+              color: common.placeholderColor,
+              alignSelf: 'center',
+            }}
+          >{transfer(lang, 'payment_transaction_amount')}</Text>
+          <Text
+            style={{
+              marginTop: common.margin20,
+              fontSize: common.font30,
+              color: common.textColor,
+              alignSelf: 'center',
+            }}
+          >{`¥${amount}`}</Text>
 
-        <View
-          style={{
-            marginTop: common.margin15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
+          <View
             style={{
-              marginLeft: common.margin10,
-              color: common.placeholderColor,
-              fontSize: common.font12,
+              marginTop: common.margin15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}
-          >{titleName}</Text>
-          <Text
+          >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.placeholderColor,
+                fontSize: common.font12,
+              }}
+            >{titleName}</Text>
+            <Text
+              style={{
+                marginRight: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+              }}
+            >{name}</Text>
+          </View>
+          <View
             style={{
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
+              marginTop: common.margin15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}
-          >{name}</Text>
-        </View>
-        <View
-          style={{
-            marginTop: common.margin15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
+          >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.placeholderColor,
+                fontSize: common.font12,
+              }}
+            >{titleBankName}</Text>
+            <Text
+              style={{
+                marginRight: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+              }}
+            >{bankName}</Text>
+          </View>
+          <View
             style={{
-              marginLeft: common.margin10,
-              color: common.placeholderColor,
-              fontSize: common.font12,
+              marginTop: common.margin15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}
-          >{titleBankName}</Text>
-          <Text
+          >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.placeholderColor,
+                fontSize: common.font12,
+              }}
+            >{titleBankNo}</Text>
+            <Text
+              onLongPress={() => {
+                Clipboard.setString(bankNo.toString())
+                Toast.success(transfer(lang, 'recharge_copyed'), 2000)
+              }}
+              value={bankNo}
+              style={{
+                paddingLeft: common.margin5,
+                paddingRight: common.margin5,
+                textAlign: 'center',
+                borderColor: common.textColor,
+                borderBottomWidth: 1,
+                marginRight: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+              }}
+            >{bankNo}</Text>
+          </View>
+          <View
             style={{
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
+              marginTop: common.margin15,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
             }}
-          >{bankName}</Text>
-        </View>
-        <View
-          style={{
-            marginTop: common.margin15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              color: common.placeholderColor,
-              fontSize: common.font12,
-            }}
-          >{titleBankNo}</Text>
-          <Text
-            onLongPress={() => {
-              Clipboard.setString(bankNo.toString())
-              Toast.success(transfer(lang, 'recharge_copyed'), 2000)
-            }}
-            value={bankNo}
-            style={{
-              paddingLeft: common.margin5,
-              paddingRight: common.margin5,
-              textAlign: 'center',
-              borderColor: common.textColor,
-              borderBottomWidth: 1,
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
-          >{bankNo}</Text>
-        </View>
-        <View
-          style={{
-            marginTop: common.margin15,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: common.margin10,
-              color: common.placeholderColor,
-              fontSize: common.font12,
-            }}
-          >{transfer(lang, 'payment_remark')}</Text>
-          <Text
-            style={{
-              marginRight: common.margin10,
-              color: common.textColor,
-              fontSize: common.font12,
-            }}
-          >{`${remark}（${transfer(lang, 'payment_please_fill_in')}）`}</Text>
-        </View>
+          >
+            <Text
+              style={{
+                marginLeft: common.margin10,
+                color: common.placeholderColor,
+                fontSize: common.font12,
+              }}
+            >{transfer(lang, 'payment_remark')}</Text>
+            <Text
+              style={{
+                marginRight: common.margin10,
+                color: common.textColor,
+                fontSize: common.font12,
+              }}
+            >{`${remark}（${transfer(lang, 'payment_please_fill_in')}）`}</Text>
+          </View>
 
-        <Text
-          style={{
-            marginTop: common.margin30,
-            marginLeft: common.margin10,
-            color: common.textColor,
-            fontSize: common.font12,
-          }}
-        >{transfer(lang, 'payment_s_please_note')}</Text>
-        <Text
-          style={{
-            marginTop: common.margin10,
-            marginLeft: common.margin10,
-            marginRight: common.margin10,
-            color: common.textColor,
-            fontSize: common.font10,
-            lineHeight: 14,
-          }}
-        >{titleTips}</Text>
-      </ScrollView>
+          <Text
+            style={{
+              marginTop: common.margin30,
+              marginLeft: common.margin10,
+              color: common.textColor,
+              fontSize: common.font12,
+            }}
+          >{transfer(lang, 'payment_s_please_note')}</Text>
+          <Text
+            style={{
+              marginTop: common.margin10,
+              marginLeft: common.margin10,
+              marginRight: common.margin10,
+              color: common.textColor,
+              fontSize: common.font10,
+              lineHeight: 14,
+            }}
+          >{titleTips}</Text>
+        </ScrollView>
+        <View>
+        {
+          rd.direct === common.sell ? null :
+          <TKButton
+            style={{ height: 40, margin: common.margin10, borderWidth: 1, borderColor: common.borderColor, backgroundColor: common.navBgColor, }}
+            titleStyle={{ color: havedPayDisabled ? common.placeholderColor : common.btnTextColor }}
+            target="global"
+            caption={havedPayTitle}
+            onPress={() => this.havedPayPress(rd.id)}
+            disabled={havedPayDisabled}
+          />
+        }
+        {
+          rd.direct === common.sell ? null :
+          <TKButton
+            style={{ height: 40, margin: common.margin10, borderWidth: 1, marginTop: 0, borderColor: common.borderColor, backgroundColor: common.navBgColor, }}
+            titleStyle={{ color: cancelBtnDisabled ? common.placeholderColor : common.btnTextColor }}
+            target="global"
+            caption={cancelBtnTitle}
+            onPress={() => this.cancelPress(rd.id)}
+            disabled={cancelBtnDisabled}
+          />
+        }
+      </View>
+    </View>
     )
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    ...state.Payment,
+    otcList: state.otcDetail.otcList,
+  }
+}
+
+export default connect(
+  mapStateToProps,
+)(Payment)
+

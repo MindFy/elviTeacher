@@ -198,11 +198,10 @@ class UpdateBank extends Component {
     const { user, authCodeType, formState, dispatch, language } = this.props
     if (authCodeType === '短信验证码' || authCodeType === '邮箱验证码') {
       const code = authCodeType === '短信验证码' ? formState.code : formState.emailCode
-      if (!code) {
+      if (!code || code.length === 0) {
         Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
         return
       }
-      Overlay.hide(this.overlayViewKeyID)
       if (authCodeType === '短信验证码') {
         dispatch(check2SMSAuth({
           mobile: user.mobile,
@@ -217,14 +216,14 @@ class UpdateBank extends Component {
           service: 'auth',
           code: formState.emailCode,
         }))
-    } else {
-      if (!formState.googleCode.length) {
+        return
+      } 
+    }else {
+      if (!formState.googleCode || formState.googleCode.length === 0) {
         Toast.fail(transfer(language, 'AuthCode_enter_gv_code'))
         return
       }
-      Overlay.hide(this.overlayViewKeyID)
       dispatch(check2GoogleAuth({ googleCode: formState.googleCode }))
-      }
     }
   }
 
@@ -298,6 +297,7 @@ class UpdateBank extends Component {
         overlayOpacity={0}
       >
         <WithdrawAuthorizeCode
+          initialIndexSelected={language === 'zh_hans' ? 0 : 1}
           dispatch={this.props.dispatch}
           titles={[transfer(language, 'AuthCode_SMS_code'), transfer(language, 'AuthCode_GV_code'), transfer(language, 'AuthCode_email_code')]}
           mobile={user.mobile}
@@ -357,16 +357,19 @@ class UpdateBank extends Component {
   }
 
   handleRequestUpdateBank(nextProps) {
-    const { updateBankResult, updateBankError, navigation, language } = nextProps
+    const { updateBankResult, updateBankError, navigation, language, authCodeType } = nextProps
     if (updateBankResult && (updateBankResult !== this.props.updateBankResult)) {
       this.userUpdate(nextProps)
       Toast.success(transfer(language, 'bank_linked'))
-      Overlay.hide(this.overlayViewKey)
+      Overlay.hide(this.overlayViewKeyID)
       navigation.goBack()
       return
     }
     if (updateBankError && (updateBankError !== this.props.updateBankError)) {
-      Overlay.hide(this.overlayViewKey)
+      if(authCodeType !== '谷歌验证码')
+      {
+        Overlay.hide(this.overlayViewKeyID)
+      }
       if (updateBankError.message === common.badNet) {
         Toast.fail(transfer(language, 'UpdateBank_net_error'))
         return

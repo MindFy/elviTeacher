@@ -30,6 +30,7 @@ import watchRequestDailyChange from './balanceDetail'
 import * as recharge from './recharge'
 import * as history from './history'
 import watcherRequestReceiverInfo from './receiverInfo'
+import * as system from './system'
 
 export default function* rootSaga() {
   yield [
@@ -144,6 +145,8 @@ export default function* rootSaga() {
     history.requestWithdraw(),
     history.requestOtc(),
     history.withdrawCancel(),
+
+    system.requestUpdateRemoteLanguage(),
 
     watcherRequestReceiverInfo(),
     watchGetFavorite(),

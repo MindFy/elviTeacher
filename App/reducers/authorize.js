@@ -106,7 +106,6 @@ export default function authorize(state = initialState, action) {
       nextState = {
         ...state,
         syncing: false,
-        loggedIn: false,
         syncSuccess: false,
       }
       break
