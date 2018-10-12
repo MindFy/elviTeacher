@@ -28,10 +28,6 @@ import {
   requestWithdrawClearError,
   requestWithdrawAddress,
   updateAuthCodeType,
-  check2GoogleAuthSetError,
-  check2GoogleAuth,
-  check2SMSAuth,
-  check2SmtpAuth,
   requestGetCode,
   requestPairs,
 } from '../../actions/withdraw'
@@ -178,17 +174,16 @@ class WithDraw extends Component {
   constructor(props) {
     super(props)
     this.withdrawErrorDic = {
+      4000156: 'login_codeError',
       4000414: 'withdraw_address_exist',
       4000416: 'withdraw_address_error',
-      4000156: 'me_authFailed',
       4000606: 'withdraw_address_error',
       4000608: 'withdraw_error_after_pwd_changed',
       4000668: 'withdraw_account_frozen',
     }
     this.verificationCodeErrorDic = {
-      4000101: 'login_numberOrTypeError',
-      4000102: 'me_Email_repeatMinute',
-      4000104: 'me_phoneRegisted',
+      4000156: 'login_codeError',
+      4000107: 'me_Email_repeatMinute',
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码', '邮箱验证码']
@@ -214,11 +209,14 @@ class WithDraw extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading, language, requestPairStatus, authCodeType } = this.props
+    const { dispatch, withdrawLoading, language, requestPairStatus, currCoin } = this.props
     this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
       Overlay.hide(this.overlayViewKeyID)
+      dispatch(requestBalance({
+        token_ids: [this.coinsIdDic[currCoin].id],
+      }))
     }
 
     if (nextProps.withdrawError) {
@@ -227,10 +225,6 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, errMsg))
       } else {
         Toast.fail(transfer(language, 'withdrawal_failed'))
-      }
-      if(authCodeType !== '谷歌验证码')
-      {
-        Overlay.hide(this.overlayViewKeyID)
       }
       dispatch(requestWithdrawClearError())
     }
@@ -243,29 +237,6 @@ class WithDraw extends Component {
       this.canWithdrawCoins = common.getDefaultPair().canWithdrawCoins
       this.coinsIdDic = common.getDefaultPair().coinIdDic
     }
-    if (!nextProps.googleCodeCheckLoading && this.props.googleCodeCheckLoading) {
-      const { currCoin, formState } = this.props
-      const tokenId = this.coinsIdDic[currCoin].id
-      dispatch(requestWithdraw({
-        token_id: tokenId,
-        amount: formState.withdrawAmount,
-        toaddr: formState.withdrawAddress,
-        googleCode: formState.googleCode,
-      }))
-    }
-
-    if (nextProps.googleCodeCheckError) {
-      const errorCode = nextProps.googleCodeCheckError.code
-      if (errorCode === 4000171) {
-        Toast.fail(transfer(language, 'me_bindBankCardFirst'))
-      } else {
-        Toast.fail(transfer(language, 'me_googleCodeError'))
-      }
-      dispatch(check2GoogleAuthSetError(null))
-    }
-    this.handleGetVerificateSMPTCodeRequest(nextProps)
-    this.handleCheckVerificateSmptCodeRequest(nextProps)
-    this.handleCheckVerificateCodeRequest(nextProps)
   }
 
   componentWillUnmount() {
@@ -273,95 +244,12 @@ class WithDraw extends Component {
     dispatch(withdrawClear())
   }
 
-  /* 获取邮箱验证码请求结果处理 */
-  handleGetVerificateSMPTCodeRequest(nextProps) {
-    const { getVerificateSmtpCodeLoading, getVerificateSmtpCodeResponse, language } = nextProps
-    if (!this.props.getVerificateSmtpCodeLoading || getVerificateSmtpCodeLoading){
-      return
-    } 
-    if (getVerificateSmtpCodeResponse.success) {
-      Toast.success(transfer(language, 'get_code_succeed'))
-    } else if (getVerificateSmtpCodeResponse.error.code === 4000101) {
-      Toast.fail(transfer(language, 'login_numberOrTypeError'))
-    } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
-      Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
-    } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
-      Toast.fail(transfer(language, 'login_codeOverDue'))
-    } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
-      Toast.fail(transfer(language, 'login_networdError'))
-    } else {
-      Toast.fail(transfer(language, 'login_getCodeFailed'))
-    }
-  }
-
-  /* 检测邮箱验证码请求结果处理 */
-  handleCheckVerificateSmptCodeRequest(nextProps) {
-    const { user, checkSmtpCodeLoading, checkSmtpCodeResponse, dispatch, formState, language, currCoin } = nextProps
-    if (!this.props.checkSmtpCodeLoading || checkSmtpCodeLoading ){
-      return
-    } 
-    if (checkSmtpCodeResponse.success) {
-      const tokenId = this.coinsIdDic[currCoin].id
-      let code = new BigNumber(formState.emailCode)
-      code = code.isNaN() ? 0 : code.toNumber()
-      dispatch(requestWithdraw({
-        token_id: tokenId,
-        amount: formState.withdrawAmount,
-        toaddr: formState.withdrawAddress,
-        code: formState.emailCode,
-        email: user.email,
-      }))
-      return
-    } else if (checkSmtpCodeResponse.error.code === 4000101) {
-      Toast.fail(transfer(language, 'login_numberOrTypeError2'))
-    } else if (checkSmtpCodeResponse.error.code === 4000102) {
-      Toast.fail(transfer(language, 'login_codeError'))
-    } else if (checkSmtpCodeResponse.error.code === 4000103) {
-      Toast.fail(transfer(language, 'login_codeOverDue'))
-    } else if (checkSmtpCodeResponse.error.message === common.badNet) {
-      Toast.fail(transfer(language, 'login_networdError'))
-    } else {
-      Toast.fail(transfer(language, 'login_verificateFailed'))
-    }
-  }
-
-  /* 检测短信验证码请求结果处理 */
-  handleCheckVerificateCodeRequest(nextProps) {
-    const { user, checkSMSCodeLoading, checkSMSCodeResponse, dispatch, formState, language, currCoin } = nextProps
-    if (!this.props.checkSMSCodeLoading || checkSMSCodeLoading ){
-      return
-    } 
-    if (checkSMSCodeResponse.success) {
-      const tokenId = this.coinsIdDic[currCoin].id
-      let code = new BigNumber(formState.code)
-      code = code.isNaN() ? 0 : code.toNumber()
-      dispatch(requestWithdraw({
-        token_id: tokenId,
-        amount: formState.withdrawAmount,
-        toaddr: formState.withdrawAddress,
-        code: formState.verificationCode,
-        email: user.email,        
-      }))
-      return
-    } else if (checkSMSCodeResponse.error.code === 4000101) {
-      Toast.fail(transfer(language, 'login_numberOrTypeError'))
-    } else if (checkSMSCodeResponse.error.code === 4000102) {
-      Toast.fail(transfer(language, 'login_codeError'))
-    } else if (checkSMSCodeResponse.error.code === 4000103) {
-      Toast.fail(transfer(language, 'login_codeOverDue'))
-    } else if (checkSMSCodeResponse.error.message === common.badNet) {
-      Toast.fail(transfer(language, 'login_networdError'))
-    } else {
-      Toast.fail(transfer(language, 'login_verificateFailed'))
-    }                         
-  }
-
   onChangeAuthCode = (e, code) => {
     const { dispatch, formState, authCodeType } = this.props
     if (authCodeType === '短信验证码') {
       dispatch(updateForm({
         ...formState,
-        verificationCode: code,
+        smsCode: code,
       }))
     } else if(authCodeType === '谷歌验证码'){
       dispatch(updateForm({
@@ -423,19 +311,17 @@ class WithDraw extends Component {
   }
 
   handleRequestGetCode(nextProps) {
-    const { getCodeResult, getCodeError, language } = nextProps
-
-    if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
+    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
+      return
+    }
+    if (requestGetCodeResponse.success) {
       Toast.success(transfer(language, 'get_code_succeed'))
     }
-    if (getCodeError && getCodeError !== this.props.getCodeError) {
-      if (getCodeError.message === common.badNet) {
-        Toast.fail(transfer(language, 'OtcDetail_net_error'))
-      } else {
-        const msg = transfer(language, this.verificationCodeErrorDic[getCodeError.code])
-        if (msg) Toast.fail(msg)
-        else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
-      }
+    else{
+      const msg = transfer(language, this.verificationCodeErrorDic[requestGetCodeResponse.error.code])
+      if (msg) Toast.fail(msg)
+      else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
     }
   }
 
@@ -455,7 +341,7 @@ class WithDraw extends Component {
       ...formState,
       withdrawAmount: '',
       withdrawAddress: '',
-      verificationCode: '',
+      smsCode: '',
       googleCode: '',
       emailCode: '',
     }))
@@ -567,40 +453,49 @@ class WithDraw extends Component {
       return
     }
     if (link) {
-      this.props.navigation.navigate('EmailCheck')
       return
     }
-    const { dispatch, currCoin, formState, authCodeType, language, user } = this.props
-    
+    const { dispatch, formState, authCodeType, language, user, currCoin } = this.props
+    const { smsCode, googleCode, emailCode, withdrawAmount, withdrawAddress } = formState
+    const tokenId = this.coinsIdDic[currCoin].id
+    if (authCodeType === '短信验证码') {
+      if (!smsCode || smsCode.length === 0) {
+        Toast.fail(transfer(language, 'me_enter_mobileVerification'))
+        return
+      }
+      dispatch(requestWithdraw({
+        token_id: tokenId,
+        amount: withdrawAmount,
+        toaddr: withdrawAddress,
+        mobile: user.mobile,
+        code: smsCode,
+      }))
+      return
+    }
     if (authCodeType === '谷歌验证码') {
-      const { googleCode } = formState
       if (!googleCode || googleCode.length === 0) {
         Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
-      dispatch(check2GoogleAuth({
-        googleCode: formState.googleCode,
-      }))
-      return
-    }
-    const code = authCodeType === '邮箱验证码' ? formState.emailCode : formState.verificationCode
-    if(!code || code.length === 0){
-      Toast.fail(transfer(language, 'login_inputCode'))
-      return
-    }
-    if (authCodeType === '短信验证码') {
-      dispatch(check2SMSAuth({
-        mobile: user.mobile,
-        service: 'auth',
-        code: formState.verificationCode,
+      dispatch(requestWithdraw({
+        token_id: tokenId,
+        amount: withdrawAmount,
+        toaddr: withdrawAddress,
+        googleCode: googleCode,
       }))
       return
     }
     if (authCodeType === '邮箱验证码') {
-      dispatch(check2SmtpAuth({
+      if (!emailCode || emailCode.length === 0) {
+        Toast.fail(transfer(language, 'me_enter_EmailVerification'))
+        return
+      }
+      dispatch(requestWithdraw({
+        token_id: tokenId,
+        amount: withdrawAmount,
+        toaddr: withdrawAddress,
         email: user.email,
-        service: 'auth',
-        code: formState.emailCode,
+        code: emailCode,
       }))
     }
   }
@@ -634,7 +529,7 @@ class WithDraw extends Component {
     if (title === '谷歌验证码') {
       dispatch(updateForm({
         ...formState,
-        verificationCode: '',
+        smsCode: '',
         emailCode: '',
       }))
     } else if(title === '短信验证码'){
@@ -643,11 +538,10 @@ class WithDraw extends Component {
         googleCode: '',
         emailCode: '',
       }))
-
     } else {
       dispatch(updateForm({
         ...formState,
-        verificationCode: '',
+        smsCode: '',
         googleCode: '',
       }))
     }
@@ -658,7 +552,7 @@ class WithDraw extends Component {
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
-      verificationCode: '',
+      smsCode: '',
       googleCode: '',
       emailCode: '',
     }))
@@ -679,11 +573,11 @@ class WithDraw extends Component {
           segmentValueChanged={this.segmentValueChanged}
           smsCodePress={(count) => {
             this.count = count
-            dispatch(requestGetCode({ mobile: user.mobile, service: 'auth' }))
+            dispatch(requestGetCode({ mobile: user.mobile, service: 'withdraw' }))
           }}
           emsCodePress={(count) => {
             this.count = count
-            dispatch(actions.getVerificateSmtpCode({ email: user.email, service: 'check' }))
+            dispatch(requestGetCode({ email: user.email, service: 'withdraw' }))
           }}
           confirmPress={link => this.confirmPress(link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
@@ -1045,8 +939,6 @@ function mapStateToProps(state) {
     ...state.withdraw,
     user: state.user.user,
     language: state.system.language,
-    getVerificateSmtpCodeLoading: state.user.getVerificateSmtpCodeVisible,
-    getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
   }
 }
 

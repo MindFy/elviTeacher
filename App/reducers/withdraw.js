@@ -9,7 +9,7 @@ const initialState = {
   formState: {
     withdrawAmount: '',
     withdrawAddress: '',
-    verificationCode: '',
+    smsCode: '',
     googleCode: '',
     emailCode: '',
   },
@@ -21,18 +21,8 @@ const initialState = {
   withdrawError: null,
   error: null,
   address: [],
-  googleCodeCheckLoading: false,
-  googleCodeCheckError: null,
-  checkSMSCodeLoading: false,
-  checkSMSCodeResponse: null,
-  checkSmtpCodeLoading: false,
-  checkSmtpCodeResponse: null,
-  getCodeLoading: false,
-  getCodeResult: null,
-  getCodeError: null,
-  getVerificateSmtpCodeLoading: false,
-  getVerificateSmtpCodeResponse: null,
-
+  requestGetCodeLoading: false,
+  requestGetCodeResponse: null,
   requestPair: {},
   requestPairStatus: 0,
 }
@@ -164,78 +154,25 @@ export default function withdraw(state = initialState, action) {
         authCodeType: payload,
       }
       break
-    case 'withdraw/check2_google_auth':
-      nextState = {
-        ...state,
-        googleCodeCheckLoading: true,
-      }
-      break
-    case 'withdraw/check2_google_auth_succeed':
-      nextState = {
-        ...state,
-        googleCodeCheckLoading: false,
-      }
-      break
-    case 'withdraw/check2_google_auth_failed':
-      nextState = {
-        ...state,
-        googleCodeCheckError: payload,
-      }
-      break
-    case 'withdraw/check2_google_auth_set_error':
-      nextState = {
-        ...state,
-        googleCodeCheckError: payload,
-      }
-      break
-    case 'withdraw/check2_sms_auth':
-      nextState = {
-        ...state,
-        checkSMSCodeLoading: true,
-      }
-      break
-    case 'withdraw/check2_sms_auth_set_response':
-      nextState = {
-        ...state,
-        checkSMSCodeLoading: false,
-        checkSMSCodeResponse: payload,
-      }
-      break
-    case 'withdraw/check2_smtp_auth':
-      nextState = {
-        ...state,
-        checkSmtpCodeLoading: true,
-      }
-      break
-    case 'withdraw/check2_smtp_auth_set_response':
-      nextState = {
-        ...state,
-        checkSmtpCodeLoading: false,
-        checkSmtpCodeResponse: payload,
-      }
-      break
     case 'withdraw/request_get_code':
       nextState = {
         ...state,
-        getCodeLoading: true,
-        getCodeResult: null,
-        getCodeError: null,
+        requestGetCodeLoading: true,
+        requestGetCodeResponse: null,
       }
       break
     case 'withdraw/request_get_code_succeed':
       nextState = {
         ...state,
-        getCodeLoading: false,
-        getCodeResult: payload,
-        getCodeError: null,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: payload,
       }
       break
     case 'withdraw/request_get_code_failed':
       nextState = {
         ...state,
-        getCodeLoading: false,
-        getCodeResult: null,
-        getCodeError: payload,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

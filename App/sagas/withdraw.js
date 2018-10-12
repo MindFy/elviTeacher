@@ -85,67 +85,18 @@ export function* requestWithdrawAddressWorker(action) {
   }
 }
 
-export function* requsetCheck2GoogleAuthWorker(action) {
-  const { payload } = action
-  const response = yield call(api.check2GoogleAuth, payload)
-  if (response.success) {
-    yield put({
-      type: 'withdraw/check2_google_auth_succeed',
-      payload: response.result,
-    })
-  } else {
-    yield put({
-      type: 'withdraw/check2_google_auth_failed',
-      payload: response.error,
-    })
-  }
-}
-
-export function* requsetCheck2SMSAuthWorker(action) {
-  const { payload } = action
-  const response = yield call(api.checkVerificateCode, payload)
-  if (response.success) {
-    yield put({
-      type: 'withdraw/check2_sms_auth_set_response',
-      payload: response,
-    })
-  } else {
-    yield put({
-      type: 'withdraw/check2_sms_auth_set_response',
-      payload: response,
-    })
-  }
-}
-
-export function* requsetCheck2SmtpAuthWorker(action) {
-  const { payload } = action
-  const response = yield call(api.checkVerificateSmtpCode, payload)
-  if (response.success) {
-    yield put({
-      type: 'withdraw/check2_smtp_auth_set_response',
-      payload: response,
-    })
-  } else {
-    yield put({
-      type: 'withdraw/check2_smtp_auth_set_response',
-      payload: response,
-    })
-  }
-}
-
 export function* requestGetCodeWorker(action) {
   const { payload } = action
-  const response = yield call(api.getVerificateCode, payload)
-
+  const response = yield call(api.requestVerificateCode, payload)
   if (response.success) {
     yield put({
       type: 'withdraw/request_get_code_succeed',
-      payload: response.result,
+      payload: response,
     })
   } else {
     yield put({
       type: 'withdraw/request_get_code_failed',
-      payload: response.error,
+      payload: response,
     })
   }
 }
@@ -230,18 +181,6 @@ export function* requestWithdraw() {
 
 export function* requestWithdrawAddress() {
   yield takeEvery('withdraw/request_withdraw_address', requestWithdrawAddressWorker)
-}
-
-export function* requsetCheck2GoogleAuth() {
-  yield takeEvery('withdraw/check2_google_auth', requsetCheck2GoogleAuthWorker)
-}
-
-export function* requsetCheck2SMSAuth() {
-  yield takeEvery('withdraw/check2_sms_auth', requsetCheck2SMSAuthWorker)
-}
-
-export function* requsetCheck2SmtpAuth() {
-  yield takeEvery('withdraw/check2_smtp_auth', requsetCheck2SmtpAuthWorker)
 }
 
 export function* requestGetCode() {

@@ -26,7 +26,6 @@ import Authentication from './views/me/Authentication'
 import SecurityCenter from './views/me/SecurityCenter'
 import Rebates from './views/me/Rebates'
 import UpdateEmail from './views/me/UpdateEmail'
-import EmailCheck from './views/me/EmailCheck'
 import UpdateMobile from './views/me/UpdateMobile'
 import Settings from './views/me/Settings'
 import Language from './views/me/Language'
@@ -47,7 +46,6 @@ import Login from './views/login/Login'
 import Register from './views/login/Register'
 import EmailRegist from './views/login/EmailRegist'
 import ForgotPwd from './views/login/ForgotPwd'
-import ConfirmPwd from './views/login/ConfirmPwd'
 import Agreement from './views/login/Agreement'
 import transfer from './localization/utils'
 
@@ -216,7 +214,6 @@ const TabBarStack = StackNavigator(
     Announcement,
     SecurityCenter,
     UpdateEmail,
-    EmailCheck,
     UpdateMobile,
     KLineFullScreen: {
       screen: KLineFullScreen,
@@ -253,7 +250,6 @@ const LoginStack = DismissableStackNavigator(
     Register,
     EmailRegist,
     ForgotPwd,
-    ConfirmPwd,
     Agreement,
   }, {
     navigationOptions: {

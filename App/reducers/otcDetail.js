@@ -2,14 +2,11 @@ const initialState = {
   otcList: [],
   otcListPage: 0,
   formState: {
-    code: '',
     allegeText: '',
+    smsCode: '',
     googleCode: '',
     emailCode: '',
   },
-  getCodeLoading: false,
-  getCodeResult: null,
-  getCodeError: null,
   confirmPayLoading: false,
   confirmPayResult: null,
   confirmPayError: null,
@@ -25,15 +22,8 @@ const initialState = {
   otcListLoading: false,
   otcListError: null,
 
-  googleCodeLoading: false,
-  googleCodeResponse: null,
-  getVerificateSmtpCodeLoading: false,
-  getVerificateSmtpCodeResponse: null,
-
-  checkSMSCodeLoading: false,
-  checkSMSCodeResponse: null,
-  checkSmtpCodeLoading: false,
-  checkSmtpCodeResponse: null,
+  requestGetCodeLoading: false,
+  requestGetCodeResponse: null,
 }
 
 export default function otcDetail(state = initialState, action) {
@@ -72,25 +62,22 @@ export default function otcDetail(state = initialState, action) {
     case 'otcDetail/request_get_code':
       nextState = {
         ...state,
-        getCodeLoading: true,
-        getCodeResult: null,
-        getCodeError: null,
+        requestGetCodeLoading: true,
+        requestGetCodeResponse: null,
       }
       break
     case 'otcDetail/request_get_code_succeed':
       nextState = {
         ...state,
-        getCodeLoading: false,
-        getCodeResult: payload,
-        getCodeError: null,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: payload,
       }
       break
     case 'otcDetail/request_get_code_failed':
       nextState = {
         ...state,
-        getCodeLoading: false,
-        getCodeResult: null,
-        getCodeError: payload,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: payload,
       }
       break
     case 'otcDetail/request_confirm_pay':
@@ -205,45 +192,6 @@ export default function otcDetail(state = initialState, action) {
       nextState = {
         ...state,
         authCodeType: payload,
-      }
-      break
-    case 'otcDetail/check2_google_auth':
-      nextState = {
-        ...state,
-        googleCodeLoading: true,
-      }
-      break
-    case 'otcDetail/check2_google_auth_set_response':
-      nextState = {
-        ...state,
-        googleCodeLoading: false,
-        googleCodeResponse: payload,
-      }
-      break
-    case 'otcDetail/check2_sms_auth':
-      nextState = {
-        ...state,
-        checkSMSCodeLoading: true,
-      }
-      break
-    case 'otcDetail/check2_sms_auth_set_response':
-      nextState = {
-        ...state,
-        checkSMSCodeLoading: false,
-        checkSMSCodeResponse: payload,
-      }
-      break
-    case 'otcDetail/check2_smtp_auth':
-      nextState = {
-        ...state,
-        checkSmtpCodeLoading: true,
-      }
-      break
-    case 'otcDetail/check2_smtp_auth_set_response':
-      nextState = {
-        ...state,
-        checkSmtpCodeLoading: false,
-        checkSmtpCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

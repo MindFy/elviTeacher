@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: common.bgColor,
+    paddingTop: common.getH(90) - common.navHeight,
   },
   inputView: {
     marginTop: common.getH(90),
@@ -83,38 +84,36 @@ class ForgotPwd extends Component {
     this.showCheckVerificateSMPTCodeResponse = false
     this.state = {
       showTip: false,
-      nextBtnDisabled: true,
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.handleGetVerificateCodeRequest(nextProps)
-    this.handleGetVerificateSMPTCodeRequest(nextProps)
-    this.handleCheckVerificateCodeRequest(nextProps)
-    this.handleCheckVerificateSmptCodeRequest(nextProps)
+    this.handleRequestGetCode(nextProps)
+    this.HandleResetPasswordRequest(nextProps)
   }
 
   componentWillUnmount() {
-    const { dispatch } = this.props
-    dispatch(actions.registerUpdate({
-      mobile: '',
-      code: '',
-      password: '',
-      passwordAgain: '',
-    }))
+    const { dispatch, mobile, code, password, passwordAgain } = this.props
+    dispatch(actions.registerUpdate({ mobile, code, password, passwordAgain }))
   }
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, mobile, code } = this.props
+    const { dispatch, mobile, code, password, passwordAgain } = this.props
 
     switch (tag) {
       case 'mobile':
         this.setState({ showTip: false })
-        dispatch(actions.registerUpdate({ mobile: text, code, password: '', passwordAgain: '' }))
+        dispatch(actions.registerUpdate({ mobile: text, code, password, passwordAgain }))
         break
       case 'code':
-        dispatch(actions.registerUpdate({ mobile, code: text, password: '', passwordAgain: '' }))
+        dispatch(actions.registerUpdate({ mobile, code: text, password, passwordAgain }))
+        break
+      case 'password':
+        dispatch(actions.registerUpdate({ mobile, code, password: text, passwordAgain }))
+        break
+      case 'passwordAgain':
+        dispatch(actions.registerUpdate({ mobile, code, password, passwordAgain: text }))
         break
       default:
         break
@@ -132,152 +131,93 @@ class ForgotPwd extends Component {
     if (common.regMobile.test(mobile)) {
       dispatch(actions.getVerificateCode({
         mobile,
-        service: 'reset',
+        service: 'reset_pass',
       }))
       return
     }
     if (common.regEmail.test(mobile)) {
-      dispatch(actions.getVerificateSmtpCode({
+      dispatch(actions.getVerificateCode({
         email: mobile,
-        service: 'reset',
+        service: 'reset_pass',
       }))
       return
     }
     Toast.fail(transfer(language, 'login_inputCorrectId'))
   }
 
-  nextPress() {
-    Keyboard.dismiss()
-
-    const { dispatch, mobile, code, language } = this.props
-    if (!mobile.length) {
-      Toast.fail(transfer(language, 'login_inputPhone'))
+  resetPasswordPress() {
+    const { dispatch, mobile, code, password, passwordAgain, language } = this.props
+    if (!password.length || !common.filterPwd(password)) {
+      Toast.show({
+        style: {
+          paddingLeft: common.margin20,
+          paddingRight: common.margin20,
+        },
+        text: transfer(language, 'login_passFormatterError'),
+      })
       return
     }
-    if (!code.length) {
-      Toast.fail(transfer(language, 'login_inputCode'))
+    if (!passwordAgain.length) {
+      Toast.fail(transfer(language, 'login_resetPass'))
+      return
+    }
+    if (password !== passwordAgain) {
+      Toast.fail(transfer(language, 'login_passwordDidMatch'))
       return
     }
     if (common.regMobile.test(mobile)) {
-      dispatch(actions.checkVerificateCode({
+      dispatch(actions.resetPassword({
         mobile,
-        service: 'reset',
         code,
+        newpassword: password,
       }))
-      return
-    }
-    if (common.regEmail.test(mobile)) {
-      dispatch(actions.checksmptVerificateCode({
+    } else {
+      dispatch(actions.resetPassword({
         email: mobile,
-        service: 'reset',
         code,
+        newpassword: password,
       }))
+    }
+  }
+
+  handleRequestGetCode(nextProps) {
+    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
-    Toast.fail(transfer(language, 'login_inputCorrectId'))
-  }
-
-  /* 获取验证码请求结果处理 */
-  handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateCodeVisible, getVerificateCodeResponse, language } = nextProps
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
-    if (getVerificateCodeVisible) {
-      this.showGetVerificateCodeResponse = true
-    } else {
-      this.showGetVerificateCodeResponse = false
-      if (getVerificateCodeResponse.success) {
-        Toast.success(transfer(language, 'get_code_succeed'))
-        this.setState({ nextBtnDisabled: false })
-      } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_numberOrTypeError'))
-      } else if (getVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
-      } else if (getVerificateCodeResponse.error.code === 4000103) {
-        Toast.fail(transfer(language, 'login_codeOverDue'))
-      } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneUnRegist2'))
-      } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
-      } else {
-        Toast.fail(transfer(language, 'login_getCodeFailed'))
-      }
+    if (requestGetCodeResponse.success) {
+      Toast.success(transfer(language, 'get_code_succeed'))
+    }
+    else{
+      const msg = transfer(language, this.errors[requestGetCodeResponse.error.code])
+      if (msg) Toast.fail(msg)
+      else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
     }
   }
 
-  /* 获取验证码请求结果处理 */
-  handleGetVerificateSMPTCodeRequest(nextProps) {
-    const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse, language } = nextProps
-    if (!getVerificateSmtpCodeVisible && !this.showGetVerificateSMPTCodeResponse) return
-
-    if (getVerificateSmtpCodeVisible) {
-      this.showGetVerificateSMPTCodeResponse = true
-    } else {
-      this.showGetVerificateSMPTCodeResponse = false
-      if (getVerificateSmtpCodeResponse.success) {
-        Toast.success(transfer(language, 'get_code_succeed'))
-        this.setState({ nextBtnDisabled: false })
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_numberOrTypeError'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
-        Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
-        Toast.fail(transfer(language, 'login_codeOverDue'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_phoneUnRegist2'))
-      } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
-      } else {
-        Toast.fail(transfer(language, 'login_getCodeFailed'))
-      }
-    }
-  }
-
-  /* 检测验证码请求结果处理 */
-  handleCheckVerificateCodeRequest(nextProps) {
-    const { checkVerificateCodeVisible, checkVerificateCodeResponse,
+  HandleResetPasswordRequest(nextProps) {
+    const { dispatch, resetPasswordVisible, resetPasswordResponse,
       navigation, language } = nextProps
-    if (!checkVerificateCodeVisible && !this.showCheckVerificateCodeResponse) return
-    if (checkVerificateCodeVisible) {
-      this.showCheckVerificateCodeResponse = true
-    } else {
-      this.showCheckVerificateCodeResponse = false
-      if (checkVerificateCodeResponse.success) {
-        navigation.navigate('ConfirmPwd')
-      } else if (checkVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_numberOrTypeError'))
-      } else if (checkVerificateCodeResponse.error.code === 4000102) {
-        Toast.fail(transfer(language, 'login_codeError'))
-      } else if (checkVerificateCodeResponse.error.code === 4000103) {
-        Toast.fail(transfer(language, 'login_codeOverDue'))
-      } else if (checkVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
-      } else {
-        Toast.fail(transfer(language, 'login_verificateFailed'))
-      }
-    }
-  }
+    if (!resetPasswordVisible && !this.showResetPasswordResponse) return
 
-  /* 检测验证码请求结果处理 */
-  handleCheckVerificateSmptCodeRequest(nextProps) {
-    const { checkVerificateSmtpCodeVisible, checkVerificateSmtpCodeResponse,
-      navigation, language } = nextProps
-    if (!checkVerificateSmtpCodeVisible && !this.showCheckVerificateSMPTCodeResponse) return
-    if (checkVerificateSmtpCodeVisible) {
-      this.showCheckVerificateSMPTCodeResponse = true
+    if (resetPasswordVisible) {
+      this.showResetPasswordResponse = true
     } else {
-      this.showCheckVerificateSMPTCodeResponse = false
-      if (checkVerificateSmtpCodeResponse.success) {
-        navigation.navigate('ConfirmPwd')
-      } else if (checkVerificateSmtpCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_numberOrTypeError2'))
-      } else if (checkVerificateSmtpCodeResponse.error.code === 4000102) {
+      this.showResetPasswordResponse = false
+      if (resetPasswordResponse.success) {
+        Toast.success(transfer(language, 'login_resetPasswordSuccess'))
+        dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
+        navigation.goBack('Login')
+      } else if (resetPasswordResponse.error.code === 4000101) {
+        Toast.fail(transfer(language, 'login_codeNotNull'))
+      } else if (resetPasswordResponse.error.code === 4000102) {
         Toast.fail(transfer(language, 'login_codeError'))
-      } else if (checkVerificateSmtpCodeResponse.error.code === 4000103) {
-        Toast.fail(transfer(language, 'login_codeOverDue'))
-      } else if (checkVerificateSmtpCodeResponse.error.message === common.badNet) {
+      } else if (resetPasswordResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
+      } else if (resetPasswordResponse.error.code === 4000156) {
+        Toast.fail(transfer(language, 'login_codeError'))
       } else {
-        Toast.fail(transfer(language, 'login_verificateFailed'))
+        Toast.fail(transfer(language, 'login_resetPasswordFailed'))
       }
     }
   }
@@ -295,13 +235,7 @@ class ForgotPwd extends Component {
   }
 
   render() {
-    const { mobile, code, getVerificateCodeVisible,
-      checkVerificateCodeVisible, language } = this.props
-    const { nextBtnDisabled } = this.state
-    let disabled = false
-    if (nextBtnDisabled || getVerificateCodeVisible) {
-      disabled = true
-    }
+    const { mobile, code, requestGetCodeLoading, password, passwordAgain, language } = this.props
     return (
       <ScrollView
         style={styles.container}
@@ -349,19 +283,40 @@ class ForgotPwd extends Component {
               keyboardType: 'numeric',
             }}
           />
+           <TKInputItem
+            viewStyle={[styles.inputView, { marginTop: common.margin40 }]}
+            inputStyle={styles.input}
+            titleStyle={styles.inputText}
+            title={transfer(language, 'login_password')}
+            placeholder={transfer(language, 'me_settings_PWnew')}
+            value={password}
+            maxLength={common.textInputMaxLenPwd}
+            onChange={e => this.onChange(e, 'password')}
+            secureTextEntry
+          />
+          <TKInputItem
+            viewStyle={[styles.inputView, { marginTop: common.margin40 }]}
+            inputStyle={styles.input}
+            titleStyle={styles.inputText}
+            title={transfer(language, 'login_reEnterPassword')}
+            placeholder={transfer(language, 'me_settings_PWnewAgain')}
+            value={passwordAgain}
+            maxLength={common.textInputMaxLenPwd}
+            onChange={e => this.onChange(e, 'passwordAgain')}
+            secureTextEntry
+          />
           <TKButton
             style={{
-              marginTop: common.getH(227),
-              backgroundColor: disabled ? common.grayColor : common.btnTextColor,
+              marginTop: common.getH(80),
+              backgroundColor: common.btnTextColor,
             }}
             theme={'yellow'}
-            caption={transfer(language, 'login_nextStep')}
-            disabled={disabled}
-            onPress={() => this.nextPress()}
+            caption={transfer(language, 'login_submit')}
+            onPress={() => this.resetPasswordPress()}
           />
         </KeyboardAvoidingView>
         <TKSpinner
-          isVisible={checkVerificateCodeVisible}
+          isVisible={requestGetCodeLoading}
         />
       </ScrollView>
 
@@ -374,15 +329,14 @@ function mapStateToProps(store) {
     mobile: store.user.mobileRegister,
     code: store.user.codeRegister,
 
-    getVerificateCodeVisible: store.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: store.user.getVerificateCodeResponse,
-    getVerificateSmtpCodeVisible: store.user.getVerificateSmtpCodeVisible,
-    getVerificateSmtpCodeResponse: store.user.getVerificateSmtpCodeResponse,
+    password: store.user.passwordRegister,
+    passwordAgain: store.user.passwordAgainRegister,
 
-    checkVerificateCodeVisible: store.user.checkVerificateCodeVisible,
-    checkVerificateCodeResponse: store.user.checkVerificateCodeResponse,
-    checkVerificateSmtpCodeVisible: store.user.checkVerificateSmtpCodeVisible,
-    checkVerificateSmtpCodeResponse: store.user.checkVerificateSmtpCodeResponse,
+    resetPasswordVisible: store.user.resetPasswordVisible,
+    resetPasswordResponse: store.user.resetPasswordResponse,
+
+    requestGetCodeLoading: store.user.requestGetCodeLoading,
+    requestGetCodeResponse: store.user.requestGetCodeResponse,
 
     language: store.system.language,
   }

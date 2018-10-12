@@ -31,11 +31,8 @@ import {
   skipLegalDealUpdate,
 } from './legalDeal'
 import {
-  checkVerificateCode,
-  checksmptVerificateCode,
   getGoogleAuth,
   getVerificateCode,
-  getVerificateSmtpCode,
   findUser,
   findUserUpdate,
   idCardAuth,
@@ -55,7 +52,7 @@ import {
   updatePasswordUpdate,
   updateEmail,
   updateMobile,
-  updateEmailUpdate,
+  updateEmailMobileUpdate,
   findAuditmanage,
   registerResetNexus,
 } from './user'
@@ -114,11 +111,8 @@ const actions = {
   legalDealUpdate,
   skipLegalDealUpdate,
 
-  checkVerificateCode,
-  checksmptVerificateCode,
   getGoogleAuth,
   getVerificateCode,
-  getVerificateSmtpCode,
   findUser,
   findUserUpdate,
   idCardAuth,
@@ -137,7 +131,7 @@ const actions = {
   updatePasswordUpdate,
   updateEmail,
   updateMobile,
-  updateEmailUpdate,
+  updateEmailMobileUpdate,
   findAuditmanage,
   registerResetNexus,
 

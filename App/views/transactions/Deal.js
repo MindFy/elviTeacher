@@ -219,7 +219,8 @@ class Deal extends Component {
           transfer(language, 'exchange_sellSuccess')}`)
       this.loadNecessaryData()
     } else if (createResponse.code) {
-      const errors = {
+      const errors = {    
+        4000156: transfer(language, 'login_codeError'),
         4000311: transfer(language, 'exchange_goodsNotExist'),
         4000312: transfer(language, 'exchange_listFailedForCreated'),
         4000510: transfer(language, 'exchange_paramsNull'),

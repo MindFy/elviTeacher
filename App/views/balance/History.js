@@ -123,6 +123,7 @@ class History extends Component {
   }
 
   errors = {
+    4000156: 'login_codeError',
     4000612: 'withdraw_doesnt_exist',
   }
 
