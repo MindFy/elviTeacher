@@ -145,6 +145,8 @@ class Otc extends Component {
         Toast.fail(transfer(language, 'Otc_please_login_to_operate'))
       } else if (error.code === 4000667) {
         Toast.fail(transfer(language, 'Otc_account_frozen'))
+      } else if (error.code === 4000156) {
+        Toast.fail(transfer(language, 'login_codeError'))
       } else {
         Toast.fail(transfer(language, 'Otc_order_pending'))
       }

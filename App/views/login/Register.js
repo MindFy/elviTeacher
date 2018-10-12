@@ -262,6 +262,7 @@ class Register extends Component {
     dispatch(actions.getVerificateCode({
       mobile,
       service: 'register',
+      language,
     }))
   }
 
@@ -308,23 +309,19 @@ class Register extends Component {
   }
 
   handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateCodeVisible, getVerificateCodeResponse, language } = nextProps
-    if (!getVerificateCodeVisible && !this.showGetVerificateCodeResponse) return
+    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    if (!requestGetCodeLoading && !this.showGetVerificateCodeResponse) return
 
-    if (getVerificateCodeVisible) {
+    if (requestGetCodeLoading) {
       this.showGetVerificateCodeResponse = true
     } else {
       this.showGetVerificateCodeResponse = false
-      if (getVerificateCodeResponse.success) {
+      if (requestGetCodeResponse.success) {
         Toast.success(transfer(language, 'get_code_succeed'))
-      } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_numberOrTypeError'))
-      } else if (getVerificateCodeResponse.error.code === 4000102) {
+      } else if (requestGetCodeResponse.error.code === 4000107) {
         Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
-      } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_getCodeFailed'))
-      } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
+      } else if (requestGetCodeResponse.error.code === 4000156) {
+        Toast.fail(transfer(language, 'login_codeError'))
       } else {
         Toast.fail(transfer(language, 'login_getCodeFailed'))
       }
@@ -346,22 +343,6 @@ class Register extends Component {
         const { dispatch } = this.props
         dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
-      } else if (registerResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_reGetCode'))
-      } else if (registerResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_codeNotNull'))
-      } else if (registerResponse.error.code === 4000102) {
-        Toast.fail(transfer(language, 'login_codeError'))
-      } else if (registerResponse.error.code === 4000103) {
-        Toast.fail(transfer(language, 'login_codeOverDue'))
-      } else if (registerResponse.error.code === 4000114) {
-        Toast.fail(transfer(language, 'login_phoneRegisted'))
-      } else if (registerResponse.error.code === 4000115) {
-        Toast.fail(transfer(language, 'login_inviteUserNotExist'))
-      } else if (registerResponse.error.code === 4000113) {
-        Toast.fail(transfer(language, 'login_inviteCodeError'))
-      } else if (registerResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
       } else {
         Toast.fail(transfer(language, 'login_registFailed'))
       }
@@ -737,8 +718,8 @@ function mapStateToProps(state) {
     registerVisible: state.user.registerVisible,
     registerResponse: state.user.registerResponse,
 
-    getVerificateCodeVisible: state.user.getVerificateCodeVisible,
-    getVerificateCodeResponse: state.user.getVerificateCodeResponse,
+    requestGetCodeLoading: state.user.requestGetCodeLoading,
+    requestGetCodeResponse: state.user.requestGetCodeResponse,
 
     language: state.system.language,
   }

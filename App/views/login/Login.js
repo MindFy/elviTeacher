@@ -189,6 +189,8 @@ class Login extends PureComponent {
       dispatch(actions.login({
         mobile: '15913913914',
         password: '123456',
+        client: 'app',
+        language: language,
       }))
     }
 
@@ -211,6 +213,8 @@ class Login extends PureComponent {
       return
     }
     nextFormData.password = formState.password
+    nextFormData.client = 'app'
+    nextFormData.language = language
     dispatch(actions.login(nextFormData))
   }
 
@@ -236,9 +240,7 @@ class Login extends PureComponent {
     }
 
     const errs = {
-      4000114: transfer(language, 'login_idNotExist'),
-      4000115: transfer(language, 'login_passError'),
-      4000116: transfer(language, 'login_phoneUnRegist2'),
+      4000156: 'login_codeError',
       4000117: transfer(language, 'login_idOrPassError'),
     }
 
@@ -249,7 +251,7 @@ class Login extends PureComponent {
       } else if (error.code === 4000118) {
         Toast.fail(error.message)
       } else {
-        Toast.fail(transfer(language, 'login_tryAgain'))
+        Toast.fail(transfer(language, 'login_idOrPassError'))
       }
     }
   }

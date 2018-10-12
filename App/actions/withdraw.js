@@ -128,13 +128,6 @@ export function updateAuthCodeType(payload) {
   }
 }
 
-export function check2GoogleAuth(payload) {
-  return {
-    type: 'withdraw/check2_google_auth',
-    payload,
-  }
-}
-
 export function check2GoogleAuthSetError(payload) {
   return {
     type: 'withdraw/check2_google_auth_set_error',
@@ -152,33 +145,5 @@ export function requestGetCode(payload) {
 export function requestPairs(payload) {
   return {
     type: 'withdraw/request_pair_request',
-  }
-}
-
-export function check2SMSAuth(payload) {
-  return {
-    type: 'withdraw/check2_sms_auth',
-    payload,
-  }
-}
-
-export function check2SMSAuthSetResponse(payload) {
-  return {
-    type: 'withdraw/check2_sms_auth_set_response',
-    payload,
-  }
-}
-
-export function check2SmtpAuth(payload) {
-  return {
-    type: 'withdraw/check2_smtp_auth',
-    payload,
-  }
-}
-
-export function check2SmtpAuthSetResponse(payload) {
-  return {
-    type: 'withdraw/check2_smtp_auth_set_response',
-    payload,
   }
 }

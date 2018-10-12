@@ -52,12 +52,7 @@ function graphqlAPI(endpoint) {
 // Token
 export const getToken = makePostAPI('/1.0/app/user/getTokens')
 // User
-export const checkVerificateCode = makePostAPI('/1.0/app/user/checkVerificateCode')
-export const checkVerificateSmtpCode = makePostAPI('/1.0/app/user/checkVerificateSmtpCode')
-export const check2GoogleAuth = makePostAPI('/1.0/app/user/check2GoogleAuth')
 export const getGoogleAuth = makePostAPI('/1.0/app/user/getGoogleAuth')
-export const getVerificateCode = makePostAPI('/1.0/app/user/getVerificateCode')
-export const getVerificateSmtpCode = makePostAPI('/1.0/app/user/getVerificateSmtpCode')
 export const idCardAuth = makePostAPI('/1.0/app/user/idCardAuth')
 export const isExist = makePostAPI('/1.0/app/user/isExist')
 export const login = makePostAPI('/1.0/app/user/login')

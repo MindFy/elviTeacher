@@ -6,13 +6,15 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  DeviceEventEmitter,
 } from 'react-native'
 import {
   Overlay,
 } from 'teaset'
 import { common, storeRead } from '../../constants/common'
 import SecurityCenterCell from './SecurityCenterCell'
+import {
+  getGoogleAuth,
+} from '../../actions/securityCenter'
 import actions from '../../actions/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
@@ -50,6 +52,14 @@ class SecurityCenter extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { language } = this.props
+    if(this.props.requestGoogleAuthLoading && !nextProps.requestGoogleAuthLoading){
+      const msg = nextProps.GoogleAuthBinded ? transfer(language, 'me_googleBinded') : transfer(language, 'me_googleBindReminder')
+      this.showOverlay(msg)
+    }
+  }
+
   componentWillMount() {
     const { navigation, language } = this.props
     navigation.setParams({
@@ -58,15 +68,9 @@ class SecurityCenter extends Component {
   }
 
   componentDidMount() {
-    this.listener = DeviceEventEmitter.addListener(common.noti.googleAuth, () => {
-      const { googleAuth, language } = this.props
-      const msg = googleAuth ? transfer(language, 'me_googleBinded') : transfer(language, 'me_googleBindReminder')
-      this.showOverlay(msg)
-    })
   }
 
   componentWillUnmount() {
-    this.listener.remove()
   }
 
   showOverlay(msg) {
@@ -103,21 +107,6 @@ class SecurityCenter extends Component {
     }, 2000)
   }
 
-  maskMobile(value) {
-    return String(value).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
-  }
-
-  maskEmail(value = '') {
-    if (value) {
-      const arr = value.split('@')
-      if (arr[0].length > 3) {
-        return `${arr[0].substring(0, 3)}****@${arr[1]}`
-      }
-      return value
-    }
-    return ''
-  }
-
   render() {
     const { navigation, loggedInResult, dispatch, language } = this.props
     return (
@@ -132,7 +121,7 @@ class SecurityCenter extends Component {
         />
         <SecurityCenterCell
           title={transfer(language, 'me_linkEmail')}
-          detail={this.maskEmail(loggedInResult.email || '')}
+          detail={common.maskEmail(loggedInResult.email || '')}
           onPress={() => {
             if (!loggedInResult.email) {
               navigation.navigate('UpdateEmail')
@@ -145,10 +134,10 @@ class SecurityCenter extends Component {
           language === 'zh_hans' ?
             (<SecurityCenterCell
               title={transfer(language, 'me_linkMobile')}
-              detail={this.maskMobile(loggedInResult.mobile || '')}
+              detail={common.maskMobile(loggedInResult.mobile || '')}
               onPress={() => {
                 if (!loggedInResult.mobile) {
-                  navigation.navigate('EmailCheck')
+                  navigation.navigate('UpdateMobile')
                 } else {
                   this.showOverlay(transfer(language, 'me_Mobile_binded'))
                 }
@@ -165,7 +154,7 @@ class SecurityCenter extends Component {
                 const { dispatch } = this.props
                 dispatch(actions.findUserUpdate(user))
                 dispatch(actions.findUser(schemas.findUser(user.id)))
-                dispatch(actions.getGoogleAuth(schemas.findUser(user.id)))}
+                dispatch(getGoogleAuth(schemas.findUser(user.id)))}
               })
             }
           }
@@ -177,6 +166,7 @@ class SecurityCenter extends Component {
 
 function mapStateToProps(state) {
   return {
+    ...state.securityCenter,
     googleAuth: state.user.googleAuth,
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,

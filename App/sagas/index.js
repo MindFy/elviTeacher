@@ -31,6 +31,7 @@ import * as recharge from './recharge'
 import * as history from './history'
 import watcherRequestReceiverInfo from './receiverInfo'
 import * as system from './system'
+import * as securityCenter from './securityCenter'
 
 export default function* rootSaga() {
   yield [
@@ -42,11 +43,8 @@ export default function* rootSaga() {
     loginFlow(),
     syncWatcher(),
     watchRequestLoginout(),
-    fork(user.checkVerificateCode),
-    fork(user.checksmptVerificateCode),
     fork(user.getGoogleAuth),
     fork(user.getVerificateCode),
-    fork(user.getVerificateSmtpCode),
     fork(user.findUser),
     fork(user.idCardAuth),
     fork(user.isExist),
@@ -89,17 +87,7 @@ export default function* rootSaga() {
     fork(withdraw.requestValuation),
     fork(withdraw.requestWithdraw),
     fork(withdraw.requestWithdrawAddress),
-    fork(withdraw.requsetCheck2GoogleAuth),
     fork(withdraw.requestGetCode),
-
-    fork(addressAdd.requsetCheck2SMSAuth),
-    fork(updateBank.requsetCheck2SMSAuth),
-    fork(otcDetail.requsetCheck2SMSAuth),
-    fork(withdraw.requsetCheck2SMSAuth),
-    fork(addressAdd.requsetCheck2SmtpAuth),
-    fork(updateBank.requsetCheck2SmtpAuth),
-    fork(otcDetail.requsetCheck2SmtpAuth),
-    fork(withdraw.requsetCheck2SmtpAuth),
 
     fork(orderHistoryRequest),
     fork(openOrderRequest),
@@ -118,12 +106,12 @@ export default function* rootSaga() {
     fork(exchanges.requestDepthMap),
     fork(requestBalanceList),
     fork(requestBalanceValuation),
+    fork(securityCenter.getGoogleAuth),
     exchanges.watchCheckFavorite(),
     exchanges.watchSetFavorite(),
 
     updateBank.requestUpdateBank(),
     updateBank.requestGetCode(),
-    updateBank.requsetCheck2GoogleAuthWatcher(),
 
     otcDetail.requestOtcList(),
     otcDetail.requestGetCode(),
@@ -131,14 +119,12 @@ export default function* rootSaga() {
     otcDetail.requestHavedPay(),
     otcDetail.requestCancel(),
     otcDetail.requestAllege(),
-    otcDetail.requsetCheck2GoogleAuthWatcher(),
 
     recharge.requestCoinList(),
     recharge.requestRechargeAddress(),
     recharge.requestCreateAddress(),
 
     addressAdd.requestAddressAdd(),
-    addressAdd.requsetCheck2GoogleAuthWatcher(),
     addressAdd.requestGetCode(),
 
     history.requestDeposit(),

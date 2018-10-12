@@ -63,5 +63,5 @@
   "jest": {
     "preset": "react-native"
   },
-  "jsVersion": "1.0.11.0"
+  "jsVersion": "1.0.12.0"
 }

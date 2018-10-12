@@ -3,24 +3,16 @@ const initialState = {
     bankName: '',
     subbankName: '',
     bankNo: '',
-    code: '',
+    smsCode: '',
     googleCode: '',
     emailCode: '',
   },
   mobile: '',
   loading: false,
   updateBankError: null,
-  getCodeError: null,
   updateBankResult: null,
-  getCodeResult: null,
-  googleCodeLoading: false,
-  googleCodeResponse: null,
-  checkSMSCodeLoading: false,
-  checkSMSCodeResponse: null,
-  checkSmtpCodeLoading: false,
-  checkSmtpCodeResponse: null,
-  getVerificateSmtpCodeLoading: false,
-  getVerificateSmtpCodeResponse: null,
+  requestGetCodeLoading: false,
+  requestGetCodeResponse: null,
 }
 
 export default function updateBank(state = initialState, action) {
@@ -61,70 +53,28 @@ export default function updateBank(state = initialState, action) {
     case 'updateBank/request_get_code':
       nextState = {
         ...state,
-        loading: true,
-        getCodeError: null,
-        getCodeResult: null,
+        requestGetCodeLoading: true,
+        requestGetCodeResponse: null,
       }
       break
     case 'updateBank/request_get_code_succeed':
       nextState = {
         ...state,
-        loading: false,
-        getCodeError: null,
-        getCodeResult: payload,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: payload,
       }
       break
     case 'updateBank/request_get_code_failed':
       nextState = {
         ...state,
-        loading: false,
-        getCodeError: payload,
-        getCodeResult: null,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: payload,
       }
       break
     case 'updateBank/update_auth_code_type':
       nextState = {
         ...state,
         authCodeType: payload,
-      }
-      break
-    case 'updateBank/check2_google_auth':
-      nextState = {
-        ...state,
-        googleCodeLoading: true,
-      }
-      break
-    case 'updateBank/check2_google_auth_set_response':
-      nextState = {
-        ...state,
-        googleCodeLoading: false,
-        googleCodeResponse: payload,
-      }
-      break
-    case 'updateBank/check2_sms_auth':
-      nextState = {
-        ...state,
-        checkSMSCodeLoading: true,
-      }
-      break
-    case 'updateBank/check2_sms_auth_set_response':
-      nextState = {
-        ...state,
-        checkSMSCodeLoading: false,
-        checkSMSCodeResponse: payload,
-      }
-      break
-    case 'updateBank/check2_smtp_auth':
-      nextState = {
-        ...state,
-        checkSmtpCodeLoading: true,
-      }
-      break
-    case 'updateBank/check2_smtp_auth_set_response':
-      nextState = {
-        ...state,
-        checkSmtpCodeLoading: false,
-        checkSmtpCodeResponse: payload,
       }
       break
     case 'notify/clear_reducer':

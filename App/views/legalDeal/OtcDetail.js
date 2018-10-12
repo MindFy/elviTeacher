@@ -26,10 +26,6 @@ import {
   updateForm,
   updateOtcList,
   updateAuthCodeType,
-  check2GoogleAuth,
-  check2GoogleAuthSetResponse,
-  check2SMSAuth,
-  check2SmtpAuth,
   updateListPage,
 } from '../../actions/otcDetail'
 import actions from '../../actions/index'
@@ -182,21 +178,17 @@ class OtcDetail extends Component {
     this.handleRequestHavedPay(nextProps)
     this.handleRequestOtcList(nextProps)
     this.handleRequestAllege(nextProps)
-    this.handleRequestCheck2GoogleCode(nextProps)
-    this.handleGetVerificateSMPTCodeRequest(nextProps)
-    this.handleCheckVerificateSmptCodeRequest(nextProps)
-    this.handleCheckVerificateCodeRequest(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch, formState } = this.props
-    dispatch(updateForm({ ...formState, code: '', allegeText: '' }))
+    dispatch(updateForm({ ...formState, smsCode: '', allegeText: '' }))
   }
 
   onChangeText(text, tag) {
     const { dispatch, formState } = this.props
     if (tag === 'code') {
-      dispatch(updateForm({ ...formState, code: text }))
+      dispatch(updateForm({ ...formState, smsCode: text }))
     } else if (tag === 'allege') {
       if (text.length > 50) return
       dispatch(updateForm({ ...formState, allegeText: text }))
@@ -209,41 +201,42 @@ class OtcDetail extends Component {
       return
     }
     if (link) {
-      this.props.navigation.navigate('EmailCheck')
       return
     }
     const { loggedInResult, dispatch, formState, authCodeType, language } = this.props
-    if (authCodeType === '短信验证码' || authCodeType === '邮箱验证码') {
-      const code = authCodeType === '短信验证码' ? formState.code : formState.emailCode
-      if (!code || code.length === 0) {
-        Toast.fail(transfer(language, 'AuthCode_enter_sms_code'))
+    const { smsCode, googleCode, emailCode } = formState
+    if (authCodeType === '短信验证码') {
+      if (!smsCode || smsCode.length === 0) {
+        Toast.fail(transfer(language, 'me_enter_mobileVerification'))
         return
       }
-      this.id = id
-      if (authCodeType === '短信验证码') {
-        dispatch(check2SMSAuth({
-          mobile: loggedInResult.mobile,
-          service: 'auth',
-          code: formState.code,
-        }))
-        return
-      }
-      if (authCodeType === '邮箱验证码') {
-        dispatch(check2SmtpAuth({
-          email: loggedInResult.email,
-          service: 'auth',
-          code: formState.emailCode,
-        }))
-      }
-    } else {
-      const { googleCode } = formState
+      dispatch(requestConfirmPay({ 
+        id: id, 
+        mobile: loggedInResult.mobile,
+        code: smsCode, 
+      }))
+      return
+    }
+    if (authCodeType === '谷歌验证码') {
       if (!googleCode || googleCode.length === 0) {
-        Toast.fail(transfer(language, 'AuthCode_enter_gv_code'))
+        Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
-      this.id = id
-      dispatch(check2GoogleAuth({
-        googleCode: formState.googleCode,
+      dispatch(requestConfirmPay({ 
+        id: id, 
+        googleCode: googleCode,
+      }))
+      return
+    }
+    if (authCodeType === '邮箱验证码') {
+      if (!emailCode || emailCode.length === 0) {
+        Toast.fail(transfer(language, 'me_enter_EmailVerification'))
+        return
+      }
+      dispatch(requestConfirmPay({ 
+        id: id, 
+        email: loggedInResult.email,
+        code: emailCode,
       }))
     }
   }
@@ -286,7 +279,7 @@ class OtcDetail extends Component {
     if (authCodeType === '短信验证码') {
       dispatch(updateForm({
         ...formState,
-        code: code,
+        smsCode: code,
       }))
     } else if(authCodeType === '谷歌验证码'){
       dispatch(updateForm({
@@ -305,21 +298,22 @@ class OtcDetail extends Component {
     const { dispatch, formState } = this.props
     const title = this.codeTitles[e.index]
     dispatch(updateAuthCodeType(title))
-
-    if (e.index === 0) {
+    if (title === '谷歌验证码') {
+      dispatch(updateForm({
+        ...formState,
+        smsCode: '',
+        emailCode: '',
+      }))
+    } else if(title === '短信验证码'){
       dispatch(updateForm({
         ...formState,
         googleCode: '',
         emailCode: '',
       }))
-    } else if(e.index === 1){
-      dispatch(updateForm({
-        code: '',
-        emailCode: '',
-      }))
     } else {
       dispatch(updateForm({
-        code: '',
+        ...formState,
+        smsCode: '',
         googleCode: '',
       }))
     }
@@ -328,7 +322,7 @@ class OtcDetail extends Component {
   SMSCodePress = (count) => {
     this.count = count
     const { loggedInResult, dispatch } = this.props
-    dispatch(requestGetCode({ mobile: loggedInResult.mobile, service: 'auth' }))
+    dispatch(requestGetCode({ mobile: loggedInResult.mobile, service: 'confirm_pay' }))
   }
 
   showAuthCode = (id) => {
@@ -336,7 +330,7 @@ class OtcDetail extends Component {
     dispatch(updateAuthCodeType('短信验证码'))
     dispatch(updateForm({
       ...formState,
-      SMSCode: '',
+      smsCode: '',
       googleCode: '',
       emailCode: '',
     }))
@@ -358,7 +352,7 @@ class OtcDetail extends Component {
           smsCodePress={this.SMSCodePress}
           emsCodePress={(count) => {
             this.count = count
-            dispatch(actions.getVerificateSmtpCode({ email: loggedInResult.email, service: 'check' }))
+            dispatch(requestGetCode({ email: loggedInResult.email, service: 'confirm_pay' }))
           }}
           confirmPress={link => this.confirmPayPress(id, link)}
           cancelPress={() => Overlay.hide(this.overlayViewKeyID)}
@@ -370,28 +364,24 @@ class OtcDetail extends Component {
   }
 
   errors = {
-    4000101: 'AuthCode_bad_phone_number_or_service_type',
-    4000102: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
-    4000104: 'AuthCode_mobile_phone_number_registered',
-    4000156: 'AuthCode_authorization_verification_failed',
+    4000156: 'login_codeError',
+    4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
     4001480: 'OtcDetail_order_statusexpired',
     4001421: 'OtcDetail_order_statusexpired',
   }
 
   handleRequestGetCode(nextProps) {
-    const { getCodeResult, getCodeError, language } = nextProps
-
-    if (getCodeResult && getCodeResult !== this.props.getCodeResult) {
+    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
+      return
+    }
+    if (requestGetCodeResponse.success) {
       Toast.success(transfer(language, 'get_code_succeed'))
     }
-    if (getCodeError && getCodeError !== this.props.getCodeError) {
-      if (getCodeError.message === common.badNet) {
-        Toast.fail(transfer(language, 'OtcDetail_net_error'))
-      } else {
-        const msg = transfer(language, this.errors[getCodeError.code])
-        if (msg) Toast.fail(msg)
-        else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
-      }
+    else{
+      const msg = transfer(language, this.errors[requestGetCodeResponse.error.code])
+      if (msg) Toast.fail(msg)
+      else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
     }
   }
 
@@ -434,11 +424,7 @@ class OtcDetail extends Component {
       } else {
         const msg = this.errors[confirmPayError.code]
         if (msg) Toast.fail(transfer(language, msg))
-        else Toast.fail(transfer(language, 'OtcDetail_confirm_failed'))
-      }
-      if(authCodeType !== '谷歌验证码')
-      {
-        Overlay.hide(this.overlayViewKeyID)
+        else Toast.fail(transfer(language, 'login_codeError'))
       }
     }
   }
@@ -464,88 +450,6 @@ class OtcDetail extends Component {
         Toast.fail(transfer(language, 'OtcDetail_operation_failed'))
       }
     }
-  }
-
-  handleRequestCheck2GoogleCode(nextProps) {
-    if (!nextProps.googleCodeLoading && this.props.googleCodeLoading) {
-      const { googleCodeResponse, dispatch, formState, language } = nextProps
-      if (googleCodeResponse.success) {
-        dispatch(requestConfirmPay({ id: this.id, googleCode: formState.googleCode }))
-      } else {
-        const errCode = googleCodeResponse.error.code
-        if (errCode === 4000171) {
-          Toast.fail(transfer(language, 'AuthCode_bind_gv_code_first'))
-        } else {
-          Toast.fail(transfer(language, 'AuthCode_gv_code_error'))
-        }
-      }
-      dispatch(check2GoogleAuthSetResponse(null))
-    }
-  }
-
-  /* 获取邮箱验证码请求结果处理 */
-  handleGetVerificateSMPTCodeRequest(nextProps) {
-    const { getVerificateSmtpCodeLoading, getVerificateSmtpCodeResponse, language } = nextProps
-    if (!this.props.getVerificateSmtpCodeLoading || getVerificateSmtpCodeLoading){
-      return
-    } 
-    if (getVerificateSmtpCodeResponse.success) {
-      Toast.success(transfer(language, 'get_code_succeed'))
-    } else if (getVerificateSmtpCodeResponse.error.code === 4000101) {
-      Toast.fail(transfer(language, 'login_numberOrTypeError'))
-    } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
-      Toast.fail(transfer(language, 'login_disbaleSendInOneMin'))
-    } else if (getVerificateSmtpCodeResponse.error.code === 4000103) {
-      Toast.fail(transfer(language, 'login_codeOverDue'))
-    } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
-      Toast.fail(transfer(language, 'login_networdError'))
-    } else {
-      Toast.fail(transfer(language, 'login_getCodeFailed'))
-    }
-  }
-
-  /* 检测邮箱验证码请求结果处理 */
-  handleCheckVerificateSmptCodeRequest(nextProps) {
-    const { loggedInResult, checkSmtpCodeLoading, checkSmtpCodeResponse, dispatch, formState, language } = nextProps
-    if (!this.props.checkSmtpCodeLoading || checkSmtpCodeLoading ){
-      return
-    } 
-    if (checkSmtpCodeResponse.success) {
-      dispatch(requestConfirmPay({ id: this.id, code: Number(formState.emailCode), email: loggedInResult.email }))
-      return
-    } else if (checkSmtpCodeResponse.error.code === 4000101) {
-      Toast.fail(transfer(language, 'login_numberOrTypeError2'))
-    } else if (checkSmtpCodeResponse.error.code === 4000102) {
-      Toast.fail(transfer(language, 'login_codeError'))
-    } else if (checkSmtpCodeResponse.error.code === 4000103) {
-      Toast.fail(transfer(language, 'login_codeOverDue'))
-    } else if (checkSmtpCodeResponse.error.message === common.badNet) {
-      Toast.fail(transfer(language, 'login_networdError'))
-    } else {
-      Toast.fail(transfer(language, 'login_verificateFailed'))
-    }
-  }
-
-  /* 检测短信验证码请求结果处理 */
-  handleCheckVerificateCodeRequest(nextProps) {
-    const { loggedInResult, checkSMSCodeLoading, checkSMSCodeResponse, dispatch, formState, language } = nextProps
-    if (!this.props.checkSMSCodeLoading || checkSMSCodeLoading ){
-      return
-    } 
-    if (checkSMSCodeResponse.success) {
-      dispatch(requestConfirmPay({ id: this.id, code: Number(formState.code), email: loggedInResult.email }))
-      return
-    } else if (checkSMSCodeResponse.error.code === 4000101) {
-      Toast.fail(transfer(language, 'login_numberOrTypeError'))
-    } else if (checkSMSCodeResponse.error.code === 4000102) {
-      Toast.fail(transfer(language, 'login_codeError'))
-    } else if (checkSMSCodeResponse.error.code === 4000103) {
-      Toast.fail(transfer(language, 'login_codeOverDue'))
-    } else if (checkSMSCodeResponse.error.message === common.badNet) {
-      Toast.fail(transfer(language, 'login_networdError'))
-    } else {
-      Toast.fail(transfer(language, 'login_verificateFailed'))
-    }                         
   }
 
   handleRequestAllege(nextProps) {
@@ -811,8 +715,6 @@ function mapStateToProps(state) {
     ...state.otcDetail,
     loggedInResult: state.authorize.loggedInResult,
     language: state.system.language,
-    getVerificateSmtpCodeLoading: state.user.getVerificateSmtpCodeVisible,
-    getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
   }
 }
 

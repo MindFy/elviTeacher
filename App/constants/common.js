@@ -252,6 +252,21 @@ const common = {
       /^[^ ]+$/.test(pwd)
   },
 
+  maskMobile(value) {
+    return String(value).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+  },
+
+  maskEmail(value = '') {
+    if (value) {
+      const arr = value.split('@')
+      if (arr[0].length > 3) {
+        return `${arr[0].substring(0, 3)}****@${arr[1]}`
+      }
+      return value
+    }
+    return ''
+  },
+
   regMobileMsg: '请输入正确的手机号', // 手机号提示
   regPassword: /^(?=.*[0-9].*)(?=.*[A-Z].*).{6,20}$/, // 密码正则
   regSpace: /^[^ ]+$/, // 空格正则

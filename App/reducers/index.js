@@ -24,6 +24,8 @@ import system from './system'
 import history from './history'
 import receiverInfo from './receiverInfo'
 import balanceDetail from './balanceDetail'
+import updatePassword from './updatePassword'
+import securityCenter from './securityCenter'
 
 const rootReducer = combineReducers({
   authorize,
@@ -51,6 +53,8 @@ const rootReducer = combineReducers({
   system,
   history,
   balanceDetail,
+  updatePassword,
+  securityCenter,
 })
 
 export default rootReducer

@@ -21,6 +21,7 @@ import * as withdraw from '../../actions/withdraw'
 import * as recharge from '../../actions/recharge'
 import { requestDailyChange } from '../../actions/balanceDetail'
 import { getDefaultLanguage } from '../../utils/languageHelper'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   container: {
@@ -116,6 +117,7 @@ class BalanceDetail extends Component {
     this.pairData = undefined
     this.state={ showPairs: false }
     props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'BalanceDetail')
       props.dispatch(actions.requestPairs())
     })
   }
@@ -178,6 +180,7 @@ class BalanceDetail extends Component {
     MDT: require('../../assets/market_MDT.png'),
     FO: require('../../assets/market_FO.png'),
     ACAR: require('../../assets/market_ACAR.png'),
+    ONT: require('../../assets/market_ONT.png'),
   }
 
   renderBalanceInfoCell = (title, value) => (
