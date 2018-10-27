@@ -16,6 +16,7 @@ import transfer from '../../localization/utils'
 import HomeMarkHeader from './components/HomeMarkHeader'
 import { modifyLastPriceSort, modifyChangeSort } from '../../actions/home'
 import { getDefaultLanguage } from '../../utils/languageHelper'
+import { imgHashApi } from '../../services/api'
 
 const styles = StyleSheet.create({
   header: {
@@ -229,7 +230,7 @@ class HomeMarket extends Component {
   }
 
   renderRow(rd) {
-    const { onPress, language } = this.props
+    const { onPress, language, requestPair } = this.props
     let dirImageSource
     let priceColor = null
     let rangeColor = null
@@ -253,7 +254,18 @@ class HomeMarket extends Component {
     common.precision(rd.goods.name, rd.currency.name, (p) => {
       cprice = new BigNumber(rd.cprice).toFixed(p, 1)
     })
-    const iconSource = this.marketIcons[rd.goods.name] || this.marketIcons.ETH
+
+    let iconSource
+    if(requestPair.coinIdDic && 
+      requestPair.coinIdDic[rd.goods.name] && 
+      requestPair.coinIdDic[rd.goods.name].appIcon && 
+      requestPair.coinIdDic[rd.goods.name].appIcon[0]){
+      iconSource = {uri: (imgHashApi + requestPair.coinIdDic[rd.goods.name].appIcon[1] + '.png')}
+    } else{
+      iconSource = this.marketIcons[rd.goods.name] || this.marketIcons.ETH
+    }
+
+
     const coinIdDic = common.getDefaultPair().coinIdDic
     let subName = null
     if (language === 'zh_hans') {

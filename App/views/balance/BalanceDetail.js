@@ -22,6 +22,7 @@ import * as recharge from '../../actions/recharge'
 import { requestDailyChange } from '../../actions/balanceDetail'
 import { getDefaultLanguage } from '../../utils/languageHelper'
 import cache from '../../utils/cache'
+import { imgHashApi } from '../../services/api'
 
 const styles = StyleSheet.create({
   container: {
@@ -191,7 +192,16 @@ class BalanceDetail extends Component {
   )
 
   renderBalanceTradeCell = ({ item }) => {
-    const icon = this.marketIcons[item.goods.name] || this.marketIcons.ETH
+    let icon
+    if(this.props.pairData.coinIdDic &&
+      this.props.pairData.coinIdDic[item.goods.name] && 
+      this.props.pairData.coinIdDic[item.goods.name].appIcon && 
+      this.props.pairData.coinIdDic[item.goods.name].appIcon[0]){
+      icon = {uri: (imgHashApi + this.props.pairData.coinIdDic[item.goods.name].appIcon[0] + '.png')}
+    } else{
+      icon = (this.marketIcons[item.goods.name] || this.marketIcons.ETH)
+    }
+
 
     let cPirce = 0
     common.precision(item.goods.name, item.currency.name, (p) => {

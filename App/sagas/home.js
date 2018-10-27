@@ -111,6 +111,7 @@ function parseConfig(data) {
         minAmount: e.withdrawMin,
         name: e.name,
         cnName: e.cnName,
+        appIcon: e.appicon,
       }
       if (e.allowWithdraw) {
         canWithdrawCoins.push(e.name)

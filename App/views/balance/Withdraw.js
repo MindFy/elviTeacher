@@ -214,9 +214,7 @@ class WithDraw extends Component {
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
       Overlay.hide(this.overlayViewKeyID)
-      dispatch(requestBalance({
-        token_ids: [this.coinsIdDic[currCoin].id],
-      }))
+      this.props.navigation.navigate('Balance')
     }
 
     if (nextProps.withdrawError) {

@@ -353,8 +353,7 @@ class Register extends Component {
   {
     const { text } = event.nativeEvent
     const newText = text.trim()
-    var bNotNum = false
-    var reg = '0123456789';
+    var reg = '0123456789'
     for(var i = 0; i < newText.length; i++){
       if(0 > reg.indexOf(newText.charAt(i)))
       {

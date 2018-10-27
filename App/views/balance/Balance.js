@@ -22,6 +22,7 @@ import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import { getDefaultLanguage } from '../../utils/languageHelper'
+import { imgHashApi } from '../../services/api'
 
 const styles = StyleSheet.create({
   container: {
@@ -199,7 +200,16 @@ class Balance extends Component {
 
   renderRow(rd) {
     const amount = new BigNumber(rd.amount).plus(rd.freezed).plus(rd.platformFreeze).toFixed(8, 1)
-    const source = this.marketIcons[rd.token.name] || this.marketIcons.ETH
+    let source
+    if(this.props.requestPair.coinIdDic && 
+      this.props.requestPair.coinIdDic[rd.token.name] && 
+      this.props.requestPair.coinIdDic[rd.token.name].appIcon && 
+      this.props.requestPair.coinIdDic[rd.token.name].appIcon[0]){
+      source = {uri: (imgHashApi + this.props.requestPair.coinIdDic[rd.token.name].appIcon[0] + '.png')}
+    } else{
+      source = (this.marketIcons[rd.token.name] || this.marketIcons.ETH)
+    }
+
     return (
       <BalanceCell
         leftImageSource={source}
@@ -220,7 +230,7 @@ class Balance extends Component {
           dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
           dispatch(requestBalanceValuation())
         }}
-        refreshing={loading && this.hasLoaded}
+        refreshing={(loading && this.hasLoaded) || false}
       />
     )
   }
@@ -314,6 +324,7 @@ class Balance extends Component {
 
 function mapStateToProps(state) {
   return {
+    requestPair: state.home.requestPair,
     loggedIn: state.authorize.loggedIn,
     loggedInResult: state.authorize.loggedInResult,
 
