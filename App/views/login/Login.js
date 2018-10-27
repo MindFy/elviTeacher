@@ -249,7 +249,8 @@ class Login extends PureComponent {
       if (msg) {
         Toast.fail(msg)
       } else if (error.code === 4000118) {
-        Toast.fail(error.message)
+        let createdAt = common.dfFullDate(new Date(error.message.substring(error.message.indexOf('@') + 1, error.message.length)).toISOString())
+        Toast.fail(transfer(language, 'login_multipleErrorPassword') + createdAt)
       } else {
         Toast.fail(transfer(language, 'login_idOrPassError'))
       }

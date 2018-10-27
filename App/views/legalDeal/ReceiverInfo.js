@@ -116,16 +116,11 @@ class ReceiverInfo extends Component {
   }
 
   handleRequestCancel(nextProps) {
-    const { cancelResult, cancelError, language } = nextProps
+    const { receiverInfoData, dispatch, cancelResult, cancelError, language } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
       Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
-      const { loggedInResult } = this.props
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: 10,
-      })
+      dispatch(otcDetail.updateOtcList([{id: receiverInfoData.id, status: 'cancel', key: receiverInfoData.id}]))
     }
     if (cancelError && cancelError !== this.props.cancelError) {
       if (cancelError.message === common.badNet) {
@@ -139,16 +134,11 @@ class ReceiverInfo extends Component {
   }
 
   handleRequestHavedPay(nextProps) {
-    const { havedPayResult, havedPayError, language } = nextProps
+    const { receiverInfoData, dispatch, havedPayResult, havedPayError, language } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
       Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
-      const { loggedInResult } = this.props
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: 10,
-      })
+      dispatch(otcDetail.updateOtcList([{id: receiverInfoData.id, status: 'waitconfirm'}]))
     }
     if (havedPayError && havedPayError !== this.props.havedPayError) {
       if (havedPayError.message === common.badNet) {
@@ -195,8 +185,7 @@ class ReceiverInfo extends Component {
   }
 
   render() {
-    const { receiverInfo, language } = this.props
-    const { receiverInfoData, receiverInfoLoading } = receiverInfo
+    const { receiverInfoData, receiverInfoLoading, language } = this.props
     if (receiverInfoData === null) {
       return (
         <View style={styles.container}>
@@ -307,7 +296,7 @@ class ReceiverInfo extends Component {
 
 function mapStateToProps(state) {
   return {
-    receiverInfo: state.receiverInfo,
+    ...state.receiverInfo,
     loggedInResult: state.authorize.loggedInResult,
     language: state.system.language,
     otcList: state.otcDetail.otcList,
