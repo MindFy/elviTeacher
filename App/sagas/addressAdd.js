@@ -2,7 +2,6 @@ import {
   call,
   put,
   takeEvery,
-  takeLatest,
 } from 'redux-saga/effects'
 import * as api from '../services/api'
 
@@ -21,58 +20,9 @@ export function* requestAddressAddWorker(action) {
   }
 }
 
-export function* requsetCheck2GoogleAuthWorker(action) {
-  const { payload } = action
-  const response = yield call(api.check2GoogleAuth, payload)
-  if (response.success) {
-    yield put({
-      type: 'addressAdd/check2_google_auth_set_response',
-      payload: response,
-    })
-  } else {
-    yield put({
-      type: 'addressAdd/check2_google_auth_set_response',
-      payload: response,
-    })
-  }
-}
-
-export function* requsetCheck2SMSAuthWorker(action) {
-  const { payload } = action
-  const response = yield call(api.checkVerificateCode, payload)
-  if (response.success) {
-    yield put({
-      type: 'addressAdd/check2_sms_auth_set_response',
-      payload: response,
-    })
-  } else {
-    yield put({
-      type: 'addressAdd/check2_sms_auth_set_response',
-      payload: response,
-    })
-  }
-}
-
-export function* requsetCheck2SmtpAuthWorker(action) {
-  const { payload } = action
-  const response = yield call(api.checkVerificateSmtpCode, payload)
-  if (response.success) {
-    yield put({
-      type: 'addressAdd/check2_smtp_auth_set_response',
-      payload: response,
-    })
-  } else {
-    yield put({
-      type: 'addressAdd/check2_smtp_auth_set_response',
-      payload: response,
-    })
-  }
-}
-
 export function* requestGetCodeWorker(action) {
   const { payload } = action
-  const response = yield call(api.getVerificateCode, payload)
-
+  const response = yield call(api.requestVerificateCode, payload)
   if (response.success) {
     yield put({
       type: 'addressAdd/request_get_code_succeed',
@@ -88,18 +38,6 @@ export function* requestGetCodeWorker(action) {
 
 export function* requestAddressAdd() {
   yield takeEvery('addressAdd/request_address_add', requestAddressAddWorker)
-}
-
-export function* requsetCheck2GoogleAuthWatcher() {
-  yield takeLatest('addressAdd/check2_google_auth', requsetCheck2GoogleAuthWorker)
-}
-
-export function* requsetCheck2SMSAuth() {
-  yield takeEvery('addressAdd/check2_sms_auth', requsetCheck2SMSAuthWorker)
-}
-
-export function* requsetCheck2SmtpAuth() {
-  yield takeEvery('addressAdd/check2_smtp_auth', requsetCheck2SmtpAuthWorker)
 }
 
 export function* requestGetCode() {

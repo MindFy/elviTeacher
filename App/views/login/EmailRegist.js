@@ -232,9 +232,9 @@ class EmailRegist extends Component {
       Toast.fail(transfer(language, 'login_inputCorrectEmail'))
       return
     }
-    dispatch(actions.getVerificateSmtpCode({
+    dispatch(actions.getVerificateCode({
       email: mobile, // 这里用mobile 记录的是 邮箱
-      service: 'auth',
+      service: 'register',
       language,
     }))
   }
@@ -282,23 +282,17 @@ class EmailRegist extends Component {
   }
 
   handleGetVerificateCodeRequest(nextProps) {
-    const { getVerificateSmtpCodeVisible, getVerificateCodeResponse, language } = nextProps
-    if (!getVerificateSmtpCodeVisible && !this.showGetVerificateCodeResponse) return
+    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    if (!requestGetCodeLoading && !this.showGetVerificateCodeResponse) return
 
-    if (getVerificateSmtpCodeVisible) {
+    if (requestGetCodeLoading) {
       this.showGetVerificateCodeResponse = true
     } else {
       this.showGetVerificateCodeResponse = false
-      if (getVerificateCodeResponse.success) {
+      if (requestGetCodeResponse.success) {
         Toast.success(transfer(language, 'get_code_succeed'))
-      } else if (getVerificateCodeResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_email_numberOrTypeError'))
-      } else if (getVerificateCodeResponse.error.code === 4000102) {
+      } else if (requestGetCodeResponse.error.code === 4000107) {
         Toast.fail(transfer(language, 'login_email_disbaleSendInOneMin'))
-      } else if (getVerificateCodeResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_emailRegisted'))
-      } else if (getVerificateCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_email_networdError'))
       } else {
         Toast.fail(transfer(language, 'login_email_getCodeFailed'))
       }
@@ -336,6 +330,8 @@ class EmailRegist extends Component {
         Toast.fail(transfer(language, 'login_inviteCodeError'))
       } else if (registerResponse.error.message === common.badNet) {
         Toast.fail(transfer(language, 'login_networdError'))
+      } else if (registerResponse.error.code === 4000156) {
+        Toast.fail(transfer(language, 'login_codeError'))
       } else {
         Toast.fail(transfer(language, 'login_registFailed'))
       }
@@ -671,8 +667,8 @@ function mapStateToProps(state) {
     registerVisible: state.user.registerVisible,
     registerResponse: state.user.registerResponse,
 
-    getVerificateSmtpCodeVisible: state.user.getVerificateSmtpCodeVisible,
-    getVerificateCodeResponse: state.user.getVerificateSmtpCodeResponse,
+    requestGetCodeLoading: state.user.requestGetCodeLoading,
+    requestGetCodeResponse: state.user.requestGetCodeResponse,
 
     language: state.system.language,
   }

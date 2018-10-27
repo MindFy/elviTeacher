@@ -13,14 +13,15 @@ import {
   Toast,
 } from 'teaset'
 import { common } from '../../constants/common'
-import TextInputPwd from './TextInputPwd'
 import TKButton from '../../components/TKButton'
 import TKSpinner from '../../components/TKSpinner'
 import TKInputItem from '../../components/TKInputItem'
+import TKInputItemCheckCode from '../../components/TKInputItemCheckCode'
 import actions from '../../actions/index'
 import schemas from '../../schemas/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import cache from '../../utils/cache'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -53,6 +54,26 @@ const styles = StyleSheet.create({
     fontSize: common.font10,
     lineHeight: 14,
   },
+  viewStyle: {
+    marginTop: common.margin10,
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    height: common.h40,
+    backgroundColor: common.navBgColor,
+    borderColor: common.borderColor,
+    borderWidth: 1,
+    borderRadius: 1,
+    justifyContent: 'center',
+  },
+  inputStyle: {
+    marginLeft: common.margin10,
+    width: '80%',
+    fontSize: common.font12,
+    color: 'white',
+  },
+  inputText: {
+    width: common.w100,
+  },
 })
 
 class UpdateEmail extends Component {
@@ -78,42 +99,48 @@ class UpdateEmail extends Component {
     }
   }
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.showGetVerificateSmtpCodeResponse = false
+    props.navigation.addListener('didFocus', () => {
+      cache.setObject('currentComponentVisible', 'UpdateEmail')
+      props.dispatch(actions.getGoogleAuth(schemas.findUser(props.user.id)))
+    })
   }
 
   componentDidMount() {
-    const { dispatch, user, navigation, codeEmail, language } = this.props
+    const { navigation, language } = this.props
     navigation.setParams({
       title: transfer(language, 'me_linkEmail'),
     })
-    dispatch(actions.findUser(schemas.findUser(user.id)))
-    if (user.email) {
-      dispatch(actions.updateEmailUpdate({ email: user.email, codeEmail }))
-    }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.handleGetVerificateSmtpCodeRequest(nextProps)
+    this.handleRequestGetCode(nextProps)
     this.handleUpdateEmailRequest(nextProps)
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props
-    dispatch(actions.updateEmailUpdate({ email: '', codeEmail: '' }))
+    dispatch(actions.updateEmailMobileUpdate({ email: '', codeEmail: '', mobile: '', codeMobile: '', codeGoogle: '' }))
   }
 
   onChange(event, tag) {
     const { text } = event.nativeEvent
-    const { dispatch, email, codeEmail } = this.props
+    const { dispatch, email, codeEmail, codeMobile, codeGoogle  } = this.props
 
     switch (tag) {
       case 'email':
-        dispatch(actions.updateEmailUpdate({ email: text.trim(), codeEmail }))
+        dispatch(actions.updateEmailMobileUpdate({ email: text.trim(), codeEmail, codeMobile, codeGoogle }))
         break
-      case 'code':
-        dispatch(actions.updateEmailUpdate({ email, codeEmail: text.trim() }))
+      case 'codeEmail':
+        dispatch(actions.updateEmailMobileUpdate({ email, codeEmail: text.trim(), codeMobile, codeGoogle }))
+        break
+      case 'codeMobile':
+        dispatch(actions.updateEmailMobileUpdate({ email, codeEmail, codeMobile: text.trim(), codeGoogle }))
+        break
+      case 'codeGoogle':
+        dispatch(actions.updateEmailMobileUpdate({ email, codeEmail, codeMobile, codeGoogle: text.trim() }))
         break
       default:
         break
@@ -121,30 +148,37 @@ class UpdateEmail extends Component {
   }
 
   sendCodeEmail(count) {
-    const { dispatch, email, user, language } = this.props
+    const { dispatch, email, language } = this.props
     if (!email.length || !common.regEmail.test(email)) {
       Toast.fail(transfer(language, 'me_Email_correctFormat'))
       return
     }
     this.count = count
-    const service = (user && (user.emailStatus === common.user.status.bind)) ? 'reset' : 'auth'
-    dispatch(actions.getVerificateSmtpCode({
+    dispatch(actions.getVerificateCode({
       email,
-      service,
+      service: 'update_email',
+    }))
+  }
+
+  sendCodeMobile(count) {
+    const { dispatch, user, language } = this.props
+    if (!user.mobile.length || !common.regMobile.test(user.mobile)) {
+      Toast.fail(transfer(language, 'me_Mobile_correctFormat'))
+      return
+    }
+    this.count = count
+    dispatch(actions.getVerificateCode({
+      mobile: user.mobile,
+      service: 'update_email',
     }))
   }
 
   confirmPress() {
     Keyboard.dismiss()
 
-    const { dispatch, email, codeEmail, language } = this.props
-    if (!email.length) {
-      Toast.fail(transfer(language, 'me_enter_EmailAddress'))
-      return
-    }
-
-    if (!common.regEmail.test(email)) {
-      Toast.fail(transfer(language, 'me_enter_EmailAddress'))
+    const { dispatch, user, email, codeEmail, codeMobile, codeGoogle, googleAuth, language } = this.props
+    if (!email.length || !common.regEmail.test(email)) {
+      Toast.fail(transfer(language, 'me_Email_correctFormat'))
       return
     }
 
@@ -153,18 +187,54 @@ class UpdateEmail extends Component {
       return
     }
 
-    dispatch(actions.updateEmail({
-      email,
-      code: codeEmail,
-    }))
+    if(googleAuth){
+      if (!codeGoogle.length) {
+        Toast.fail(transfer(language, 'me_enter_GoogleVerification'))
+        return
+      }
+      dispatch(actions.updateEmail({
+        email,
+        emailCode: codeEmail,
+        googleCode: codeGoogle,
+      }))
+    } else{
+      if (!codeMobile.length) {
+        Toast.fail(transfer(language, 'me_enter_MobileVerification'))
+        return
+      }
+      dispatch(actions.updateEmail({
+        email,
+        emailCode: codeEmail,
+        mobile: user.mobile,
+        mobileCode: codeMobile,
+      }))
+    }
+  }
+
+  SMSCodePress = (count) => {
+    this.count = count
+    const { user, dispatch } = this.props
+    dispatch(actions.getVerificateCode({ mobile: user.mobile, service: 'update_email' }))
   }
 
   errors = {
-    4000101: 'login_codeNotNull',
-    4000102: 'login_codeError',
-    4000103: 'login_codeOverDue',
-    4000160: 'me_Email_format_error',
-    4000161: 'me_Email_registered',
+    4000156: 'login_codeError',
+    4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+  }
+
+  handleRequestGetCode(nextProps) {
+    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
+      return
+    }
+    if (requestGetCodeResponse.success) {
+      Toast.success(transfer(language, 'get_code_succeed'))
+    }
+    else{
+      const msg = transfer(language, this.errors[requestGetCodeResponse.error.code])
+      if (msg) Toast.fail(msg)
+      else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+    }
   }
 
   handleUpdateEmailRequest(nextProps) {
@@ -190,26 +260,20 @@ class UpdateEmail extends Component {
     }
   }
 
-  handleGetVerificateSmtpCodeRequest(nextProps) {
+  handleGetVerificateCodeRequest(nextProps) {
     const { language } = this.props
-    const { getVerificateSmtpCodeVisible, getVerificateSmtpCodeResponse } = nextProps
-    if (!getVerificateSmtpCodeVisible && !this.showGetVerificateSmtpCodeResponse) return
+    const { requestGetCodeLoading, requestGetCodeResponse } = nextProps
+    if (!requestGetCodeLoading && !this.showGetVerificateSmtpCodeResponse) return
 
-    if (getVerificateSmtpCodeVisible) {
+    if (requestGetCodeLoading) {
       this.showGetVerificateSmtpCodeResponse = true
     } else {
       this.showGetVerificateSmtpCodeResponse = false
-      if (getVerificateSmtpCodeResponse.success) {
+      if (requestGetCodeResponse.success) {
         this.count()
         Toast.success(transfer(language, 'get_code_succeed'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000150) {
-        Toast.fail(transfer(language, 'me_Email_serverTypeWrong'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000151) {
+      } else if (requestGetCodeResponse.error.code === 4000107) {
         Toast.fail(transfer(language, 'me_Email_repeatMinute'))
-      } else if (getVerificateSmtpCodeResponse.error.code === 4000152) {
-        Toast.fail(transfer(language, 'me_Email_registered'))
-      } else if (getVerificateSmtpCodeResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'me_settings_PWinternetFailed'))
       } else {
         Toast.fail(transfer(language, 'me_Email_getCodeFailed'))
       }
@@ -232,7 +296,7 @@ class UpdateEmail extends Component {
   )
 
   render() {
-    const { email, codeEmail, updateEmailVisible, user, language } = this.props
+    const { email, codeEmail, codeMobile, codeGoogle, updateEmailVisible, user, language, googleAuth } = this.props
 
     return (
       <KeyboardAvoidingView
@@ -246,6 +310,8 @@ class UpdateEmail extends Component {
         >
           <TKInputItem
             viewStyle={styles.email}
+            titleStyle={styles.inputText}
+            title={transfer(language, 'AuthCode_email_tip')}
             placeholder={transfer(language, 'me_enter_EmailAddress')}
             value={email}
             onChange={e => this.onChange(e, 'email')}
@@ -253,14 +319,64 @@ class UpdateEmail extends Component {
           />
           {
             user.emailStatus === common.user.status.bind ? null
-              : <TextInputPwd
+              : <TKInputItemCheckCode
+              viewStyle={styles.viewStyle}
+              inputStyle={styles.inputStyle}
+              titleStyle={styles.inputText}
+              title={transfer(language, 'AuthCode_email_code')}
+              language={language}
+              placeholder={transfer(language, 'me_enter_EmailVerification')}
+              value={codeEmail}
+              maxLength={8}
+              extraDisable={
+                !email || !common.regEmail.test(email)
+              }
+              onPressCheckCodeBtn={() => this.sendCodeEmail()}
+              onChange={e => this.onChange(e, 'codeEmail')}
+              textInputProps={{
+                keyboardType: 'numeric',
+              }}
+            />
+          }
+          {
+            !googleAuth ? null
+              : <TKInputItem
+                viewStyle={styles.email}
+                titleStyle={styles.inputText}
+                title={transfer(language, 'me_googleCode')}
+                placeholder={transfer(language, 'me_inputGoogleCode')}
+                value={codeGoogle}
+                maxLength={6}
+                onChange={e => this.onChange(e, 'codeGoogle')}
+              /> 
+          }
+          {
+            googleAuth ? null
+              : <TKInputItem
+                viewStyle={styles.email}
+                titleStyle={styles.inputText}
+                title={transfer(language, 'AuthCode_mobile_tip')}
+                placeholder={transfer(language, 'login_inputPhone')}
+                value={common.maskMobile(user.mobile || '')}
+                editable={false}
+              />
+          }
+          {
+            googleAuth ? null
+              : <TKInputItemCheckCode
+                viewStyle={styles.viewStyle}
+                inputStyle={styles.inputStyle}
+                titleStyle={styles.inputText}
+                title={transfer(language, 'AuthCode_sms_tip')}
                 language={language}
-                placeholder={transfer(language, 'me_enter_EmailVerification')}
-                value={codeEmail}
-                codeEmail={'code'}
-                onChange={e => this.onChange(e, 'code')}
-                onPress={count => this.sendCodeEmail(count)}
-                maxLength={8}
+                placeholder={transfer(language, 'me_enter_mobileVerification')}
+                value={codeMobile}
+                maxLength={6}
+                onPressCheckCodeBtn={() => this.sendCodeMobile()}
+                onChange={e => this.onChange(e, 'codeMobile')}
+                textInputProps={{
+                  keyboardType: 'numeric',
+                }}
               />
           }
 
@@ -294,12 +410,15 @@ function mapStateToProps(state) {
     user: state.user.user,
     email: state.user.email,
     codeEmail: state.user.codeEmail,
+    codeMobile: state.user.codeMobile,
+    codeGoogle: state.user.codeGoogle,
+    googleAuth: state.user.googleAuth,
 
     updateEmailVisible: state.user.updateEmailVisible,
     updateEmailResult: state.user.updateEmailResult,
     updateEmailError: state.user.updateEmailError,
-    getVerificateSmtpCodeVisible: state.user.getVerificateSmtpCodeVisible,
-    getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
+    requestGetCodeLoading: state.user.requestGetCodeLoading,
+    requestGetCodeResponse: state.user.requestGetCodeResponse,
     language: state.system.language,
   }
 }

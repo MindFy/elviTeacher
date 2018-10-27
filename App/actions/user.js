@@ -1,19 +1,5 @@
 import * as constants from '../constants/index'
 
-export function checkVerificateCode(data) {
-  return {
-    type: constants.CHECK_VERIFICATE_CODE_REQUEST,
-    data,
-  }
-}
-
-export function checksmptVerificateCode(data) {
-  return {
-    type: 'user/check_smtp_code_request',
-    data,
-  }
-}
-
 export function getGoogleAuth(schema) {
   return {
     type: constants.GET_GOOGLE_AUTH_REQUEST,
@@ -24,13 +10,6 @@ export function getGoogleAuth(schema) {
 export function getVerificateCode(data) {
   return {
     type: constants.GET_VERIFICATE_CODE_REQUEST,
-    data,
-  }
-}
-
-export function getVerificateSmtpCode(data) {
-  return {
-    type: constants.GET_VERIFICATE_SMTP_CODE_REQUEST,
     data,
   }
 }
@@ -142,9 +121,9 @@ export function updateEmail(data) {
   }
 }
 
-export function updateEmailUpdate(data) {
+export function updateEmailMobileUpdate(data) {
   return {
-    type: constants.UPDATE_EMAIL_UPDATE,
+    type: constants.UPDATE_EMAIL_MOBILE_UPDATE,
     data,
   }
 }

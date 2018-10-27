@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { common, storeRead } from '../../../constants/common'
 import TKCheckCodeBtn from '../../../components/TKCheckCodeBtn'
+import TKCheckEmailBtn from '../../../components/TKCheckEmailBtn'
 import WithdrawAuthSelecionBar from './WithdrawAuthSelecionBar'
 import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 import transfer from '../../../localization/utils'
@@ -219,21 +220,6 @@ export default class TKViewCheckAuthorize extends Component {
     )
   }
 
-  maskMobile(value) {
-    return String(value).replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
-  }
-
-  maskEmail(value = '') {
-    if (value) {
-      const arr = value.split('@')
-      if (arr[0].length > 3) {
-        return `${arr[0].substring(0, 3)}****@${arr[1]}`
-      }
-      return value
-    }
-    return ''
-  }
-
   renderSMSCode = () => {
     const { mobile, titles, smsCodePress, onChangeText, language } = this.props
     const index = titles.indexOf(transfer(language, 'AuthCode_SMS_code'))
@@ -253,7 +239,7 @@ export default class TKViewCheckAuthorize extends Component {
       <View>
         <View style={styles.mobileContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_mobile_tip')}</Text>
-          <Text style={styles.mobile}>{this.maskMobile(mobile)}</Text>
+          <Text style={styles.mobile}>{common.maskMobile(mobile)}</Text>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_sms_tip')}</Text>
@@ -340,7 +326,7 @@ export default class TKViewCheckAuthorize extends Component {
       <View>
         <View style={styles.mobileContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_email_tip')}</Text>
-          <Text style={styles.email}>{this.maskEmail(email)}</Text>
+          <Text style={styles.email}>{common.maskEmail(email)}</Text>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.mobileTip}>{transfer(language, 'AuthCode_email_code')}</Text>
@@ -354,7 +340,7 @@ export default class TKViewCheckAuthorize extends Component {
               }, text)}
               underlineColorAndroid="transparent"
             />
-            <TKCheckCodeBtn
+            <TKCheckEmailBtn
               style={styles.codeContainer}
               titleStyle={styles.fetchCodeTitle}
               language={language}

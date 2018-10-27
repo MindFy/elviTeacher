@@ -120,6 +120,7 @@ class HomeMarket extends Component {
     MDT: require('../../assets/market_MDT.png'),
     FO: require('../../assets/market_FO.png'),
     ACAR: require('../../assets/market_ACAR.png'),
+    ONT: require('../../assets/market_ONT.png'),
   }
 
   marketHeaderIcons = {

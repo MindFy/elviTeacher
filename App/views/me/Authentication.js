@@ -352,6 +352,8 @@ class Authentication extends Component {
         Toast.fail(transfer(language, 'me_ID_numberWrong'))
       } else if (idCardAuthResponse.error.code === 4000155) {
         Toast.fail(transfer(language, 'me_ID_numberExisted'))
+      } else if (idCardAuthResponse.error.code === 4000156) {
+        Toast.fail(transfer(language, 'login_codeError'))
       } else {
         Toast.fail(transfer(language, 'me_ID_AuthFailed'))
       }

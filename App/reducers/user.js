@@ -25,18 +25,9 @@ const initialState = {
 
   email: '',
   codeEmail: '',
-
-  checkVerificateCodeVisible: false,
-  checkVerificateCodeResponse: undefined,
-
-  checkVerificateSmtpCodeVisible: false,
-  checkVerificateSmtpCodeResponse: undefined,
-
-  getVerificateCodeVisible: false,
-  getVerificateCodeResponse: undefined,
-
-  getVerificateSmtpCodeVisible: false,
-  getVerificateSmtpCodeResponse: undefined,
+  mobile: '',
+  codeMobile: '',
+  codeGoogle: '',
 
   findUserVisible: false,
   findUserResponse: undefined,
@@ -77,58 +68,15 @@ const initialState = {
 
   mobileIsExistRequesting: false,
   mobileIsExist: false,
+
+  requestGetCodeLoading: false,
+  requestGetCodeResponse: null,
 }
 
 export default function user(state = initialState, action) {
   let nextState = state
 
   switch (action.type) {
-    case constants.CHECK_VERIFICATE_CODE_REQUEST:
-      nextState = {
-        ...state,
-        checkVerificateCodeVisible: true,
-        checkVerificateCodeResponse: undefined,
-        checkVerificateSmtpCodeVisible: false,
-        checkVerificateSmtpCodeResponse: undefined,
-      }
-      break
-    case constants.CHECK_VERIFICATE_CODE_SUCCEED:
-      nextState = {
-        ...state,
-        checkVerificateCodeVisible: false,
-        checkVerificateCodeResponse: action.response,
-      }
-      break
-    case constants.CHECK_VERIFICATE_CODE_FAILED:
-      nextState = {
-        ...state,
-        checkVerificateCodeVisible: false,
-        checkVerificateCodeResponse: action.response,
-      }
-      break
-    case 'user/check_smtp_code_request':
-      nextState = {
-        ...state,
-        checkVerificateSmtpCodeVisible: true,
-        checkVerificateSmtpCodeResponse: undefined,
-        checkVerificateCodeVisible: false,
-        checkVerificateCodeResponse: undefined,
-      }
-      break
-    case 'user/check_smtp_code_success':
-      nextState = {
-        ...state,
-        checkVerificateSmtpCodeVisible: false,
-        checkVerificateSmtpCodeResponse: action.response,
-      }
-      break
-    case 'user/check_smtp_code_failed':
-      nextState = {
-        ...state,
-        checkVerificateSmtpCodeVisible: false,
-        checkVerificateSmtpCodeResponse: action.response,
-      }
-      break
     case constants.GET_GOOGLE_AUTH_SUCCEED:
       nextState = {
         ...state,
@@ -144,45 +92,22 @@ export default function user(state = initialState, action) {
     case constants.GET_VERIFICATE_CODE_REQUEST:
       nextState = {
         ...state,
-        getVerificateCodeVisible: true,
-        getVerificateSmtpCodeVisible: false,
-        getVerificateSmtpCodeResponse: undefined,
+        requestGetCodeLoading: true,
+        requestGetCodeResponse: null,
       }
       break
     case constants.GET_VERIFICATE_CODE_SUCCEED:
       nextState = {
         ...state,
-        getVerificateCodeVisible: false,
-        getVerificateCodeResponse: action.response,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: action.response,
       }
       break
     case constants.GET_VERIFICATE_CODE_FAILED:
       nextState = {
         ...state,
-        getVerificateCodeVisible: false,
-        getVerificateCodeResponse: action.response,
-      }
-      break
-    case constants.GET_VERIFICATE_SMTP_CODE_REQUEST:
-      nextState = {
-        ...state,
-        getVerificateSmtpCodeVisible: true,
-        getVerificateCodeVisible: false,
-        getVerificateCodeResponse: undefined,
-      }
-      break
-    case constants.GET_VERIFICATE_SMTP_CODE_SUCCEED:
-      nextState = {
-        ...state,
-        getVerificateSmtpCodeVisible: false,
-        getVerificateSmtpCodeResponse: action.response,
-      }
-      break
-    case constants.GET_VERIFICATE_SMTP_CODE_FAILED:
-      nextState = {
-        ...state,
-        getVerificateSmtpCodeVisible: false,
-        getVerificateSmtpCodeResponse: action.response,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: action.response,
       }
       break
     case constants.FIND_USER_SUCCEED:
@@ -383,11 +308,14 @@ export default function user(state = initialState, action) {
         updateEmailError: action.payload,
       }
       break
-    case constants.UPDATE_EMAIL_UPDATE:
+    case constants.UPDATE_EMAIL_MOBILE_UPDATE:
       nextState = {
         ...state,
         email: action.data.email,
         codeEmail: action.data.codeEmail,
+        mobile: action.data.mobile,
+        codeMobile: action.data.codeMobile,
+        codeGoogle: action.data.codeGoogle,
       }
       break
     case constants.FIND_AUDIT_MANAGE_SUCCEED:
@@ -428,8 +356,8 @@ export default function user(state = initialState, action) {
         recommendNo: '',
         registerResponse: undefined,
         registerVisible: false,
-        getVerificateCodeVisible: false,
-        getVerificateCodeResponse: undefined,
+        requestGetCodeLoading: false,
+        requestGetCodeResponse: null,
         mobileIsExistRequesting: false,
         mobileIsExist: false,
       }

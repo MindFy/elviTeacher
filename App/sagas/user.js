@@ -11,26 +11,6 @@ import {
 import * as constants from '../constants/index'
 import * as api from '../services/api'
 
-/* 检测验证码 */
-export function* checkVerificateCode() {
-  while (true) {
-    const request = yield take(constants.CHECK_VERIFICATE_CODE_REQUEST)
-    const response = yield call(api.checkVerificateCode, request.data)
-    if (response.success) yield put({ type: constants.CHECK_VERIFICATE_CODE_SUCCEED, response })
-    else yield put({ type: constants.CHECK_VERIFICATE_CODE_FAILED, response })
-  }
-}
-
-/* 检测验证码 */
-export function* checksmptVerificateCode() {
-  while (true) {
-    const request = yield take('user/check_smtp_code_request')
-    const response = yield call(api.checkVerificateSmtpCode, request.data)
-    if (response.success) yield put({ type: 'user/check_smtp_code_success', response })
-    else yield put({ type: 'user/check_smtp_code_failed', response })
-  }
-}
-
 /* 获取谷歌验证信息 */
 export function* getGoogleAuth() {
   while (true) {
@@ -47,24 +27,17 @@ export function* getGoogleAuth() {
     DeviceEventEmitter.emit(common.noti.googleAuth)
   }
 }
+
 /* 获取验证码 */
 export function* getVerificateCode() {
   while (true) {
     const request = yield take(constants.GET_VERIFICATE_CODE_REQUEST)
-    const response = yield call(api.getVerificateCode, request.data)
+    const response = yield call(api.requestVerificateCode, request.data)
     if (response.success) yield put({ type: constants.GET_VERIFICATE_CODE_SUCCEED, response })
     else yield put({ type: constants.GET_VERIFICATE_CODE_FAILED, response })
   }
 }
-/* 获取验证码 */
-export function* getVerificateSmtpCode() {
-  while (true) {
-    const request = yield take(constants.GET_VERIFICATE_SMTP_CODE_REQUEST)
-    const response = yield call(api.getVerificateSmtpCode, request.data)
-    if (response.success) yield put({ type: constants.GET_VERIFICATE_SMTP_CODE_SUCCEED, response })
-    else yield put({ type: constants.GET_VERIFICATE_SMTP_CODE_FAILED, response })
-  }
-}
+
 /* 获取单个用户的信息 */
 export function* findUser() {
   while (true) {

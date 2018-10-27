@@ -1,6 +1,6 @@
 import WAValidator from 'wallet-address-validator'
 
-const orginCoins = ['BTC', 'ETC', 'ETH', 'LTC']
+const orginCoins = ['BTC', 'ETC', 'ETH', 'LTC', 'ONT']
 
 function validate(address, currencyNameOrSymbol, networkType) {
   let validateCurrency = currencyNameOrSymbol
@@ -8,7 +8,7 @@ function validate(address, currencyNameOrSymbol, networkType) {
     validateCurrency = 'ETH'
   }
 
-  const result = WAValidator.validate(address, validateCurrency, networkType)
+   const result = WAValidator.validate(address, validateCurrency, networkType)
 
   return result
 }

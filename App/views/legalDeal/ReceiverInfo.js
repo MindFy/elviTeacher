@@ -109,10 +109,8 @@ class ReceiverInfo extends Component {
   }
 
   errors = {
-    4000101: 'AuthCode_bad_phone_number_or_service_type',
-    4000102: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
-    4000104: 'AuthCode_mobile_phone_number_registered',
-    4000156: 'AuthCode_authorization_verification_failed',
+    4000156: 'login_codeError',
+    4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
     4001480: 'OtcDetail_order_statusexpired',
     4001421: 'OtcDetail_order_statusexpired',
   }
