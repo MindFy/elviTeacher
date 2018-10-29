@@ -180,6 +180,10 @@ class ForgotPwd extends Component {
     }
   }
 
+  errors = {
+    4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+  }
+
   handleRequestGetCode(nextProps) {
     const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
