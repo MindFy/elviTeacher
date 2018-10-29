@@ -707,6 +707,7 @@
   "auth_email_unbind": "信箱未綁定",
   "me_inputEmailCode": "請輸入信箱驗證碼",
   "login_multipleErrorPassword": "登入密碼錯誤次數過多，您的帳號已被鎖定，請於以下時間後重新登入：",
+  "NoDecimal": "此幣最小提領單位為個位數",
 
   "FO_temp_hint": "FO目前僅提供人工儲值/提領服務，請聯繫客服service@tok.com"
 }
