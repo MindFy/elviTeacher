@@ -101,8 +101,8 @@ android {
         applicationId "com.tok"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 13
-        versionName "1.0.13.0"
+        versionCode 14
+        versionName "1.0.14.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
