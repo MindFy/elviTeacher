@@ -8,7 +8,7 @@ export function* getGoogleAuth() {
     while (true) {
         const request = yield take('securityCenter/get_google_auth')
         const response = yield call(api.graphql, request.schema)
-        if (response.result.data.user.googleSecret) {
+        if (response.success && response.result.data.user.googleSecret) {
             yield put({ type: 'securityCenter/get_google_auth_succeed', })
         } else {
             yield put({ type: 'securityCenter/get_google_auth_failed', })

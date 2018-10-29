@@ -210,6 +210,7 @@ const TabBarStack = StackNavigator(
     Payment,
     UpdateBank,
     Banner,
+    Balance,
     BalanceDetail,
     Announcement,
     SecurityCenter,

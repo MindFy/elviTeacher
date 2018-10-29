@@ -10,6 +10,7 @@ import {
   Keyboard,
   AsyncStorage,
 } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import {
   Toast,
   Overlay,
@@ -209,12 +210,21 @@ class WithDraw extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading, language, requestPairStatus, currCoin } = this.props
+    const { dispatch, withdrawLoading, language, requestPairStatus, formState } = this.props
     this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
       Overlay.hide(this.overlayViewKeyID)
-      this.props.navigation.navigate('Balance')
+      dispatch(withdrawClear())
+      const resetAction = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({routeName: 'TabBar'}),
+            NavigationActions.navigate({routeName: 'Balance'}),
+          ],
+        }
+      );
+      this.props.navigation.dispatch(resetAction)
     }
 
     if (nextProps.withdrawError) {
