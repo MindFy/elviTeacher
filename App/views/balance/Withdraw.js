@@ -288,7 +288,7 @@ class WithDraw extends Component {
     }
     const bMaxBalace = new BigNumber(balance).dp(8, 1)
     if (bWithdrawAmount.gt(bMaxBalace)) {
-      if(currCoin === 'ONT' && balance.indexOf('.') >= 0){
+      if(currCoin === 'ONT' && JSON.stringify(balance).indexOf('.') >= 0){
         dispatch(updateForm({
           ...formState,
           withdrawAmount: balance.split('.')[0],
@@ -310,8 +310,8 @@ class WithDraw extends Component {
     if (splitArr.length > 1 && splitArr[1].length > 8) { // 小数长度限制
       return
     }
-
-    if(currCoin === 'ONT' && withdrawAmount.indexOf('.') >= 0){
+    
+    if(currCoin === 'ONT' && JSON.stringify(withdrawAmount).indexOf('.') >= 0){
       Keyboard.dismiss()
       Toast.fail(transfer(language, 'NoDecimal'))
       return
