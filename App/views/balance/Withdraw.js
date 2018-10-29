@@ -278,6 +278,14 @@ class WithDraw extends Component {
     }
     const bMaxBalace = new BigNumber(balance).dp(8, 1)
     if (bWithdrawAmount.gt(bMaxBalace)) {
+      if(currCoin === 'ONT' && balance.indexOf('.') >= 0){
+        dispatch(updateForm({
+          ...formState,
+          withdrawAmount: balance.split('.')[0],
+        }))
+        return
+      }
+
       dispatch(updateForm({
         ...formState,
         withdrawAmount: bMaxBalace.toFixed(),
@@ -294,6 +302,7 @@ class WithDraw extends Component {
     }
 
     if(currCoin === 'ONT' && withdrawAmount.indexOf('.') >= 0){
+      Keyboard.dismiss()
       Toast.fail(transfer(language, 'NoDecimal'))
       return
     }
