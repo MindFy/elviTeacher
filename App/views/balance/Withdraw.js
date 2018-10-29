@@ -263,7 +263,7 @@ class WithDraw extends Component {
   }
 
   onChangeWithdrawAmount = (withdrawAmount) => {
-    const { dispatch, formState, balance } = this.props
+    const { dispatch, formState, balance, currCoin, language   } = this.props
     if (!withdrawAmount) {
       dispatch(updateForm({
         ...formState,
@@ -293,6 +293,11 @@ class WithDraw extends Component {
       return
     }
 
+    if(currCoin === 'ONT' && withdrawAmount.indexOf('.') >= 0){
+      Toast.fail(transfer(language, 'NoDecimal'))
+      return
+    }
+    
     dispatch(updateForm({
       ...formState,
       withdrawAmount,

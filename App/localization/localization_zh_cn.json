@@ -707,6 +707,7 @@
   "auth_email_unbind": "邮箱未绑定",
   "me_inputEmailCode": "请输入邮箱验证码",
   "login_multipleErrorPassword": "登录密码错误次数过多，您的账号已被锁定登录，请于如下时间后重新登录：",
-
+  "NoDecimal": "由于币种原因，提币不支持小数位",
+  
   "FO_temp_hint": "由于安全原因，FO暂时仅支持人工充提服务，请联系客服service@tok.com进行充提币"
 }
