@@ -27,10 +27,11 @@ import packageJson from '../../../package.json'
 import transfer from '../../localization/utils'
 import * as api from '../../services/api'
 import Alert from '../../components/Alert'
-import { modifyLastPriceSort, modifyChangeSort, requestPairs } from '../../actions/home'
+import { modifyLastPriceSort, modifyChangeSort, requestPairs, requestShowPairs } from '../../actions/home'
 import { getDefaultLanguage } from '../../utils/languageHelper'
 import * as system from '../../actions/system'
-
+import Toast from 'teaset/components/Toast/Toast';
+import { NavigationActions } from 'react-navigation'
 global.Buffer = require('buffer').Buffer
 
 const styles = StyleSheet.create({
@@ -53,13 +54,6 @@ class Home extends Component {
   }
 
   componentWillMount() {
-    AsyncStorage.getItem('savedKlineIndex')
-      .then((savedIndex) => {
-        if (savedIndex) {
-          cache.setObject('savedKlineIndex', savedIndex)
-          this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
-        }
-      })
     setTimeout(() => {
       this.checkUpdate(getDefaultLanguage())
     }, 1000)
@@ -86,7 +80,7 @@ class Home extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const { market, dispatch, requestPairStatus } = this.props
+    const { market, dispatch, requestPairStatus, requestShowPairStatus } = this.props
     const { selectedPair, requestPair } = props
     if (props.language !== this.props.language) {
       this.refreshData(props.language)
@@ -104,7 +98,9 @@ class Home extends Component {
     this.handleSync(props)
     if (props.requestPairStatus === 2 && requestPairStatus !== 1) {
       // 加载失败
-      dispatch(requestPairs())
+      setTimeout(() => {
+        dispatch(requestPairs())
+      }, 2000)
     } else if (props.requestPairStatus === 1 && requestPairStatus !== 1) {
       common.setDefaultPair(requestPair)
       AsyncStorage.setItem('local_pair', JSON.stringify(requestPair), () => { })
@@ -142,7 +138,7 @@ class Home extends Component {
 
   _handleAppStateChange(nextAppState) {
     if (nextAppState === 'active') {
-      this.isNeedAutoLogin(() => { this.props.dispatch(actions.sync()) })
+      this.isNeedAutoLogin(() => { if(this.props.loggedIn) this.props.dispatch(actions.sync()) })
       this.refreshData()
     }
   }
@@ -159,32 +155,37 @@ class Home extends Component {
 
   handleSync = (nextProps) => {
     if (this.props.authorize.syncing && !nextProps.authorize.syncing) {
-      const { syncSuccess } = nextProps.authorize
+      const { syncSuccess, loggedIn } = nextProps.authorize
       if (syncSuccess) {
-        this.syncSuccess()
+        this.syncSuccess(loggedIn)
       } else {
         this.syncFailed()
       }
     }
   }
 
-  syncSuccess = () => {
+  syncSuccess = (loggedIn) => {
     const { language } = this.props
     storeRead(common.user.string, (result) => {
       if (result) {
-        cache.setObject('isLoginIn', 'true')
-        const user = JSON.parse(result)
         const { dispatch } = this.props
-        dispatch(actions.findUserUpdate(user))
-        dispatch(actions.findUser(schemas.findUser(user.id)))
-        dispatch(system.updateRemoteLanguage({lang: language}))
+        if(loggedIn){
+          cache.setObject('isLoginIn', 'true')
+          const user = JSON.parse(result)
+          dispatch(actions.findUserUpdate(user))
+          dispatch(actions.findUser(schemas.findUser(user.id)))
+          dispatch(system.updateRemoteLanguage({lang: language}))
+        } else{
+          cache.removeObject('isLoginIn')
+          dispatch(actions.clearLogin())
+        }
       }
     })
   }
 
   syncFailed = () => {
     const { dispatch } = this.props
-    dispatch(actions.findUserUpdate(undefined))
+    // dispatch(actions.findUserUpdate(undefined))
     // dispatch(actions.clearAllReducer())
     dispatch(actions.findAssetListUpdate({
       asset: [],
@@ -367,6 +368,7 @@ function mapStateToProps(store) {
     user: store.user.user,
     authorize: store.authorize,
     language: store.system.language,
+    loggedIn: store.authorize.loggedIn,
   }
 }
 

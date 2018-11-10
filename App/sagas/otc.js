@@ -7,6 +7,9 @@ import * as api from '../services/api'
 
 export function* submitRequestWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.legalDealCreate, {
     direct: payload.type,
     quantity: payload.quantity,

@@ -18,12 +18,13 @@ import {
 import BigNumber from 'bignumber.js'
 import FS from 'rn-fs-d3j'
 import { common } from '../../constants/common'
-import * as actions from '../../actions/rebates'
+import { requestUser } from '../../actions/rebates'
 import * as api from '../../services/api'
 import * as schemas from '../../schemas/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -191,8 +192,9 @@ class Rebates extends Component {
   }
 
   refreshData() {
-    const { dispatch, loggedInResult } = this.props
-    dispatch(actions.requestUser(schemas.findUser(loggedInResult.id)))
+    const { dispatch, loggedInResult, loggedIn } = this.props
+    dispatch(requestUser(schemas.findUser(loggedInResult.id)))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   clipUID() {
@@ -205,7 +207,8 @@ class Rebates extends Component {
   }
 
   clipLink() {
-    const { user, language } = this.props
+    const { user, language, dispatch, loggedIn } = this.props
+    if(loggedIn) dispatch(actions.sync())
     const { prefixNo, recommendId } = user
     let rebatesLink = ''
     if (recommendId.length) {
@@ -276,7 +279,7 @@ class Rebates extends Component {
   }
 
   showLinkQr() {
-    const { user, language } = this.props
+    const { user, language, dispatch, loggedIn } = this.props
     const { prefixNo, recommendId } = user
     let rebatesLinkQr = ''
     if (recommendId.length) {
@@ -293,6 +296,7 @@ class Rebates extends Component {
           style={styles.overlayBtn}
           activeOpacity={1}
           onPress={() => {
+            if(loggedIn) dispatch(actions.sync())
             this._tapLinkQRImage(rebatesLinkQr)
           }}
         >
@@ -452,6 +456,7 @@ function mapStateToProps(state) {
   return {
     ...state.rebates,
     loggedInResult: state.authorize.loggedInResult,
+    loggedIn: state.authorize.loggedIn,
     language: state.system.language,
   }
 }

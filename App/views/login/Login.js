@@ -128,6 +128,7 @@ class Login extends PureComponent {
         screenProps.dismiss()
       },
     })
+    cache.setObject('currentComponentVisible', 'Login')
   }
 
   componentDidMount = async () => {
@@ -156,6 +157,7 @@ class Login extends PureComponent {
       mobile: '',
       password: '',
     }))
+    cache.setObject('currentComponentVisible', '')
   }
 
   onChange(event, tag) {
@@ -221,7 +223,7 @@ class Login extends PureComponent {
   loginHandle(nextProps) {
     const { dispatch, loggedIn, error, loggedInResult, screenProps, language } = nextProps
 
-    if (loggedIn !== this.props.loggedIn) {
+    if (loggedIn && loggedIn !== this.props.loggedIn) {
       Toast.success(transfer(language, 'login_success'))
       dispatch(system.updateRemoteLanguage({lang: language}))
       const user = loggedInResult
@@ -242,6 +244,7 @@ class Login extends PureComponent {
     const errs = {
       4000156: 'login_codeError',
       4000117: transfer(language, 'login_idOrPassError'),
+      4000129: transfer(language, 'login_except_fault'),
     }
 
     if (nextProps.error && (error !== this.props.error)) {

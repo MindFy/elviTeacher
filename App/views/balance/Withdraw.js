@@ -93,6 +93,13 @@ const styles = StyleSheet.create({
     color: common.placeholderColor,
     alignSelf: 'center',
   },
+  addressTip: {
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    fontSize: common.font12,
+    color: common.textColor,
+    textAlign: 'center',
+  },
   balance: {
     marginTop: common.margin10,
     marginLeft: common.margin10,
@@ -108,6 +115,12 @@ const styles = StyleSheet.create({
     marginRight: common.margin10,
     justifyContent: 'center',
     height: common.h35,
+  },
+  addressLabelView: {
+    marginLeft: common.margin10,
+    marginRight: common.margin10,
+    justifyContent: 'flex-end',
+    height: common.h81,
   },
   amountInput: {
     textAlign: 'center',
@@ -181,10 +194,12 @@ class WithDraw extends Component {
       4000606: 'withdraw_address_error',
       4000608: 'withdraw_error_after_pwd_changed',
       4000668: 'withdraw_account_frozen',
+      4031601: 'Otc_please_login_to_operate',
     }
     this.verificationCodeErrorDic = {
       4000156: 'login_codeError',
       4000107: 'me_Email_repeatMinute',
+      4031601: 'Otc_please_login_to_operate',
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码', '邮箱验证码']
@@ -200,17 +215,18 @@ class WithDraw extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, navigation, language } = this.props
+    const { dispatch, user, navigation, language, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'balances_withdraw'),
     })
     dispatch(requestPairs())
     dispatch(requestValuation())
     dispatch(requestWithdrawAddress(findAddress(user.id)))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading, language, requestPairStatus, formState } = this.props
+    const { dispatch, withdrawLoading, language, requestPairStatus, loggedIn } = this.props
     this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
@@ -235,10 +251,13 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'withdrawal_failed'))
       }
       dispatch(requestWithdrawClearError())
+      if(loggedIn) dispatch(actions.sync())
     }
     if (nextProps.requestPairStatus === 2 && requestPairStatus !== 1) {
       // 加载失败
-      dispatch(requestPairs())
+      setTimeout(() => {
+        dispatch(requestPairs())
+      }, 2000)
     } else if (nextProps.requestPairStatus === 1 && requestPairStatus !== 1) {
       common.setDefaultPair(nextProps.requestPair)
       AsyncStorage.setItem('local_pair', JSON.stringify(nextProps.requestPair), () => { })
@@ -286,16 +305,17 @@ class WithDraw extends Component {
     if (bWithdrawAmount.isNaN()) {
       return
     }
-    const bMaxBalace = new BigNumber(balance).dp(8, 1)
-    if (bWithdrawAmount.gt(bMaxBalace)) {
-      if(currCoin === 'ONT' && JSON.stringify(balance).indexOf('.') >= 0){
-        dispatch(updateForm({
-          ...formState,
-          withdrawAmount: balance.split('.')[0],
-        }))
-        return
-      }
 
+    let bMaxBalace
+    if(currCoin === 'ONT'){
+      bMaxBalace = new BigNumber(balance).dp(0, 1)
+    } else if(currCoin === 'XRP'){
+      bMaxBalace = new BigNumber(balance).dp(4, 1)
+    } else{
+      bMaxBalace = new BigNumber(balance).dp(8, 1)
+    }
+
+    if (bWithdrawAmount.gt(bMaxBalace)) {
       dispatch(updateForm({
         ...formState,
         withdrawAmount: bMaxBalace.toFixed(),
@@ -310,7 +330,11 @@ class WithDraw extends Component {
     if (splitArr.length > 1 && splitArr[1].length > 8) { // 小数长度限制
       return
     }
-    
+
+    if (currCoin === 'XRP' && splitArr.length > 1 && splitArr[1].length > 4) { // 小数长度限制
+      return
+    }
+
     if(currCoin === 'ONT' && JSON.stringify(withdrawAmount).indexOf('.') >= 0){
       Keyboard.dismiss()
       Toast.fail(transfer(language, 'NoDecimal'))
@@ -333,17 +357,18 @@ class WithDraw extends Component {
   }
 
   handleRequestGetCode(nextProps) {
-    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    const { requestGetCodeLoading, requestGetCodeResponse, language, dispatch, loggedIn } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
     if (requestGetCodeResponse.success) {
       Toast.success(transfer(language, 'get_code_succeed'))
     }
-    else{
+    else{      
       const msg = transfer(language, this.verificationCodeErrorDic[requestGetCodeResponse.error.code])
       if (msg) Toast.fail(msg)
       else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -363,6 +388,7 @@ class WithDraw extends Component {
       ...formState,
       withdrawAmount: '',
       withdrawAddress: '',
+      withdrawAddressLabel: '',
       smsCode: '',
       googleCode: '',
       emailCode: '',
@@ -424,7 +450,7 @@ class WithDraw extends Component {
       return
     }
 
-    const { currCoin } = this.props
+    const { currCoin, requestPair } = this.props
     const { valuation } = this.props
     const { count, rates } = valuation
     const { quotaCount, withdrawedCount } = count
@@ -451,7 +477,12 @@ class WithDraw extends Component {
       return
     }
 
-    if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, currCoin)) {
+    let item = currCoin
+    if(requestPair && requestPair.coinIdDic[item] && requestPair.coinIdDic[item].contract.chain){
+      item = requestPair.coinIdDic[item].contract.chain
+    }
+
+    if (this.checkWithdrawAddressIsIneligible(formState.withdrawAddress, item)) {
       Alert.alert(
         transfer(language, 'withdraw_scanNote'),
         `${transfer(language, 'withdrawal_address_correct_required_1')}${currCoin}${transfer(language, 'withdrawal_address_correct_required_2')}`,
@@ -478,7 +509,7 @@ class WithDraw extends Component {
       return
     }
     const { dispatch, formState, authCodeType, language, user, currCoin } = this.props
-    const { smsCode, googleCode, emailCode, withdrawAmount, withdrawAddress } = formState
+    const { smsCode, googleCode, emailCode, withdrawAmount, withdrawAddress, withdrawAddressLabel } = formState
     const tokenId = this.coinsIdDic[currCoin].id
     if (authCodeType === '短信验证码') {
       if (!smsCode || smsCode.length === 0) {
@@ -491,6 +522,7 @@ class WithDraw extends Component {
         toaddr: withdrawAddress,
         mobile: user.mobile,
         code: smsCode,
+        tag: withdrawAddressLabel
       }))
       return
     }
@@ -504,6 +536,7 @@ class WithDraw extends Component {
         amount: withdrawAmount,
         toaddr: withdrawAddress,
         googleCode: googleCode,
+        tag: withdrawAddressLabel
       }))
       return
     }
@@ -518,6 +551,7 @@ class WithDraw extends Component {
         toaddr: withdrawAddress,
         email: user.email,
         code: emailCode,
+        tag: withdrawAddressLabel,
       }))
     }
   }
@@ -619,26 +653,36 @@ class WithDraw extends Component {
   }
 
   addAddressPress = () => {
-    const { currCoin, language } = this.props
+    const { currCoin, language, loggedIn } = this.props
     const tokenId = this.coinsIdDic[currCoin].id
-    this.props.navigation.navigate('AddAddress', {
-      title: currCoin,
-      headerTitle: transfer(language, 'withdrawal_add_address'),
-      tokenId,
-    })
+    if (loggedIn){
+      this.props.navigation.navigate('AddAddress', {
+        title: currCoin,
+        headerTitle: transfer(language, 'withdrawal_add_address'),
+        tokenId,
+      })
+    }
+    else {
+      navigation.navigate('LoginStack')
+    }
   }
 
   jumpToScanPage() {
-    const { navigation, currCoin, dispatch, formState } = this.props
-    navigation.navigate('ScanBarCode', {
-      coin: currCoin,
-      didScan: (val) => {
-        dispatch(updateForm({
-          ...formState,
-          withdrawAddress: val,
-        }))
-      },
-    })
+    const { navigation, currCoin, dispatch, formState, loggedIn } = this.props
+    if (loggedIn){
+      navigation.navigate('ScanBarCode', {
+        coin: currCoin,
+        didScan: (val) => {
+          dispatch(updateForm({
+            ...formState,
+            withdrawAddress: val,
+          }))
+        },
+      })
+    }
+    else {
+      navigation.navigate('LoginStack')
+    }
   }
 
   tapAddAddress = () => {
@@ -847,6 +891,31 @@ class WithDraw extends Component {
     )
   }
 
+  renderFormWithdrawAddressLabel = () => {
+    const { dispatch, formState, language } = this.props
+    let tipHeight
+    if (language === 'zh_hans' || language === 'zh_hant') {
+      tipHeight = {height: common.h70}
+    } 
+    return (
+      <View style={[styles.addressLabelView, tipHeight]}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[styles.addressTip, {marginTop: common.margin10}]}>{transfer(language, 'withdrawal_address_label')}</Text>
+          <Text style={[styles.addressTip, {color: common.redColor, width: common.sw * 0.8 - common.getH(40)}, {textAlign: 'left'}]}>{transfer(language, 'withdrawal_address_label_warning')}</Text>
+        </View>
+        <TKInputItem
+          inputStyle={styles.addressInput}
+          placeholder={transfer(language, 'withdrawal_address_label')}
+          value={formState.withdrawAddressLabel}
+          onChangeText={(withdrawAddressLabel = '') => dispatch(updateForm({
+            ...formState,
+            withdrawAddressLabel: withdrawAddressLabel.trim(),
+          }))}
+        />
+      </View>
+    )
+  }
+
   renderFormWithdrawBtn = () => {
     const { formState, language } = this.props
     const { withdrawAmount } = formState
@@ -893,7 +962,8 @@ class WithDraw extends Component {
             lineHeight: common.h15,
           }}
         >{`${transfer(language, 'withdrawal_note_1')}${minAmount} ${currCoin}
-${transfer(language, 'withdrawal_note_2')}`}
+${transfer(language, 'withdrawal_note_2')}
+${transfer(language, 'withdrawal_note_3')}`}
         </Text>
       </View>
     )
@@ -926,6 +996,12 @@ ${transfer(language, 'withdrawal_note_2')}`}
               {this.renderFormWithdrawAmount()}
               {this.renderFormFeeOrBalanceReceived()}
               {this.renderFormWithdrawAddress()}
+              {
+                currCoin !== 'XRP' ?
+                null
+                :
+                this.renderFormWithdrawAddressLabel()
+              }
               {this.renderFormWithdrawBtn()}
               {this.renderFormTip()}
             </View>
@@ -961,6 +1037,8 @@ function mapStateToProps(state) {
     ...state.withdraw,
     user: state.user.user,
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
+    pairs: state.home.requestPair
   }
 }
 

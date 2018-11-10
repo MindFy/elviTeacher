@@ -1,13 +1,27 @@
 import {
   LOGIN_REQUEST,
+  LOGOUT_REQUEST,
   LOGIN_FORM_CHANGE,
   LOGIN_FLOW_CLEAR_ERROR,
+  LOGIN_FAILED,
 } from '../constants/index'
 
 export function login(payload) {
   return {
     type: LOGIN_REQUEST,
     payload,
+  }
+}
+
+export function logout() {
+  return {
+    type: LOGOUT_REQUEST,
+  }
+}
+
+export function clearLogin() {
+  return {
+    type: LOGIN_FAILED,
   }
 }
 

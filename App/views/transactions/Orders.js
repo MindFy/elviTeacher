@@ -31,6 +31,7 @@ import {
   findDelegateSelfHistory,
 } from '../../schemas/delegate'
 import transfer from '../../localization/utils'
+import actions from '../../actions/index'
 
 // openOrderCellStyles
 const OOCStyles = StyleSheet.create({
@@ -221,6 +222,7 @@ class Orders extends Component {
         openOrderReState: RefreshState.Idle,
       })
       this.props.dispatch(openOrderSetError(null))
+      if(this.props.loggedIn) this.props.dispatch(actions.sync())
     }
 
     if (this.props.orderHistoryLoading && !nexProps.orderHistoryLoading) {
@@ -237,6 +239,7 @@ class Orders extends Component {
         orderHistoryReState: RefreshState.Idle,
       })
       this.props.dispatch(orderHistrorySetError(null))
+      if(this.props.loggedIn) this.props.dispatch(actions.sync())
     }
 
     if (this.props.cancelOrderLoading && !nexProps.cancelOrderLoading) {
@@ -245,6 +248,7 @@ class Orders extends Component {
     if (nexProps.cancelOrderError) {
       Toast.fail(transfer(this.props.language, 'exchange_withdrawalFailed'))
       this.props.dispatch(requestCancelOrderSetError(null))
+      if(this.props.loggedIn) this.props.dispatch(actions.sync())
     }
   }
 
@@ -268,6 +272,7 @@ class Orders extends Component {
       this.props.dispatch(updateOrderHistoryPage(this.orderHistoryPage))
       this.requestOrderHistory()
     }
+    if(this.props.loggedIn) this.props.dispatch(actions.sync())
   }
 
   onFooterRefresh = () => {
@@ -275,7 +280,7 @@ class Orders extends Component {
       return
     }
     this.isRefresh = true
-    const { titleSeleted, language } = this.props
+    const { titleSeleted, language, dispatch, loggedIn } = this.props
 
     if (titleSeleted === transfer(language, 'home_currentDelegate')) {
       this.openOrderPage++
@@ -286,6 +291,7 @@ class Orders extends Component {
       this.props.dispatch(updateOrderHistoryPage(this.orderHistoryPage))
       this.requestOrderHistory()
     }
+    if(loggedIn) dispatch(actions.sync())
   }
 
   getDataSource = () => {
@@ -536,6 +542,7 @@ function mapStateToProps(store) {
     ...store.orders,
     user: store.user.user,
     language: store.system.language,
+    loggedIn: store.authorize.loggedIn,
   }
 }
 

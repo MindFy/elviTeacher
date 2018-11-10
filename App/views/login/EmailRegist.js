@@ -307,11 +307,9 @@ class EmailRegist extends Component {
       this.showRegisterResponse = true
     } else {
       this.showRegisterResponse = false
-
+      const { dispatch } = this.props
       if (registerResponse.success) {
         Toast.success(transfer(language, 'login_registSuccess'))
-
-        const { dispatch } = this.props
         dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
       } else if (registerResponse.error.code === 4000104) {
@@ -589,7 +587,7 @@ class EmailRegist extends Component {
       passwordAgain,
       language,
     } = this.props
-
+    
     let behavior = null
     let offset = 0
     if (common.IsIOS) {

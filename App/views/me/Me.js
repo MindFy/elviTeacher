@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
+  Text,
   View,
   ScrollView,
 } from 'react-native'
@@ -15,6 +16,10 @@ import cache from '../../utils/cache'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
 import { getDefaultLanguage } from '../../utils/languageHelper'
+import user from '../../reducers/user';
+import {
+  Overlay,
+} from 'teaset'
 
 class Me extends Component {
   static navigationOptions = () => {
@@ -32,6 +37,7 @@ class Me extends Component {
     this.showLogoutResponse = false
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Me')
+      if(this.props.loggedIn) this.props.dispatch(actions.sync())
     })
   }
 
@@ -85,6 +91,40 @@ class Me extends Component {
       return email
     }
     return ''
+  }
+
+  showOverlay(msg) {
+    const overlayView = (
+      <Overlay.View
+        style={{ justifyContent: 'center' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <View
+          style={{
+            marginTop: -common.margin210,
+            borderRadius: common.radius6,
+            height: common.h60,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            width: '50%',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: common.font16,
+              color: common.blackColor,
+              alignSelf: 'center',
+            }}
+          >{msg}</Text>
+        </View>
+      </Overlay.View>
+    )
+    this.overlayViewKey = Overlay.show(overlayView)
+    setTimeout(() => {
+      Overlay.hide(this.overlayViewKey)
+    }, 2000)
   }
 
   render() {
@@ -142,8 +182,13 @@ class Me extends Component {
           />
           <MeCell
             onPress={() => {
-              if (loggedIn) navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
-              else navigation.navigate('LoginStack')
+              if (!loggedIn){
+                navigation.navigate('LoginStack')
+              } else if (loggedInResult && loggedInResult.idCardAuthStatus && loggedInResult.idCardAuthStatus === common.user.status.pass){
+                navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
+              } else {
+                this.showOverlay(transfer(language, 'me_id_authentic_before'))
+              }
             }}
             leftImageSource={require('../../assets/bank_card.png')}
             title={transfer(language, 'me_bankCards_management')}

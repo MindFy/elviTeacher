@@ -104,7 +104,7 @@ class AddAddress extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { navigation, dispatch, user, language } = this.props
+    const { navigation, dispatch, user, language, loggedIn } = this.props
     this.handleRequestGetCode(nextProps)
     if (nextProps.error) {
       const errCode = nextProps.error.code
@@ -115,6 +115,7 @@ class AddAddress extends Component {
         Toast.fail(transfer(language, 'add_address_failed'))
       }
       dispatch(requestAddressClearError())
+      if(loggedIn) dispatch(actions.sync())
     }
 
     if (this.props.loading && !nextProps.loading) {
@@ -123,6 +124,11 @@ class AddAddress extends Component {
       dispatch(requestWithdrawAddress(findAddress(user.id)))
       navigation.goBack()
     }
+  }
+
+  componentDidMount() {
+    const { dispatch, loggedIn } = this.props
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillUnmount() {
@@ -138,6 +144,7 @@ class AddAddress extends Component {
 
   getCodeErrors = {
     4000107: 'me_Email_repeatMinute',
+    4031601: 'Otc_please_login_to_operate'
   }
 
   codeTitles = ['短信验证码', '谷歌验证码', '邮箱验证码']
@@ -146,10 +153,11 @@ class AddAddress extends Component {
     4000156: 'login_codeError',
     4000413: 'withdraw_address_length_error',
     4000416: 'withdraw_address_error',
+    4031601: 'Otc_please_login_to_operate'
   }
 
   handleRequestGetCode(nextProps) {
-    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    const { requestGetCodeLoading, requestGetCodeResponse, language, dispatch, loggedIn } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
@@ -158,8 +166,12 @@ class AddAddress extends Component {
     }
     else{
       const msg = transfer(language, this.getCodeErrors[requestGetCodeResponse.error.code])
-      if (msg) Toast.fail(msg)
-      else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      if (msg){
+        Toast.fail(msg)
+      } else{
+        Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -189,7 +201,7 @@ class AddAddress extends Component {
   }
 
   confirmPress() {
-    const { formState, language } = this.props
+    const { formState, language, requestPair } = this.props
     if (!formState.address.length) {
       Toast.fail(transfer(language, 'withdrawal_address_required'))
       return
@@ -199,7 +211,12 @@ class AddAddress extends Component {
     const { navigation } = this.props
     const { title } = navigation.state.params
 
-    if (this.checkWithdrawAddressIsIneligible(address, title)) {
+    let item = title
+    if(requestPair && requestPair.coinIdDic[item] && requestPair.coinIdDic[item].contract.chain){
+      item = requestPair.coinIdDic[item].contract.chain
+    }
+
+    if (this.checkWithdrawAddressIsIneligible(address, item)) {
       Alert.alert(
         transfer(language, 'withdraw_scanNote'),
         `${transfer(language, 'withdrawal_address_correct_required_1')}${title}${transfer(language, 'withdrawal_address_correct_required_2')}`,
@@ -366,7 +383,6 @@ class AddAddress extends Component {
 
   render() {
     const { navigation, formState, language } = this.props
-
     return (
       <View
         style={styles.container}
@@ -413,6 +429,9 @@ function mapStateToProps(state) {
     ...state.addressAdd,
     user: state.user.user,
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
+    requestPair: state.home.requestPair,
+    
   }
 }
 

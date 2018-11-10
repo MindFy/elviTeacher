@@ -112,6 +112,7 @@ function parseConfig(data) {
         name: e.name,
         cnName: e.cnName,
         appIcon: e.appicon,
+        contract: e.contract,
       }
       if (e.allowWithdraw) {
         canWithdrawCoins.push(e.name)
@@ -143,7 +144,7 @@ function parseConfig(data) {
 
 
 function* requestPairsWorker() {
-  const response = yield call(api.getToken)
+  const response = yield call(api.getToken, {pairs_type: 'show'})
   if (response.success) {
     yield put({
       type: 'home/request_pair_success',
@@ -161,4 +162,25 @@ function* requestPairsWorker() {
 
 export function* requestPairs() {
   yield takeEvery('home/request_pair_request', requestPairsWorker)
+}
+
+function* requestShowPairsWorker() {
+  const response = yield call(api.getToken, {pairs_type: 'show'})
+
+  if (response.success) {
+    yield put({
+      type: 'home/request_show_pair_success',
+      payload: {requestShowRawPair: response.result, requestShowPair: parseConfig(response.result)},
+    })
+  } else {
+    yield put({
+      type: 'home/request_show_pair_failed',
+      payload: undefined,
+    })
+  }
+}
+
+
+export function* requestShowPairs() {
+  yield takeEvery('home/request_show_pair_request', requestShowPairsWorker)
 }

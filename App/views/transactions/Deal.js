@@ -176,8 +176,18 @@ class Deal extends Component {
     ]
   }
 
+  componentWillMount(){
+    AsyncStorage.getItem('savedKlineIndex')
+    .then((savedIndex) => {
+      if (savedIndex) {
+        cache.setObject('savedKlineIndex', savedIndex)
+        this.props.dispatch(exchange.updateKLineIndex(Number(savedIndex)))
+      }
+    })
+  }
+
   componentDidMount() {
-    const { selectedPair, loggedIn, language } = this.props
+    const { selectedPair, loggedIn, language, dispatch } = this.props
     const { currency, goods } = selectedPair
     if (loggedIn) {
       this.props.dispatch(exchange.checkFavorite({ goods, currency }))
@@ -191,6 +201,7 @@ class Deal extends Component {
         this.loadNecessaryData(true)
       }
     }, common.refreshIntervalTime)
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillReceiveProps(nextProps) {
@@ -198,7 +209,7 @@ class Deal extends Component {
     // if (!equal(nextProps.selectedPair, selectedPair)) {
     //   this.initWebSocket(nextProps)
     // }
-    const { dispatch, createOrderIndex, language } = this.props
+    const { dispatch, createOrderIndex, language, loggedIn } = this.props
     const { createResponse, valuation } = nextProps
     if (!equal(valuation, this.props.valuation)) {
       Toast2.hide()
@@ -209,9 +220,12 @@ class Deal extends Component {
     if (nextProps.cancelOrderError) {
       Toast.fail(transfer(language, 'exchange_withdrawalFailed'))
       dispatch(exchange.requestCancelOrderSetError(null))
+      if(loggedIn) dispatch(actions.sync())
     }
 
-    if (!createResponse) return
+    if (!createResponse) {
+      return
+    }
     if (createResponse.id) {
       Toast.success(
         `${createOrderIndex === 0 ?
@@ -228,6 +242,7 @@ class Deal extends Component {
         4000513: transfer(language, 'exchange_listFailedForLessCredit'),
         4000514: transfer(language, 'exchange_listFailedForLessCredit'),
         4000666: transfer(language, 'exchange_account_frozen'),
+        4031601: transfer(language, 'Otc_please_login_to_operate'),
       }
       const msg = errors[createResponse.code]
       if (msg) {
@@ -239,11 +254,13 @@ class Deal extends Component {
             transfer(language, 'exchange_sellFailed'),
         )
       }
+      if(loggedIn) dispatch(actions.sync())
     } else {
       Toast.fail(
         `${createOrderIndex === 0 ?
           transfer(language, 'exchange_buyFailed') :
           transfer(language, 'exchange_sellFailed')}`)
+      if(loggedIn) dispatch(actions.sync())
     }
     dispatch(exchange.clearResponse())
   }
@@ -532,6 +549,7 @@ class Deal extends Component {
       navigation.navigate('LoginStack')
       return
     }
+    
     if (this.drawer) {
       dispatch(exchange.updateCreateOrderIndex(index))
       const { buy = [], sell = [] } = lastPrice
@@ -603,7 +621,7 @@ class Deal extends Component {
         cprice = new BigNumber(selectedPair.cprice).toFixed(p, 1)
         quantity = new BigNumber(selectedPair.quantity).toFixed(q, 1)
       })
-      if (valuation && valuation.rates) {
+      if (valuation && valuation.rates && valuation.rates[currencyName]) {
         rmb = valuation.rates[currencyName][common.token.CNYT]
         rmb = new BigNumber(cprice).multipliedBy(rmb).toFixed(2, 1)
       }

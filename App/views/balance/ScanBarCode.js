@@ -7,6 +7,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
 import TKWAValidator from '../../utils/TKWAValidator'
+import actions from '../../actions/index'
 
 class ScanBarCode extends Component {
   static navigationOptions(props) {
@@ -46,10 +47,11 @@ class ScanBarCode extends Component {
   }
 
   componentDidMount() {
-    const { navigation, language } = this.props
+    const { navigation, language, dispatch, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'withdraw_scanTitle'),
     })
+    if(loggedIn) dispatch(actions.sync())
   }
 
   barcodeReceived(barCode) {
@@ -57,7 +59,7 @@ class ScanBarCode extends Component {
       return
     }
     this.didFindData = true
-    const { navigation, language } = this.props
+    const { navigation, language, requestPair } = this.props
     const { coin, didScan } = navigation.state.params
     const data = barCode.data
     var address = data
@@ -65,7 +67,13 @@ class ScanBarCode extends Component {
     if(pos >= 0 && pos != (address.length - 1)){
       address = address.substring(pos + 1)
     }
-    const disMatch = (!TKWAValidator.validate(address, coin) && !TKWAValidator.validate(address, coin, 'testnet'))
+
+    let item = coin
+    if(requestPair && requestPair.coinIdDic[item] && requestPair.coinIdDic[item].contract.chain){
+      item = requestPair.coinIdDic[item].contract.chain
+    }
+
+    const disMatch = (!TKWAValidator.validate(address, item) && !TKWAValidator.validate(address, item, 'testnet'))
     if (disMatch) {
       const params1 = transfer(language, 'withdrawal_address_correct_required_1')
       const params2 = transfer(language, 'withdrawal_address_correct_required_2')
@@ -106,6 +114,8 @@ class ScanBarCode extends Component {
 function mapStateToProps(state) {
   return {
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
+    requestPair: state.home.requestPair,
   }
 }
 
