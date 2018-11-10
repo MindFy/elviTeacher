@@ -16,7 +16,7 @@ export function* getGoogleAuth() {
   while (true) {
     const request = yield take(constants.GET_GOOGLE_AUTH_REQUEST)
     const response = yield call(api.graphql, request.schema)
-    if (response.result.data.user.googleSecret) {
+    if (response.success && response.result.data.user.googleSecret) {
       const user = response.result.data.user
       storeSave(common.noti.googleAuth, user.googleSecret, (e) => {})
       yield put({ type: constants.GET_GOOGLE_AUTH_SUCCEED })

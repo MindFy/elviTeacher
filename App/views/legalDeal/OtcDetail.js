@@ -386,16 +386,13 @@ class OtcDetail extends Component {
   }
 
   handleRequestCancel(nextProps) {
-    const { cancelResult, cancelError, language } = nextProps
+    const { dispatch, cancelResult, cancelError, language, otcList } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
       Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
-      const { loggedInResult } = this.props
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: this.limit,
-      })
+      const nextOtcList = otcList.concat()
+      nextOtcList[this.operateIndex].status = 'cancel'
+      dispatch(updateOtcList(nextOtcList))
     }
     if (cancelError && cancelError !== this.props.cancelError) {
       if (cancelError.message === common.badNet) {
@@ -409,7 +406,7 @@ class OtcDetail extends Component {
   }
 
   handleRequestConfirmPay(nextProps) {
-    const { dispatch, confirmPayResult, confirmPayError, otcList, language, authCodeType } = nextProps
+    const { dispatch, confirmPayResult, confirmPayError, otcList, language } = nextProps
 
     if (confirmPayResult && confirmPayResult !== this.props.confirmPayResult) {
       Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
@@ -430,16 +427,13 @@ class OtcDetail extends Component {
   }
 
   handleRequestHavedPay(nextProps) {
-    const { havedPayResult, havedPayError,language } = nextProps
+    const { dispatch, havedPayResult, havedPayError,language, otcList } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
       Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
-      const { loggedInResult } = this.props
-      this.refreshOtcList({
-        id: loggedInResult.id,
-        skip: 0,
-        limit: this.limit,
-      })
+      const nextOtcList = otcList.concat()
+      nextOtcList[this.operateIndex].status = 'waitconfirm'
+      dispatch(updateOtcList(nextOtcList))
     }
     if (havedPayError && havedPayError !== this.props.havedPayError) {
       if (havedPayError.message === common.badNet) {
@@ -558,6 +552,8 @@ class OtcDetail extends Component {
       havedPayTitle = transfer(language, 'OtcDetail_received')
       cancelBtnTitle = transfer(language, 'OtcDetail_complaints')
       havedPayDisabled = confirmPayDisabled
+    } else{
+      return null
     }
     const coin = common.legalDeal.token
     let cancelTitleColor = common.placeholderColor
@@ -610,6 +606,7 @@ class OtcDetail extends Component {
               style={styles.paymentBtn}
               activeOpacity={common.activeOpacity}
               onPress={() => {
+                this.operateIndex = rid
                 navigation.navigate('Payment', { havedPayDisabled: havedPayDisabled, cancelBtnDisabled: cancelBtnDisabled, cancelPress: this.cancelPress.bind(this), havedPayPress: this.havedPayPress.bind(this), data: rd, lang: language })
               }}
             >
@@ -689,7 +686,6 @@ class OtcDetail extends Component {
   render() {
     const { loggedInResult, otcList, language } = this.props
     const { refreshState } = this.state
-
     return (
       <View style={{ flex: 1, backgroundColor: common.blackColor }}>
         <RefreshListView

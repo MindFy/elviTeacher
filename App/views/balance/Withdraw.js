@@ -10,6 +10,7 @@ import {
   Keyboard,
   AsyncStorage,
 } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import {
   Toast,
   Overlay,
@@ -209,14 +210,21 @@ class WithDraw extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, withdrawLoading, language, requestPairStatus, currCoin } = this.props
+    const { dispatch, withdrawLoading, language, requestPairStatus, formState } = this.props
     this.handleRequestGetCode(nextProps)
     if (withdrawLoading && !nextProps.withdrawLoading && nextProps.withdrawSuccess) {
       Toast.success(transfer(language, 'withdrawal_succeed'))
       Overlay.hide(this.overlayViewKeyID)
-      dispatch(requestBalance({
-        token_ids: [this.coinsIdDic[currCoin].id],
-      }))
+      dispatch(withdrawClear())
+      const resetAction = NavigationActions.reset({
+          index: 1,
+          actions: [
+            NavigationActions.navigate({routeName: 'TabBar'}),
+            NavigationActions.navigate({routeName: 'Balance'}),
+          ],
+        }
+      );
+      this.props.navigation.dispatch(resetAction)
     }
 
     if (nextProps.withdrawError) {
@@ -265,7 +273,7 @@ class WithDraw extends Component {
   }
 
   onChangeWithdrawAmount = (withdrawAmount) => {
-    const { dispatch, formState, balance } = this.props
+    const { dispatch, formState, balance, currCoin, language   } = this.props
     if (!withdrawAmount) {
       dispatch(updateForm({
         ...formState,
@@ -280,6 +288,14 @@ class WithDraw extends Component {
     }
     const bMaxBalace = new BigNumber(balance).dp(8, 1)
     if (bWithdrawAmount.gt(bMaxBalace)) {
+      if(currCoin === 'ONT' && JSON.stringify(balance).indexOf('.') >= 0){
+        dispatch(updateForm({
+          ...formState,
+          withdrawAmount: balance.split('.')[0],
+        }))
+        return
+      }
+
       dispatch(updateForm({
         ...formState,
         withdrawAmount: bMaxBalace.toFixed(),
@@ -294,7 +310,13 @@ class WithDraw extends Component {
     if (splitArr.length > 1 && splitArr[1].length > 8) { // 小数长度限制
       return
     }
-
+    
+    if(currCoin === 'ONT' && JSON.stringify(withdrawAmount).indexOf('.') >= 0){
+      Keyboard.dismiss()
+      Toast.fail(transfer(language, 'NoDecimal'))
+      return
+    }
+    
     dispatch(updateForm({
       ...formState,
       withdrawAmount,

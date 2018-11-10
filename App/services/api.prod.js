@@ -2,6 +2,8 @@ export const API_ROOT = 'https://www.tok.com'
 export const ws = 'wss://tok.com/1.0/push'
 // export const API_ROOT = 'http://192.168.0.11:8080'
 // export const ws = 'ws://192.168.0.11:8080/1.0/push'
+// export const API_ROOT = 'http://47.91.206.104:8080'
+// export const ws = 'ws://47.91.206.104:8080/1.0/push'
 export const announcements1 = 'https://toksupport.zendesk.com/api/v2/help_center/'
 export const announcements2 = '/sections/360001728931/articles.json'
 

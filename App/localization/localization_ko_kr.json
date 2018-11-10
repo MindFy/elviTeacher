@@ -706,6 +706,8 @@
   "AuthCode_email_tip": "email",
   "auth_email_unbind": "email unlinked",
   "me_inputEmailCode": "Please enter verification code",
+  "login_multipleErrorPassword": "Your account has been locked due to multiple failed logins. Please try again after the following time:",
+  "NoDecimal": "Minimun withdrawal of this coin is ones",
 
   "FO_temp_hint": "FO deposit and withdrawal can only be operated manually for the time being. Please contact our customer service: service@tok.com"
 }
