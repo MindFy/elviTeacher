@@ -120,6 +120,7 @@ class BalanceDetail extends Component {
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'BalanceDetail')
       props.dispatch(actions.requestPairs())
+      if(props.loggedIn) props.dispatch(actions.sync())
     })
   }
 
@@ -129,6 +130,7 @@ class BalanceDetail extends Component {
 
   requsetDailyChange = () => {
     this.props.dispatch(requestDailyChange())
+    if(this.props.loggedIn) this.props.dispatch(actions.sync())
   }
 
   jumpToDeal = (data) => {
@@ -138,26 +140,34 @@ class BalanceDetail extends Component {
   }
 
   jumpToRecharge = () => {
-    const { dispatch, navigation, currentToken } = this.props
+    const { dispatch, navigation, currentToken, loggedIn } = this.props
     dispatch(recharge.coinSelected(currentToken))
     dispatch(recharge.requestRechargeAddress({
       token_ids: [currentToken.id],
     }))
-    navigation.navigate('Recharge', {
-      hideShowForm: true,
-    })
+    if (loggedIn){
+      navigation.navigate('Recharge', {
+        hideShowForm: true,
+      })
+    } else {
+      navigation.navigate('LoginStack')
+    }
   }
-
   jumpToWithdraw = () => {
-    const { dispatch, navigation, currentToken } = this.props
+    const { dispatch, navigation, currentToken, loggedIn } = this.props
     dispatch(withdraw.toggleForm())
     dispatch(withdraw.coinSelected(currentToken.name))
     dispatch(withdraw.requestBalance({
       token_ids: [currentToken.id],
     }))
-    navigation.navigate('Withdraw', {
-      hideShowForm: true,
-    })
+    if (loggedIn){
+      navigation.navigate('Withdraw', {
+        hideShowForm: true,
+      })
+    }
+    else {
+      navigation.navigate('LoginStack')
+    }
   }
 
   configureDataSource = (dataSource) => {
@@ -414,6 +424,7 @@ const mapStateToProps = (state) => {
     pairData: state.home.requestPair,
     getVerificateSmtpCodeLoading: state.user.getVerificateSmtpCodeVisible,
     getVerificateSmtpCodeResponse: state.user.getVerificateSmtpCodeResponse,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

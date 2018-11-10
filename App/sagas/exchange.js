@@ -69,6 +69,9 @@ export function* requestOrderhistoryListWorker(action) {
 
 export function* createOrderWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.create, payload)
   if (response.success) {
     yield put({
@@ -100,6 +103,9 @@ export function* requestValuationWorker() {
 
 export function* requestCancelOrderWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.cancel, payload)
 
   if (response.success) {

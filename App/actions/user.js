@@ -61,12 +61,6 @@ export function isExist(data) {
   }
 }
 
-export function logout() {
-  return {
-    type: constants.LOGOUT_REQUEST,
-  }
-}
-
 export function clearAllReducer() {
   return {
     type: 'notify/clear_reducer',

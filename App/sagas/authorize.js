@@ -33,6 +33,8 @@ export function* sync() {
     const response = yield call(api.sync)
     if (response.success && response.result.id > 0) {
       yield put({ type: 'authorize/sync_request_succeed', payload: response.result })
+    } else if(response.success){
+      yield put({ type: 'authorize/sync_request_finished', payload: response.result })
     } else {
       yield put({ type: 'authorize/sync_request_failed', payload: response.error })
     }

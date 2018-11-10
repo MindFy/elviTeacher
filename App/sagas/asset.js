@@ -68,6 +68,9 @@ export function* findAssetList() {
       const amountVisible = {}
       for (let i = 0; i < findAsset.length; i++) {
         const element = findAsset[i]
+        if(!element || !element.token || !element.token.name){
+          continue
+        }
         amountVisible[element.token.name] = element.amount
       }
       yield put({ type: constants.FIND_ASSET_LIST_SUCCEED, findAsset, amountVisible })

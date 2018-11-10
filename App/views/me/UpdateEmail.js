@@ -109,10 +109,11 @@ class UpdateEmail extends Component {
   }
 
   componentDidMount() {
-    const { navigation, language } = this.props
+    const { navigation, language, dispatch, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'me_linkEmail'),
     })
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillReceiveProps(nextProps) {
@@ -220,10 +221,11 @@ class UpdateEmail extends Component {
   errors = {
     4000156: 'login_codeError',
     4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4031601: 'Otc_please_login_to_operate',
   }
 
   handleRequestGetCode(nextProps) {
-    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    const { requestGetCodeLoading, requestGetCodeResponse, language, dispatch, loggedIn } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
@@ -235,11 +237,12 @@ class UpdateEmail extends Component {
       if (msg) Toast.fail(msg)
       else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
     }
+    if(loggedIn) dispatch(actions.sync())
   }
 
   handleUpdateEmailRequest(nextProps) {
     const { updateEmailVisible, updateEmailError, updateEmailResult } = nextProps
-    const { user, language, dispatch, navigation } = this.props
+    const { user, language, dispatch, navigation, loggedIn } = this.props
     if (!updateEmailVisible && this.props.updateEmailVisible) {
       if (updateEmailError) {
         if (updateEmailError.message === common.badNet) {
@@ -249,6 +252,7 @@ class UpdateEmail extends Component {
           if (msg) Toast.fail(transfer(language, msg))
           else Toast.fail(transfer(language, 'me_Email_bind_failed'))
         }
+        if(loggedIn) dispatch(actions.sync())
       }
       if (updateEmailResult) {
         Toast.success(transfer(language, 'me_Email_binded'))
@@ -261,7 +265,7 @@ class UpdateEmail extends Component {
   }
 
   handleGetVerificateCodeRequest(nextProps) {
-    const { language } = this.props
+    const { language, dispatch, loggedIn } = this.props
     const { requestGetCodeLoading, requestGetCodeResponse } = nextProps
     if (!requestGetCodeLoading && !this.showGetVerificateSmtpCodeResponse) return
 
@@ -277,6 +281,7 @@ class UpdateEmail extends Component {
       } else {
         Toast.fail(transfer(language, 'me_Email_getCodeFailed'))
       }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -297,7 +302,6 @@ class UpdateEmail extends Component {
 
   render() {
     const { email, codeEmail, codeMobile, codeGoogle, updateEmailVisible, user, language, googleAuth } = this.props
-
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
@@ -420,6 +424,7 @@ function mapStateToProps(state) {
     requestGetCodeLoading: state.user.requestGetCodeLoading,
     requestGetCodeResponse: state.user.requestGetCodeResponse,
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

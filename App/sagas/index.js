@@ -39,6 +39,7 @@ export default function* rootSaga() {
     home.requestAnnouncements(),
     home.requestMarket(),
     home.requestPairs(),
+    home.requestShowPairs(),
     withdraw.requestPairs(),
     loginFlow(),
     syncWatcher(),

@@ -1,14 +1,52 @@
 import WAValidator from 'wallet-address-validator'
 
-const orginCoins = ['BTC', 'ETC', 'ETH', 'LTC', 'ONT']
+const orginCoins = [    
+'btc',
+'bch',
+'ltc',
+'ppc',
+'doge',
+'bvc',
+'frc',
+'pts',
+'mec',
+'xpm',
+'aur',
+'nmc',
+'bio',
+'grlc',
+'vtc',
+'btg',
+'kmd',
+'btcz',
+'btcp',
+'hush',
+'sng',
+'zec',
+'zcl',
+'zen',
+'vot',
+'dcr',
+'dgb',
+'eth',
+'etz',
+'etc',
+'clo',
+'xrp',
+'dash',
+'neo',
+'gas',
+'ont',
+'gas',
+'qtum']
 
 function validate(address, currencyNameOrSymbol, networkType) {
-  let validateCurrency = currencyNameOrSymbol
-  if (orginCoins.every(e => e !== validateCurrency)) {
-    validateCurrency = 'ETH'
+  let validateCurrency = currencyNameOrSymbol.toLowerCase()
+  if (!orginCoins.includes(validateCurrency)) {
+    return true;
   }
 
-   const result = WAValidator.validate(address, validateCurrency, networkType)
+  const result = WAValidator.validate(address, validateCurrency, networkType)
 
   return result
 }

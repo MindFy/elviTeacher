@@ -318,7 +318,8 @@
   "withdrawal_address": "地址",
   "withdrawal": "提现",
   "withdrawal_note_1": "1. 最小提币数量为: ",
-  "withdrawal_note_2": "2. 最大提币数量为: 未身份认证: 单日限1 BTC或等额其他币种，已身份认证: 单日限50 BTC或等额其他币种",
+  "withdrawal_note_2": "2. 最大提币数量为：单日限50 BTC或等额其他币种",
+  "withdrawal_note_3": "3. 为保障资金安全，请务必确认电脑及浏览器安全，防止信息被篡改或泄漏", 
   "withdrawal_succeed": "提现成功",
   "withdrawal_failed": "提现失败",
   "withdrawal_amount_required": "请输入提币数量",
@@ -708,6 +709,17 @@
   "me_inputEmailCode": "请输入邮箱验证码",
   "login_multipleErrorPassword": "登录密码错误次数过多，您的账号已被锁定登录，请于如下时间后重新登录：",
   "NoDecimal": "由于币种原因，提币不支持小数位",
-  
+  "me_ID_enterCorrectName":"请输入正确姓名",
+  "login_except_fault":"登录失败，失败原因：意外错误。请稍后重试，如有疑问请联系客服。",
+  "deposit_address_label": "地址标签",
+  "deposit_address_label_warning": "(请务必填写并仔细核对)",
+  "deposit_copy_address_label": "复制",
+  "withdrawal_address_label": "地址标签",
+  "withdrawal_address_label_warning": "(填写错误可能导致资产损失，请仔细核对。若无地址标签，可不填写)",
+  "UpdateBank_account_name": "持卡人姓名",
+  "UpdateBank_bankno_hint1": "请确认添加",
+  "UpdateBank_bankno_hint2": "本人银行卡",
+  "me_id_authentic_before":"请先进行身份认证！",
+
   "FO_temp_hint": "由于安全原因，FO暂时仅支持人工充提服务，请联系客服service@tok.com进行充提币"
 }

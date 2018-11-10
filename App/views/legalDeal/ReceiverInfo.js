@@ -25,6 +25,7 @@ import {
 import TKButton from '../../components/TKButton'
 import * as otcDetail from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   container: {
@@ -113,10 +114,11 @@ class ReceiverInfo extends Component {
     4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
     4001480: 'OtcDetail_order_statusexpired',
     4001421: 'OtcDetail_order_statusexpired',
+    4031601: 'Otc_please_login_to_operate',
   }
 
   handleRequestCancel(nextProps) {
-    const { receiverInfoData, dispatch, cancelResult, cancelError, language } = nextProps
+    const { receiverInfoData, dispatch, cancelResult, cancelError, language, loggedIn } = nextProps
 
     if (cancelResult && cancelResult !== this.props.cancelResult) {
       Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
@@ -130,11 +132,12 @@ class ReceiverInfo extends Component {
         if (msg) Toast.fail(transfer(language, msg))
         else Toast.fail(transfer(language, 'OtcDetail_failed_to_cancel_the_order'))
       }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
   handleRequestHavedPay(nextProps) {
-    const { receiverInfoData, dispatch, havedPayResult, havedPayError, language } = nextProps
+    const { receiverInfoData, dispatch, havedPayResult, havedPayError, language, loggedIn } = nextProps
 
     if (havedPayResult && havedPayResult !== this.props.havedPayResult) {
       Toast.success(transfer(language, 'OtcDetail_confirm_successful'))
@@ -148,11 +151,12 @@ class ReceiverInfo extends Component {
         if (msg) Toast.fail(msg)
         Toast.fail(transfer(language, 'OtcDetail_operation_failed'))
       }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
   componentDidMount() {
-    const { navigation, loggedInResult } = this.props
+    const { navigation, loggedInResult, dispatch, loggedIn } = this.props
     const { params } = navigation.state
     if (params && params.receiverId) {
       this.requesetReceiverInfo(params.receiverId)
@@ -162,26 +166,31 @@ class ReceiverInfo extends Component {
       skip: 0,
       limit: 10,
     })
+    if(loggedIn) dispatch(actions.sync())
   }
 
   requesetReceiverInfo = (id) => {
-    const { dispatch } = this.props
+    const { dispatch, loggedIn } = this.props
     dispatch(requesetReceiverInfo(findOtcReceiverInfo(id)))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   cancelPress(id) {
-    const { dispatch } = this.props
+    const { dispatch, loggedIn } = this.props
     dispatch(otcDetail.requestCancel({ id }))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   havedPayPress(id) {
-    const { dispatch } = this.props
+    const { dispatch, loggedIn } = this.props
     dispatch(otcDetail.requestHavedPay({ id }))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   refreshOtcList(data) {
-    const { dispatch } = this.props
+    const { dispatch, loggedIn } = this.props
     dispatch(otcDetail.requestOtcList(schemas.findOtcList(data)))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   render() {
@@ -298,6 +307,7 @@ function mapStateToProps(state) {
   return {
     ...state.receiverInfo,
     loggedInResult: state.authorize.loggedInResult,
+    loggedIn: state.authorize.loggedIn,
     language: state.system.language,
     otcList: state.otcDetail.otcList,
     cancelResult: state.otcDetail.cancelResult,

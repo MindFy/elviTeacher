@@ -10,9 +10,9 @@ import NextTouchableOpacity from '../../../components/NextTouchableOpacity'
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginLeft: common.getH(10),
-    marginRight: common.getH(10),
+    justifyContent: 'space-around',
+    marginLeft: common.getH(2),
+    marginRight: common.getH(2),
     borderBottomColor: common.lineColor,
     borderBottomWidth: 1,
   },
@@ -61,8 +61,8 @@ class BalanceAuthSelectionBar extends Component {
         <Text
           style={{
             color: selected ? common.btnTextColor : common.blackColor,
-             marginRight: index === 2 ? 0 : common.getH(14),
-             marginLeft: index === 0 ? 0 : common.getH(14),
+             marginRight: common.getH(2),
+             marginLeft: common.getH(2),
             fontSize: common.font12,
             alignSelf: 'center',
           }}

@@ -102,6 +102,14 @@ export default function authorize(state = initialState, action) {
         loggedInResult: payload,
       }
       break
+    case 'authorize/sync_request_finished':
+      nextState = {
+        ...state,
+        syncing: false,
+        syncSuccess: true,
+        loggedIn: false,
+      }
+      break
     case 'authorize/sync_request_failed':
       nextState = {
         ...state,

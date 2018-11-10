@@ -38,12 +38,6 @@ const initialState = {
   isExistVisible: false,
   isExistResponse: undefined,
 
-  loginVisible: false,
-  loginResponse: undefined,
-
-  logoutVisible: false,
-  logoutResponse: undefined,
-
   registerVisible: false,
   registerResponse: undefined,
 
@@ -176,33 +170,6 @@ export default function user(state = initialState, action) {
         ...state,
         isExistVisible: false,
         isExistResponse: action.response,
-      }
-      break
-    case constants.LOGIN_REQUEST:
-      nextState = {
-        ...state,
-        loginVisible: true,
-      }
-      break
-    case constants.LOGIN_SUCCEED:
-      nextState = {
-        ...state,
-        loginVisible: false,
-        loginResponse: action.response,
-      }
-      break
-    case constants.LOGIN_FAILED:
-      nextState = {
-        ...state,
-        loginVisible: false,
-        loginResponse: action.response,
-      }
-      break
-    case constants.LOGIN_UPDATE:
-      nextState = {
-        ...state,
-        mobileLogin: action.data.mobile,
-        passwordLogin: action.data.password,
       }
       break
     case constants.REGISTER_REQUEST:

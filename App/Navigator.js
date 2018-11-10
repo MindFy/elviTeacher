@@ -216,6 +216,7 @@ const TabBarStack = StackNavigator(
     SecurityCenter,
     UpdateEmail,
     UpdateMobile,
+    Login,
     KLineFullScreen: {
       screen: KLineFullScreen,
       navigationOptions: {

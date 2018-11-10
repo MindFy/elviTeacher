@@ -28,6 +28,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import cache from '../../utils/cache'
 import { getDefaultLanguage } from '../../utils/languageHelper'
 import transfer from '../../localization/utils'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   container: {
@@ -68,8 +69,8 @@ const styles = StyleSheet.create({
   tipsContent: {
     marginTop: common.margin10,
     color: common.textColor,
-    fontSize: common.font10,
-    lineHeight: 14,
+    fontSize: common.font13,
+    lineHeight: 16,
   },
 })
 
@@ -119,7 +120,7 @@ class Otc extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { response } = nextProps
-    const { navigation, dispatch, type, loggedInResult, language } = this.props
+    const { navigation, dispatch, type, loggedInResult, language, loggedIn } = this.props
 
     if (!response) return
 
@@ -161,6 +162,7 @@ class Otc extends Component {
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
     }
     dispatch(clearResponse())
+    if(loggedIn) dispatch(actions.sync())
   }
 
   onSubmit() {
