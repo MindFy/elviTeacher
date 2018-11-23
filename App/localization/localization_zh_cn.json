@@ -720,6 +720,7 @@
   "UpdateBank_bankno_hint1": "请确认添加",
   "UpdateBank_bankno_hint2": "本人银行卡",
   "me_id_authentic_before":"请先进行身份认证！",
+  "otc_need_bind_Mobile":"请先绑定手机号码"
 
-  "FO_temp_hint": "由于安全原因，FO暂时仅支持人工充提服务，请联系客服service@tok.com进行充提币"
+  
 }

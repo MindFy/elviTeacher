@@ -714,6 +714,6 @@
   "deposit_copy_address_label": "Copy",
   "withdrawal_address_label": "Tag",
   "withdrawal_address_label_warning": "(Mistakes might cause assets loss. Make sure you check. Please leave it blank for the tokens without the tag.)",
+  "otc_need_bind_Mobile":"请先绑定手机号码"
 
-  "FO_temp_hint": "FO deposit and withdrawal can only be operated manually for the time being. Please contact our customer service: service@tok.com"
 }

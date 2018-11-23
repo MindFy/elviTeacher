@@ -223,7 +223,7 @@ const common = {
   h60: 60 / w * sw, // 当前委托cell高度
   h70: 70 / w * sw, // 首页Cell高度
   h80: 80 / w * sw,
-  h81: 81 / w * sw, // XRP提示语专用高度
+  h81: 81 / w * sw, // addtag提示语专用高度
   h97: 97 / w * sw,
   h100: 100 / w * sw, // 二维码宽高
   h120: 120 / w * sw, // 超级返利已推荐好友

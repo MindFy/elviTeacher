@@ -292,7 +292,7 @@ class WithDraw extends Component {
   }
 
   onChangeWithdrawAmount = (withdrawAmount) => {
-    const { dispatch, formState, balance, currCoin, language   } = this.props
+    const { dispatch, formState, balance, currCoin, language, requestRawPair } = this.props
     if (!withdrawAmount) {
       dispatch(updateForm({
         ...formState,
@@ -306,14 +306,25 @@ class WithDraw extends Component {
       return
     }
 
-    let bMaxBalace
-    if(currCoin === 'ONT'){
-      bMaxBalace = new BigNumber(balance).dp(0, 1)
-    } else if(currCoin === 'XRP'){
-      bMaxBalace = new BigNumber(balance).dp(4, 1)
-    } else{
-      bMaxBalace = new BigNumber(balance).dp(8, 1)
+    if(!requestRawPair || !requestRawPair.tokens){
+      return
     }
+
+    const arr = [0,1,2,3,4,5,6,7,8]
+    let withdrawLimit
+    let withdrawLimitExist = false
+    requestRawPair.tokens.map(e => {
+      if(e.name && e.name === currCoin && e.withdrawLimit && arr.indexOf(Number(e.withdrawLimit)) >= 0){
+        withdrawLimitExist = true
+        withdrawLimit = Number(e.withdrawLimit)
+      }
+    })
+
+    if(!withdrawLimitExist){
+      return
+    }
+
+    let bMaxBalace = new BigNumber(balance).dp(withdrawLimit, 1)
 
     if (bWithdrawAmount.gt(bMaxBalace)) {
       dispatch(updateForm({
@@ -331,11 +342,11 @@ class WithDraw extends Component {
       return
     }
 
-    if (currCoin === 'XRP' && splitArr.length > 1 && splitArr[1].length > 4) { // 小数长度限制
+    if (splitArr.length > 1 && splitArr[1].length > withdrawLimit) { // 小数长度限制
       return
     }
 
-    if(currCoin === 'ONT' && JSON.stringify(withdrawAmount).indexOf('.') >= 0){
+    if(withdrawLimit === 0 && JSON.stringify(withdrawAmount).indexOf('.') >= 0){
       Keyboard.dismiss()
       Toast.fail(transfer(language, 'NoDecimal'))
       return
@@ -746,16 +757,11 @@ class WithDraw extends Component {
   renderCoinList() {
     const { listToggled, language } = this.props
     const coinList = common.getDefaultPair().canWithdrawCoins
-    let coinListEx = []
-    if(coinList && common.getDefaultPair()['coinIdDic']['FO']){
-      coinListEx = [transfer(language, 'FO_temp_hint')]
-    }
-    coinListEx = coinList.concat(coinListEx)
-    return !listToggled ? null : coinListEx.map(ele => (
+    return !listToggled ? null : coinList.map(ele => (
       <NextTouchableOpacity
         style={{
           marginTop: common.margin5,
-          height: ele === transfer(language, 'FO_temp_hint') ? common.h60 : common.h40,
+          height: common.h40,
           backgroundColor: common.navBgColor,
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -763,9 +769,6 @@ class WithDraw extends Component {
         key={ele}
         activeOpacity={common.activeOpacity}
         onPress={() => {
-          if(ele === transfer(language, 'FO_temp_hint')){
-            return
-          }
           this.tapCoinListCell(ele)
         }}
         delay={100}
@@ -891,8 +894,20 @@ class WithDraw extends Component {
     )
   }
 
+  isPureNumberString(numString)
+  {
+    var reg = '0123456789'
+    for(var i = 0; i < numString.length; i++){
+      if(0 > reg.indexOf(numString.charAt(i)))
+      {
+        return false
+      }
+    }
+    return true
+  }
+
   renderFormWithdrawAddressLabel = () => {
-    const { dispatch, formState, language } = this.props
+    const { dispatch, formState, language, currCoin } = this.props
     let tipHeight
     if (language === 'zh_hans' || language === 'zh_hant') {
       tipHeight = {height: common.h70}
@@ -907,10 +922,15 @@ class WithDraw extends Component {
           inputStyle={styles.addressInput}
           placeholder={transfer(language, 'withdrawal_address_label')}
           value={formState.withdrawAddressLabel}
-          onChangeText={(withdrawAddressLabel = '') => dispatch(updateForm({
-            ...formState,
-            withdrawAddressLabel: withdrawAddressLabel.trim(),
-          }))}
+          onChangeText={(withdrawAddressLabel = '') => {
+            if(currCoin === 'XRP' && !this.isPureNumberString(withdrawAddressLabel)){
+              return
+            }
+            dispatch(updateForm({
+              ...formState,
+              withdrawAddressLabel: withdrawAddressLabel.trim(),
+            }))
+          }}
         />
       </View>
     )
@@ -975,6 +995,7 @@ ${transfer(language, 'withdrawal_note_3')}`}
       currCoin,
       listToggled,
       language,
+      requestPair,
     } = this.props
 
     const bBalance = new BigNumber(balance)
@@ -997,10 +1018,10 @@ ${transfer(language, 'withdrawal_note_3')}`}
               {this.renderFormFeeOrBalanceReceived()}
               {this.renderFormWithdrawAddress()}
               {
-                currCoin !== 'XRP' ?
-                null
-                :
+                (requestPair && requestPair.coinIdDic && requestPair.coinIdDic[currCoin] && requestPair.coinIdDic[currCoin].contract && requestPair.coinIdDic[currCoin].contract.addrTag === true) ?
                 this.renderFormWithdrawAddressLabel()
+                :
+                null
               }
               {this.renderFormWithdrawBtn()}
               {this.renderFormTip()}
@@ -1038,7 +1059,6 @@ function mapStateToProps(state) {
     user: state.user.user,
     language: state.system.language,
     loggedIn: state.authorize.loggedIn,
-    pairs: state.home.requestPair
   }
 }
 
