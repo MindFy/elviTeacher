@@ -353,7 +353,7 @@ class UpdatePassword extends Component {
         Toast.success(transfer(language, 'me_change_pwd_succeed'))
         Overlay.hide(this.overlayViewKeyID)
         navigation.goBack()
-      } else if (error.code === 4031601) {
+      } else if (updatePasswordResponse.error.code === 4031601) {
         Toast.fail(transfer(language, 'Otc_please_login_to_operate'))
       } else if (updatePasswordResponse.error.code === 4030501) {
         Toast.fail(transfer(language, 'me_settings_PWoldWrong'))

@@ -17,6 +17,9 @@ import {
   requestBalanceList,
   requestBalanceValuation,
 } from '../../actions/balance'
+import {
+  requestPairs,
+} from '../../actions/home'
 import { updateCurrentToken } from '../../actions/balanceDetail'
 import cache from '../../utils/cache'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -108,6 +111,7 @@ class Balance extends Component {
       const { loggedInResult, dispatch, loggedIn } = this.props
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
       dispatch(requestBalanceValuation())
+      dispatch(requestPairs())
       if(loggedIn) dispatch(actions.sync())
     })
   }

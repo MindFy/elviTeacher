@@ -150,7 +150,7 @@ function* requestPairsWorker() {
   if (response.success) {
     yield put({
       type: 'withdraw/request_pair_success',
-      payload: parseConfig(response.result),
+      payload: {requestRawPair: response.result, requestPair: parseConfig(response.result)},
     })
   } else {
     yield put({

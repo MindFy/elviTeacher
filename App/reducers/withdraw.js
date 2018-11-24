@@ -25,6 +25,7 @@ const initialState = {
   requestGetCodeLoading: false,
   requestGetCodeResponse: null,
   requestPair: {},
+  requestRawPair: {},
   requestPairStatus: 0,
 }
 
@@ -183,7 +184,8 @@ export default function withdraw(state = initialState, action) {
       nextState = {
         ...state,
         requestPairStatus: 1,
-        requestPair: payload,
+        requestPair: payload.requestPair,
+        requestRawPair: payload.requestRawPair,
       }
       break
     case 'withdraw/request_pair_failed':
