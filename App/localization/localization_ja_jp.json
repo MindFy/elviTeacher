@@ -318,7 +318,8 @@
   "withdrawal_address": "アドレス",
   "withdrawal": "引出",
   "withdrawal_note_1": "1. 最小引出金額： ",
-  "withdrawal_note_2": "2. 最大引出金額：本人未確認：一日に1 BTCまで、または同額の他の通貨は、本人が確認済み：一日に50 BTCまで、または同額の他の通貨",
+  "withdrawal_note_2": "2. コインの最大引出数は次のとおりです：1日の制限は50 BTCまたは同等のその他通貨",
+  "withdrawal_note_3": "3. 資金の安全を保障するために、コンピュータやブラウザのセキュリティをチェックして、情報の改ざんや漏洩を防止してください", 
   "withdrawal_succeed": "引出に成功しました",
   "withdrawal_failed": "引出に失敗しました",
   "withdrawal_amount_required": "引出額を入力してください",
@@ -708,6 +709,12 @@
   "me_inputEmailCode": "Please enter verification code",
   "login_multipleErrorPassword": "Your account has been locked due to multiple failed logins. Please try again after the following time:",
   "NoDecimal": "Minimun withdrawal of this coin is ones",
+  "login_except_fault":"Failed to login: unexpected error. Please try again later. If you have any questions, please contact our customer service. ",
+  "deposit_address_label": "Tag",
+  "deposit_address_label_warning": "(Please make sure you fill in and check.)",
+  "deposit_copy_address_label": "Copy",
+  "withdrawal_address_label": "Tag",
+  "withdrawal_address_label_warning": "(Mistakes might cause assets loss. Make sure you check. Please leave it blank for the tokens without the tag.)",
 
   "FO_temp_hint": "FO deposit and withdrawal can only be operated manually for the time being. Please contact our customer service: service@tok.com"
 }

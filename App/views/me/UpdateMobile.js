@@ -109,10 +109,11 @@ class UpdateMobile extends Component {
   }
 
   componentDidMount() {
-    const { navigation, language } = this.props
+    const { navigation, language, dispatch, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'me_linkMobile'),
     })
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillReceiveProps(nextProps) {
@@ -214,10 +215,11 @@ class UpdateMobile extends Component {
   errors = {
     4000156: 'login_codeError',
     4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4031601: 'Otc_please_login_to_operate',
   }
 
   handleRequestGetCode(nextProps) {
-    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    const { requestGetCodeLoading, requestGetCodeResponse, language, dispatch, loggedIn } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
@@ -228,12 +230,13 @@ class UpdateMobile extends Component {
       const msg = transfer(language, this.errors[requestGetCodeResponse.error.code])
       if (msg) Toast.fail(msg)
       else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
   handleUpdateMobileRequest(nextProps) {
     const { updateMobileVisible, updateMobileError, updateMobileResult } = nextProps
-    const { user, language, dispatch, navigation } = this.props
+    const { user, language, dispatch, navigation, loggedIn } = this.props
     if (!updateMobileVisible && this.props.updateMobileVisible) {
       if (updateMobileError) {
         if (updateMobileError.message === common.badNet) {
@@ -243,6 +246,7 @@ class UpdateMobile extends Component {
           if (msg) Toast.fail(transfer(language, msg))
           else Toast.fail(transfer(language, 'me_Mobile_bind_failed'))
         }
+        if(loggedIn) dispatch(actions.sync())
       }
       if (updateMobileResult) {
         Toast.success(transfer(language, 'me_Mobile_binded'))
@@ -255,7 +259,7 @@ class UpdateMobile extends Component {
   }
 
   handleGetVerificateCodeRequest(nextProps) {
-    const { language } = this.props
+    const { language, dispatch, loggedIn } = this.props
     const { requestGetCodeLoading, requestGetCodeResponse } = nextProps
     if (!requestGetCodeLoading && !this.showGetVerificateSmtpCodeResponse) return
 
@@ -271,6 +275,7 @@ class UpdateMobile extends Component {
       } else {
         Toast.fail(transfer(language, 'me_Email_getCodeFailed'))
       }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -414,6 +419,7 @@ function mapStateToProps(state) {
     requestGetCodeLoading: state.user.requestGetCodeLoading,
     requestGetCodeResponse: state.user.requestGetCodeResponse,
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

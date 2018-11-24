@@ -42,7 +42,6 @@ import {
   isExist,
   mobileIsExist,
   clearMobileIsExist,
-  logout,
   clearAllReducer,
   register,
   registerUpdate,
@@ -70,6 +69,8 @@ import {
 } from './detailDeal'
 import {
   login,
+  logout,
+  clearLogin,
   loginUpdate,
   clearError,
   toggleAutoLogin,
@@ -83,7 +84,8 @@ const actions = {
   modifyLastPriceSort: home.modifyLastPriceSort,
   modifyChangeSort: home.modifyChangeSort,
   requestPairs: home.requestPairs,
-  
+  requestShowPairs: home.requestShowPairs,
+
   add,
   addUpdate,
   findAddress,
@@ -122,7 +124,6 @@ const actions = {
   isExist,
   mobileIsExist,
   clearMobileIsExist,
-  logout,
   register,
   registerUpdate,
   resetPassword,
@@ -146,6 +147,8 @@ const actions = {
   detailupdateKV,
 
   login,
+  logout,
+  clearLogin,
   loginUpdate,
   clearError,
   toggleAutoLogin,

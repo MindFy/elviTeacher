@@ -11,6 +11,7 @@ import {
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   headerLeft: {

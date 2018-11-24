@@ -26,6 +26,8 @@ import * as api from '../../services/api'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import Alert from '../../components/Alert'
+import actions from '../../actions/index'
+import cache from '../../utils/cache';
 
 const styles = StyleSheet.create({
   backBtn: {
@@ -162,11 +164,12 @@ class Recharge extends Component {
   }
 
   componentDidMount() {
-    const { navigation, language } = this.props
+    const { navigation, language, dispatch, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'home_deposit'),
       right: transfer(language, 'recharge_historyList'),
     })
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillUnmount() {
@@ -228,7 +231,7 @@ class Recharge extends Component {
     }
   }
 
-  qrPress = (rechargeAddress, coinName, qrApi) => {
+  qrPress = (rechargeAddress, coinName, qrApi, bIsLabel = false) => {
     const overlayView = (
       <Overlay.View
         style={{
@@ -240,7 +243,7 @@ class Recharge extends Component {
       >
         <View style={styles.qrContainer}>
           <Text style={styles.qrRecharge}>
-            {`${coinName} ${transfer(this.props.language, 'deposit_address')}`}
+            {`${coinName} ${transfer(this.props.language, bIsLabel ? 'deposit_address_label' : 'deposit_address')}`}
           </Text>
           <Image
             style={styles.qrImage}
@@ -381,7 +384,8 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
   }
 
   renderRechargeAddress = (rechargeAddress, coinName, qrApi) => {
-    const { language } = this.props
+    const { language, user } = this.props
+    var rechargeAddressLabel = 150818 ^ user.id;
     const addressContent = (
       <View>
         <Text style={styles.addressTip}>{transfer(language, 'deposit_address')}</Text>
@@ -410,10 +414,50 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
         </View>
       </View>
     )
+    
+    const addressLabelContent = (
+      <View>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={styles.addressTip}>{transfer(language, 'withdrawal_address_label')}</Text>
+          <Text style={[styles.addressTip, {color: common.redColor}]}>{transfer(language, 'deposit_address_label_warning')}</Text>
+        </View>
+        <Text style={styles.address}>{rechargeAddressLabel}</Text>
+      </View>
+    )
+    const addressLabelBtn = (
+      <View>
+        <View style={styles.btnsContainer}>
+          <NextTouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.clipPress(rechargeAddressLabel.toString())}
+          >
+            <Text style={styles.copyAddressBtn}>{transfer(language, 'deposit_copy_address_label')}</Text>
+          </NextTouchableOpacity>
+          <NextTouchableOpacity
+            activeOpacity={common.activeOpacity}
+            onPress={() => this.qrPress(rechargeAddressLabel, coinName, qrApi, true)}
+          >
+            <Text style={styles.copyAddressBtn}>{transfer(language, 'deposit_QA_code')}</Text>
+          </NextTouchableOpacity>
+        </View>
+      </View>
+    )
+
     return (
-      <View style={styles.addressContainer}>
-        {addressContent}
-        {addressBtn}
+      <View >
+        <View style={styles.addressContainer}>
+          {addressContent}
+          {addressBtn}
+        </View>
+        {
+          isHide || coinName !== 'XRP' ?
+          null
+          :
+          <View style={styles.addressContainer}>
+            {addressLabelContent}
+            {addressLabelBtn}
+          </View>
+        }
       </View>
     )
   }
@@ -471,6 +515,7 @@ function mapStateToProps(state) {
     ...state.recharge,
     user: state.user.user,
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

@@ -53,6 +53,9 @@ export function* requestGetCodeWorker(action) {
 
 export function* requestConfirmPayWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.confirmPay, payload)
 
   if (response.success) {
@@ -70,6 +73,9 @@ export function* requestConfirmPayWorker(action) {
 
 export function* requestHavedPayWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.havedPay, payload)
 
   if (response.success) {
@@ -87,6 +93,9 @@ export function* requestHavedPayWorker(action) {
 
 export function* requestCancelWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.legalDealCancel, payload)
 
   if (response.success) {
@@ -104,6 +113,9 @@ export function* requestCancelWorker(action) {
 
 export function* requestAllegeWorker(action) {
   const { payload } = action
+  try {
+    yield call(api.sync)
+  } catch (error) {}
   const response = yield call(api.createAllege, payload)
 
   if (response.success) {

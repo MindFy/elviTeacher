@@ -9,6 +9,7 @@ const initialState = {
   formState: {
     withdrawAmount: '',
     withdrawAddress: '',
+    withdrawAddressLabel: '',
     smsCode: '',
     googleCode: '',
     emailCode: '',

@@ -23,6 +23,7 @@ import { findUserUpdate } from '../../actions/user'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import WithdrawAuthorizeCode from '../balance/components/WithdrawAuthorizeCode'
 import transfer from '../../localization/utils'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   container: {
@@ -52,13 +53,13 @@ const styles = StyleSheet.create({
     fontSize: common.font12,
   },
   tipDetail: {
+    
     marginTop: common.margin5,
     marginLeft: common.margin10,
     marginRight: common.margin10,
     marginBottom: common.margin10,
     color: common.textColor,
-    fontSize: common.font10,
-    lineHeight: common.font12,
+    fontSize: common.font14,
   },
 })
 
@@ -99,7 +100,7 @@ class UpdateBank extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user, navigation, language } = this.props
+    const { dispatch, user, navigation, language, loggedIn } = this.props
     navigation.setParams({
       title: transfer(language, 'me_bankCards_management'),
     })
@@ -112,6 +113,7 @@ class UpdateBank extends Component {
       googleCode: '',
       emailCode: '',
     }))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillReceiveProps(nextProps) {
@@ -323,10 +325,11 @@ class UpdateBank extends Component {
   errors = {
     4000156: 'login_codeError',
     4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4031601: 'Otc_please_login_to_operate',
   }
 
   handleRequestGetCode(nextProps) {
-    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    const { requestGetCodeLoading, requestGetCodeResponse, language, dispatch, loggedIn } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
@@ -338,6 +341,7 @@ class UpdateBank extends Component {
       if (msg) Toast.fail(msg)
       else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
     }
+    if(loggedIn) dispatch(actions.sync())
   }
 
   userUpdate(nextProps) {
@@ -352,7 +356,7 @@ class UpdateBank extends Component {
   }
 
   handleRequestUpdateBank(nextProps) {
-    const { updateBankResult, updateBankError, navigation, language, authCodeType } = nextProps
+    const { updateBankResult, updateBankError, navigation, language, dispatch, loggedIn } = nextProps
     if (updateBankResult && (updateBankResult !== this.props.updateBankResult)) {
       this.userUpdate(nextProps)
       Toast.success(transfer(language, 'bank_linked'))
@@ -368,6 +372,7 @@ class UpdateBank extends Component {
       const msg = this.errors[updateBankError.code]
       if (msg) Toast.fail(transfer(language, msg))
       else Toast.fail(transfer(language, 'UpdateBank_blind_card_failed'))
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -394,6 +399,7 @@ class UpdateBank extends Component {
 
   render() {
     const { loading, formState, navigation, user, language } = this.props
+    
     if (language !== 'zh_hans') {
       return this.renderChineseVisible(language)
     }
@@ -410,6 +416,21 @@ class UpdateBank extends Component {
         style={styles.container}
         keyboardShouldPersistTaps="handled"
       >
+        <TKInputItem
+          viewStyle={{
+            marginTop: common.margin10,
+            borderRadius: 0,
+            borderWidth: 0,
+          }}
+          titleStyle={{
+            width: common.h97,
+            fontSize: common.font14,
+          }}
+          title={transfer(language, 'UpdateBank_account_name')}
+          value={user.name}
+          inputStyle={{color: common.placeholderColor}}
+          editable={false}
+        />
         <TKInputItem
           viewStyle={{
             marginTop: common.margin10,
@@ -463,6 +484,16 @@ class UpdateBank extends Component {
           editable={editable}
         />
 
+        <Text
+          style={{
+            textAlign: 'center',
+            color: common.redColor,
+            fontSize: common.font12,
+          }}
+        >
+          {`${transfer(this.props.language, 'UpdateBank_bankno_hint1')}${user.name}${transfer(this.props.language, 'UpdateBank_bankno_hint2')}`}
+        </Text>
+
         {this.renderTip(language)}
 
         <TKButton
@@ -486,6 +517,7 @@ function mapStateToProps(store) {
     ...store.updateBank,
     user: store.user.user,
     loggedInResult: store.authorize.loggedInResult,
+    loggedIn: store.authorize.loggedIn,
     language: store.system.language,
   }
 }

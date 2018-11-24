@@ -68,6 +68,7 @@ class SecurityCenter extends Component {
   }
 
   componentDidMount() {
+    if(this.props.loggedIn) this.props.dispatch(actions.sync())
   }
 
   componentWillUnmount() {
@@ -108,7 +109,7 @@ class SecurityCenter extends Component {
   }
 
   render() {
-    const { navigation, loggedInResult, dispatch, language } = this.props
+    const { navigation, loggedInResult, language, dispatch, loggedIn } = this.props
     return (
       <ScrollView
         style={{
@@ -127,6 +128,7 @@ class SecurityCenter extends Component {
               navigation.navigate('UpdateEmail')
             } else {
               this.showOverlay(transfer(language, 'me_Email_binded'))
+              if(loggedIn) dispatch(actions.sync())
             }
           }}
         />
@@ -140,6 +142,7 @@ class SecurityCenter extends Component {
                   navigation.navigate('UpdateMobile')
                 } else {
                   this.showOverlay(transfer(language, 'me_Mobile_binded'))
+                  if(loggedIn) dispatch(actions.sync())
                 }
               }}
             />) : null
@@ -156,6 +159,7 @@ class SecurityCenter extends Component {
                 dispatch(actions.findUser(schemas.findUser(user.id)))
                 dispatch(getGoogleAuth(schemas.findUser(user.id)))}
               })
+              if(loggedIn) dispatch(actions.sync())
             }
           }
         />

@@ -318,7 +318,8 @@
   "withdrawal_address": "地址",
   "withdrawal": "提領",
   "withdrawal_note_1": "1. 最小提領數量為: ",
-  "withdrawal_note_2": "2. 最大提領數量為: 未身份認證: 單日限 1 BTC 或 等額其他幣種，已身份認證: 單日限 50 BTC 或 等額其他幣種",
+  "withdrawal_note_2": "2. 最大提幣數量為：單日限50 BTC或等額其他幣種",
+  "withdrawal_note_3": "3. 為保障資金安全，請務必確認電腦及流覽器安全，防止資訊被篡改或洩漏", 
   "withdrawal_succeed": "提領成功",
   "withdrawal_failed": "提領失敗",
   "withdrawal_amount_required": "請輸入提領數量",
@@ -708,6 +709,12 @@
   "me_inputEmailCode": "請輸入信箱驗證碼",
   "login_multipleErrorPassword": "登入密碼錯誤次數過多，您的帳號已被鎖定，請於以下時間後重新登入：",
   "NoDecimal": "此幣最小提領單位為個位數",
+  "login_except_fault":"登入失敗，失敗原因：意外錯誤。請稍後重試，如有疑問請聯繫客服。",
+  "deposit_address_label": "地址標籤",
+  "deposit_address_label_warning": "(請務必填寫並仔細核對)",
+  "deposit_copy_address_label": "複製",
+  "withdrawal_address_label": "地址標籤",
+  "withdrawal_address_label_warning": "(填寫錯誤可能導致資產流失，請仔細核對。若無地址標籤，可不填寫。)",
 
   "FO_temp_hint": "FO目前僅提供人工儲值/提領服務，請聯繫客服service@tok.com"
 }

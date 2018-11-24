@@ -26,6 +26,7 @@ import {
 import schemas from '../../schemas/index'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   headerLeft: {
@@ -89,7 +90,7 @@ class History extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, loggedInResult } = this.props
+    const { dispatch, loggedInResult, loggedIn } = this.props
 
     dispatch(requestDeposit(schemas.findPaymentListRecharge(
       loggedInResult.id,
@@ -106,6 +107,7 @@ class History extends Component {
       skip: 0,
       limit: this.limit,
     })))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   componentWillReceiveProps(nextProps) {
@@ -125,6 +127,7 @@ class History extends Component {
   errors = {
     4000156: 'login_codeError',
     4000612: 'withdraw_doesnt_exist',
+    4031601: 'Otc_please_login_to_operate',
   }
 
   handleRequestDeposit(nextProps) {
@@ -155,7 +158,7 @@ class History extends Component {
   }
 
   handleWithdrawCancel(nextProps) {
-    const { dispatch, withdrawCancelResult, withdrawCancelError, language } = nextProps
+    const { dispatch, withdrawCancelResult, withdrawCancelError, language, loggedIn } = nextProps
 
     if (withdrawCancelResult && withdrawCancelResult !== this.props.withdrawCancelResult) {
       Toast.success(transfer(language, 'OtcDetail_revocation_successful'))
@@ -171,6 +174,7 @@ class History extends Component {
         if (msg) Toast.fail(transfer(language, msg))
         else Toast.fail(transfer(language, 'OtcDetail_failed_to_cancel_the_order'))
       }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -196,6 +200,7 @@ class History extends Component {
       loggedInResult,
       language,
       withdrawCancelLoading,
+      loggedIn,
     } = this.props
     const {
       selectionBar,
@@ -232,6 +237,7 @@ class History extends Component {
             transfer(language, 'history_withdrawal'),
             transfer(language, 'history_otc')]}
           onPress={(e) => {
+            if(loggedIn) dispatch(actions.sync())
             if (e.title === transfer(language, 'history_deposit')) {
               this.setState({ selectionBar: 'deposit' })
             } else if (e.title === transfer(language, 'history_withdrawal')) {
@@ -250,6 +256,7 @@ class History extends Component {
               selectionBar={selectionBar}
               refreshState={depositState}
               onHeaderRefresh={() => {
+                if(loggedIn) dispatch(actions.sync())
                 if (this.firstRequestDeposit) return
                 this.setState({ depositState: RefreshState.HeaderRefreshing })
                 this.depositSkip = 0
@@ -261,6 +268,7 @@ class History extends Component {
                 )))
               }}
               onFooterRefresh={() => {
+                if(loggedIn) dispatch(actions.sync())
                 if (this.firstRequestDeposit) return
                 this.setState({ depositState: RefreshState.FooterRefreshing })
                 this.depositSkip += 1
@@ -281,6 +289,7 @@ class History extends Component {
               selectionBar={selectionBar}
               refreshState={withdrawState}
               onHeaderRefresh={() => {
+                if(loggedIn) dispatch(actions.sync())
                 this.setState({ withdrawState: RefreshState.HeaderRefreshing })
                 this.withdrawSkip = 0
                 dispatch(withdrawPageUpdate(this.withdrawSkip))
@@ -291,6 +300,7 @@ class History extends Component {
                 )))
               }}
               onFooterRefresh={() => {
+                if(loggedIn) dispatch(actions.sync())
                 this.setState({ withdrawState: RefreshState.FooterRefreshing })
                 this.withdrawSkip += 1
                 dispatch(withdrawPageUpdate(this.withdrawSkip))
@@ -314,6 +324,7 @@ class History extends Component {
               selectionBar={selectionBar}
               refreshState={otcState}
               onHeaderRefresh={() => {
+                if(loggedIn) dispatch(actions.sync())
                 this.setState({ otcState: RefreshState.HeaderRefreshing })
                 this.otcSkip = 0
                 dispatch(otcPageUpdate(this.otcSkip))
@@ -324,6 +335,7 @@ class History extends Component {
                 })))
               }}
               onFooterRefresh={() => {
+                if(loggedIn) dispatch(actions.sync())
                 this.setState({ otcState: RefreshState.FooterRefreshing })
                 this.otcSkip += 1
                 dispatch(otcPageUpdate(this.otcSkip))
@@ -347,6 +359,7 @@ function mapStateToProps(state) {
 
     loggedInResult: state.authorize.loggedInResult,
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

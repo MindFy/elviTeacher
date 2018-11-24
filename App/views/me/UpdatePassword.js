@@ -111,13 +111,14 @@ class UpdatePassword extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, user } = this.props
+    const { dispatch, user, loggedIn } = this.props
     if (!user) return
     dispatch(updateForm({
       smsCode: '',
       googleCode: '',
       emailCode: '',
     }))
+    if(loggedIn) dispatch(actions.sync())
   }
 
   onChange(event, tag) {
@@ -321,10 +322,11 @@ class UpdatePassword extends Component {
   errors = {
     4000156: 'login_codeError',
     4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4031601: 'Otc_please_login_to_operate',
   }
 
   handleRequestGetCode(nextProps) {
-    const { requestGetCodeLoading, requestGetCodeResponse, language } = nextProps
+    const { requestGetCodeLoading, requestGetCodeResponse, language, dispatch, loggedIn } = nextProps
     if (!this.props.requestGetCodeLoading || requestGetCodeLoading) {
       return
     }
@@ -335,11 +337,12 @@ class UpdatePassword extends Component {
       const msg = transfer(language, this.errors[requestGetCodeResponse.error.code])
       if (msg) Toast.fail(msg)
       else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
   handlePasswordRequest(nextProps) {
-    const { updatePasswordVisible, updatePasswordResponse, navigation, language } = nextProps
+    const { updatePasswordVisible, updatePasswordResponse, navigation, language, dispatch, loggedIn } = nextProps
     if (!updatePasswordVisible && !this.showUpdatePasswordResponse) return
 
     if (updatePasswordVisible) {
@@ -350,6 +353,8 @@ class UpdatePassword extends Component {
         Toast.success(transfer(language, 'me_change_pwd_succeed'))
         Overlay.hide(this.overlayViewKeyID)
         navigation.goBack()
+      } else if (error.code === 4031601) {
+        Toast.fail(transfer(language, 'Otc_please_login_to_operate'))
       } else if (updatePasswordResponse.error.code === 4030501) {
         Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
       } else if (updatePasswordResponse.error.code === 4000120) {
@@ -363,6 +368,7 @@ class UpdatePassword extends Component {
       } else {
         Toast.fail(transfer(language, 'me_settings_PWchangeFailed'))
       }
+      if(loggedIn) dispatch(actions.sync())
     }
   }
 
@@ -460,6 +466,7 @@ function mapStateToProps(state) {
     requestGetCodeResponse: state.user.requestGetCodeResponse,
 
     language: state.system.language,
+    loggedIn: state.authorize.loggedIn,
   }
 }
 

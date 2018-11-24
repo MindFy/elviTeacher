@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, DeviceEventEmitter } from 'react-native'
+import { View } from 'react-native'
 import Toast from 'antd-mobile/lib/toast'
-import { common, storeRead } from '../../constants/common'
+import { common } from '../../constants/common'
 import MarketList from './MarketList'
 import {
   requestPairInfo,
@@ -70,7 +70,7 @@ class Market extends Component {
     super(props)
     this.pairData = {}
     props.navigation.addListener('didFocus', () => {
-      props.dispatch(actions.requestPairs())
+      props.dispatch(actions.requestShowPairs())
       cache.setObject('currentComponentVisible', 'Market')
       this.resetSortState()
       this.isNeedtoGetFavorites()
@@ -89,7 +89,7 @@ class Market extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, navigation, language, marketData } = this.props
+    const { dispatch, navigation, language } = this.props
     cache.setObject('currentComponentVisible', 'Market')
     dispatch(requestPairInfo({}))
     const params = navigation.state.params || {}
@@ -106,6 +106,7 @@ class Market extends Component {
     this.timeId = setInterval(() => {
       if (cache.getObject('currentComponentVisible') === 'Market') {
         dispatch(requestPairInfo({}))
+        dispatch(actions.requestShowPairs())
       }
     }, common.refreshIntervalTime)
   }
@@ -207,14 +208,13 @@ class Market extends Component {
     dispatch(toggleEdit(!isEdit))
   }
 
-  coinsIdDic = common.getDefaultPair().coinIdDic
-
-  obtainMarketData = () => {
-    const { currPair, pairs, language, favoriteList } = this.props
+  obtainMarketData = (pairs, showRawPairData) => {
+    const { currPair, language, favoriteList } = this.props
     const marketData = []
-    if (pairs && currPair === transfer(language, 'market_favorites')) {
-      for (let i = 0; i < pairs.length; i++) {
-        const ones = pairs[i]
+    marts = this.getMarketInfo(pairs, showRawPairData);
+    if (marts && currPair === transfer(language, 'market_favorites')) {
+      for (let i = 0; i < marts.length; i++) {
+        const ones = marts[i]
         for (let j = 0; j < ones.sub.length; j++) {
           const one = ones.sub[j]
           if (favoriteList &&
@@ -240,9 +240,9 @@ class Market extends Component {
           }
         }
       }
-    } else if (pairs) {
-      for (let i = 0; i < pairs.length; i++) {
-        const ones = pairs[i]
+    } else if (marts) {
+      for (let i = 0; i < marts.length; i++) {
+        const ones = marts[i]
         for (let j = 0; j < ones.sub.length; j++) {
           const one = ones.sub[j]
           if (ones.name === currPair) {
@@ -277,26 +277,56 @@ class Market extends Component {
     return marketData
   }
 
+  getMarketInfo(res, tokens) {
+    const exclusion = window.exclusion || []
+    var marketRose = []
+    tokens.coinPairs.forEach(cp => {
+      var roseMarket = res.filter(it => {
+        return it.id === cp.id
+      })
+      if (roseMarket.length === 0) return
+  
+      var sub = []
+      cp.pairs.forEach(pair => {
+        var roseCoin = roseMarket[0].sub.filter(it => {
+          return (it.id === pair.id && pair.istransaction)
+        })
+  
+        if (roseCoin.length === 0) return
+        var coinPair = {
+          ...roseCoin[0]
+        }
+        sub.push(coinPair)
+      })
+      if (sub.length > 0) {
+        var market = {
+          ...roseMarket[0],
+          sub: sub
+        }
+        marketRose.push(market)
+      }
+    })
+  
+    return marketRose
+  }
+
   render() {
-    const { currPair, language, isEdit } = this.props
-    const marketData = this.obtainMarketData()
-    let dataTemp = []
-    if( this.props.pairData !== undefined &&  this.props.pairData.accuracy !== undefined){
-      marketData.map(ele => {
-        let pairName = ele.goods.name + '_' + ele.currency.name
-        if( this.props.pairData['accuracy'][pairName] !== undefined &&  this.props.pairData['accuracy'][pairName].istransaction === true){
-          dataTemp.push(ele)
+    const { currPair, language, isEdit, pairs, showPairData, showRawPairData } = this.props
+    let marketData = []
+    if(showRawPairData && showRawPairData.coinPairs && pairs){
+      marketData = this.obtainMarketData(pairs, showRawPairData)
+    }
+
+    let marketTitles = []
+    if(showRawPairData && showRawPairData.coinPairs){
+      marketTitles.push(transfer(language, 'market_favorites'))
+      showRawPairData.coinPairs.map(e => {
+        if((e.name !== 'CNYT' || getDefaultLanguage() === 'zh_hans') && Object.keys(e.pairs).length !== 0){
+          marketTitles.push(e.name)
         }
       })
     }
 
-    let marketTitles
-
-    if (getDefaultLanguage() === 'zh_hans') {
-      marketTitles = [transfer(language, 'market_favorites'), 'CNYT', 'BTC', 'TK']
-    } else {
-      marketTitles = [transfer(language, 'market_favorites'), 'BTC', 'TK']
-    }
     const index = marketTitles.indexOf(currPair)
     return (
       <View
@@ -313,7 +343,7 @@ class Market extends Component {
         <MarketList
           {...this.props}
           language={language}
-          data={dataTemp}
+          data={marketData}
           isEdit={isEdit}
           onClickMarketItem={this.onClickMarketItem}
           onPressMarked={this.handlePressMarked}
@@ -336,7 +366,8 @@ function mapStateToProps(state) {
     dailyChangeSortType: state.market.dailyChangeSortType,
     loggedIn: state.authorize.loggedIn,
     language: state.system.language,
-    pairData: state.home.requestPair
+    showPairData: state.home.requestShowPair,
+    showRawPairData: state.home.requestShowRawPair
   }
 }
 

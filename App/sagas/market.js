@@ -16,12 +16,12 @@ export function* requestPairInfoWorker(action) {
   if (response.success) {
     const result = response.result
     yield put({
-      type: 'withdraw/request_pair_info_succeed',
+      type: 'market/request_pair_info_succeed',
       payload: result,
     })
   } else {
     yield put({
-      type: 'withdraw/request_pair_info_failed',
+      type: 'market/request_pair_info_failed',
       payload: response.error,
     })
   }
@@ -41,7 +41,7 @@ function* getFavorite(action) {
     if (!initialized && Object.keys(dict).length > 0) {
       const language = yield select(state => state.system.language)
       yield put({
-        type: 'withdraw/update_current_pair',
+        type: 'market/update_current_pair',
         payload: { title: transfer(language, 'market_favorites') },
       })
     }
@@ -54,7 +54,7 @@ function* getFavorite(action) {
     const initialized = yield select(state => state.market.initialized)
     if (!initialized) {
       yield put({
-        type: 'withdraw/update_current_pair',
+        type: 'market/update_current_pair',
         payload: { title: 'CNYT' },
       })
     }
@@ -114,7 +114,7 @@ function* setFavorite(action) {
 }
 
 export function* requestPairInfo() {
-  yield takeEvery('withdraw/request_pair_info', requestPairInfoWorker)
+  yield takeEvery('market/request_pair_info', requestPairInfoWorker)
 }
 
 export function* watchGetFavorite() {

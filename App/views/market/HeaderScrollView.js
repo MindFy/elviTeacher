@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ScrollView } from 'react-native'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import { common } from '../../constants/common'
 
@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: common.sw / 6,
     justifyContent: 'center',
+    paddingHorizontal: 4,
   },
   item: {
     fontSize: common.font14,
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
 class HeaderScrollView extends Component {
   renderHeaderItem = (item, index, selected, onClickItem) => {
     const textColor =
-      selected ? { color: common.btnTextColor } : { color: common.textColor }
+      selected ? { color: common.btnTextColor, borderColor: common.btnTextColor, borderBottomWidth: 1} : { color: common.textColor }
 
     let itemWith = {}
     if (item.length > 6) {
@@ -57,10 +58,16 @@ class HeaderScrollView extends Component {
   render() {
     const { titles, onClickItem } = this.props
     return (
-      <View style={styles.container}>
-        {titles.map((item, index) => (
-          this.renderHeaderItem(item, index, index === this.props.indexSelected, onClickItem)
-        ))}
+      <View style={styles.container} >
+        <ScrollView style={styles.container} 
+          horizontal={true} 
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        >
+          {titles.map((item, index) => (
+            this.renderHeaderItem(item, index, index === this.props.indexSelected, onClickItem)
+          ))}
+        </ScrollView>
       </View>
     )
   }

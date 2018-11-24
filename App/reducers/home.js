@@ -14,6 +14,10 @@ const initialState = {
 
   requestPair: {},
   requestPairStatus: 0, // 加载币币对 的状态 (0: default, 1: 成功 2: 失败)
+
+  requestShowRawPair: {}, 
+  requestShowPair: {}, 
+  requestShowPairStatus: 0,
 }
 
 export default function home(state = initialState, action) {
@@ -95,6 +99,22 @@ export default function home(state = initialState, action) {
         ...state,
         requestPairStatus: 2,
         requestPair: {},
+      }
+      break
+    case 'home/request_show_pair_success':
+      nextState = {
+        ...state,
+        requestShowPairStatus: 1,
+        requestShowPair: payload.requestShowPair,
+        requestShowRawPair: payload.requestShowRawPair,
+      }
+      break
+    case 'home/request_show_pair_failed':
+      nextState = {
+        ...state,
+        requestShowPairStatus: 2,
+        requestShowPair: {},
+        requestShowRawPair: {},
       }
       break
     default:

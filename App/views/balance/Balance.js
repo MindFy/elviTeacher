@@ -23,6 +23,7 @@ import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import transfer from '../../localization/utils'
 import { getDefaultLanguage } from '../../utils/languageHelper'
 import { imgHashApi } from '../../services/api'
+import actions from '../../actions/index'
 
 const styles = StyleSheet.create({
   container: {
@@ -104,9 +105,10 @@ class Balance extends Component {
     props.navigation.addListener('didFocus', () => {
       cache.setObject('currentComponentVisible', 'Balance')
       this.hasLoaded = false
-      const { loggedInResult, dispatch } = this.props
+      const { loggedInResult, dispatch, loggedIn } = this.props
       dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
       dispatch(requestBalanceValuation())
+      if(loggedIn) dispatch(actions.sync())
     })
   }
 
@@ -192,10 +194,16 @@ class Balance extends Component {
 
   jumpToBalanceDetail = (rd) => {
     this.props.dispatch(updateCurrentToken({ ...rd.token }))
-    this.props.navigation.navigate('BalanceDetail', {
-      language: this.props.language,
-      headerTitle: transfer(this.props.language, 'balance_detail'),
-    })
+    if (this.props.loggedIn){
+        this.props.navigation.navigate('BalanceDetail', {
+        language: this.props.language,
+        headerTitle: transfer(this.props.language, 'balance_detail'),
+      })
+    }
+    else {
+      navigation.navigate('LoginStack')
+    }
+
   }
 
   renderRow(rd) {
@@ -227,6 +235,7 @@ class Balance extends Component {
         onRefresh={() => {
           const { dispatch, loggedInResult, loggedIn } = this.props
           if (!loggedIn) return
+
           dispatch(requestBalanceList(findAssetList(loggedInResult.id)))
           dispatch(requestBalanceValuation())
         }}

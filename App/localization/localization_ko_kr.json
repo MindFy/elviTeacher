@@ -318,7 +318,8 @@
   "withdrawal_address": "주소",
   "withdrawal": "인출",
   "withdrawal_note_1": "1. 최소 인출액: ",
-  "withdrawal_note_2": "2. 최대 인출액: 신분 미인증: 하루 1 BTC 또는 동등한 가치의 기타 코인을 초과하는 경우 신분 인증 필요: 하루 50 BTC 또는 동등한 가치의 기타 코인",
+  "withdrawal_note_2": "2. 최대 화폐 인출 수량 : 하루 50 BTC 혹은 동등 액수의 기타 화폐 종류로 한정",
+  "withdrawal_note_3": "3. 자금의 안전 보장을 위해, 반드시 컴퓨터 및 브라우저의 보안을 확인하여 정보 유출이나 남용을 방지해주십시오", 
   "withdrawal_succeed": "인출 성공",
   "withdrawal_failed": "인출 실패",
   "withdrawal_amount_required": "인출액을 입력하십시오",
@@ -708,6 +709,11 @@
   "me_inputEmailCode": "Please enter verification code",
   "login_multipleErrorPassword": "Your account has been locked due to multiple failed logins. Please try again after the following time:",
   "NoDecimal": "Minimun withdrawal of this coin is ones",
+  "deposit_address_label": "Tag",
+  "deposit_address_label_warning": "(Please make sure you fill in and check.)",
+  "deposit_copy_address_label": "Copy",
+  "withdrawal_address_label": "Tag",
+  "withdrawal_address_label_warning": "(Mistakes might cause assets loss. Make sure you check. Please leave it blank for the tokens without the tag.)",
 
   "FO_temp_hint": "FO deposit and withdrawal can only be operated manually for the time being. Please contact our customer service: service@tok.com"
 }

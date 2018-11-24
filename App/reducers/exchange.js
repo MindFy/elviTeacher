@@ -248,12 +248,6 @@ export default function exchange(state = initialState, action) {
         currPair: payload.title,
       }
       break
-    case 'exchange/request_pair_info_succeed':
-      nextState = {
-        ...state,
-        pairs: payload,
-      }
-      break
     case 'exchange/update_kLine_index':
       nextState = {
         ...state,

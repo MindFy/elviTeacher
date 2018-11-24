@@ -199,6 +199,10 @@ class Authentication extends Component {
       Toast.fail(transfer(language, 'me_ID_shorterName'))
       return
     }
+    if (/\d/gi.test(name)) {
+      Toast.fail(transfer(language, 'me_ID_enterCorrectName'))
+      return
+    }
     if (!idNo.length || !idcard.verify(idNo)) {
       Toast.fail(transfer(language, 'me_ID_correctNumber'))
       return

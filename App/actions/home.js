@@ -73,3 +73,9 @@ export function requestPairs() {
     type: 'home/request_pair_request',
   }
 }
+
+export function requestShowPairs() {
+  return {
+    type: 'home/request_show_pair_request',
+  }
+}
