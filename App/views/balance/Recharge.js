@@ -338,9 +338,6 @@ class Recharge extends Component {
         key={ele.id}
         activeOpacity={common.activeOpacity}
         onPress={() => {
-          if(ele.name === transfer(language, 'FO_temp_hint')){
-            return
-          }
           if (tapCoinListCell) {
             tapCoinListCell(ele)
           }
@@ -349,7 +346,7 @@ class Recharge extends Component {
         <View
           style={{
             marginTop: common.margin5,
-            height: ele.name === transfer(language, 'FO_temp_hint') ? common.h60 : common.h40,
+            height: common.h40,
             backgroundColor: common.navBgColor,
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -383,7 +380,7 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
     )
   }
 
-  renderRechargeAddress = (rechargeAddress, coinName, qrApi) => {
+  renderRechargeAddress = (rechargeAddress, coinName, qrApi, contract) => {
     const { language, user } = this.props
     var rechargeAddressLabel = 150818 ^ user.id;
     const addressContent = (
@@ -450,7 +447,7 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
           {addressBtn}
         </View>
         {
-          isHide || coinName !== 'XRP' ?
+          (isHide || !contract || !contract.addrTag) ?
           null
           :
           <View style={styles.addressContainer}>
@@ -468,14 +465,16 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
     const coinList = canRechargeAddress.map(e => ({
       id: coinIdDic[e].id,
       name: coinIdDic[e].name,
+      contract: coinIdDic[e].contract,
     }))
-    let coinListEx = []
-    if(coinList && coinIdDic && coinIdDic['FO']){
-      coinListEx = [{id: coinIdDic['FO'].id, name: transfer(language, 'FO_temp_hint')}]
-    }
-    coinListEx = coinList.concat(coinListEx)
+    let contract = null
+    coinList.map(e => {
+      if(currCoin &&  currCoin.name === e.name){
+        contract = e.contract
+      }
+    })
     const coinSelector = this.renderCoinSelector(currCoin, listToggled, this.showForm)
-    const coinListView = this.renderCoinList(coinListEx, listToggled, this.tapCoinListCell)
+    const coinListView = this.renderCoinList(coinList, listToggled, this.tapCoinListCell)
     const ishasAddress =
       rechargeAddress &&
       this.canRechargeAddress.includes(currCoin.name) &&
@@ -484,7 +483,7 @@ ${transfer(language, 'deposit_note_5')}`}</Text>
     const rechargeAddressView =
       ishasAddress &&
       this.renderRechargeAddress(
-        rechargeAddress[currCoin.id].rechargeaddr, currCoin.name, api.qrApi,
+        rechargeAddress[currCoin.id].rechargeaddr, currCoin.name, api.qrApi, contract
       )
     const tipView = ishasAddress && this.renderTip(currCoin.name)
 

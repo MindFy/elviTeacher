@@ -29,6 +29,9 @@ import cache from '../../utils/cache'
 import { getDefaultLanguage } from '../../utils/languageHelper'
 import transfer from '../../localization/utils'
 import actions from '../../actions/index'
+import {
+  Overlay,
+} from 'teaset'
 
 const styles = StyleSheet.create({
   container: {
@@ -164,6 +167,39 @@ class Otc extends Component {
     dispatch(clearResponse())
     if(loggedIn) dispatch(actions.sync())
   }
+  showOverlay(msg) {
+    const overlayView = (
+      <Overlay.View
+        style={{ justifyContent: 'center' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <View
+          style={{
+            marginTop: -common.margin210,
+            borderRadius: common.radius6,
+            height: common.h60,
+            backgroundColor: 'white',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            width: '50%',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: common.font16,
+              color: common.blackColor,
+              alignSelf: 'center',
+            }}
+          >{msg}</Text>
+        </View>
+      </Overlay.View>
+    )
+    this.overlayViewKey = Overlay.show(overlayView)
+    setTimeout(() => {
+      Overlay.hide(this.overlayViewKey)
+    }, 2000)
+  }
 
   onSubmit() {
     Keyboard.dismiss()
@@ -175,10 +211,20 @@ class Otc extends Component {
       type,
       navigation,
       language,
+      loggedInResult,
     } = this.props
 
     if (!loggedIn) {
       navigation.navigate('LoginStack')
+      return
+    }
+
+    if (loggedInResult && !loggedInResult.mobile) {
+      this.showOverlay(transfer(language, 'otc_need_bind_Mobile'))
+      if(loggedIn) dispatch(actions.sync())
+      setTimeout(() => {
+        navigation.navigate('UpdateMobile')
+      }, 2000)
       return
     }
 
