@@ -720,7 +720,11 @@
   "UpdateBank_bankno_hint1": "请确认添加",
   "UpdateBank_bankno_hint2": "本人银行卡",
   "me_id_authentic_before":"请先进行身份认证！",
-  "otc_need_bind_Mobile":"请先绑定手机号码"
-
+  "otc_need_bind_Mobile":"请先绑定手机号码",
+  "me_authority_request_title": "提示",
+  "me_authority_request_camera": "请在设置中,为本应用开放相机和存储权限",
+  "me_authority_request_album": "请在设置中,为本应用开放相册和存储权限",
+  "me_authority_request_cancel": "取消",
+  "me_authority_request_set": "权限设置"
   
 }
