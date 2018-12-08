@@ -397,6 +397,12 @@ class UpdateBank extends Component {
     )
   }
 
+  isStringContainNumber(event){
+    const newText = event.trim()
+    let p = /[0-9]/
+    return p.test(newText)
+  }
+
   render() {
     const { loading, formState, navigation, user, language } = this.props
     
@@ -444,7 +450,12 @@ class UpdateBank extends Component {
           title={transfer(language, 'UpdateBank_account_bank')}
           value={formState.bankName}
           placeholder={transfer(language, 'UpdateBank_account_bank_placeholder')}
-          onChangeText={e => this.onChangeText(e, 'bankName')}
+          onChangeText={e => {
+            if(this.isStringContainNumber(e)){
+              return
+            }
+            this.onChangeText(e, 'bankName')
+          }}
           editable={editable}
         />
 
@@ -461,7 +472,12 @@ class UpdateBank extends Component {
           title={transfer(language, 'UpdateBank_branch')}
           value={formState.subbankName}
           placeholder={transfer(language, 'UpdateBank_branch_placeholder')}
-          onChangeText={e => this.onChangeText(e, 'subbankName')}
+          onChangeText={e => {
+            if(this.isStringContainNumber(e)){
+              return
+            }
+            this.onChangeText(e, 'subbankName')
+          }}
           editable={editable}
         />
 

@@ -13,6 +13,7 @@ import TKSelectionBar2 from '../../components/tkselectionbar2'
 import TKInputItem from '../../components/TKInputItem'
 import TKSpinner from '../../components/TKSpinner'
 import TKButton from '../../components/TKButton'
+import TKDelayConfirmBtn from '../../components/TKDelayConfirmBtn'
 import { common } from '../../constants/common'
 import {
   updateForm,
@@ -74,6 +75,24 @@ const styles = StyleSheet.create({
     color: common.textColor,
     fontSize: common.font13,
     lineHeight: 16,
+  },
+  hintTitle: {
+    marginTop: common.margin10,
+    color: '#000000',
+    fontSize: common.font20,
+  },
+  hintContent: {
+    marginTop: common.margin20,
+    marginBottom: common.margin20,
+    color: '#000000',
+    fontSize: common.font17,
+  },
+  delayBtn: {
+    alignItems: 'center',
+    width: common.w60,
+    padding: 10,
+    backgroundColor: '#1890ff', 
+    borderRadius: 5,
   },
 })
 
@@ -244,6 +263,46 @@ class Otc extends Component {
         common.minQuantityLegalDeal}`)
       return
     }
+
+    if(type === common.buy){
+      let overlayModalView = (
+        <Overlay.View
+          style={{alignItems: 'stretch', justifyContent: 'center'}}
+          modal={true}
+          overlayOpacity={null}
+          ref={v => this.overlayModalView = v}
+          >
+          <View style={{backgroundColor: '#fff', padding: 20, borderRadius: 15, alignItems: 'center'}}>
+            <Text style={styles.hintTitle}>
+              {transfer(this.props.language, 'otc_buy_hint_title')}
+            </Text>
+            <Text style={styles.hintContent}>
+              {transfer(this.props.language, 'otc_buy_hint_content')}
+            </Text>
+            <TKDelayConfirmBtn
+              style={styles.delayBtn}
+              titleStyle={{         
+                color: '#fff',
+                fontSize: common.font16,}
+              }
+              language={language}
+              onPress={() => {
+                if(this.overlayModalView){
+                  this.overlayModalView.close()
+                  dispatch(submitRequest({
+                    type,
+                    quantity,
+                  }))
+                }
+              }}
+            />
+          </View>
+        </Overlay.View>
+      );
+      Overlay.show(overlayModalView);
+      return
+    }
+
     dispatch(submitRequest({
       type,
       quantity,
