@@ -725,6 +725,10 @@
   "me_authority_request_camera": "请在设置中,为本应用开放相机和存储权限",
   "me_authority_request_album": "请在设置中,为本应用开放相册和存储权限",
   "me_authority_request_cancel": "取消",
-  "me_authority_request_set": "权限设置"
-  
+  "me_authority_request_set": "权限设置",
+  "withdraw_address_forbid": "提币地址已禁用",
+  "withdraw_please_perform_authentication_first": "请先实名认证",
+  "otc_buy_hint_title":"温 馨 提 示",
+  "otc_buy_hint_content":"1.请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会被退款。（禁止微信和支付宝）\n\n2 买入成功后，请在1小时内完成付款并确认“我已付款”，逾期订单将被取消。"
+
 }

@@ -715,7 +715,7 @@
   "deposit_copy_address_label": "複製",
   "withdrawal_address_label": "地址標籤",
   "withdrawal_address_label_warning": "(填寫錯誤可能導致資產流失，請仔細核對。若無地址標籤，可不填寫。)",
-  "otc_need_bind_Mobile":"请先绑定手机号码"
-
-
+  "otc_need_bind_Mobile":"请先绑定手机号码",
+  "withdraw_address_forbid": "提領地址已禁用",
+  "withdraw_please_perform_authentication_first": "請先身分驗證"
 }
