@@ -82,7 +82,7 @@ export default class SelectImage extends Component {
       status,
     })
   }
-
+  
   showImagePicker() {
     const { imagePickerBlock, language } = this.props
     const items = [
@@ -92,6 +92,10 @@ export default class SelectImage extends Component {
           ImagePicker.launchCamera({
             cameraType: 'back',
             allowsEditing: false,
+            permissionDenied: {title: transfer(language, 'me_authority_request_title'), 
+                               text: transfer(language, 'me_authority_request_camera'), 
+                               reTryTitle: transfer(language, 'me_authority_request_set'), 
+                               okTitle: transfer(language, 'me_authority_request_cancel')},
           }, (response) => {
             if (response.uri && response.uri.length) {
               const uri = common.IsIOS ? response.uri : response.path
@@ -108,6 +112,10 @@ export default class SelectImage extends Component {
         onPress: () => {
           ImagePicker.launchImageLibrary({
             allowsEditing: false,
+            permissionDenied: {title: transfer(language, 'me_authority_request_title'), 
+                               text: transfer(language, 'me_authority_request_album'), 
+                               reTryTitle: transfer(language, 'me_authority_request_set'), 
+                               okTitle: transfer(language, 'me_authority_request_cancel')},
           }, (response) => {
             if (response.uri && response.uri.length) {
               const uri = common.IsIOS ? response.uri : response.path

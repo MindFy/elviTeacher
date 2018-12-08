@@ -195,15 +195,19 @@ class WithDraw extends Component {
       4000608: 'withdraw_error_after_pwd_changed',
       4000668: 'withdraw_account_frozen',
       4031601: 'Otc_please_login_to_operate',
+      4001418: 'withdraw_please_perform_authentication_first',
+      4001419: 'withdraw_address_forbid',
     }
     this.verificationCodeErrorDic = {
       4000156: 'login_codeError',
       4000107: 'me_Email_repeatMinute',
+      4001419: 'withdraw_address_forbid',
       4031601: 'Otc_please_login_to_operate',
     }
 
     this.codeTitles = ['短信验证码', '谷歌验证码', '邮箱验证码']
     this.canWithdrawCoins = common.getDefaultPair().canWithdrawCoins
+    this.executeOnce = false
   }
 
   componentWillMount() {
@@ -512,6 +516,14 @@ class WithDraw extends Component {
 
   confirmPress = (link) => {
     Keyboard.dismiss()
+    if(this.executeOnce){
+      return
+    }
+    this.executeOnce = true
+    this.interval = setInterval(() => {
+      this.executeOnce = false
+      clearInterval(this.interval);
+    }, 1500)
 
     if (link === undefined) {
       return
