@@ -729,6 +729,11 @@
   "withdraw_address_forbid": "提币地址已禁用",
   "withdraw_please_perform_authentication_first": "请先实名认证",
   "otc_buy_hint_title":"温 馨 提 示",
-  "otc_buy_hint_content":"1.请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会被退款。（禁止微信和支付宝）\n\n2 买入成功后，请在1小时内完成付款并确认“我已付款”，逾期订单将被取消。"
+  "otc_buy_hint_content":"1.请使用本人绑定的银行卡进行汇款，其他任何方式汇款都会被退款。（禁止微信和支付宝）\n\n2 买入成功后，请在1小时内完成付款并确认“我已付款”，逾期订单将被取消。",
+  "otc_confirm_cancel_title":"确认取消交易",
+  "otc_confirm_cancel_content":"如果您已经向商家付款，请千万不要取消订单.如果您已经向商家付款，请千万不要取消订单.",
+  "otc_confirm_cancel_item":"我确认还没有付款给对方",
+  "otc_confirm": "确定",
+  "otc_cancel": "取消"
 
 }

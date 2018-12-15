@@ -9,6 +9,9 @@ import {
 } from 'react-native'
 import BigNumber from 'bignumber.js'
 import {
+  Overlay,
+} from 'teaset'
+import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -18,6 +21,7 @@ import {
 } from 'teaset'
 import TKButton from '../../components/TKButton'
 import * as otcDetail from '../../actions/otcDetail'
+import LegalDealConfirmCancelView from './components/LegalDealConfirmCancelView'
 
 class Payment extends Component {
   static navigationOptions(props) {
@@ -49,11 +53,33 @@ class Payment extends Component {
         ),
     }
   }
+
+  showConfirmOverlay(id) {
+    const { dispatch, navigation } = this.props
+    const lang = navigation.state.params.lang
+    const overlayView = (
+      <Overlay.View
+        style={{ justifyContent: 'center' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <LegalDealConfirmCancelView
+          language={lang}
+          pressCancel={() => {Overlay.hide(this.overlayCancelViewKey)}}
+          pressConfirm={() => {
+            dispatch(otcDetail.requestCancel({ id }))
+            Overlay.hide(this.overlayCancelViewKey)
+          }}
+        />
+      </Overlay.View>
+    )
+    this.overlayCancelViewKey = Overlay.show(overlayView)
+  }
+
   componentDidMount() { }
 
   cancelPress(id) {
-    const { dispatch } = this.props
-    dispatch(otcDetail.requestCancel({ id }))
+    this.showConfirmOverlay(id)
   }
 
   havedPayPress(id) {
