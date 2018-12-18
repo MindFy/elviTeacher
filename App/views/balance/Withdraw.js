@@ -526,7 +526,6 @@ class WithDraw extends Component {
     if(this.executeOnce){
       return
     }
-    this.executeOnce = true
 
     Keyboard.dismiss()
 
@@ -544,6 +543,7 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'me_enter_mobileVerification'))
         return
       }
+      this.executeOnce = true
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: withdrawAmount,
@@ -559,6 +559,7 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
+      this.executeOnce = true
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: withdrawAmount,
@@ -573,6 +574,7 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'me_enter_EmailVerification'))
         return
       }
+      this.executeOnce = true
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: withdrawAmount,
