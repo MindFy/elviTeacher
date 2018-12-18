@@ -88,7 +88,7 @@ class Payment extends Component {
   }
 
   render() {
-    const { navigation } = this.props
+    const { navigation, user } = this.props
     const rd = navigation.state.params.data
     const lang = navigation.state.params.lang
     
@@ -120,7 +120,7 @@ class Payment extends Component {
       titleName = transfer(lang, 'payment_b_account_name')
       titleBankName = transfer(lang, 'payment_b_bank')
       titleBankNo = transfer(lang, 'payment_b_account_No')
-      titleTips = transfer(lang, 'payment_s_please_note_content')
+      titleTips = transfer(lang, 'payment_s_please_note_content1') + remark + transfer(lang, 'payment_s_please_note_content2') + user.name + transfer(lang, 'payment_s_please_note_content3')
       havedPayTitle = transfer(lang, 'OtcDetail_i_paid')
       cancelBtnTitle = transfer(lang, 'OtcDetail_cancelOrder')
     } else if (rd.direct === common.sell) {
@@ -262,7 +262,7 @@ class Payment extends Component {
               marginTop: common.margin30,
               marginLeft: common.margin10,
               color: common.textColor,
-              fontSize: common.font12,
+              fontSize: common.font18,
             }}
           >{transfer(lang, 'payment_s_please_note')}</Text>
           <Text
@@ -271,8 +271,7 @@ class Payment extends Component {
               marginLeft: common.margin10,
               marginRight: common.margin10,
               color: common.textColor,
-              fontSize: common.font10,
-              lineHeight: 14,
+              fontSize: common.font16,
             }}
           >{titleTips}</Text>
         </ScrollView>
@@ -309,6 +308,7 @@ function mapStateToProps(state) {
   return {
     ...state.Payment,
     otcList: state.otcDetail.otcList,
+    user: state.user.user,
   }
 }
 

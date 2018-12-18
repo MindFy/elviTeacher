@@ -242,9 +242,8 @@ class Login extends PureComponent {
     }
 
     const errs = {
-      4000156: 'login_codeError',
+      4000116: transfer(language, 'login_idOrPassError'),
       4000117: transfer(language, 'login_idOrPassError'),
-      4000129: transfer(language, 'login_except_fault'),
     }
 
     if (nextProps.error && (error !== this.props.error)) {

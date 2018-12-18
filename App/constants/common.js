@@ -234,6 +234,7 @@ const common = {
 
   font30: 30 / w * sw,
   font20: 20 / w * sw,
+  font18: 18 / w * sw,
   font17: 17 / w * sw,
   font16: 16 / w * sw,
   font14: 14 / w * sw,

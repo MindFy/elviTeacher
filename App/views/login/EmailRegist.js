@@ -127,6 +127,12 @@ class EmailRegist extends Component {
         showTip: false,
       }
     }
+
+    this.registerErrorDic = {
+      4000102: 'login_codeError',
+      4000113: 'login_inviteCodeError',
+      4000114: 'login_id_registed',
+    }
   }
 
   componentWillMount() {
@@ -312,26 +318,13 @@ class EmailRegist extends Component {
         Toast.success(transfer(language, 'login_registSuccess'))
         dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
-      } else if (registerResponse.error.code === 4000104) {
-        Toast.fail(transfer(language, 'login_reGetCode'))
-      } else if (registerResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_codeNotNull'))
-      } else if (registerResponse.error.code === 4000102) {
-        Toast.fail(transfer(language, 'login_codeError'))
-      } else if (registerResponse.error.code === 4000103) {
-        Toast.fail(transfer(language, 'login_codeOverDue'))
-      } else if (registerResponse.error.code === 4000114) {
-        Toast.fail(transfer(language, 'login_emailRegisted'))
-      } else if (registerResponse.error.code === 4000115) {
-        Toast.fail(transfer(language, 'login_inviteUserNotExist'))
-      } else if (registerResponse.error.code === 4000113) {
-        Toast.fail(transfer(language, 'login_inviteCodeError'))
-      } else if (registerResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
-      } else if (registerResponse.error.code === 4000156) {
-        Toast.fail(transfer(language, 'login_codeError'))
       } else {
-        Toast.fail(transfer(language, 'login_registFailed'))
+        const errMsg = this.registerErrorDic[registerResponse.error.code]
+        if (errMsg) {
+          Toast.fail(transfer(language, errMsg))
+        } else {
+          Toast.fail(transfer(language, 'login_registFailed'))
+        }
       }
     }
   }

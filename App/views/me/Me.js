@@ -187,7 +187,7 @@ class Me extends Component {
               } else if (loggedInResult && loggedInResult.idCardAuthStatus && loggedInResult.idCardAuthStatus === common.user.status.pass){
                 navigation.navigate('UpdateBank', { fromMe: 'fromMe' })
               } else {
-                this.showOverlay(transfer(language, 'me_id_authentic_before'))
+                this.showOverlay(transfer(language, language === 'zh_hans' ? 'me_id_authentic_before' : 'otc_visible_chinese'))
               }
             }}
             leftImageSource={require('../../assets/bank_card.png')}
