@@ -51,3 +51,11 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+app-debug.apk
+app-release.apk
+android/app/src/main/assets/index.android.bundle
+android/app/src/main/assets/index.android.bundle.meta
+android/app/build/intermediates/assets/debug/index.android.bundle
+android/app/build/intermediates/assets/debug/index.android.bundle.meta
+android/app/build/intermediates/assets/release/index.android.bundle
+android/app/build/intermediates/assets/release/index.android.bundle.meta
