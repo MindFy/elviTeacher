@@ -9,6 +9,9 @@ import {
 } from 'react-native'
 import BigNumber from 'bignumber.js'
 import {
+  Overlay,
+} from 'teaset'
+import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -18,6 +21,7 @@ import {
 } from 'teaset'
 import TKButton from '../../components/TKButton'
 import * as otcDetail from '../../actions/otcDetail'
+import LegalDealConfirmCancelView from './components/LegalDealConfirmCancelView'
 
 class Payment extends Component {
   static navigationOptions(props) {
@@ -49,11 +53,33 @@ class Payment extends Component {
         ),
     }
   }
+
+  showConfirmOverlay(id) {
+    const { dispatch, navigation } = this.props
+    const lang = navigation.state.params.lang
+    const overlayView = (
+      <Overlay.View
+        style={{ justifyContent: 'center' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <LegalDealConfirmCancelView
+          language={lang}
+          pressCancel={() => {Overlay.hide(this.overlayCancelViewKey)}}
+          pressConfirm={() => {
+            dispatch(otcDetail.requestCancel({ id }))
+            Overlay.hide(this.overlayCancelViewKey)
+          }}
+        />
+      </Overlay.View>
+    )
+    this.overlayCancelViewKey = Overlay.show(overlayView)
+  }
+
   componentDidMount() { }
 
   cancelPress(id) {
-    const { dispatch } = this.props
-    dispatch(otcDetail.requestCancel({ id }))
+    this.showConfirmOverlay(id)
   }
 
   havedPayPress(id) {
@@ -62,7 +88,7 @@ class Payment extends Component {
   }
 
   render() {
-    const { navigation } = this.props
+    const { navigation, user } = this.props
     const rd = navigation.state.params.data
     const lang = navigation.state.params.lang
     
@@ -94,7 +120,7 @@ class Payment extends Component {
       titleName = transfer(lang, 'payment_b_account_name')
       titleBankName = transfer(lang, 'payment_b_bank')
       titleBankNo = transfer(lang, 'payment_b_account_No')
-      titleTips = transfer(lang, 'payment_s_please_note_content')
+      titleTips = transfer(lang, 'payment_s_please_note_content1') + remark + transfer(lang, 'payment_s_please_note_content2') + user.name + transfer(lang, 'payment_s_please_note_content3')
       havedPayTitle = transfer(lang, 'OtcDetail_i_paid')
       cancelBtnTitle = transfer(lang, 'OtcDetail_cancelOrder')
     } else if (rd.direct === common.sell) {
@@ -236,7 +262,7 @@ class Payment extends Component {
               marginTop: common.margin30,
               marginLeft: common.margin10,
               color: common.textColor,
-              fontSize: common.font12,
+              fontSize: common.font18,
             }}
           >{transfer(lang, 'payment_s_please_note')}</Text>
           <Text
@@ -245,8 +271,7 @@ class Payment extends Component {
               marginLeft: common.margin10,
               marginRight: common.margin10,
               color: common.textColor,
-              fontSize: common.font10,
-              lineHeight: 14,
+              fontSize: common.font16,
             }}
           >{titleTips}</Text>
         </ScrollView>
@@ -283,6 +308,7 @@ function mapStateToProps(state) {
   return {
     ...state.Payment,
     otcList: state.otcDetail.otcList,
+    user: state.user.user,
   }
 }
 

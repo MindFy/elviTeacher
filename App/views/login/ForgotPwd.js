@@ -85,6 +85,10 @@ class ForgotPwd extends Component {
     this.state = {
       showTip: false,
     }
+    this.resetPasswordErrorDic = {
+      4000119: 'login_phoneUnRegist2',
+      4000123: 'login_codeError',
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -212,16 +216,13 @@ class ForgotPwd extends Component {
         Toast.success(transfer(language, 'login_resetPasswordSuccess'))
         dispatch(actions.registerUpdate({ mobile: '', code: '', password: '', passwordAgain: '' }))
         navigation.goBack('Login')
-      } else if (resetPasswordResponse.error.code === 4000101) {
-        Toast.fail(transfer(language, 'login_codeNotNull'))
-      } else if (resetPasswordResponse.error.code === 4000102) {
-        Toast.fail(transfer(language, 'login_codeError'))
-      } else if (resetPasswordResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'login_networdError'))
-      } else if (resetPasswordResponse.error.code === 4000156) {
-        Toast.fail(transfer(language, 'login_codeError'))
       } else {
-        Toast.fail(transfer(language, 'login_resetPasswordFailed'))
+        const errMsg = this.resetPasswordErrorDic[resetPasswordResponse.error.code]
+        if (errMsg) {
+          Toast.fail(transfer(language, errMsg))
+        } else {
+          Toast.fail(transfer(language, 'login_resetPasswordFailed'))
+        }
       }
     }
   }

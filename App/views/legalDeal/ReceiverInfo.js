@@ -10,6 +10,9 @@ import {
 } from 'react-native'
 import BigNumber from 'bignumber.js'
 import {
+  Overlay,
+} from 'teaset'
+import {
   common,
 } from '../../constants/common'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
@@ -26,6 +29,7 @@ import TKButton from '../../components/TKButton'
 import * as otcDetail from '../../actions/otcDetail'
 import schemas from '../../schemas/index'
 import actions from '../../actions/index'
+import LegalDealConfirmCancelView from './components/LegalDealConfirmCancelView'
 
 const styles = StyleSheet.create({
   container: {
@@ -63,15 +67,14 @@ const styles = StyleSheet.create({
     marginTop: common.margin30,
     marginLeft: common.margin10,
     color: common.textColor,
-    fontSize: common.font12,
+    fontSize: common.font18,
   },
   pleaseNote: {
     marginTop: common.margin10,
     marginLeft: common.margin10,
     marginRight: common.margin10,
     color: common.textColor,
-    fontSize: common.font10,
-    lineHeight: 14,
+    fontSize: common.font16,
   },
 })
 
@@ -155,6 +158,28 @@ class ReceiverInfo extends Component {
     }
   }
 
+  showConfirmOverlay(id) {
+    const { dispatch, language, loggedIn } = this.props
+    const overlayView = (
+      <Overlay.View
+        style={{ justifyContent: 'center' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <LegalDealConfirmCancelView
+          language={language}
+          pressCancel={() => {Overlay.hide(this.overlayCancelViewKey)}}
+          pressConfirm={() => {
+            dispatch(otcDetail.requestCancel({ id }))
+            if(loggedIn) dispatch(actions.sync())
+            Overlay.hide(this.overlayCancelViewKey)
+          }}
+        />
+      </Overlay.View>
+    )
+    this.overlayCancelViewKey = Overlay.show(overlayView)
+  }
+
   componentDidMount() {
     const { navigation, loggedInResult, dispatch, loggedIn } = this.props
     const { params } = navigation.state
@@ -176,9 +201,7 @@ class ReceiverInfo extends Component {
   }
 
   cancelPress(id) {
-    const { dispatch, loggedIn } = this.props
-    dispatch(otcDetail.requestCancel({ id }))
-    if(loggedIn) dispatch(actions.sync())
+    this.showConfirmOverlay(id)
   }
 
   havedPayPress(id) {
@@ -194,7 +217,7 @@ class ReceiverInfo extends Component {
   }
 
   render() {
-    const { receiverInfoData, receiverInfoLoading, language } = this.props
+    const { receiverInfoData, receiverInfoLoading, language, user } = this.props
     if (receiverInfoData === null) {
       return (
         <View style={styles.container}>
@@ -218,7 +241,7 @@ class ReceiverInfo extends Component {
     const remark =
       `${receiverInfoData.traderPayinfo.remark}（${transfer(language, 'payment_please_fill_in')}）`
     const pleaseNoteTitle = transfer(language, 'payment_s_please_note')
-    const pleaseNote = transfer(language, 'payment_s_please_note_content')
+    const pleaseNote = transfer(language, 'payment_s_please_note_content1') + receiverInfoData.traderPayinfo.remark + transfer(language, 'payment_s_please_note_content2') + user.name + transfer(language, 'payment_s_please_note_content3')
     const havedPayTitle = transfer(language, 'OtcDetail_i_paid')
     const cancelBtnTitle = transfer(language, 'OtcDetail_cancelOrder')
     let havedPayDisabled = true
@@ -314,6 +337,7 @@ function mapStateToProps(state) {
     cancelError: state.otcDetail.cancelError,
     havedPayResult: state.otcDetail.havedPayResult,
     havedPayError: state.otcDetail.havedPayError,
+    user: state.user.user,
   }
 }
 
