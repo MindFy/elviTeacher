@@ -34,6 +34,8 @@ import {
   Overlay,
 } from 'teaset'
 
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -68,13 +70,12 @@ const styles = StyleSheet.create({
   tipsContainer: {
     marginTop: common.margin15,
     color: common.textColor,
-    fontSize: common.font12,
+    fontSize: common.font18,
   },
   tipsContent: {
     marginTop: common.margin10,
     color: common.textColor,
-    fontSize: common.font13,
-    lineHeight: 16,
+    fontSize: common.font16,
   },
   hintTitle: {
     marginTop: common.margin10,

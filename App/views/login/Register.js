@@ -154,6 +154,11 @@ class Register extends Component {
         showTip: false,
       }
     }
+    this.registerErrorDic = {
+      4000102: 'login_codeError',
+      4000113: 'login_inviteCodeError',
+      4000114: 'login_id_registed',
+    }
   }
 
   componentWillMount() {
@@ -344,7 +349,12 @@ class Register extends Component {
         dispatch(actions.loginUpdate({ mobile: '', password: '' }))
         navigation.goBack()
       } else {
-        Toast.fail(transfer(language, 'login_registFailed'))
+        const errMsg = this.registerErrorDic[registerResponse.error.code]
+        if (errMsg) {
+          Toast.fail(transfer(language, errMsg))
+        } else {
+          Toast.fail(transfer(language, 'login_registFailed'))
+        }
       }
     }
   }

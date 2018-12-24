@@ -717,6 +717,9 @@
   "withdrawal_address_label_warning": "(Mistakes might cause assets loss. Make sure you check. Please leave it blank for the tokens without the tag.)",
   "otc_need_bind_Mobile":"请先绑定手机号码",
   "withdraw_address_forbid": "Unavailable address",
-  "withdraw_please_perform_authentication_first": "Please verify your ID first"
+  "withdraw_please_perform_authentication_first": "Please verify your ID first",
+  "login_id_registed": "The account has been registered",
+  "auth_smscode_error": "Invalid SMS Verification Code",
+  "auth_emailcode_error": "Invalid Email Verification Code"
 
 }

@@ -379,7 +379,7 @@
   "Otc_system_does_not_provide_tradable_merchants": "系統未提供可交易的商家",
   "Otc_merchant_does_not_provide_bank_card_information": "商家未提供銀行卡資訊",
   "Otc_please_perform_authentication_first": "請先進行身份驗證",
-  "Otc_wait_legalDeal_more_than_2": "您尚有2筆訂單未完成，請先完成後再繼續交易",
+  "Otc_wait_legalDeal_more_than_2": "您尚有1筆訂單未完成，請先完成後再繼續交易",
   "Otc_enter_the_number_of_purchases": "請輸入買入數量",
   "Otc_enter_the_quantity_sold": "請輸入賣出數量",
   "Otc_minimum_purchase_amount": "買入數量最少為",
@@ -717,5 +717,8 @@
   "withdrawal_address_label_warning": "(填寫錯誤可能導致資產流失，請仔細核對。若無地址標籤，可不填寫。)",
   "otc_need_bind_Mobile":"请先绑定手机号码",
   "withdraw_address_forbid": "提領地址已禁用",
-  "withdraw_please_perform_authentication_first": "請先身分驗證"
+  "withdraw_please_perform_authentication_first": "請先身分驗證",
+  "login_id_registed": "帳號已被註冊",
+  "auth_smscode_error": "簡訊驗證碼錯誤",
+  "auth_emailcode_error": "信箱驗證碼錯誤"
 }

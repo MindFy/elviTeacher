@@ -319,9 +319,17 @@ class UpdatePassword extends Component {
 
   codeTitles = ['短信验证码', '谷歌验证码', '邮箱验证码']
 
-  errors = {
+  codeErrors = {
     4000156: 'login_codeError',
     4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4031601: 'Otc_please_login_to_operate',
+  }
+
+  errors = {
+    4000120: 'me_settings_PWoldWrong',
+    4000121: 'me_settings_PWoldWrong',
+    4000123: 'login_codeError',
+    4030501: 'me_settings_PWoldWrong',
     4031601: 'Otc_please_login_to_operate',
   }
 
@@ -334,7 +342,7 @@ class UpdatePassword extends Component {
       Toast.success(transfer(language, 'get_code_succeed'))
     }
     else{
-      const msg = transfer(language, this.errors[requestGetCodeResponse.error.code])
+      const msg = transfer(language, this.codeErrors[requestGetCodeResponse.error.code])
       if (msg) Toast.fail(msg)
       else Toast.fail(transfer(language, 'AuthCode_failed_to_get_verification_code'))
       if(loggedIn) dispatch(actions.sync())
@@ -353,20 +361,10 @@ class UpdatePassword extends Component {
         Toast.success(transfer(language, 'me_change_pwd_succeed'))
         Overlay.hide(this.overlayViewKeyID)
         navigation.goBack()
-      } else if (updatePasswordResponse.error.code === 4031601) {
-        Toast.fail(transfer(language, 'Otc_please_login_to_operate'))
-      } else if (updatePasswordResponse.error.code === 4030501) {
-        Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
-      } else if (updatePasswordResponse.error.code === 4000120) {
-        Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
-      } else if (updatePasswordResponse.error.code === 4000121) {
-        Toast.fail(transfer(language, 'me_settings_PWoldWrong'))
-      } else if (updatePasswordResponse.error.code === 4000156) {
-        Toast.fail(transfer(language, 'login_codeError'))
-      } else if (updatePasswordResponse.error.message === common.badNet) {
-        Toast.fail(transfer(language, 'me_settings_PWinternetFailed'))
       } else {
-        Toast.fail(transfer(language, 'me_settings_PWchangeFailed'))
+        const msg = transfer(language, this.errors[updatePasswordResponse.error.code])
+        if (msg) Toast.fail(msg)
+        else Toast.fail(transfer(language, 'me_settings_PWchangeFailed'))
       }
       if(loggedIn) dispatch(actions.sync())
     }

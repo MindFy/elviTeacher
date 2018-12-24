@@ -34,6 +34,7 @@ import AllegeView from './AllegeView'
 import NextTouchableOpacity from '../../components/NextTouchableOpacity'
 import WithdrawAuthorizeCode from '../../views/balance/components/WithdrawAuthorizeCode'
 import transfer from '../../localization/utils'
+import LegalDealConfirmCancelView from './components/LegalDealConfirmCancelView'
 
 const styles = StyleSheet.create({
   column: {
@@ -148,6 +149,27 @@ class OtcDetail extends Component {
     }
   }
 
+  showConfirmOverlay(id) {
+    const { dispatch, language } = this.props
+    const overlayView = (
+      <Overlay.View
+        style={{ justifyContent: 'center' }}
+        modal={false}
+        overlayOpacity={0}
+      >
+        <LegalDealConfirmCancelView
+          language={language}
+          pressCancel={() => {Overlay.hide(this.overlayCancelViewKey)}}
+          pressConfirm={() => {
+            dispatch(requestCancel({ id }))
+            Overlay.hide(this.overlayCancelViewKey)
+          }}
+        />
+      </Overlay.View>
+    )
+    this.overlayCancelViewKey = Overlay.show(overlayView)
+  }
+
   constructor() {
     super()
     this.state = {
@@ -250,7 +272,7 @@ class OtcDetail extends Component {
   cancelPress(title, id) {
     const { dispatch, formState, language } = this.props
     if (title === transfer(language, 'OtcDetail_cancelOrder')) {
-      dispatch(requestCancel({ id }))
+      this.showConfirmOverlay(id)
     } else if (title === transfer(language, 'OtcDetail_complaints')) {
       dispatch(updateForm({ ...formState, allegeText: '' }))
       this.setState({

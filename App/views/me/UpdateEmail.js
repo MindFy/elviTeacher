@@ -219,8 +219,9 @@ class UpdateEmail extends Component {
   }
 
   errors = {
-    4000156: 'login_codeError',
-    4000107: 'AuthCode_cannot_send_verification_code_repeatedly_within_one_minute',
+    4000107: 'me_Email_repeatMinute',
+    4000102: 'auth_emailcode_error',
+    4000174: 'AuthCode_gv_code_error',
     4031601: 'Otc_please_login_to_operate',
   }
 
@@ -247,6 +248,10 @@ class UpdateEmail extends Component {
       if (updateEmailError) {
         if (updateEmailError.message === common.badNet) {
           Toast.fail(transfer(language, 'OtcDetail_net_error'))
+        } else if(updateEmailError.message === 'sms验证码错误'){
+          Toast.fail(transfer(language, 'auth_smscode_error'))
+        } else if(updateEmailError.message === 'email验证码错误'){
+          Toast.fail(transfer(language, 'auth_emailcode_error'))
         } else {
           const msg = this.errors[updateEmailError.code]
           if (msg) Toast.fail(transfer(language, msg))

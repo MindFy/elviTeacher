@@ -236,6 +236,10 @@ class WithDraw extends Component {
       Toast.success(transfer(language, 'withdrawal_succeed'))
       Overlay.hide(this.overlayViewKeyID)
       dispatch(withdrawClear())
+      this.interval = setInterval(() => {
+        this.executeOnce = false
+        clearInterval(this.interval);
+      }, 1500)
       const resetAction = NavigationActions.reset({
           index: 1,
           actions: [
@@ -256,6 +260,10 @@ class WithDraw extends Component {
       }
       dispatch(requestWithdrawClearError())
       if(loggedIn) dispatch(actions.sync())
+      this.interval = setInterval(() => {
+        this.executeOnce = false
+        clearInterval(this.interval);
+      }, 1500)
     }
     if (nextProps.requestPairStatus === 2 && requestPairStatus !== 1) {
       // 加载失败
@@ -515,15 +523,11 @@ class WithDraw extends Component {
   }
 
   confirmPress = (link) => {
-    Keyboard.dismiss()
     if(this.executeOnce){
       return
     }
-    this.executeOnce = true
-    this.interval = setInterval(() => {
-      this.executeOnce = false
-      clearInterval(this.interval);
-    }, 1500)
+
+    Keyboard.dismiss()
 
     if (link === undefined) {
       return
@@ -539,6 +543,7 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'me_enter_mobileVerification'))
         return
       }
+      this.executeOnce = true
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: withdrawAmount,
@@ -554,6 +559,7 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'me_inputGoogleCode'))
         return
       }
+      this.executeOnce = true
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: withdrawAmount,
@@ -568,6 +574,7 @@ class WithDraw extends Component {
         Toast.fail(transfer(language, 'me_enter_EmailVerification'))
         return
       }
+      this.executeOnce = true
       dispatch(requestWithdraw({
         token_id: tokenId,
         amount: withdrawAmount,
